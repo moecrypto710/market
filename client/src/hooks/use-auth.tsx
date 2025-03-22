@@ -23,7 +23,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const [_, navigate] = useLocation();
-  
+
   const {
     data: user,
     error,
@@ -35,8 +35,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginUser) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const response = await apiRequest("POST", "/api/login", credentials);
+      if (!response.ok) {
+        const errorData = await response.json();
+        const errorMessage = errorData.message || "فشل تسجيل الدخول"; // Extract error message from response if available
+        throw new Error(errorMessage);
+      }
+      return response.json();
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
