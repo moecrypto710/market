@@ -14,7 +14,7 @@ interface RewardCardProps {
   userPoints: number;
 }
 
-export function RewardCard({ reward, userPoints }: RewardCardProps) {
+export default function RewardCard({ reward, userPoints }: RewardCardProps) {
   const { toast } = useToast();
   const [claimed, setClaimed] = useState(false);
   const queryClient = useQueryClient();

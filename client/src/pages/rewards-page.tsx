@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Reward } from "@shared/schema";
 import { Progress } from "@/components/ui/progress";
-import RewardCard from "@/components/reward-card";
+import { RewardCard } from "@/components/reward-card";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function RewardsPage() {
