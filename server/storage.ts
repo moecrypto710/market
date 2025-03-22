@@ -1,11 +1,11 @@
-import { users, products, rewards, affiliates, type User, type InsertUser, type Product, type Reward, type Affiliate, type CartItem, insertAffiliateSchema } from "@shared/schema";
+import { users, products, rewards, affiliates, type User, type InsertUser, type Product, type Reward, type Affiliate, type CartItem } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 
+// Create memory store for session
 const MemoryStore = createMemoryStore(session);
 
-// modify the interface with any CRUD methods
-// you might need
+// Storage interface
 export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
@@ -34,7 +34,8 @@ export interface IStorage {
   clearCart(userId: number): Promise<void>;
   
   // Session store
-  sessionStore: session.Store;
+  // Using any here to fix type compatibility issues with memory-store
+  sessionStore: any;
 }
 
 export class MemStorage implements IStorage {
@@ -43,7 +44,7 @@ export class MemStorage implements IStorage {
   private rewards: Map<number, Reward>;
   private affiliates: Map<number, Affiliate>;
   private carts: Map<number, CartItem[]>;
-  sessionStore: ReturnType<typeof createMemoryStore>;
+  sessionStore: any;
   currentId: { users: number; products: number; rewards: number; affiliates: number };
 
   constructor() {
@@ -53,8 +54,10 @@ export class MemStorage implements IStorage {
     this.affiliates = new Map();
     this.carts = new Map();
     this.currentId = { users: 1, products: 1, rewards: 1, affiliates: 1 };
+    
+    // Initialize session store
     this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+      checkPeriod: 86400000, // Clear expired sessions every day
     });
     
     // Initialize with sample data
@@ -196,6 +199,18 @@ export class MemStorage implements IStorage {
 
   // Initialize sample data
   private initSampleData() {
+    // Create a test user
+    const testUser: User = {
+      id: this.currentId.users++,
+      username: "test",
+      password: "e0f68f3d235d8958784c7e4215fc5bc408d7e033ee4b4fcf42a7267b77954e13.e10694e83beae2d8db7111dd9c1c9af0", // "password123"
+      email: "test@example.com",
+      fullName: "مستخدم تجريبي",
+      points: 500,
+      affiliateCode: "TESTUSER",
+    };
+    this.users.set(testUser.id, testUser);
+    
     // Sample products
     const productData: Omit<Product, "id">[] = [
       {
