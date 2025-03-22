@@ -34,7 +34,7 @@ export interface IStorage {
   clearCart(userId: number): Promise<void>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: ReturnType<typeof createMemoryStore>;
 }
 
 export class MemStorage implements IStorage {
@@ -43,7 +43,7 @@ export class MemStorage implements IStorage {
   private rewards: Map<number, Reward>;
   private affiliates: Map<number, Affiliate>;
   private carts: Map<number, CartItem[]>;
-  sessionStore: session.SessionStore;
+  sessionStore: ReturnType<typeof createMemoryStore>;
   currentId: { users: number; products: number; rewards: number; affiliates: number };
 
   constructor() {
