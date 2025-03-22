@@ -1,8 +1,11 @@
-// product-card.tsx
+
 import React from 'react';
 
 interface ProductCardProps {
-  product: any; // Replace 'any' with the actual product type
+  product: {
+    name: string;
+    description: string;
+  };
 }
 
 function ProductCard({ product }: ProductCardProps) {
