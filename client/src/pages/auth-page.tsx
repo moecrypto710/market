@@ -8,6 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Redirect } from "wouter";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useState, useEffect } from "react";
 
 // Extend the schemas with additional validation
 const registerSchema = insertUserSchema.extend({
@@ -17,11 +19,19 @@ const registerSchema = insertUserSchema.extend({
   path: ["confirmPassword"],
 });
 
+// Add remember me field to login schema
+type LoginFormValues = z.infer<typeof loginUserSchema> & { rememberMe: boolean };
 type RegisterFormValues = z.infer<typeof registerSchema>;
-type LoginFormValues = z.infer<typeof loginUserSchema>;
+
+// Sample guest account for quick login
+const GUEST_ACCOUNTS = [
+  { username: "زائر", password: "guest123" },
+  { username: "متسوق", password: "shop123" },
+];
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
+  const [quickLoginLoading, setQuickLoginLoading] = useState(false);
   
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -39,16 +49,62 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
+      rememberMe: true,
     },
   });
   
+  // Check for stored credentials on component mount
+  useEffect(() => {
+    try {
+      const storedCredentials = localStorage.getItem('amrikyy_credentials');
+      if (storedCredentials) {
+        const { username, password } = JSON.parse(storedCredentials);
+        loginForm.setValue('username', username);
+        loginForm.setValue('password', password);
+        loginForm.setValue('rememberMe', true);
+      }
+    } catch (error) {
+      console.error('Failed to load stored credentials', error);
+    }
+  }, [loginForm]);
+  
   const onLoginSubmit = (data: LoginFormValues) => {
-    loginMutation.mutate(data);
+    const { rememberMe, ...credentials } = data;
+    
+    // Store credentials if remember me is checked
+    if (rememberMe) {
+      localStorage.setItem('amrikyy_credentials', JSON.stringify(credentials));
+    } else {
+      localStorage.removeItem('amrikyy_credentials');
+    }
+    
+    loginMutation.mutate(credentials);
   };
   
   const onRegisterSubmit = (data: RegisterFormValues) => {
     const { confirmPassword, ...userData } = data;
     registerMutation.mutate(userData);
+  };
+  
+  const handleQuickLogin = (guestCredentials: { username: string, password: string }) => {
+    setQuickLoginLoading(true);
+    loginMutation.mutate(guestCredentials, {
+      onSettled: () => setQuickLoginLoading(false)
+    });
+  };
+  
+  const handleLoginWithSocial = (provider: string) => {
+    // Here we would implement social login
+    // For now, we'll just use a placeholder guest login
+    setQuickLoginLoading(true);
+    setTimeout(() => {
+      loginMutation.mutate({
+        username: "social_user",
+        password: "social123"
+      }, {
+        onSettled: () => setQuickLoginLoading(false)
+      });
+    }, 1000);
   };
   
   // Redirect if already logged in
@@ -73,6 +129,52 @@ export default function AuthPage() {
             
             <TabsContent value="login">
               <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
+                {/* Quick Login Options */}
+                <div className="mb-6">
+                  <div className="text-sm text-white/70 mb-3 text-center">دخول سريع</div>
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    {GUEST_ACCOUNTS.map((account) => (
+                      <Button 
+                        key={account.username}
+                        variant="outline" 
+                        className="border-white/20 hover:bg-white/10 hover:text-white"
+                        onClick={() => handleQuickLogin(account)}
+                        disabled={quickLoginLoading || loginMutation.isPending}
+                      >
+                        <i className="fas fa-user-alt mr-2"></i>
+                        {account.username}
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      variant="outline" 
+                      className="border-white/20 hover:bg-blue-600 hover:text-white"
+                      onClick={() => handleLoginWithSocial('facebook')}
+                      disabled={quickLoginLoading || loginMutation.isPending}
+                    >
+                      <i className="fab fa-facebook mr-2"></i>
+                      فيسبوك
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="border-white/20 hover:bg-red-600 hover:text-white"
+                      onClick={() => handleLoginWithSocial('google')}
+                      disabled={quickLoginLoading || loginMutation.isPending}
+                    >
+                      <i className="fab fa-google mr-2"></i>
+                      جوجل
+                    </Button>
+                  </div>
+                  
+                  <div className="relative flex items-center gap-4 py-5">
+                    <div className="border-t border-white/20 flex-grow"></div>
+                    <div className="text-white/50 text-sm">أو</div>
+                    <div className="border-t border-white/20 flex-grow"></div>
+                  </div>
+                </div>
+                
                 <Form {...loginForm}>
                   <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                     <FormField
@@ -108,6 +210,24 @@ export default function AuthPage() {
                             />
                           </FormControl>
                           <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={loginForm.control}
+                      name="rememberMe"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rtl:space-x-reverse">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel>تذكرني</FormLabel>
+                          </div>
                         </FormItem>
                       )}
                     />
@@ -220,6 +340,29 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button 
+                        variant="outline" 
+                        className="border-white/20 hover:bg-blue-600 hover:text-white"
+                        onClick={() => handleLoginWithSocial('facebook')}
+                        type="button"
+                        disabled={registerMutation.isPending}
+                      >
+                        <i className="fab fa-facebook mr-2"></i>
+                        فيسبوك
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="border-white/20 hover:bg-red-600 hover:text-white"
+                        onClick={() => handleLoginWithSocial('google')}
+                        type="button"
+                        disabled={registerMutation.isPending}
+                      >
+                        <i className="fab fa-google mr-2"></i>
+                        جوجل
+                      </Button>
+                    </div>
                     
                     <Button 
                       type="submit" 
