@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
+import { redeemReward } from "@/lib/api";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import confetti from "canvas-confetti";
