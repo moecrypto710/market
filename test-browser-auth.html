@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    
+    <div>
+        <button id="loginBtn">Login as Test User</button>
+        <button id="getUserBtn">Get Current User</button>
+        <button id="logoutBtn">Logout</button>
+    </div>
+    
+    <h3>Results:</h3>
+    <pre id="results"></pre>
+    
+    <script>
+        const API_BASE = window.location.origin;
+        const resultsEl = document.getElementById('results');
+        
+        function log(message, isError = false) {
+            const className = isError ? 'error' : 'success';
+            resultsEl.innerHTML += `<div class="${className}">${new Date().toLocaleTimeString()}: ${message}</div>`;
+        }
+        
+        async function login() {
+            log('Attempting to login with test user...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'test',
+                        password: 'password123'
+                    }),
+                    credentials: 'include' // Important for cookies
+                });
+                
+                log(`Login status: ${response.status}`);
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    log(`User data: ${JSON.stringify(userData, null, 2)}`);
+                    log('Login successful!');
+                    
+                    // Automatically get user data to verify
+                    setTimeout(getUser, 500);
+                } else {
+                    const errorText = await response.text();
+                    log(`Login failed: ${errorText}`, true);
+                }
+            } catch (error) {
+                log(`Error during login: ${error.message}`, true);
+            }
+        }
+        
+        async function getUser() {
+            log('Fetching current user data...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/user`, {
+                    method: 'GET',
+                    credentials: 'include' // Important for cookies
+                });
+                
+                log(`Get user status: ${response.status}`);
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    log(`Current user: ${JSON.stringify(userData, null, 2)}`);
+                    log('User data retrieved successfully!');
+                } else {
+                    log(`Failed to get user data (${response.status})`, true);
+                }
+            } catch (error) {
+                log(`Error getting user: ${error.message}`, true);
+            }
+        }
+        
+        async function logout() {
+            log('Attempting to logout...');
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/logout`, {
+                    method: 'POST',
+                    credentials: 'include' // Important for cookies
+                });
+                
+                log(`Logout status: ${response.status}`);
+                
+                if (response.ok) {
+                    log('Logout successful!');
+                    
+                    // Verify logout by trying to get user
+                    setTimeout(getUser, 500);
+                } else {
+                    const errorText = await response.text();
+                    log(`Logout failed: ${errorText}`, true);
+                }
+            } catch (error) {
+                log(`Error during logout: ${error.message}`, true);
+            }
+        }
+        
+        // Add event listeners
+        document.getElementById('loginBtn').addEventListener('click', login);
+        document.getElementById('getUserBtn').addEventListener('click', getUser);
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+        
+        // Check if already logged in on page load
+        window.addEventListener('load', getUser);
+    </script>
+</body>
+</html>
