@@ -34,7 +34,7 @@ export interface IStorage {
   clearCart(userId: number): Promise<void>;
   
   // Session store
-  sessionStore: ReturnType<typeof createMemoryStore>;
+  sessionStore: session.Store;
 }
 
 export class MemStorage implements IStorage {
