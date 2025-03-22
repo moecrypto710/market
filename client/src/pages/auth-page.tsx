@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Redirect } from "wouter";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
+import { toast } from "@/components/ui/toast";
 
 // Extend the schemas with additional validation
 const registerSchema = insertUserSchema.extend({
@@ -32,7 +33,7 @@ const GUEST_ACCOUNTS = [
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [quickLoginLoading, setQuickLoginLoading] = useState(false);
-  
+
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -43,7 +44,7 @@ export default function AuthPage() {
       confirmPassword: "",
     },
   });
-  
+
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginUserSchema),
     defaultValues: {
@@ -52,7 +53,7 @@ export default function AuthPage() {
       rememberMe: true,
     },
   });
-  
+
   // Check for stored credentials on component mount
   useEffect(() => {
     try {
@@ -67,32 +68,44 @@ export default function AuthPage() {
       console.error('Failed to load stored credentials', error);
     }
   }, [loginForm]);
-  
+
   const onLoginSubmit = (data: LoginFormValues) => {
     const { rememberMe, ...credentials } = data;
-    
+
     // Store credentials if remember me is checked
     if (rememberMe) {
       localStorage.setItem('amrikyy_credentials', JSON.stringify(credentials));
     } else {
       localStorage.removeItem('amrikyy_credentials');
     }
-    
+
     loginMutation.mutate(credentials);
   };
-  
+
   const onRegisterSubmit = (data: RegisterFormValues) => {
     const { confirmPassword, ...userData } = data;
     registerMutation.mutate(userData);
   };
-  
-  const handleQuickLogin = (guestCredentials: { username: string, password: string }) => {
+
+  const handleQuickLogin = async (account: { username: string; password: string }) => {
     setQuickLoginLoading(true);
-    loginMutation.mutate(guestCredentials, {
-      onSettled: () => setQuickLoginLoading(false)
-    });
+    try {
+      await loginMutation.mutateAsync(account);
+      toast({
+        title: "تم تسجيل الدخول بنجاح",
+        description: `مرحباً ${account.username}!`,
+      });
+    } catch (error) {
+      console.error("Quick login failed:", error);
+      toast({
+        title: "فشل تسجيل الدخول",
+        description: "حاول مرة أخرى",
+        variant: "destructive",
+      });
+    }
+    setQuickLoginLoading(false);
   };
-  
+
   const handleLoginWithSocial = (provider: string) => {
     // Here we would implement social login
     // For now, we'll just use a placeholder guest login
@@ -106,12 +119,12 @@ export default function AuthPage() {
       });
     }, 1000);
   };
-  
+
   // Redirect if already logged in
   if (user) {
     return <Redirect to="/" />;
   }
-  
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen py-10">
       <div className="w-full md:w-1/2 px-4 md:px-10 flex items-center justify-center">
@@ -120,13 +133,13 @@ export default function AuthPage() {
             <h1 className="text-3xl font-bold mb-2">Amrikyy</h1>
             <p className="text-white/70">تجربة تسوق افتراضية في عالم العرب</p>
           </div>
-          
+
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid grid-cols-2 mb-6">
               <TabsTrigger value="login">تسجيل الدخول</TabsTrigger>
               <TabsTrigger value="register">حساب جديد</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="login">
               <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
                 {/* Quick Login Options */}
@@ -146,7 +159,7 @@ export default function AuthPage() {
                       </Button>
                     ))}
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-3">
                     <Button 
                       variant="outline" 
@@ -167,14 +180,14 @@ export default function AuthPage() {
                       جوجل
                     </Button>
                   </div>
-                  
+
                   <div className="relative flex items-center gap-4 py-5">
                     <div className="border-t border-white/20 flex-grow"></div>
                     <div className="text-white/50 text-sm">أو</div>
                     <div className="border-t border-white/20 flex-grow"></div>
                   </div>
                 </div>
-                
+
                 <Form {...loginForm}>
                   <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                     <FormField
@@ -194,7 +207,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={loginForm.control}
                       name="password"
@@ -213,7 +226,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={loginForm.control}
                       name="rememberMe"
@@ -231,7 +244,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <Button 
                       type="submit" 
                       className="w-full bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]"
@@ -243,7 +256,7 @@ export default function AuthPage() {
                 </Form>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="register">
               <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
                 <Form {...registerForm}>
@@ -265,7 +278,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={registerForm.control}
                       name="fullName"
@@ -283,7 +296,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={registerForm.control}
                       name="email"
@@ -302,7 +315,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={registerForm.control}
                       name="password"
@@ -321,7 +334,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={registerForm.control}
                       name="confirmPassword"
@@ -340,7 +353,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-3">
                       <Button 
                         variant="outline" 
@@ -363,7 +376,7 @@ export default function AuthPage() {
                         جوجل
                       </Button>
                     </div>
-                    
+
                     <Button 
                       type="submit" 
                       className="w-full bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]"
@@ -378,7 +391,7 @@ export default function AuthPage() {
           </Tabs>
         </div>
       </div>
-      
+
       <div className="w-full md:w-1/2 px-4 py-10 md:p-10 flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 w-full max-w-md">
           <h2 className="text-2xl font-bold mb-4">استمتع بتجربة تسوق فريدة</h2>
@@ -392,7 +405,7 @@ export default function AuthPage() {
                 <p className="text-sm">استكشف المنتجات في بيئة ثلاثية الأبعاد كأنك في متجر حقيقي</p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3 space-x-reverse">
               <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                 <i className="fas fa-gift"></i>
@@ -402,7 +415,7 @@ export default function AuthPage() {
                 <p className="text-sm">اجمع النقاط واستبدلها بخصومات وهدايا مجانية</p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3 space-x-reverse">
               <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                 <i className="fas fa-users"></i>
@@ -412,7 +425,7 @@ export default function AuthPage() {
                 <p className="text-sm">اكسب المال عند مشاركة منتجاتنا المفضلة مع أصدقائك</p>
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3 space-x-reverse">
               <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                 <i className="fas fa-lock"></i>
