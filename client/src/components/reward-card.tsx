@@ -7,7 +7,6 @@ import { redeemReward } from "@/lib/api";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import confetti from "canvas-confetti";
-import { apiRequest } from "@/lib/api";
 
 interface RewardCardProps {
   reward: Reward;
@@ -22,18 +21,7 @@ export default function RewardCard({ reward, userPoints }: RewardCardProps) {
   const progressPercentage = Math.min(Math.round((userPoints / reward.pointsRequired) * 100), 100);
 
   const redeemMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest(
-        "POST", 
-        `/api/rewards/${reward.id}/redeem`, 
-        {}
-      );
-      if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error);
-      }
-      return await response.json();
-    },
+    mutationFn: () => redeemReward(reward.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/user'] });
       setClaimed(true);
