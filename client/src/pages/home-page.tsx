@@ -7,10 +7,12 @@ import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import VRShop from "@/components/vr-shop";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export default function HomePage() {
   const { user } = useAuth();
-  const { vrEnabled } = useVR();
+  const { vrEnabled, toggleVR } = useVR();
+  const [isCheckingDevice, setIsCheckingDevice] = useState(false);
   
   const { data: products } = useQuery<Product[]>({
     queryKey: ['/api/products'],
@@ -32,6 +34,16 @@ export default function HomePage() {
   const nextRewardLevel = 1000;
   const progressPercentage = Math.min(100, (currentPoints / nextRewardLevel) * 100);
   
+  // Handle enabling VR mode with device detection simulation
+  const handleEnableVR = () => {
+    setIsCheckingDevice(true);
+    // Simulate device check
+    setTimeout(() => {
+      toggleVR();
+      setIsCheckingDevice(false);
+    }, 1500);
+  };
+  
   return (
     <>
       {/* VR Shop Component */}
@@ -47,14 +59,28 @@ export default function HomePage() {
                 <h2 className="text-xl font-bold">تجربة تسوق افتراضية</h2>
               </div>
               <p className="mb-4 text-white/80">استخدم وضع الواقع الافتراضي للمشي في المتجر وتجربة المنتجات</p>
-              <Button variant="default" className="bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]">
-                <i className="fas fa-vr-cardboard mr-2"></i>
-                تمكين وضع VR
+              <Button 
+                variant="default" 
+                className="bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]"
+                onClick={handleEnableVR}
+                disabled={isCheckingDevice}
+              >
+                {isCheckingDevice ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin mr-2"></i>
+                    جاري التحقق من الجهاز...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-vr-cardboard mr-2"></i>
+                    تمكين وضع VR
+                  </>
+                )}
               </Button>
             </div>
             <div className="absolute right-0 bottom-0 opacity-20">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-32 h-32 transform rotate-12">
-                <path d="M13.5 2a1.5 1.5 0 0 0-3 0v.947h-2.839A2.25 2.25 0 0 0 5.500 5.333a1.5 1.5 0 0 0 0 3 2.25 2.25 0 0 0 2.161 2.386h2.839v3.774a3.001 3.001 0 0 0-2.5 2.957 3 3 0 1 0 6 0 3.001 3.001 0 0 0-2.5-2.957V10.72h2.839a2.25 2.25 0 0 0 2.161-2.386 1.5 1.5 0 0 0 0-3 2.25 2.25 0 0 0-2.161-2.386H13.5V2ZM7.750 7.333a.75.75 0 0 1-.75-.75.75.75 0 0 1 .75-.75.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75Zm8.5 0a.75.75 0 0 1-.75-.75.75.75 0 0 1 .75-.75.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75ZM12 18.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" />
+                <path d="M13.5 2a1.5 1.5 0 0 0-3 0v.947h-2.839A2.25 2.25 0 0 0 5.500 5.333a1.5 1.5 0 0 0 0 3 2.25 2.25 0 0 0 2.161 2.386h2.839v3.774a3.001 3.001 0 0 0-2.5 2.957a3 3 0 1 0 6 0 3.001 3.001 0 0 0-2.5-2.957V10.72h2.839a2.25 2.25 0 0 0 2.161-2.386 1.5 1.5 0 0 0 0-3 2.25 2.25 0 0 0-2.161-2.386H13.5V2ZM7.750 7.333a.75.75 0 0 1-.75-.75.75.75 0 0 1 .75-.75.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75Zm8.5 0a.75.75 0 0 1-.75-.75.75.75 0 0 1 .75-.75.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75ZM12 18.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z" />
               </svg>
             </div>
           </div>

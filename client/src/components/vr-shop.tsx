@@ -179,6 +179,38 @@ export default function VRShop({ products }: VRShopProps) {
     );
   }
   
+  // Group products by category
+  const productsByCategory = products.reduce((groups, product) => {
+    const category = product.category;
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(product);
+    return groups;
+  }, {} as Record<string, Product[]>);
+  
+  // Calculate store sections based on categories
+  const storeSections = [
+    { id: 'electronics', name: 'إلكترونيات', x: 25, y: 30, width: 30, height: 30 },
+    { id: 'clothing', name: 'ملابس', x: 65, y: 30, width: 30, height: 30 },
+    { id: 'home', name: 'منزل', x: 25, y: 70, width: 30, height: 25 },
+    { id: 'sports', name: 'رياضة', x: 65, y: 70, width: 30, height: 25 },
+  ];
+  
+  // Get current section based on avatar position
+  const getCurrentSection = () => {
+    return storeSections.find(section => {
+      return (
+        avatarPosition.x >= section.x - section.width/2 &&
+        avatarPosition.x <= section.x + section.width/2 &&
+        avatarPosition.y >= section.y - section.height/2 &&
+        avatarPosition.y <= section.y + section.height/2
+      );
+    });
+  };
+  
+  const currentSection = getCurrentSection();
+  
   return (
     <div 
       ref={shopRef}
@@ -189,21 +221,113 @@ export default function VRShop({ products }: VRShopProps) {
         backgroundPosition: 'center',
       }}
     >
+      {/* Shop map in corner */}
+      <div className="absolute top-4 right-4 bg-black/70 rounded-lg p-2 z-50">
+        <div className="relative w-32 h-32 bg-white/10 rounded-lg overflow-hidden border border-white/20">
+          {storeSections.map(section => (
+            <div
+              key={section.id}
+              className="absolute border border-white/30 rounded bg-white/10"
+              style={{
+                left: `${section.x - section.width/2}%`,
+                top: `${section.y - section.height/2}%`,
+                width: `${section.width}%`,
+                height: `${section.height}%`,
+                opacity: currentSection?.id === section.id ? 0.8 : 0.4,
+                backgroundColor: currentSection?.id === section.id ? '#5e35b1' : 'transparent'
+              }}
+            >
+              <span className="absolute bottom-1 right-1 text-[6px] font-bold">
+                {section.name}
+              </span>
+            </div>
+          ))}
+          
+          {/* Avatar position on map */}
+          <div 
+            className="absolute w-3 h-3 bg-[#ffeb3b] rounded-full transform -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `${avatarPosition.x}%`,
+              top: `${avatarPosition.y}%`,
+              boxShadow: '0 0 0 2px rgba(255,235,59,0.3), 0 0 0 4px rgba(255,235,59,0.2)'
+            }}
+          />
+        </div>
+      </div>
+
       {/* Virtual shop floor */}
       <div className="absolute inset-10 bg-white/5 rounded-xl border border-white/10">
+        {/* Store sections/zones */}
+        {storeSections.map(section => (
+          <div
+            key={section.id}
+            className="absolute border-2 border-white/10 rounded-xl bg-white/5"
+            style={{
+              left: `${section.x - section.width/2}%`,
+              top: `${section.y - section.height/2}%`,
+              width: `${section.width}%`,
+              height: `${section.height}%`,
+            }}
+          >
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/60 px-3 py-1 rounded-full text-sm">
+              {section.name}
+            </div>
+            
+            {/* Section-specific visuals */}
+            {section.id === 'electronics' && (
+              <div className="absolute top-4 left-4 text-4xl opacity-20">
+                <i className="fas fa-laptop"></i>
+              </div>
+            )}
+            {section.id === 'clothing' && (
+              <div className="absolute top-4 left-4 text-4xl opacity-20">
+                <i className="fas fa-tshirt"></i>
+              </div>
+            )}
+            {section.id === 'home' && (
+              <div className="absolute top-4 left-4 text-4xl opacity-20">
+                <i className="fas fa-couch"></i>
+              </div>
+            )}
+            {section.id === 'sports' && (
+              <div className="absolute top-4 left-4 text-4xl opacity-20">
+                <i className="fas fa-dumbbell"></i>
+              </div>
+            )}
+          </div>
+        ))}
+        
+        {/* Section dividers/walls */}
+        <div className="absolute left-1/2 top-10 bottom-10 w-0.5 bg-white/10 -translate-x-1/2"></div>
+        <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-white/10 -translate-y-1/2"></div>
+        
         {/* Products displayed on shelves */}
         {products.map((product, index) => {
-          // Distribute products in a grid
-          const productX = 20 + (index % 3) * 30; // 3 columns
-          const productY = 30 + Math.floor(index / 3) * 30; // Multiple rows
+          // Determine which section to place the product in
+          const sectionIndex = ['electronics', 'clothing', 'home', 'sports'].indexOf(product.category);
+          const section = storeSections[sectionIndex === -1 ? index % 4 : sectionIndex];
+          
+          // Calculate position within the section
+          const productsInSection = productsByCategory[product.category]?.length || 1;
+          const productIndexInSection = productsByCategory[product.category]?.indexOf(product) || 0;
+          
+          const rows = Math.ceil(productsInSection / 3);
+          const cols = Math.min(productsInSection, 3);
+          
+          const rowIndex = Math.floor(productIndexInSection / 3);
+          const colIndex = productIndexInSection % 3;
+          
+          // Calculate grid position within section
+          const gridX = section.x - section.width/2 + section.width * (colIndex + 0.5) / cols;
+          const gridY = section.y - section.height/2 + section.height * (rowIndex + 0.5) / rows;
           
           return (
             <div 
               key={product.id}
               className="absolute w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
               style={{ 
-                left: `${productX}%`, 
-                top: `${productY}%`,
+                left: `${gridX}%`, 
+                top: `${gridY}%`,
                 transition: 'transform 0.3s ease'
               }}
             >
@@ -220,6 +344,14 @@ export default function VRShop({ products }: VRShopProps) {
             </div>
           );
         })}
+        
+        {/* Store decorations */}
+        <div className="absolute left-[30%] top-[50%] w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+          <i className="fas fa-shopping-cart text-white/20 text-2xl"></i>
+        </div>
+        <div className="absolute right-[30%] top-[50%] w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+          <i className="fas fa-tag text-white/20 text-2xl"></i>
+        </div>
         
         {/* Avatar */}
         <div 
@@ -257,6 +389,13 @@ export default function VRShop({ products }: VRShopProps) {
           {/* Shadow below avatar */}
           <div className="w-12 h-3 bg-black/30 rounded-full mx-auto -mt-1 blur-sm"></div>
         </div>
+        
+        {/* Section indicator */}
+        {currentSection && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            أنت في قسم: {currentSection.name}
+          </div>
+        )}
       </div>
       
       {/* Controls */}
