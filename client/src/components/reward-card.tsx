@@ -1,4 +1,3 @@
-
 import { Reward } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ interface RewardCardProps {
   userPoints: number;
 }
 
-export default function RewardCard({ reward, userPoints }: RewardCardProps) {
+function RewardCard({ reward, userPoints }: RewardCardProps) {
   const { toast } = useToast();
   const [claimed, setClaimed] = useState(false);
   const queryClient = useQueryClient();
