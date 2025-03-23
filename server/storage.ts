@@ -355,11 +355,11 @@ export class MemStorage implements IStorage {
       this.products.set(id, { ...product, id });
     });
 
-    // Sample rewards with brand products
+    // Enhanced rewards with branded products and exclusive benefits
     const rewardData: Omit<Reward, "id">[] = [
       {
         name: "خصم 500 جنيه على منتجات نايكي",
-        description: "استمتع بخصم على طلبك التالي من منتجات نايكي الأصلية في مول أمريكي",
+        description: "استمتع بخصم على طلبك التالي من منتجات نايكي الأصلية في مول أمريكي. صالح على جميع منتجات نايكي بما فيها الإصدارات الجديدة والحصرية",
         pointsRequired: 1000,
         isActive: true,
         tier: "basic",
@@ -367,8 +367,8 @@ export class MemStorage implements IStorage {
         expiryDate: new Date("2025-12-31")
       },
       {
-        name: "شحن مجاني",
-        description: "توصيل مجاني لمشترياتك القادمة من أي ماركة في مول أمريكي لجميع أنحاء مصر",
+        name: "شحن مجاني لمدة 3 أشهر",
+        description: "توصيل مجاني لجميع مشترياتك من أي ماركة في مول أمريكي لجميع أنحاء مصر، والخدمة صالحة لمدة 3 أشهر كاملة من تاريخ التفعيل",
         pointsRequired: 750,
         isActive: true,
         tier: "basic",
@@ -377,7 +377,7 @@ export class MemStorage implements IStorage {
       },
       {
         name: "قسيمة هدية بقيمة 1000 جنيه",
-        description: "احصل على قسيمة هدية بقيمة 1000 جنيه لاستخدامها على أي منتجات في مول أمريكي",
+        description: "احصل على قسيمة هدية بقيمة 1000 جنيه لاستخدامها على أي منتجات في مول أمريكي. القسيمة قابلة للتحويل ويمكن استخدامها على أقساط",
         pointsRequired: 2000,
         isActive: true,
         tier: "premium",
@@ -386,11 +386,47 @@ export class MemStorage implements IStorage {
       },
       {
         name: "عضوية VIP لمدة شهر",
-        description: "احصل على عضوية VIP تمنحك خصم 15% على جميع المنتجات وشحن مجاني لمدة شهر كامل",
+        description: "احصل على عضوية VIP تمنحك خصم 15% على جميع المنتجات وشحن مجاني لمدة شهر كامل، بالإضافة إلى الوصول المبكر للعروض الحصرية والتخفيضات",
         pointsRequired: 3000,
         isActive: true,
         tier: "premium",
         imageUrl: "/images/product-templates/apple-airpods.svg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "وصول مبكر لمنتجات سامسونج الجديدة",
+        description: "كن من أوائل من يحصل على منتجات سامسونج الجديدة قبل طرحها في الأسواق، مع خصم خاص 10% على أول طلب من الإصدارات الجديدة",
+        pointsRequired: 3500,
+        isActive: true,
+        tier: "premium",
+        imageUrl: "/images/product-templates/samsung-galaxy.svg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "متجر افتراضي مجاني لمدة شهر",
+        description: "احصل على متجر افتراضي مجاني في مول أمريكي لمدة شهر كامل لعرض منتجاتك الخاصة أو منتجات شركائك مع دعم فني كامل",
+        pointsRequired: 5000,
+        isActive: true,
+        tier: "vip",
+        imageUrl: "/images/product-templates/levis-jeans.svg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "جلسة استشارية مع مصمم أزياء",
+        description: "جلسة خاصة لمدة ساعة مع أحد مصممي الأزياء المعتمدين لدينا لتحصل على نصائح حصرية تناسب أسلوبك واحتياجاتك",
+        pointsRequired: 4000,
+        isActive: true,
+        tier: "vip",
+        imageUrl: "/images/product-templates/adidas-tshirt.svg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "وصول حصري لمجموعات محدودة",
+        description: "الوصول الحصري للمنتجات المحدودة والإصدارات الخاصة من كبرى الماركات العالمية قبل نفاذها من السوق",
+        pointsRequired: 7500,
+        isActive: true,
+        tier: "vip",
+        imageUrl: "/images/product-templates/nike-shoes.svg",
         expiryDate: new Date("2025-12-31")
       }
     ];
