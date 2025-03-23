@@ -994,54 +994,233 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           </div>
         </div>
         
-        {/* Avatar indicator */}
+        {/* Enhanced Avatar indicator with holographic effect */}
         <div 
-          className="absolute w-8 h-8 bg-[#ffeb3b] rounded-full border-2 border-white shadow-glow z-40 avatar"
+          className="absolute w-10 h-10 z-40 avatar"
           style={{
             left: `${avatarPosition.x}%`,
             top: `${avatarPosition.y}%`,
             transform: 'translate(-50%, -50%)',
-            boxShadow: '0 0 15px rgba(255, 235, 59, 0.5)',
           }}
         >
-          <img 
-            src={selectedAvatar.image} 
-            alt={selectedAvatar.name}
-            className="w-full h-full object-cover rounded-full" 
-          />
+          {/* Glow rings */}
+          <div className="absolute -inset-2 rounded-full animate-pulse" 
+              style={{
+                background: `radial-gradient(circle, ${ambientColor}50 0%, transparent 70%)`,
+                opacity: 0.7,
+                filter: 'blur(8px)'
+              }}>
+          </div>
+          
+          {/* Spinning holographic ring */}
+          <div className="absolute -inset-1 rounded-full border border-fuchsia-400/50 animate-spin-slow"></div>
+          <div className="absolute -inset-2 rounded-full border border-fuchsia-400/30 animate-spin-slow" style={{animationDirection: 'reverse', animationDuration: '12s'}}></div>
+          
+          {/* Position indicator beam */}
+          <div className="absolute w-[1px] h-[100vh] bg-gradient-to-b from-fuchsia-400/50 via-fuchsia-400/10 to-transparent left-1/2 -translate-x-1/2 -bottom-4 z-0 pointer-events-none"></div>
+          
+          {/* Floating particles */}
+          <div className="absolute -inset-4">
+            <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-fuchsia-300 rounded-full animate-float1 opacity-70"></div>
+            <div className="absolute bottom-1/2 right-1/3 w-1 h-1 bg-fuchsia-200 rounded-full animate-float2 opacity-70"></div>
+          </div>
+          
+          {/* Avatar image container */}
+          <div className="relative w-full h-full rounded-full border-2 border-fuchsia-400 overflow-hidden shadow-glow" 
+               style={{
+                 boxShadow: `0 0 15px ${ambientColor}80, inset 0 0 8px ${ambientColor}60`,
+               }}>
+            {/* Holographic overlay */}
+            <div className="absolute inset-0 holographic-bg opacity-20 z-10 pointer-events-none"></div>
+            
+            {/* Scanline effect */}
+            <div className="absolute inset-0 z-20 pointer-events-none"
+                 style={{
+                   background: 'linear-gradient(to bottom, transparent, transparent 49.9%, rgba(217, 70, 239, 0.3) 50%, transparent 50.1%)',
+                   backgroundSize: '100% 4px',
+                   animation: 'scanline 4s linear infinite',
+                 }}></div>
+            
+            {/* Avatar image */}
+            <img 
+              src={selectedAvatar.image} 
+              alt={selectedAvatar.name}
+              className="w-full h-full object-cover z-0" 
+            />
+          </div>
+          
+          {/* Direction indicator - subtle arrow pointing in movement direction */}
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-fuchsia-400/70 text-xs">
+            <i className="fas fa-chevron-down animate-pulse"></i>
+          </div>
         </div>
         
-        {/* Mall sections - simplified representation with minimal design */}
+        {/* Mall sections - enhanced futuristic representation */}
         <div className="absolute inset-10 flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4 h-full">
-            {/* Electronics */}
+          <div className="grid grid-cols-2 gap-6 h-full">
+            {/* Electronics Section */}
             <div 
-              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all duration-500 group perspective-3d relative overflow-hidden backdrop-blur-sm ${
                 currentSection === 'electronics' 
-                  ? 'bg-blue-500/20 border-2 border-blue-500/30 shadow-glow' 
-                  : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                  ? 'bg-fuchsia-600/20 futuristic-border neon-border shadow-glow' 
+                  : 'bg-black/30 border border-fuchsia-500/10 hover:border-fuchsia-500/30 hover:bg-black/40'
               }`}
+              style={{
+                boxShadow: currentSection === 'electronics' 
+                  ? '0 0 30px rgba(217, 70, 239, 0.3)' 
+                  : 'none'
+              }}
               onClick={() => handleSectionNavigation('electronics')}
             >
-              <div className="text-center">
-                <i className="fas fa-microchip text-3xl mb-1 text-blue-400"></i>
-                <h3 className="text-lg font-bold">الإلكترونيات</h3>
+              {/* Background circuit pattern for electronics */}
+              <div className="absolute inset-0 opacity-10 circuit-overlay"></div>
+              
+              {/* Holographic effect on hover/active */}
+              <div className={`absolute inset-0 opacity-0 ${
+                currentSection === 'electronics' ? 'opacity-20' : 'group-hover:opacity-10'
+              } transition-opacity duration-300 holographic-bg`}></div>
+              
+              {/* Animated glow orb */}
+              <div className={`absolute bottom-4 right-4 w-16 h-16 rounded-full 
+                ${currentSection === 'electronics' ? 'opacity-40' : 'opacity-0 group-hover:opacity-20'} 
+                transition-all duration-500 radial-pulse`}
+                style={{
+                  background: 'radial-gradient(circle, rgba(217, 70, 239, 0.8) 0%, transparent 70%)',
+                  filter: 'blur(10px)'
+                }}
+              ></div>
+              
+              {/* Content with 3D hover effect */}
+              <div className="text-center transform transition-transform duration-500 group-hover:scale-105 relative z-10">
+                {/* Icon with glow effect */}
+                <div className="relative inline-block mb-3">
+                  <i className={`fas fa-microchip text-4xl ${
+                    currentSection === 'electronics' ? 'text-fuchsia-400 text-glow' : 'text-fuchsia-400/80'
+                  } transition-all duration-500 group-hover:text-glow`}></i>
+                  
+                  {/* Floating particles around icon */}
+                  <div className={`absolute -inset-2 ${
+                    currentSection === 'electronics' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  } transition-opacity duration-500`}>
+                    <div className="absolute top-0 left-1/4 w-1 h-1 bg-fuchsia-300 rounded-full animate-float1"></div>
+                    <div className="absolute bottom-0 right-1/4 w-1 h-1 bg-blue-300 rounded-full animate-float2"></div>
+                  </div>
+                </div>
+                
+                {/* Title with glow effect */}
+                <h3 className={`text-xl font-bold ${
+                  currentSection === 'electronics' ? 'text-white text-glow' : 'text-white/90'
+                } transition-all duration-500 group-hover:text-glow`}>الإلكترونيات</h3>
+                
+                {/* Subtle description on hover/active */}
+                <p className={`mt-2 text-xs max-w-[80%] mx-auto ${
+                  currentSection === 'electronics' ? 'opacity-80' : 'opacity-0 group-hover:opacity-60'
+                } transition-all duration-500 text-white/80`}>
+                  أحدث المنتجات التقنية والإلكترونيات المتطورة بتصميمات مستقبلية
+                </p>
               </div>
             </div>
             
-            {/* Clothing */}
+            {/* Clothing Section */}
             <div 
-              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all duration-500 group perspective-3d relative overflow-hidden backdrop-blur-sm ${
                 currentSection === 'clothing' 
-                  ? 'bg-pink-500/20 border-2 border-pink-500/30 shadow-glow' 
-                  : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                  ? 'bg-fuchsia-600/20 futuristic-border neon-border shadow-glow' 
+                  : 'bg-black/30 border border-fuchsia-500/10 hover:border-fuchsia-500/30 hover:bg-black/40'
               }`}
+              style={{
+                boxShadow: currentSection === 'clothing' 
+                  ? '0 0 30px rgba(217, 70, 239, 0.3)' 
+                  : 'none'
+              }}
               onClick={() => handleSectionNavigation('clothing')}
             >
-              <div className="text-center">
-                <i className="fas fa-tshirt text-3xl mb-1 text-pink-400"></i>
-                <h3 className="text-lg font-bold">الأزياء</h3>
+              {/* Background arabesque pattern for clothing */}
+              <div className="absolute inset-0 opacity-10 arabesque-pattern"></div>
+              
+              {/* Holographic effect on hover/active */}
+              <div className={`absolute inset-0 opacity-0 ${
+                currentSection === 'clothing' ? 'opacity-20' : 'group-hover:opacity-10'
+              } transition-opacity duration-300 holographic-bg`}></div>
+              
+              {/* Animated glow orb */}
+              <div className={`absolute top-4 left-4 w-16 h-16 rounded-full 
+                ${currentSection === 'clothing' ? 'opacity-40' : 'opacity-0 group-hover:opacity-20'} 
+                transition-all duration-500 radial-pulse`}
+                style={{
+                  background: 'radial-gradient(circle, rgba(217, 70, 239, 0.8) 0%, transparent 70%)',
+                  filter: 'blur(10px)'
+                }}
+              ></div>
+              
+              {/* Content with 3D hover effect */}
+              <div className="text-center transform transition-transform duration-500 group-hover:scale-105 relative z-10">
+                {/* Icon with glow effect */}
+                <div className="relative inline-block mb-3">
+                  <i className={`fas fa-tshirt text-4xl ${
+                    currentSection === 'clothing' ? 'text-fuchsia-400 text-glow' : 'text-fuchsia-400/80'
+                  } transition-all duration-500 group-hover:text-glow`}></i>
+                  
+                  {/* Floating particles around icon */}
+                  <div className={`absolute -inset-2 ${
+                    currentSection === 'clothing' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  } transition-opacity duration-500`}>
+                    <div className="absolute top-0 right-1/4 w-1 h-1 bg-fuchsia-300 rounded-full animate-float1"></div>
+                    <div className="absolute bottom-0 left-1/4 w-1 h-1 bg-pink-300 rounded-full animate-float2"></div>
+                  </div>
+                </div>
+                
+                {/* Title with glow effect */}
+                <h3 className={`text-xl font-bold ${
+                  currentSection === 'clothing' ? 'text-white text-glow' : 'text-white/90'
+                } transition-all duration-500 group-hover:text-glow`}>الأزياء</h3>
+                
+                {/* Subtle description on hover/active */}
+                <p className={`mt-2 text-xs max-w-[80%] mx-auto ${
+                  currentSection === 'clothing' ? 'opacity-80' : 'opacity-0 group-hover:opacity-60'
+                } transition-all duration-500 text-white/80`}>
+                  أحدث تصميمات الأزياء العالمية بلمسة عربية أصيلة وتقنيات متطورة
+                </p>
               </div>
+            </div>
+            
+            {/* Additional Section Buttons */}
+            <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3">
+              {/* Home Section Button */}
+              <button
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all relative overflow-hidden group ${
+                  currentSection === 'home' 
+                    ? 'bg-fuchsia-600/80 text-white shadow-glow' 
+                    : 'bg-black/40 text-white/70 hover:bg-black/60 border border-fuchsia-500/20'
+                }`}
+                onClick={() => handleSectionNavigation('home')}
+              >
+                {/* Button shine effect */}
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
+                
+                <span className="relative z-10 flex items-center gap-2">
+                  <i className="fas fa-home"></i>
+                  <span>المنزل</span>
+                </span>
+              </button>
+              
+              {/* Plaza Section Button */}
+              <button
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all relative overflow-hidden group ${
+                  currentSection === 'plaza' 
+                    ? 'bg-fuchsia-600/80 text-white shadow-glow' 
+                    : 'bg-black/40 text-white/70 hover:bg-black/60 border border-fuchsia-500/20'
+                }`}
+                onClick={() => handleSectionNavigation('plaza')}
+              >
+                {/* Button shine effect */}
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
+                
+                <span className="relative z-10 flex items-center gap-2">
+                  <i className="fas fa-map-marked-alt"></i>
+                  <span>الساحة</span>
+                </span>
+              </button>
             </div>
           </div>
         </div>
