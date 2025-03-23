@@ -6,6 +6,8 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import CulturalTransition from "@/components/cultural-transition";
+import confetti from 'canvas-confetti';
+import AiShoppingAssistant from "./ai-shopping-assistant";
 
 // Types
 interface AvatarProps {
@@ -126,6 +128,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const [show3DView, setShow3DView] = useState(false);
   const [showSpecialEffect, setShowSpecialEffect] = useState(false);
   const [specialEffectType, setSpecialEffectType] = useState<'sparkle' | 'confetti' | 'hologram'>('sparkle');
+  const [showAiAssistant, setShowAiAssistant] = useState(true);
   
   // References
   const mallRef = useRef<HTMLDivElement>(null);
