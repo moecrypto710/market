@@ -55,6 +55,9 @@ export default function VRMall({ products }: VRMallProps) {
   const [showStoreDetails, setShowStoreDetails] = useState(false);
   const [isTryingOn, setIsTryingOn] = useState(false);
   const [showHelpMenu, setShowHelpMenu] = useState(false);
+  const [activeSection, setActiveSection] = useState<any | null>(null);
+  const [selectedFeature, setSelectedFeature] = useState<any | null>(null);
+  const [showFeatureDetails, setShowFeatureDetails] = useState(false);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   
   // New avatar enhancement state variables
@@ -233,18 +236,286 @@ export default function VRMall({ products }: VRMallProps) {
   // Mall layout sections definition - stores, categories, and navigation points
   const storeSections = [
     // Main mall structure
-    { id: 'main-entrance', name: 'المدخل الرئيسي', x: 50, y: 5, width: 30, height: 10, type: 'entrance', icon: 'door-open', backgroundColor: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.3)' },
-    { id: 'central-plaza', name: 'الساحة المركزية', x: 50, y: 40, width: 20, height: 20, type: 'plaza', icon: 'compass', backgroundColor: 'rgba(94,53,177,0.1)', borderColor: 'rgba(94,53,177,0.3)' },
-    { id: 'west-wing', name: 'الجناح الغربي', x: 25, y: 30, width: 40, height: 50, type: 'wing', backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.1)' },
-    { id: 'east-wing', name: 'الجناح الشرقي', x: 75, y: 30, width: 40, height: 50, type: 'wing', backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.1)' },
-    { id: 'food-court', name: 'منطقة المطاعم', x: 50, y: 85, width: 40, height: 15, type: 'special', icon: 'utensils', backgroundColor: 'rgba(244,114,182,0.1)', borderColor: 'rgba(244,114,182,0.2)' },
-    { id: 'vr-experience', name: 'تجربة الواقع الافتراضي', x: 50, y: 60, width: 15, height: 15, type: 'special', icon: 'vr-cardboard', backgroundColor: 'rgba(234,179,8,0.1)', borderColor: 'rgba(234,179,8,0.2)' },
+    { 
+      id: 'main-entrance', 
+      name: 'المدخل الرئيسي', 
+      x: 50, y: 5, width: 30, height: 10, 
+      type: 'entrance', 
+      icon: 'door-open', 
+      backgroundColor: 'rgba(0,0,0,0.3)', 
+      borderColor: 'rgba(255,255,255,0.3)',
+      features: [
+        {
+          id: 'ai-welcome',
+          name: 'استقبال ذكي',
+          description: 'مرحباً بك في مول أمريكي! سأكون مرشدك الافتراضي اليوم',
+          icon: 'robot'
+        },
+        {
+          id: 'hologram-map',
+          name: 'خريطة هولوجرام',
+          description: 'خريطة ثلاثية الأبعاد تفاعلية للمول بتقنية الهولوجرام',
+          icon: 'map-3d'
+        }
+      ]
+    },
+    { 
+      id: 'central-plaza', 
+      name: 'الساحة المركزية', 
+      x: 50, y: 40, width: 20, height: 20, 
+      type: 'plaza', 
+      icon: 'compass', 
+      backgroundColor: 'rgba(94,53,177,0.1)', 
+      borderColor: 'rgba(94,53,177,0.3)',
+      features: [
+        {
+          id: 'interactive-fountain',
+          name: 'نافورة تفاعلية',
+          description: 'نافورة رقمية تتفاعل مع حركة المتسوقين وتعرض العروض الخاصة',
+          icon: 'tint'
+        },
+        {
+          id: 'product-showcase',
+          name: 'عروض المنتجات',
+          description: 'منصة عرض دائرية تستعرض أحدث المنتجات بتقنية ثلاثية الأبعاد',
+          icon: 'cube'
+        },
+        {
+          id: 'social-zone',
+          name: 'منطقة اجتماعية',
+          description: 'تفاعل مع متسوقين آخرين وشارك تجربتك في المول الافتراضي',
+          icon: 'users'
+        }
+      ]
+    },
+    { 
+      id: 'west-wing', 
+      name: 'الجناح الغربي', 
+      x: 25, y: 30, width: 40, height: 50, 
+      type: 'wing', 
+      backgroundColor: 'rgba(0,0,0,0.1)', 
+      borderColor: 'rgba(255,255,255,0.1)'
+    },
+    { 
+      id: 'east-wing', 
+      name: 'الجناح الشرقي', 
+      x: 75, y: 30, width: 40, height: 50, 
+      type: 'wing', 
+      backgroundColor: 'rgba(0,0,0,0.1)', 
+      borderColor: 'rgba(255,255,255,0.1)'
+    },
+    { 
+      id: 'food-court', 
+      name: 'منطقة المطاعم', 
+      x: 50, y: 85, width: 40, height: 15, 
+      type: 'special', 
+      icon: 'utensils', 
+      backgroundColor: 'rgba(244,114,182,0.1)', 
+      borderColor: 'rgba(244,114,182,0.2)',
+      features: [
+        {
+          id: 'virtual-tasting',
+          name: 'تذوق افتراضي',
+          description: 'تجربة تذوق افتراضية للأطعمة المختلفة مع تأثيرات حسية',
+          icon: 'cookie-bite'
+        },
+        {
+          id: 'chef-holograms',
+          name: 'طهاة افتراضيون',
+          description: 'عروض طهي حية من طهاة عالميين بتقنية الهولوجرام',
+          icon: 'hat-chef'
+        }
+      ]
+    },
+    { 
+      id: 'vr-experience', 
+      name: 'تجربة الواقع الافتراضي', 
+      x: 50, y: 60, width: 15, height: 15, 
+      type: 'special', 
+      icon: 'vr-cardboard', 
+      backgroundColor: 'rgba(234,179,8,0.1)', 
+      borderColor: 'rgba(234,179,8,0.2)',
+      features: [
+        {
+          id: 'product-simulation',
+          name: 'محاكاة المنتجات',
+          description: 'جرب المنتجات في بيئات واقعية مختلفة قبل الشراء',
+          icon: 'vr-cardboard'
+        },
+        {
+          id: 'virtual-runway',
+          name: 'منصة عرض افتراضية',
+          description: 'شاهد عروض أزياء حية للماركات العالمية على منصة افتراضية',
+          icon: 'person-walking'
+        }
+      ]
+    },
     
-    // Category zones
-    { id: 'electronics', name: 'منطقة الإلكترونيات', x: 25, y: 30, width: 25, height: 25, type: 'category', icon: 'laptop', backgroundColor: 'rgba(14,165,233,0.05)', borderColor: 'rgba(14,165,233,0.15)' },
-    { id: 'clothing', name: 'منطقة الملابس', x: 75, y: 30, width: 25, height: 25, type: 'category', icon: 'shirt', backgroundColor: 'rgba(236,72,153,0.05)', borderColor: 'rgba(236,72,153,0.15)' },
-    { id: 'home', name: 'منطقة المنزل', x: 25, y: 70, width: 25, height: 25, type: 'category', icon: 'home', backgroundColor: 'rgba(34,197,94,0.05)', borderColor: 'rgba(34,197,94,0.15)' },
-    { id: 'sports', name: 'منطقة الرياضة', x: 75, y: 70, width: 25, height: 25, type: 'category', icon: 'dumbbell', backgroundColor: 'rgba(168,85,247,0.05)', borderColor: 'rgba(168,85,247,0.15)' },
+    // Category zones with interactive features
+    { 
+      id: 'electronics', 
+      name: 'منطقة الإلكترونيات', 
+      x: 25, y: 30, width: 25, height: 25, 
+      type: 'category', 
+      icon: 'laptop', 
+      backgroundColor: 'rgba(14,165,233,0.05)', 
+      borderColor: 'rgba(14,165,233,0.15)',
+      features: [
+        {
+          id: 'virtual-demo',
+          name: 'العروض الافتراضية',
+          description: 'تجربة حية للمنتجات الإلكترونية قبل الشراء',
+          icon: 'vr-cardboard'
+        },
+        {
+          id: 'tech-comparison',
+          name: 'مقارنة المنتجات',
+          description: 'مقارنة مواصفات الأجهزة الحديثة بتقنية هولوجرام',
+          icon: 'balance-scale'
+        },
+        {
+          id: 'future-tech',
+          name: 'تقنيات المستقبل',
+          description: 'استعراض أحدث التقنيات المستقبلية والابتكارات',
+          icon: 'atom'
+        }
+      ]
+    },
+    { 
+      id: 'clothing', 
+      name: 'منطقة الملابس', 
+      x: 75, y: 30, width: 25, height: 25, 
+      type: 'category', 
+      icon: 'shirt', 
+      backgroundColor: 'rgba(236,72,153,0.05)', 
+      borderColor: 'rgba(236,72,153,0.15)',
+      features: [
+        {
+          id: 'virtual-fitting',
+          name: 'قياس افتراضي',
+          description: 'تجربة الملابس افتراضياً على صورتك الشخصية',
+          icon: 'user-check'
+        },
+        {
+          id: 'fashion-show',
+          name: 'عرض أزياء',
+          description: 'مشاهدة عروض أزياء حية للتشكيلات الجديدة',
+          icon: 'walking'
+        },
+        {
+          id: 'personal-stylist',
+          name: 'مصمم شخصي',
+          description: 'الحصول على نصائح أزياء من مصمم افتراضي ذكي',
+          icon: 'user-tie'
+        }
+      ]
+    },
+    { 
+      id: 'home', 
+      name: 'منطقة المنزل', 
+      x: 25, y: 70, width: 25, height: 25, 
+      type: 'category', 
+      icon: 'home', 
+      backgroundColor: 'rgba(34,197,94,0.05)', 
+      borderColor: 'rgba(34,197,94,0.15)',
+      features: [
+        {
+          id: 'room-design',
+          name: 'تصميم الغرف',
+          description: 'صمم غرفتك باستخدام منتجاتنا بتقنية ثلاثية الأبعاد',
+          icon: 'pencil-ruler'
+        },
+        {
+          id: 'smart-home',
+          name: 'المنزل الذكي',
+          description: 'تجربة حية لأنظمة المنزل الذكي المتكاملة',
+          icon: 'home'
+        },
+        {
+          id: 'furniture-preview',
+          name: 'معاينة الأثاث',
+          description: 'شاهد الأثاث في منزلك بتقنية الواقع المعزز قبل الشراء',
+          icon: 'couch'
+        }
+      ]
+    },
+    { 
+      id: 'sports', 
+      name: 'منطقة الرياضة', 
+      x: 75, y: 70, width: 25, height: 25, 
+      type: 'category', 
+      icon: 'dumbbell', 
+      backgroundColor: 'rgba(168,85,247,0.05)', 
+      borderColor: 'rgba(168,85,247,0.15)',
+      features: [
+        {
+          id: 'fitness-test',
+          name: 'اختبار اللياقة',
+          description: 'تجربة معدات اللياقة البدنية في بيئة افتراضية',
+          icon: 'heartbeat'
+        },
+        {
+          id: 'sports-game',
+          name: 'ألعاب رياضية',
+          description: 'تجربة الألعاب الرياضية الافتراضية باستخدام معداتنا',
+          icon: 'futbol'
+        },
+        {
+          id: 'athlete-avatar',
+          name: 'لقاء الرياضيين',
+          description: 'تفاعل مع نجوم الرياضة الشهيرة في تجربة افتراضية',
+          icon: 'medal'
+        }
+      ]
+    },
+    // New exclusive zone
+    { 
+      id: 'vip-lounge', 
+      name: 'صالة كبار الزوار', 
+      x: 85, y: 15, width: 15, height: 15, 
+      type: 'special', 
+      icon: 'crown', 
+      backgroundColor: 'rgba(156,39,176,0.1)', 
+      borderColor: 'rgba(156,39,176,0.2)',
+      features: [
+        {
+          id: 'exclusive-products',
+          name: 'منتجات حصرية',
+          description: 'تشكيلة من المنتجات الحصرية لكبار العملاء',
+          icon: 'gem'
+        },
+        {
+          id: 'personal-concierge',
+          name: 'خدمة شخصية',
+          description: 'مساعد تسوق شخصي لتلبية احتياجاتك',
+          icon: 'user-tie'
+        }
+      ]
+    },
+    // Innovation hub
+    { 
+      id: 'innovation-hub', 
+      name: 'مركز الابتكار', 
+      x: 15, y: 15, width: 15, height: 15, 
+      type: 'special', 
+      icon: 'lightbulb', 
+      backgroundColor: 'rgba(3,169,244,0.1)', 
+      borderColor: 'rgba(3,169,244,0.2)',
+      features: [
+        {
+          id: 'concept-products',
+          name: 'منتجات مفاهيمية',
+          description: 'استكشاف المنتجات المستقبلية التي لم تصل للأسواق بعد',
+          icon: 'flask'
+        },
+        {
+          id: 'tech-demos',
+          name: 'عروض تقنية',
+          description: 'تجارب حية لأحدث التقنيات والابتكارات',
+          icon: 'microchip'
+        }
+      ]
+    }
   ];
 
   // Check if avatar is near a product with enhanced interaction
@@ -536,6 +807,42 @@ export default function VRMall({ products }: VRMallProps) {
   };
   
   const currentSection = getCurrentSection();
+  
+  // Update active section when avatar moves between sections
+  useEffect(() => {
+    if (!selectedAvatar || !vrEnabled) return;
+    
+    const newSection = getCurrentSection();
+    
+    // If entered a new section with features
+    if (newSection && newSection !== activeSection && newSection.features) {
+      setActiveSection(newSection);
+      
+      // Show notification about section features
+      toast({
+        title: `أهلاً بك في ${newSection.name}!`,
+        description: `اكتشف الميزات المتاحة في هذه المنطقة: ${newSection.features.map(f => f.name).join('، ')}`,
+        duration: 5000,
+      });
+      
+      // If this is a first-time visit to any section with features
+      if (!completedTasks.includes('visitSection')) {
+        setCompletedTasks(prev => [...prev, 'visitSection']);
+        
+        toast({
+          title: "تلميح من المساعد الذكي",
+          description: "انقر على أيقونات الميزات المتوفرة في المنطقة للتفاعل معها وتجربة مزايا المول الافتراضي",
+          duration: 6000,
+        });
+      }
+    } 
+    // If leaving a section
+    else if (!newSection && activeSection) {
+      setActiveSection(null);
+      setSelectedFeature(null);
+      setShowFeatureDetails(false);
+    }
+  }, [avatarPosition, storeSections, selectedAvatar, vrEnabled, activeSection, completedTasks]);
   
   return (
     <div 
