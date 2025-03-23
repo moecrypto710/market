@@ -4,7 +4,6 @@ import { Reward } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface RewardCardProps {
@@ -21,7 +20,7 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
     if (claimed || userPoints < reward.pointsRequired) return;
     
     try {
-      const response = await fetch(`/api/rewards/${reward.id}/claim`, {
+      const response = await fetch(`/api/rewards/${reward.id}/redeem`, {
         method: 'POST',
         credentials: 'include'
       });
