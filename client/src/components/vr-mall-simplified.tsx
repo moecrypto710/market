@@ -470,12 +470,35 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             transformOrigin: 'center bottom',
           }}></div>
           
-          {/* Floating particles */}
+          {/* Holographic overlay */}
+          <div className="absolute inset-0 holographic-bg opacity-10"></div>
+          
+          {/* Scanning lines */}
+          <div className="absolute left-0 right-0 h-[1px] w-full bg-blue-400/30 animate-scan-slow"></div>
+          
+          {/* Enhanced floating particles with more interactive elements */}
           <div className="absolute top-0 left-0 w-2 h-2 bg-purple-500 rounded-full animate-float1"></div>
           <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float2"></div>
           <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-amber-400 rounded-full animate-float3"></div>
           <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-purple-300 rounded-full animate-float4"></div>
           <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-float5"></div>
+          
+          {/* New interactive elements */}
+          <div className="absolute top-[15%] left-[25%] w-3 h-3 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-glow-pulse"></div>
+          <div className="absolute bottom-[20%] right-[20%] w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-float-slow"></div>
+          
+          {/* Arabic-inspired geometric patterns */}
+          <div className="absolute top-[10%] right-[10%] w-20 h-20 border-2 border-white/10 rounded-full animate-pattern-rotate opacity-20">
+            <div className="absolute inset-2 border border-white/5 rounded-full"></div>
+            <div className="absolute inset-4 border border-white/5 rounded-full"></div>
+            <div className="absolute inset-6 border border-white/5 rounded-full"></div>
+          </div>
+          
+          <div className="absolute bottom-[15%] left-[15%] w-16 h-16 animate-pattern-rotate opacity-30">
+            <div className="absolute inset-0 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+            <div className="absolute inset-2 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+            <div className="absolute inset-4 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
+          </div>
         </div>
         
         {/* Dynamic Ambient Mood Lighting */}
