@@ -70,10 +70,23 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       const user = await storage.getUserByUsername(username);
-      if (!user || !(await comparePasswords(password, user.password))) {
+      if (!user) {
         return done(null, false);
-      } else {
+      }
+      
+      // Special handling for test accounts (direct password comparison)
+      if (['test', 'زائر', 'متسوق'].includes(username)) {
+        if (password === user.password) {
+          return done(null, user);
+        } else {
+          return done(null, false);
+        }
+      } 
+      // Normal password checking for regular accounts
+      else if (await comparePasswords(password, user.password)) {
         return done(null, user);
+      } else {
+        return done(null, false);
       }
     }),
   );

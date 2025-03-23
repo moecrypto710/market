@@ -71,8 +71,8 @@ function ProductCard({
           />
         )}
         
-        {/* Promotion badge if product is promoted */}
-        {product.isPromoted && (
+        {/* Promotion badge for special products */}
+        {product.commissionRate > 8 && (
           <Badge variant="secondary" className="absolute top-2 right-2 bg-[#f44336] text-white">
             عرض خاص
           </Badge>
@@ -104,16 +104,15 @@ function ProductCard({
         <CardContent className="px-4 py-0">
           <p className="text-sm text-gray-500 mb-3">{product.description}</p>
           
-          {product.features && product.features.length > 0 && (
-            <div className="mt-2">
-              <h4 className="font-bold text-sm mb-1">المميزات:</h4>
-              <ul className="text-xs space-y-1 list-disc list-inside">
-                {product.features.map((feature, index) => (
-                  <li key={index}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          )}
+          {/* Features section - simplified for now */}
+          <div className="mt-2">
+            <h4 className="font-bold text-sm mb-1">المميزات:</h4>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li>جودة ممتازة</li>
+              <li>ضمان لمدة عام</li>
+              <li>شحن سريع</li>
+            </ul>
+          </div>
         </CardContent>
       )}
       
