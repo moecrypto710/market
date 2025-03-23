@@ -122,6 +122,10 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [currentSection, setCurrentSection] = useState<string>('entrance');
   const [ambientColor, setAmbientColor] = useState('#5e35b1');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [show3DView, setShow3DView] = useState(false);
+  const [showSpecialEffect, setShowSpecialEffect] = useState(false);
+  const [specialEffectType, setSpecialEffectType] = useState<'sparkle' | 'confetti' | 'hologram'>('sparkle');
   
   // References
   const mallRef = useRef<HTMLDivElement>(null);
@@ -249,6 +253,15 @@ export default function VRMallSimplified({ products }: VRMallProps) {
     return <AvatarSelectionScreen onSelect={handleSelectAvatar} />;
   }
   
+  // Get products for current section
+  const sectionProducts = products.filter(product => {
+    if (currentSection === 'electronics') return product.category === 'electronics';
+    if (currentSection === 'clothing') return product.category === 'clothing';
+    if (currentSection === 'home') return product.category === 'home';
+    if (currentSection === 'sports') return product.category === 'sports';
+    return true; // Show all in other sections
+  }).slice(0, 3);
+  
   return (
     <>
       <CulturalTransition 
@@ -256,6 +269,145 @@ export default function VRMallSimplified({ products }: VRMallProps) {
         style={transitionStyle as any} 
         onFinish={handleTransitionFinish} 
       />
+      
+      {/* 3D Product View Modal */}
+      {selectedProduct && show3DView && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            onClick={() => {
+              setShow3DView(false);
+              setSelectedProduct(null);
+              setShowSpecialEffect(false);
+            }}
+          ></div>
+          
+          <div className="relative w-[80%] h-[80%] max-w-4xl bg-[#0a0120]/90 border border-white/20 rounded-xl p-8 flex flex-col z-10">
+            {/* Close button */}
+            <button 
+              className="absolute top-4 right-4 text-white/60 hover:text-white text-xl"
+              onClick={() => {
+                setShow3DView(false);
+                setSelectedProduct(null);
+                setShowSpecialEffect(false);
+              }}
+            >
+              <i className="fas fa-times"></i>
+            </button>
+            
+            <div className="flex flex-col md:flex-row h-full">
+              {/* 3D Product View */}
+              <div className="md:w-2/3 h-full relative">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* 3D Effect Container */}
+                  <div className="relative w-80 h-80">
+                    {/* 3D effect with moving shadows and highlights */}
+                    <div 
+                      className="absolute inset-0 rounded-full opacity-20"
+                      style={{
+                        background: `radial-gradient(circle, ${ambientColor} 0%, transparent 70%)`,
+                        animation: 'pulse 3s infinite'
+                      }}
+                    ></div>
+                    
+                    {/* Hologram effect */}
+                    {showSpecialEffect && specialEffectType === 'hologram' && (
+                      <>
+                        <div className="absolute inset-0 border-2 border-blue-400/30 rounded-full animate-pulse"></div>
+                        <div className="absolute inset-4 border border-blue-400/20 rounded-full animate-spin-slow"></div>
+                        
+                        {/* Scanning lines */}
+                        <div 
+                          className="absolute inset-0 overflow-hidden rounded-full"
+                          style={{ 
+                            backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(77, 213, 254, 0.1) 4px, rgba(77, 213, 254, 0.1) 8px)',
+                            animation: 'scan 8s linear infinite'
+                          }}
+                        ></div>
+                        
+                        {/* Glowing dots */}
+                        <div className="absolute top-1/3 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float1"></div>
+                        <div className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-blue-300 rounded-full animate-float2"></div>
+                      </>
+                    )}
+                    
+                    {/* Floating product image */}
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center transform hover:scale-110 transition-transform"
+                      style={{ animation: 'float 6s ease-in-out infinite' }}
+                    >
+                      <img 
+                        src={selectedProduct.imageUrl || 'https://via.placeholder.com/300'} 
+                        alt={selectedProduct.name}
+                        className="max-w-full max-h-full object-contain z-10" 
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Interactive elements */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  <button 
+                    className="bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center"
+                    onClick={() => setSpecialEffectType('sparkle')}
+                  >
+                    <i className="fas fa-sparkles text-yellow-400"></i>
+                  </button>
+                  
+                  <button 
+                    className="bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center"
+                    onClick={() => setSpecialEffectType('hologram')}
+                  >
+                    <i className="fas fa-cube text-blue-400"></i>
+                  </button>
+                  
+                  <button 
+                    className="bg-white/10 hover:bg-white/20 rounded-full w-10 h-10 flex items-center justify-center"
+                    onClick={() => setSpecialEffectType('confetti')}
+                  >
+                    <i className="fas fa-bahai text-pink-400"></i>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Product information */}
+              <div className="md:w-1/3 p-4 flex flex-col">
+                <h2 className="text-2xl font-bold mb-2">{selectedProduct.name}</h2>
+                <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-black font-bold py-1 px-3 rounded-full mb-4 w-fit">
+                  {selectedProduct.price} ج.م
+                </div>
+                
+                <p className="text-white/70 mb-4 text-sm">{selectedProduct.description}</p>
+                
+                <div className="border border-white/10 rounded p-3 mb-4 bg-white/5">
+                  <h3 className="font-bold mb-2">مميزات المنتج</h3>
+                  <ul className="text-sm space-y-1 text-white/80">
+                    <li className="flex items-center">
+                      <i className="fas fa-check text-green-400 mr-2 text-xs"></i>
+                      <span>ضمان لمدة عامين</span>
+                    </li>
+                    <li className="flex items-center">
+                      <i className="fas fa-check text-green-400 mr-2 text-xs"></i>
+                      <span>توصيل مجاني</span>
+                    </li>
+                    <li className="flex items-center">
+                      <i className="fas fa-check text-green-400 mr-2 text-xs"></i>
+                      <span>متوفر في المخزون</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600">
+                    <i className="fas fa-shopping-cart mr-2"></i>
+                    إضافة إلى السلة
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div 
         ref={mallRef}
@@ -419,8 +571,22 @@ export default function VRMallSimplified({ products }: VRMallProps) {
                   <p className="text-white/70 text-xs mb-2 line-clamp-2">{product.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-amber-400">{product.price} ج.م</span>
-                    <button className="bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-xs">
-                      عرض
+                    <button 
+                      className="bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-xs"
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setShow3DView(true);
+                        setShowSpecialEffect(true);
+                        setSpecialEffectType('hologram');
+                        
+                        // Show toast
+                        toast({
+                          title: "عرض المنتج ثلاثي الأبعاد",
+                          description: `استخدم الفأرة لتدوير المنتج والتحكم بالعرض المجسم`
+                        });
+                      }}
+                    >
+                      عرض ثلاثي الأبعاد
                     </button>
                   </div>
                 </div>
