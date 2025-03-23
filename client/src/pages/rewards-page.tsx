@@ -3,6 +3,7 @@ import { Reward } from "@shared/schema";
 import { Progress } from "@/components/ui/progress";
 import { RewardCard } from "@/components/reward-card";
 import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function RewardsPage() {
   const { user } = useAuth();
@@ -18,14 +19,14 @@ export default function RewardsPage() {
   const earningMethods = [
     {
       id: 1,
-      title: "إتمام عمليات الشراء",
-      description: "10 نقاط لكل $1 تنفقه",
+      title: "عمليات الشراء",
+      description: "10 نقاط لكل 100 جنيه",
       icon: "shopping-cart"
     },
     {
       id: 2,
       title: "دعوة أصدقاء",
-      description: "200 نقطة لكل صديق يسجل",
+      description: "200 نقطة لكل صديق",
       icon: "user-plus"
     },
     {
@@ -37,54 +38,51 @@ export default function RewardsPage() {
   ];
   
   return (
-    <div className="px-4 py-6">
+    <div className="container mx-auto px-4 py-6">
       <h2 className="text-2xl font-bold mb-6">برنامج المكافآت</h2>
       
-      {/* Current Points */}
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-6">
-        <div className="text-center mb-4">
-          <span className="text-[#ffeb3b] text-4xl font-bold block">{currentPoints}</span>
-          <p className="text-sm text-white/70">نقاط المكافآت الخاصة بك</p>
-        </div>
-        
-        <div className="mb-4">
-          <div className="flex justify-between text-sm mb-1">
-            <span>المستوى التالي:</span>
-            <span>{nextRewardLevel} نقطة</span>
+      {/* Current Points - Simplified */}
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="text-center mb-4">
+            <span className="text-3xl font-bold block text-[#5e35b1]">{currentPoints}</span>
+            <p className="text-sm text-gray-600 dark:text-gray-400">نقاط المكافآت</p>
           </div>
-          <Progress value={progressPercentage} className="h-3 bg-white/20" />
-        </div>
-        
-        <button className="w-full bg-[#ffeb3b] text-[#2a1f6f] py-2 rounded-lg font-bold hover:bg-[#fdd835] transition duration-300">
-          استبدال النقاط
-        </button>
-      </div>
+          
+          <div className="mb-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span>0</span>
+              <span>{nextRewardLevel}</span>
+            </div>
+            <Progress value={progressPercentage} className="h-2" />
+          </div>
+        </CardContent>
+      </Card>
       
-      {/* Available Rewards */}
+      {/* Available Rewards - Grid Layout */}
       <div className="mb-8">
-        <h3 className="text-lg font-bold mb-4">المكافآت المتاحة</h3>
-        
-        <div className="space-y-4">
+        <h3 className="text-xl font-bold mb-4">المكافآت المتاحة</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {rewards?.map((reward) => (
             <RewardCard key={reward.id} reward={reward} userPoints={currentPoints} />
           ))}
         </div>
       </div>
       
-      {/* How to Earn */}
-      <div>
-        <h3 className="text-lg font-bold mb-4">كيف تكسب النقاط</h3>
-        <div className="space-y-3">
+      {/* How to Earn - Simplified */}
+      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+        <h3 className="text-xl font-bold mb-4">كيف تكسب النقاط</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {earningMethods.map((method) => (
-            <div key={method.id} className="bg-white/10 backdrop-blur-md rounded-lg p-4 flex items-center">
-              <div className="bg-[#7e57c2]/50 w-10 h-10 rounded-full flex items-center justify-center ml-4">
-                <i className={`fas fa-${method.icon}`}></i>
-              </div>
-              <div>
-                <h4 className="font-bold">{method.title}</h4>
-                <p className="text-sm text-white/70">{method.description}</p>
-              </div>
-            </div>
+            <Card key={method.id} className="border-0">
+              <CardContent className="pt-6 text-center">
+                <div className="bg-[#5e35b1] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i className={`fas fa-${method.icon}`}></i>
+                </div>
+                <h4 className="font-bold mb-1">{method.title}</h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{method.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
