@@ -26,8 +26,8 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 // Sample guest account for quick login
 const GUEST_ACCOUNTS = [
-  { username: "زائر", password: "guest123" },
-  { username: "متسوق", password: "shop123" },
+  { username: "زائر", password: "guest123", icon: "fas fa-user-alt", color: "bg-amber-500" },
+  { username: "متسوق", password: "shop123", icon: "fas fa-shopping-bag", color: "bg-purple-500" },
 ];
 
 export default function AuthPage() {
@@ -87,37 +87,72 @@ export default function AuthPage() {
     registerMutation.mutate(userData);
   };
 
-  const handleQuickLogin = async (account: { username: string; password: string }) => {
+  const handleQuickLogin = async (account: { username: string; password: string; icon?: string }) => {
     setQuickLoginLoading(true);
+    
+    // First show a welcome toast
+    toast({
+      title: "جاري تسجيل الدخول...",
+      description: `أهلاً بك ${account.username}! جارٍ تحضير تجربة التسوق الافتراضية...`,
+    });
+    
     try {
+      // Set a short delay to show the loading state and make the experience feel smoother
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Perform actual login
       await loginMutation.mutateAsync(account);
+      
       toast({
         title: "تم تسجيل الدخول بنجاح",
-        description: `مرحباً ${account.username}!`,
+        description: `مرحباً ${account.username}! استمتع بتجربة التسوق الافتراضية`,
       });
     } catch (error) {
       console.error("Quick login failed:", error);
       toast({
         title: "فشل تسجيل الدخول",
-        description: "حاول مرة أخرى",
+        description: "حاول مرة أخرى أو جرب حساب آخر",
         variant: "destructive",
       });
+    } finally {
+      setQuickLoginLoading(false);
     }
-    setQuickLoginLoading(false);
   };
 
-  const handleLoginWithSocial = (provider: string) => {
+  const handleLoginWithSocial = async (provider: string) => {
     // Here we would implement social login
     // For now, we'll just use a placeholder guest login
     setQuickLoginLoading(true);
-    setTimeout(() => {
-      loginMutation.mutate({
-        username: "social_user",
-        password: "social123"
-      }, {
-        onSettled: () => setQuickLoginLoading(false)
+    
+    toast({
+      title: "جاري تسجيل الدخول...",
+      description: `جارٍ تسجيل الدخول باستخدام ${provider === 'facebook' ? 'فيسبوك' : 'جوجل'}...`,
+    });
+    
+    try {
+      // Simulate a delay for network request
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Default guest login since we don't have real social login yet
+      await loginMutation.mutateAsync({
+        username: "زائر",
+        password: "guest123"
       });
-    }, 1000);
+      
+      toast({
+        title: "تم تسجيل الدخول بنجاح",
+        description: `تم تسجيل دخولك باستخدام ${provider === 'facebook' ? 'فيسبوك' : 'جوجل'}`,
+      });
+    } catch (error) {
+      console.error("Social login failed:", error);
+      toast({
+        title: "فشل تسجيل الدخول",
+        description: "حاول مرة أخرى أو استخدم طريقة تسجيل دخول أخرى",
+        variant: "destructive",
+      });
+    } finally {
+      setQuickLoginLoading(false);
+    }
   };
 
   // Redirect if already logged in
@@ -144,23 +179,29 @@ export default function AuthPage() {
               <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
                 {/* Quick Login Options */}
                 <div className="mb-6">
-                  <div className="text-sm text-white/70 mb-3 text-center">دخول سريع</div>
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    {GUEST_ACCOUNTS.map((account) => (
-                      <Button 
-                        key={account.username}
-                        variant="outline" 
-                        className="border-white/20 hover:bg-white/10 hover:text-white"
-                        onClick={() => handleQuickLogin(account)}
-                        disabled={quickLoginLoading || loginMutation.isPending}
-                      >
-                        <i className="fas fa-user-alt mr-2"></i>
-                        {account.username}
-                      </Button>
-                    ))}
+                  <div className="bg-[#ffeb3b]/10 p-4 rounded-lg mb-6 border border-[#ffeb3b]/30">
+                    <h3 className="text-center text-lg font-bold mb-2 text-[#ffeb3b]">دخول سريع</h3>
+                    <p className="text-center text-white/70 text-sm mb-4">جرب تطبيقنا فوراً بدون تسجيل حساب جديد</p>
+                    <div className="grid gap-3">
+                      {GUEST_ACCOUNTS.map((account) => (
+                        <Button 
+                          key={account.username}
+                          variant="outline" 
+                          className={`border-white/20 hover:bg-white/10 hover:text-white group h-14 relative overflow-hidden`}
+                          onClick={() => handleQuickLogin(account)}
+                          disabled={quickLoginLoading || loginMutation.isPending}
+                        >
+                          <div className={`absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity ${account.color}`}></div>
+                          <div className="relative flex items-center justify-center w-full">
+                            <i className={`${account.icon} mr-2 text-xl`}></i>
+                            <span className="text-lg">تسوق كـ {account.username}</span>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 mb-4">
                     <Button 
                       variant="outline" 
                       className="border-white/20 hover:bg-blue-600 hover:text-white"

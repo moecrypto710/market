@@ -199,17 +199,41 @@ export class MemStorage implements IStorage {
 
   // Initialize sample data
   private initSampleData() {
-    // Create a test user
-    const testUser: User = {
-      id: this.currentId.users++,
-      username: "test",
-      password: "e0f68f3d235d8958784c7e4215fc5bc408d7e033ee4b4fcf42a7267b77954e13.e10694e83beae2d8db7111dd9c1c9af0", // "password123"
-      email: "test@example.com",
-      fullName: "مستخدم تجريبي",
-      points: 500,
-      affiliateCode: "TESTUSER",
-    };
-    this.users.set(testUser.id, testUser);
+    // Create test users
+    const users: User[] = [
+      {
+        id: this.currentId.users++,
+        username: "test",
+        password: "e0f68f3d235d8958784c7e4215fc5bc408d7e033ee4b4fcf42a7267b77954e13.e10694e83beae2d8db7111dd9c1c9af0", // "password123"
+        email: "test@example.com",
+        fullName: "مستخدم تجريبي",
+        points: 500,
+        affiliateCode: "TESTUSER",
+      },
+      {
+        id: this.currentId.users++,
+        username: "زائر", // 'Guest' in Arabic
+        password: "d63e3ce5e1943c1e20a7364f374a9eaaa517c84c62aaceff8ee02267b2d5e39c.d1cc34089e5aec04f8c2d5cba84347aa", // "guest123"
+        email: "guest@example.com",
+        fullName: "زائر",
+        points: 100,
+        affiliateCode: "GUEST001",
+      },
+      {
+        id: this.currentId.users++,
+        username: "متسوق", // 'Shopper' in Arabic
+        password: "a98cd417cf943fb1daa9a2f8fe764c25c38cd6c9edf4bf6da72d96701778b04c.8e17faed0cf9ac80cb32c9a64f8c8e7a", // "shop123"
+        email: "shopper@example.com", 
+        fullName: "متسوق",
+        points: 200,
+        affiliateCode: "SHOPPER001",
+      }
+    ];
+    
+    // Add all users to the storage
+    users.forEach(user => {
+      this.users.set(user.id, user);
+    });
     
     // Sample products
     const productData: Omit<Product, "id">[] = [
