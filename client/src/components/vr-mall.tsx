@@ -912,6 +912,26 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
+  // Get ambient color scheme based on current section using useMemo
+  const currentColors = useMemo(() => {
+    if (!currentSection) return categoryColors.default;
+    
+    // If section has an explicit category, use it
+    if (currentSection.category && 
+        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.category)) {
+      return categoryColors[currentSection.category as keyof typeof categoryColors];
+    }
+    
+    // For category sections, use their id
+    if (currentSection.type === 'category' && 
+        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.id)) {
+      return categoryColors[currentSection.id as keyof typeof categoryColors];
+    }
+    
+    // Fallback to default colors
+    return categoryColors.default;
+  }, [currentSection]);
+  
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
     setShowTransition(false);
@@ -2284,10 +2304,10 @@ export default function VRMall({ products }: VRMallProps) {
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
-                  {selectedBrand.vrFeatures?.map((feature, index) => (
+                  {selectedBrand.vrFeatures?.map((feature: {name: string, icon: string, description: string}, index: number) => (
                     <div key={index} className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 flex items-center">
-                      <i className="fas fa-check-circle text-white mr-2"></i>
-                      <span className="text-white/90 text-sm">{feature}</span>
+                      <i className={`fas fa-${feature.icon || 'check-circle'} text-white mr-2`}></i>
+                      <span className="text-white/90 text-sm">{String(feature.name)}</span>
                     </div>
                   ))}
                 </div>
