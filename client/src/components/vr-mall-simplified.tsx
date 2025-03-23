@@ -871,34 +871,79 @@ export default function VRMallSimplified({ products }: VRMallProps) {
         ref={mallRef}
         className="fixed inset-0 bg-[#070314]/95 backdrop-blur-md z-50 overflow-hidden"
         style={{
-          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
+          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
         }}
       >
-        {/* Simplified atmosphere effects */}
-        <div className="absolute inset-0 overflow-hidden opacity-20">
-          {/* Abstract grid lines - clean and minimal */}
-          <div className="absolute inset-0" style={{ 
-            backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%)',
+        {/* Advanced atmosphere effects */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Digital circuit background pattern */}
+          <div className="absolute inset-0 circuit-overlay opacity-30"></div>
+          
+          {/* Enhanced arabesque pattern with cultural fusion */}
+          <div className="absolute inset-0 arabesque-pattern mix-blend-overlay opacity-30"></div>
+          
+          {/* Advanced 3D grid with depth effect */}
+          <div className="absolute inset-0 perspective-3d" style={{ 
+            backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(217, 70, 239, 0.1) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(217, 70, 239, 0.1) 100%)',
             backgroundSize: '60px 60px',
-            transform: 'perspective(500px) rotateX(60deg)',
+            transform: 'perspective(800px) rotateX(60deg)',
             transformOrigin: 'center bottom',
+            animation: 'pulse 10s infinite alternate'
           }}></div>
           
-          {/* Subtle holographic overlay */}
-          <div className="absolute inset-0 holographic-bg opacity-5"></div>
+          {/* Scanline effect */}
+          <div 
+            className="absolute inset-0 opacity-10"
+            style={{
+              background: 'linear-gradient(to bottom, transparent, transparent 49.9%, rgba(217, 70, 239, 0.5) 50%, transparent 50.1%)',
+              backgroundSize: '100% 8px',
+              animation: 'scanline 8s linear infinite',
+              pointerEvents: 'none'
+            }}
+          ></div>
           
-          {/* Just a few key particles for ambient effect */}
-          <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float2"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-amber-400 rounded-full animate-float3"></div>
+          {/* Advanced holographic overlay */}
+          <div className="absolute inset-0 holographic-bg opacity-10"></div>
+          
+          {/* Floating holographic particles */}
+          <div className="absolute inset-0">
+            {/* Top section particles */}
+            <div className="absolute top-1/5 left-1/4 w-1.5 h-1.5 bg-fuchsia-400 rounded-full animate-float1 opacity-80"></div>
+            <div className="absolute top-1/6 right-1/3 w-1 h-1 bg-purple-400 rounded-full animate-float2 opacity-70"></div>
+            <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-indigo-300 rounded-full animate-float3 opacity-60"></div>
+            
+            {/* Middle section particles */}
+            <div className="absolute top-1/2 left-1/4 w-1 h-1 bg-pink-400 rounded-full animate-float3 opacity-80"></div>
+            <div className="absolute top-1/2 right-1/5 w-1.5 h-1.5 bg-blue-300 rounded-full animate-float1 opacity-70"></div>
+            
+            {/* Bottom section particles */}
+            <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-fuchsia-300 rounded-full animate-float2 opacity-80"></div>
+            <div className="absolute bottom-1/5 right-1/4 w-1 h-1 bg-purple-300 rounded-full animate-float1 opacity-70"></div>
+          </div>
         </div>
         
-        {/* Simplified ambient mood lighting */}
+        {/* Ambient glow points */}
+        <div className="absolute top-1/3 left-1/4 w-40 h-40 opacity-30 radial-pulse" style={{
+          background: `radial-gradient(circle, ${ambientColor}50 0%, transparent 70%)`,
+          filter: 'blur(30px)',
+        }}></div>
+        
+        <div className="absolute bottom-1/3 right-1/4 w-60 h-60 opacity-20 radial-pulse" style={{
+          background: `radial-gradient(circle, ${ambientColor}40 0%, transparent 70%)`,
+          filter: 'blur(40px)',
+          animationDelay: '2s'
+        }}></div>
+        
+        {/* Enhanced ambient mood lighting with section-specific coloring */}
         <div 
-          className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-20 transition-all duration-1000"
+          className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-30 transition-all duration-1000"
           style={{ 
-            backgroundImage: `linear-gradient(to top, ${ambientColor}20, transparent, transparent)` 
+            backgroundImage: `linear-gradient(to top, ${ambientColor}30, transparent 70%, ${ambientColor}10 100%)` 
           }}
         ></div>
+        
+        {/* Digital glitch effect - random artifacts */}
+        <div className="absolute inset-0 digital-glitch"></div>
         
         {/* Controls interface */}
         <div className="absolute top-4 left-4 z-50 flex items-center gap-2 bg-black/60 rounded-lg p-2 backdrop-blur-sm border border-white/10">
