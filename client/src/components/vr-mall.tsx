@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useVR } from "@/hooks/use-vr";
 import { Product } from "@shared/schema";
 import { useMutation } from "@tanstack/react-query";
@@ -912,8 +912,8 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
-  // Get ambient color scheme based on current section using useMemo
-  const currentColors = useMemo(() => {
+  // Helper function to get ambient color scheme based on current section
+  function getCurrentColors() {
     if (!currentSection) return categoryColors.default;
     
     // If section has an explicit category, use it
@@ -930,7 +930,7 @@ export default function VRMall({ products }: VRMallProps) {
     
     // Fallback to default colors
     return categoryColors.default;
-  }, [currentSection]);
+  }
   
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
