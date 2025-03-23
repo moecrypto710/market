@@ -6,18 +6,32 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import VRMallSimplified from "@/components/vr-mall-simplified";
 import AIAssistant from "@/components/ai-assistant";
-import { useState, useEffect } from "react";
+import CulturalTransition from "@/components/cultural-transition";
+import BrandsSection from "@/components/brands-section";
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 
 export default function HomePage() {
   const { user } = useAuth();
   const { vrEnabled, toggleVR } = useVR();
   const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
   const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
+  const [showTransition, setShowTransition] = useState(false);
+  const [transitionStyle, setTransitionStyle] = useState<'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque'>('arabesque');
+  const [, setLocation] = useLocation();
+  const heroRef = useRef<HTMLDivElement>(null);
   
   const { data: products } = useQuery<Product[]>({
     queryKey: ['/api/products'],
+  });
+  
+  const { data: promotedProducts } = useQuery<Product[]>({
+    queryKey: ['/api/products/promoted'],
   });
   
   const { data: rewards } = useQuery({
@@ -25,10 +39,10 @@ export default function HomePage() {
   });
   
   const categories = [
-    { id: 1, name: "إلكترونيات", icon: "laptop" },
-    { id: 2, name: "ملابس", icon: "tshirt" },
-    { id: 3, name: "منزل", icon: "home" },
-    { id: 4, name: "رياضة", icon: "dumbbell" }
+    { id: 1, name: "إلكترونيات", icon: "laptop", color: "bg-blue-500", gradientFrom: "from-blue-900/40", gradientTo: "to-blue-700/40", borderColor: "border-blue-500/20" },
+    { id: 2, name: "ملابس", icon: "tshirt", color: "bg-pink-500", gradientFrom: "from-pink-900/40", gradientTo: "to-pink-700/40", borderColor: "border-pink-500/20" },
+    { id: 3, name: "منزل", icon: "home", color: "bg-cyan-500", gradientFrom: "from-cyan-900/40", gradientTo: "to-cyan-700/40", borderColor: "border-cyan-500/20" },
+    { id: 4, name: "رياضة", icon: "dumbbell", color: "bg-lime-500", gradientFrom: "from-lime-900/40", gradientTo: "to-lime-700/40", borderColor: "border-lime-500/20" }
   ];
   
   // Calculate points progress
@@ -55,6 +69,40 @@ export default function HomePage() {
       setViewedProducts(randomSelection);
     }
   }, [products]);
+  
+  // Parallax effect for hero section
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const scrollY = window.scrollY;
+        heroRef.current.style.backgroundPositionY = `${scrollY * 0.5}px`;
+        
+        // Apply opacity based on scroll
+        const opacity = Math.max(0, Math.min(1, 1 - scrollY / 500));
+        const heroElements = heroRef.current.querySelectorAll('.hero-element');
+        heroElements.forEach(el => {
+          (el as HTMLElement).style.opacity = opacity.toString();
+          (el as HTMLElement).style.transform = `translateY(${scrollY * 0.2}px)`;
+        });
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
+  // Function to trigger cultural transition
+  const triggerTransition = (style: 'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque', destination?: string) => {
+    setTransitionStyle(style);
+    setShowTransition(true);
+    
+    // If destination provided, navigate after transition finishes
+    if (destination) {
+      setTimeout(() => {
+        setLocation(destination);
+      }, 1200);
+    }
+  };
   
   return (
     <div className="container mx-auto px-4 py-6">
