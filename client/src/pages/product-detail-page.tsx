@@ -142,7 +142,7 @@ export default function ProductDetailPage() {
             إضافة للسلة
           </Button>
           
-          {/* Community QR Code */}
+          {/* Community QR Code - with purchase simulation */}
           <div className="mb-6">
             <CommunityQRCode 
               buttonText="انضم إلى مجتمعنا للحصول على عروض حصرية" 
@@ -150,7 +150,13 @@ export default function ProductDetailPage() {
               buttonSize="lg"
               whatsappUrl="https://chat.whatsapp.com/yourgroup" 
               telegramUrl="https://t.me/yourchannel"
+              purchased={true} // Simulating that the product is purchased on the detail page
+              productId={product.id}
             />
+            <p className="text-xs text-center mt-2 text-green-500">
+              <i className="fas fa-check-circle mr-1"></i>
+              هذا المنتج مؤهل للوصول إلى مجتمعنا الحصري
+            </p>
           </div>
         </div>
       </div>

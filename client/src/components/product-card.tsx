@@ -63,46 +63,82 @@ function ProductCard({
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
-      <div className="relative pb-[60%] overflow-hidden bg-black/5 cursor-pointer" onClick={() => window.location.href = `/product/${product.id}`}>
+    <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full flex flex-col group border-[#5e35b1]/10 hover:border-[#5e35b1]/30">
+      <div 
+        className="relative pb-[60%] overflow-hidden bg-gradient-to-b from-black/0 to-black/5 cursor-pointer" 
+        onClick={() => window.location.href = `/product/${product.id}`}
+      >
         {product.imageUrl && (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
+          <>
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </>
         )}
+        
+        {/* Price tag with EGP */}
+        <div className="absolute top-3 left-3 bg-white/90 dark:bg-black/80 px-2 py-1 rounded-md shadow-md text-sm font-bold">
+          {(product.price / 100).toFixed(2)} ج.م
+        </div>
         
         {/* Promotion badge for special products */}
         {product.commissionRate > 8 && (
-          <Badge variant="secondary" className="absolute top-2 right-2 bg-[#f44336] text-white">
+          <Badge variant="secondary" className="absolute top-3 right-3 bg-[#f44336] text-white px-2 py-1 font-medium shadow-md">
             عرض خاص
           </Badge>
         )}
         
         {/* AR button */}
         {showAR && (
-          <div className="absolute bottom-2 left-2">
+          <div className="absolute bottom-3 left-3 transition-transform duration-300 transform group-hover:translate-y-0 translate-y-10">
             <AugmentedReality product={product} button size="sm" />
           </div>
         )}
+        
+        {/* Quick view button - appears on hover */}
+        <div className="absolute left-1/2 bottom-4 -translate-x-1/2 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+          <Button 
+            size="sm" 
+            variant="secondary" 
+            className="bg-white/90 text-[#5e35b1] hover:bg-white shadow-md backdrop-blur-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.location.href = `/product/${product.id}`;
+            }}
+          >
+            <i className="fas fa-eye mr-1"></i>
+            عرض سريع
+          </Button>
+        </div>
       </div>
       
-      <CardHeader className="py-3 px-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 
-              className="font-bold text-lg mb-1 hover:text-blue-500 cursor-pointer" 
-              onClick={() => window.location.href = `/product/${product.id}`}
-            >
-              {product.name}
-            </h3>
-            <Badge variant="outline" className="text-xs capitalize">
+      <CardHeader className="py-3 px-4 pb-0">
+        <div className="flex flex-col w-full">
+          <div className="flex justify-between items-center w-full mb-1">
+            <Badge variant="outline" className="text-xs capitalize bg-[#5e35b1]/10 hover:bg-[#5e35b1]/20 text-[#5e35b1]">
               {getCategoryLabel(product.category)}
             </Badge>
+            {product.inStock ? (
+              <span className="text-xs text-green-600 flex items-center">
+                <i className="fas fa-check-circle mr-1"></i> متوفر
+              </span>
+            ) : (
+              <span className="text-xs text-gray-500 flex items-center">
+                <i className="fas fa-clock mr-1"></i> قريباً
+              </span>
+            )}
           </div>
-          <div className="font-bold text-lg">
-            ${formattedPrice}
+          <h3 
+            className="font-bold text-lg hover:text-[#5e35b1] cursor-pointer transition-colors duration-200" 
+            onClick={() => window.location.href = `/product/${product.id}`}
+          >
+            {product.name}
+          </h3>
+          <div className="mt-1 mb-1 text-sm line-clamp-2 text-gray-600 min-h-[40px]">
+            {product.description}
           </div>
         </div>
       </CardHeader>
@@ -123,10 +159,35 @@ function ProductCard({
         </CardContent>
       )}
       
-      <CardFooter className="p-4 mt-auto flex flex-col gap-3">
+      <CardFooter className="p-4 pt-0 mt-auto flex flex-col gap-3 border-t-0">
+        {/* Pricing and Rating section */}
+        <div className="flex justify-between items-center w-full mb-2">
+          <div className="flex items-center">
+            <div className="font-bold text-xl text-[#5e35b1]">
+              ${formattedPrice}
+            </div>
+            {product.commissionRate > 0 && (
+              <span className="text-xs ml-2 text-green-600">
+                {product.commissionRate > 8 ? 'خصم 20%' : 'خصم 10%'}
+              </span>
+            )}
+          </div>
+          
+          {/* Simulated star rating */}
+          <div className="flex items-center text-xs text-yellow-500">
+            <i className="fas fa-star"></i>
+            <i className="fas fa-star"></i>
+            <i className="fas fa-star"></i>
+            <i className="fas fa-star"></i>
+            <i className="fas fa-star-half-alt"></i>
+            <span className="text-gray-600 mr-1">(4.5)</span>
+          </div>
+        </div>
+        
+        {/* Action buttons */}
         <div className="flex justify-between items-center w-full">
           <Button 
-            className="flex-1 mr-2"
+            className="flex-1 mr-2 bg-[#5e35b1] hover:bg-[#4527a0]"
             onClick={() => addToCartMutation.mutate()}
             disabled={addToCartMutation.isPending}
           >
