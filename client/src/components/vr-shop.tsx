@@ -360,13 +360,33 @@ export default function VRShop({ products }: VRShopProps) {
   return (
     <div 
       ref={shopRef}
-      className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 overflow-hidden"
+      className="fixed inset-0 bg-[#070314]/95 backdrop-blur-md z-50 overflow-hidden"
       style={{
-        backgroundImage: 'url("https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&w=1600&blur=50")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
       }}
     >
+      {/* Dynamic atmosphere effects */}
+      <div className="absolute inset-0 overflow-hidden opacity-20">
+        {/* Abstract grid lines */}
+        <div className="absolute inset-0" style={{ 
+          backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%)',
+          backgroundSize: '60px 60px',
+          transform: 'perspective(500px) rotateX(60deg)',
+          transformOrigin: 'center bottom',
+        }}></div>
+        
+        {/* Floating particles */}
+        <div className="absolute top-0 left-0 w-2 h-2 bg-purple-500 rounded-full animate-float1"></div>
+        <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float2"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-amber-400 rounded-full animate-float3"></div>
+        <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-purple-300 rounded-full animate-float4"></div>
+        <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-float5"></div>
+      </div>
+      
+      {/* Atmospheric fog/glow */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#5e35b1]/10 via-transparent to-transparent opacity-30"></div>
+      <div className="absolute top-0 left-1/4 w-1/2 h-1/4 bg-[#5e35b1]/5 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-0 right-1/4 w-1/2 h-1/5 bg-[#ff9800]/5 blur-3xl rounded-full"></div>
       {/* Immersive VR controls and status */}
       <div className="absolute top-4 left-4 z-50 flex items-center gap-2 bg-black/60 rounded-lg p-2 backdrop-blur-sm border border-white/10">
         <div className="rounded-full w-3 h-3 bg-green-500 animate-pulse"></div>
@@ -674,13 +694,208 @@ export default function VRShop({ products }: VRShopProps) {
         </button>
       </div>
       
-      {/* Help floating button - always visible */}
+      {/* Help floating button - always visible with glow effect */}
       <button
-        className="fixed bottom-20 right-6 z-50 bg-[#ffeb3b] text-[#2a1f6f] rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+        className="fixed bottom-20 right-6 z-50 bg-gradient-to-r from-[#5e35b1] to-[#3f1dcb] text-white rounded-full w-14 h-14 flex items-center justify-center shadow-[0_0_15px_rgba(94,53,177,0.6)] hover:shadow-[0_0_20px_rgba(94,53,177,0.8)] hover:scale-110 transition-all duration-300"
         onClick={() => setShowHelpMenu(!showHelpMenu)}
+        style={{
+          animation: showHelpMenu ? 'none' : 'pulse 2s infinite'
+        }}
       >
-        <i className="fas fa-question-circle text-xl"></i>
+        <i className="fas fa-question-circle text-2xl"></i>
+        <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-[10px] flex items-center justify-center font-bold">3</span>
       </button>
+      
+      {/* Help Menu Dialog */}
+      {showHelpMenu && (
+        <div className="fixed inset-0 flex items-center justify-center z-[200] bg-black/60 backdrop-blur-md">
+          <div className="bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f172a] rounded-2xl p-6 max-w-2xl w-full mx-4 shadow-2xl border border-[#5e35b1]/40 overflow-hidden">
+            {/* Decorative Elements */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-gradient-to-br from-[#5e35b1]/40 to-transparent blur-2xl"></div>
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-gradient-to-tr from-[#ff9800]/30 to-transparent blur-2xl"></div>
+            
+            <div className="flex items-start justify-between mb-6 relative">
+              <div>
+                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#5e35b1] to-[#ff9800]">دليل التسوق الافتراضي</h2>
+                <p className="text-white/60 mt-1">تجربة تسوق مع الواقع الافتراضي</p>
+              </div>
+              
+              <button 
+                className="text-white/60 hover:text-white rounded-full w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 transition-colors"
+                onClick={() => setShowHelpMenu(false)}
+              >
+                <i className="fas fa-times text-lg"></i>
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Left Column - Tasks */}
+              <div className="order-2 md:order-1">
+                <h3 className="font-bold text-xl mb-4 flex items-center text-white">
+                  <span className="w-8 h-8 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mr-2">
+                    <i className="fas fa-tasks text-[#5e35b1]"></i>
+                  </span>
+                  مهام التسوق الافتراضي
+                </h3>
+                
+                <div className="space-y-3">
+                  {[
+                    { id: 'move', title: 'تحرك في المول الافتراضي', description: 'استخدم أسهم لوحة المفاتيح أو اسحب الشخصية للتنقل في المول' },
+                    { id: 'viewProduct', title: 'استعرض منتج', description: 'اقترب من المنتجات لمشاهدة تفاصيلها' },
+                    { id: 'tryOn', title: 'جرب منتج', description: 'اضغط على زر "تجربة المنتج" لتجربة المنتج افتراضياً' },
+                    { id: 'visitStore', title: 'زر متجر', description: 'انقر على أي متجر من متاجر الشركاء للتعرف عليه' },
+                    { id: 'addToCart', title: 'أضف للسلة', description: 'أضف منتج إلى سلة التسوق الخاصة بك' }
+                  ].map(task => (
+                    <div 
+                      key={task.id} 
+                      className={`p-3 rounded-lg flex items-start gap-3 transition-all
+                      ${completedTasks.includes(task.id) 
+                        ? 'bg-green-900/20 border border-green-500/30' 
+                        : 'bg-white/5 border border-white/10 hover:border-[#5e35b1]/30 hover:bg-[#5e35b1]/10'}`}
+                    >
+                      <div className={`mt-0.5 w-5 h-5 rounded-full flex-shrink-0 border ${
+                        completedTasks.includes(task.id) 
+                          ? 'bg-green-500 border-green-500 text-black' 
+                          : 'border-white/20'
+                        } flex items-center justify-center`}
+                      >
+                        {completedTasks.includes(task.id) && (
+                          <i className="fas fa-check text-[10px]"></i>
+                        )}
+                      </div>
+                      <div>
+                        <h4 className={`font-medium ${completedTasks.includes(task.id) ? 'text-green-400' : 'text-white'}`}>
+                          {task.title}
+                        </h4>
+                        <p className="text-xs text-white/60 mt-1">{task.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mt-4 bg-[#0f172a] p-4 rounded-lg border border-[#5e35b1]/20">
+                  <div className="flex items-center gap-2 text-white/80 text-sm mb-2">
+                    <i className="fas fa-gift text-[#ff9800]"></i>
+                    <span>تفتح المزيد من الميزات عند إكمال المهام</span>
+                  </div>
+                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-[#5e35b1] to-[#ff9800]" 
+                      style={{ width: `${(completedTasks.length / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right Column - Tips and Controls */}
+              <div className="order-1 md:order-2">
+                <h3 className="font-bold text-xl mb-4 flex items-center text-white">
+                  <span className="w-8 h-8 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mr-2">
+                    <i className="fas fa-lightbulb text-[#5e35b1]"></i>
+                  </span>
+                  نصائح وتحكم
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-[#0f172a] p-4 rounded-lg border border-[#5e35b1]/20">
+                    <h4 className="font-medium text-white flex items-center gap-2">
+                      <i className="fas fa-keyboard text-[#5e35b1]"></i>
+                      التحكم بلوحة المفاتيح
+                    </h4>
+                    <div className="grid grid-cols-2 gap-2 mt-3">
+                      <div className="flex items-center gap-2">
+                        <span className="bg-white/10 px-2 py-1 rounded text-xs text-white">↑</span>
+                        <span className="text-white/60 text-sm">للأعلى</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="bg-white/10 px-2 py-1 rounded text-xs text-white">↓</span>
+                        <span className="text-white/60 text-sm">للأسفل</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="bg-white/10 px-2 py-1 rounded text-xs text-white">←</span>
+                        <span className="text-white/60 text-sm">لليسار</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="bg-white/10 px-2 py-1 rounded text-xs text-white">→</span>
+                        <span className="text-white/60 text-sm">لليمين</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-[#0f172a] p-4 rounded-lg border border-[#5e35b1]/20">
+                    <h4 className="font-medium text-white flex items-center gap-2">
+                      <i className="fas fa-mouse text-[#5e35b1]"></i>
+                      التحكم بالماوس
+                    </h4>
+                    <div className="space-y-2 mt-3">
+                      <div className="flex items-center gap-2">
+                        <i className="fas fa-mouse-pointer text-white/40 w-5 text-center"></i>
+                        <span className="text-white/60 text-sm">انقر على المتاجر للتفاصيل</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <i className="fas fa-hand-pointer text-white/40 w-5 text-center"></i>
+                        <span className="text-white/60 text-sm">اسحب الشخصية للتنقل</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* VR Tips */}
+                  <div className="relative overflow-hidden bg-gradient-to-r from-[#0f172a] to-[#1a124a] p-4 rounded-lg border border-[#5e35b1]/40">
+                    <div className="absolute -right-10 -bottom-10 opacity-20">
+                      <i className="fas fa-vr-cardboard text-8xl text-[#5e35b1]"></i>
+                    </div>
+                    
+                    <h4 className="font-medium text-white flex items-center gap-2">
+                      <i className="fas fa-star text-[#ff9800]"></i>
+                      نصائح للتسوق الافتراضي
+                    </h4>
+                    
+                    <ul className="space-y-2 mt-3 relative z-10">
+                      <li className="text-white/70 text-sm flex items-start gap-2">
+                        <i className="fas fa-check-circle text-green-400 mt-1 w-4"></i>
+                        <span>زيارة متاجر متعددة للحصول على تجربة أفضل</span>
+                      </li>
+                      <li className="text-white/70 text-sm flex items-start gap-2">
+                        <i className="fas fa-check-circle text-green-400 mt-1 w-4"></i>
+                        <span>تجربة المنتجات قبل إضافتها للسلة</span>
+                      </li>
+                      <li className="text-white/70 text-sm flex items-start gap-2">
+                        <i className="fas fa-check-circle text-green-400 mt-1 w-4"></i>
+                        <span>استكشاف عروض الشراكة مع العلامات التجارية</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 flex justify-between">
+              <button
+                className="bg-white/10 hover:bg-white/20 text-white py-2 px-6 rounded-lg transition-colors"
+                onClick={() => setShowHelpMenu(false)}
+              >
+                إغلاق
+              </button>
+              
+              <button
+                className="bg-gradient-to-r from-[#5e35b1] to-[#3f1dcb] text-white py-2 px-6 rounded-lg hover:shadow-lg hover:shadow-[#5e35b1]/20 transition-all"
+                onClick={() => {
+                  // Reset tasks or start guided tour
+                  setCompletedTasks([]);
+                  setShowHelpMenu(false);
+                  toast({
+                    title: "بدء الجولة الافتراضية",
+                    description: "تم إعادة ضبط المهام، استكشف المول الافتراضي الآن!",
+                  });
+                }}
+              >
+                <i className="fas fa-play mr-2"></i>
+                بدء جولة إرشادية
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Product interaction panel when near a product */}
       {selectedProduct && (
