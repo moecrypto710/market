@@ -10,16 +10,16 @@
   }
   
   .shadow-glow {
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.7);
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.7);
     animation: glow-shadow 2s ease-in-out infinite;
   }
   
   .text-glow {
-    text-shadow: 0 0 10px rgba(14, 165, 233, 0.7);
+    text-shadow: 0 0 10px rgba(217, 70, 239, 0.7);
   }
   
   .hover-glow:hover {
-    filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.7));
+    filter: drop-shadow(0 0 8px rgba(217, 70, 239, 0.7));
   }
   
   .hover-expand {
@@ -30,23 +30,6 @@
     transform: scale(1.05);
   }
   
-  /* Futuristic animation effects */
-  .animate-float1 {
-    animation: float1 8s ease-in-out infinite;
-  }
-  
-  .animate-float2 {
-    animation: float2 10s ease-in-out infinite;
-  }
-  
-  .animate-float3 {
-    animation: float3 12s ease-in-out infinite;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
   .perspective-3d {
     transform-style: preserve-3d;
     perspective: 1000px;
@@ -72,9 +55,9 @@
   .neon-text {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
                  0 0 10px rgba(255, 255, 255, 0.5),
-                 0 0 15px rgba(94, 53, 177, 0.5),
-                 0 0 20px rgba(94, 53, 177, 0.5),
-                 0 0 25px rgba(94, 53, 177, 0.5);
+                 0 0 15px rgba(217, 70, 239, 0.5),
+                 0 0 20px rgba(217, 70, 239, 0.5),
+                 0 0 25px rgba(217, 70, 239, 0.5);
   }
   
   .futuristic-border {
@@ -90,62 +73,7 @@
     left: -100%;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(94, 53, 177, 0.8), transparent);
-    animation: border-flow 3s linear infinite;
-  }
-  
-  .glass-effect {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  }
-}
-  
-  .perspective-3d {
-    transform-style: preserve-3d;
-    perspective: 1000px;
-  }
-  
-  .rotate-y-hover:hover {
-    transform: rotateY(15deg);
-  }
-  
-  .rotate-x-hover:hover {
-    transform: rotateX(15deg);
-  }
-  
-  .text-3d {
-    text-shadow: 0px 1px 0px #999, 
-                 0px 2px 0px #888, 
-                 0px 3px 0px #777, 
-                 0px 4px 0px #666, 
-                 0px 5px 0px #555, 
-                 0px 6px 0px #444;
-  }
-  
-  .neon-text {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8),
-                 0 0 10px rgba(255, 255, 255, 0.5),
-                 0 0 15px rgba(94, 53, 177, 0.5),
-                 0 0 20px rgba(94, 53, 177, 0.5),
-                 0 0 25px rgba(94, 53, 177, 0.5);
-  }
-  
-  .futuristic-border {
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .futuristic-border::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(94, 53, 177, 0.8), transparent);
+    background: linear-gradient(90deg, transparent, rgba(217, 70, 239, 0.8), transparent);
     animation: border-flow 3s linear infinite;
   }
   
@@ -157,7 +85,16 @@
   }
 }
 
-/* Holographic scan effect */
+/* Animation Keyframes */
+@keyframes scanline {
+  0% {
+    background-position: 0 -100vh;
+  }
+  100% {
+    background-position: 0 100vh;
+  }
+}
+
 @keyframes scan {
   0% {
     background-position: 0 0;
@@ -167,7 +104,6 @@
   }
 }
 
-/* Floating animations with different timings */
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -219,34 +155,6 @@
   }
 }
 
-@keyframes float4 {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  33% {
-    transform: translate(-10px, -3px);
-  }
-  66% {
-    transform: translate(10px, -6px);
-  }
-}
-
-@keyframes float5 {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  25% {
-    transform: translate(7px, 5px) rotate(5deg);
-  }
-  50% {
-    transform: translate(0, 10px) rotate(0deg);
-  }
-  75% {
-    transform: translate(-7px, 5px) rotate(-5deg);
-  }
-}
-
-/* Pulse animation for ambient effects */
 @keyframes pulse {
   0%, 100% {
     opacity: 0.2;
@@ -256,14 +164,87 @@
   }
 }
 
-/* Glowing effect for holographic elements */
 @keyframes glow {
   0%, 100% {
-    filter: brightness(1) drop-shadow(0 0 5px rgba(14, 165, 233, 0.7));
+    filter: brightness(1) drop-shadow(0 0 5px rgba(217, 70, 239, 0.7));
   }
   50% {
-    filter: brightness(1.2) drop-shadow(0 0 15px rgba(14, 165, 233, 0.9));
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(217, 70, 239, 0.9));
   }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scale-pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(217, 70, 239, 0.6);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(217, 70, 239, 0.8);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(217, 70, 239, 0.6);
+    transform: scale(1);
+  }
+}
+
+@keyframes glow-shadow {
+  0% { box-shadow: 0 0 10px rgba(217, 70, 239, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(217, 70, 239, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(217, 70, 239, 0.5); }
+}
+
+@keyframes border-flow {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+@keyframes holographic-move {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Animation Classes */
+.animate-float1 {
+  animation: float1 8s ease-in-out infinite;
+}
+
+.animate-float2 {
+  animation: float2 10s ease-in-out infinite;
+}
+
+.animate-float3 {
+  animation: float3 12s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-scan {
+  animation: scanline 6s linear infinite;
+}
+
+.holographic-bg {
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.7) 0%,
+    rgba(217, 70, 239, 0.1) 25%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(217, 70, 239, 0.1) 75%,
+    rgba(0,0,0,0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: holographic-move 5s linear infinite;
 }
 
 /* Avatar dot pulse */
@@ -280,158 +261,9 @@
   animation: pulse 2s infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* VR Shop Custom Animations - Enhanced scale pulse */
-@keyframes scale-pulse {
-  0% {
-    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
-    transform: scale(1.05);
-  }
-  100% {
-    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
-    transform: scale(1);
-  }
-}
-
-/* New VR animations for cyberpunk experience */
-@keyframes float-slow {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0); }
-}
-
-@keyframes scan-slow {
-  0% { top: 0; opacity: 0.8; }
-  100% { top: 100%; opacity: 0.2; }
-}
-
-@keyframes glow-pulse {
-  0% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
-  50% { filter: brightness(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
-  100% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
-}
-
-@keyframes glow-shadow {
-  0% { box-shadow: 0 0 10px rgba(14, 165, 233, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.8); }
-  100% { box-shadow: 0 0 10px rgba(14, 165, 233, 0.5); }
-}
-
-.animate-float-slow {
-  animation: float-slow 3s ease-in-out infinite;
-}
-
-.animate-scan-slow {
-  animation: scan-slow 2s linear infinite;
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 2s ease-in-out infinite;
-}
-
-/* Holographic effect */
-.holographic-bg {
-  background: linear-gradient(to right, 
-    rgba(0,0,0,0.7) 0%,
-    rgba(94,53,177,0.1) 25%,
-    rgba(255,255,255,0.1) 50%,
-    rgba(94,53,177,0.1) 75%,
-    rgba(0,0,0,0.7) 100%
-  );
-  background-size: 200% 100%;
-  animation: holographic-move 5s linear infinite;
-}
-
-@keyframes holographic-move {
-  0% { background-position: 0% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes border-flow {
-  0% { left: -100%; }
-  50% { left: 100%; }
-  100% { left: 100%; }
-}
-
-/* Arrow clip path for avatar navigation */
-.clip-arrow {
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-}
-
-/* Welcome Screen Arabic-Themed Animations */
-@keyframes float-particle {
-  0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
-  25% { transform: translate(50px, -30px) rotate(90deg); opacity: 0.2; }
-  50% { transform: translate(100px, 0) rotate(180deg); opacity: 0.8; }
-  75% { transform: translate(50px, 30px) rotate(270deg); opacity: 0.4; }
-  100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; }
-}
-
-@keyframes calligraphy-fade {
-  0% { opacity: 0; transform: translateY(20px) scale(0.8); }
-  60% { opacity: 1; transform: translateY(0) scale(1); }
-  80% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-10px) scale(0.9); }
-}
-
-@keyframes pattern-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.animate-float1 {
-  animation: float1 8s ease-in-out infinite;
-}
-
-.animate-float2 {
-  animation: float2 10s ease-in-out infinite;
-}
-
-.animate-float3 {
-  animation: float3 12s ease-in-out infinite;
-}
-
-.animate-float4 {
-  animation: float4 9s ease-in-out infinite;
-}
-
-.animate-float5 {
-  animation: float5 14s ease-in-out infinite;
-}
-
-.animate-float-particle {
-  animation: float-particle 20s ease-in-out infinite;
-}
-
-.animate-calligraphy-fade {
-  animation: calligraphy-fade 8s ease-in-out infinite;
-}
-
-.animate-pattern-rotate {
-  animation: pattern-rotate 30s linear infinite;
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+/* Arabic font styling */
+.font-arabic {
+  font-family: 'Amiri', 'Scheherazade New', serif;
 }
 
 .clip-arrow {
@@ -440,11 +272,6 @@
 
 .border-3 {
   border-width: 3px;
-}
-
-/* Arabic font styling */
-.font-arabic {
-  font-family: 'Amiri', 'Scheherazade New', serif;
 }
 
 @layer base {

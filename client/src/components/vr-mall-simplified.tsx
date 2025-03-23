@@ -153,17 +153,18 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
             <div
               key={avatar.id}
               className={`
-                relative bg-black border border-${hoveredAvatar === avatar.id ? avatar.color : 'purple-800/30'} 
+                relative bg-black border-2 border-${hoveredAvatar === avatar.id ? avatar.color : 'purple-800/30'} 
                 p-8 rounded-xl cursor-pointer transition-all duration-500 
-                hover:border-${avatar.color} w-[280px] h-[400px] transform perspective-[1000px]
-                ${hoveredAvatar === avatar.id ? 'scale-105 shadow-lg shadow-' + avatar.color + '/20' : ''}
+                hover:border-${avatar.color} w-[280px] h-[420px] transform perspective-[1200px] 
+                backdrop-blur-sm overflow-hidden futuristic-border
+                ${hoveredAvatar === avatar.id ? 'scale-105 shadow-lg shadow-' + avatar.color + '/40' : ''}
               `}
               style={{
                 background: `radial-gradient(circle at ${hoveredAvatar === avatar.id ? '30%' : '50%'} ${hoveredAvatar === avatar.id ? '30%' : '50%'}, 
-                rgba(${avatar.color === '#5e35b1' ? '94, 53, 177' : '233, 30, 99'}, 0.2) 0%, 
-                rgba(0, 0, 0, 0.95) 70%)`,
-                transform: hoveredAvatar === avatar.id ? 'rotateY(-5deg)' : 'rotateY(0deg)',
-                boxShadow: hoveredAvatar === avatar.id ? `0 10px 30px -5px ${avatar.color}30` : 'none',
+                rgba(${avatar.color === '#5e35b1' ? '94, 53, 177' : '217, 70, 239'}, 0.3) 0%, 
+                rgba(0, 0, 0, 0.9) 70%)`,
+                transform: hoveredAvatar === avatar.id ? 'rotateY(-8deg)' : 'rotateY(0deg)',
+                boxShadow: hoveredAvatar === avatar.id ? `0 10px 40px -5px ${avatar.color}50` : 'none',
                 transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
               }}
               onClick={() => handleSelect(avatar)}
@@ -176,32 +177,77 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
                 setShowDetails(null);
               }}
             >
-              {/* Decorative elements */}
-              <div className="absolute top-3 left-3 h-8 w-8 border-t border-l border-white/20 rounded-tl-lg"></div>
-              <div className="absolute bottom-3 right-3 h-8 w-8 border-b border-r border-white/20 rounded-br-lg"></div>
+              {/* Scanline effect for holographic feel */}
+              <div 
+                className="absolute inset-0 opacity-10 rounded-xl overflow-hidden"
+                style={{
+                  background: 'linear-gradient(to bottom, transparent, transparent 50%, rgba(217, 70, 239, 0.2) 50%, transparent 50.5%)',
+                  backgroundSize: '100% 8px',
+                  animation: 'scanline 8s linear infinite',
+                  pointerEvents: 'none'
+                }}
+              ></div>
               
-              {/* Avatar image with effects */}
-              <div className="mb-6 relative h-40 w-40 mx-auto">
-                <div className="absolute -inset-4 rounded-full animate-pulse" 
+              {/* Holographic background shimmer */}
+              <div className="absolute inset-0 opacity-20 holographic-bg rounded-xl overflow-hidden"></div>
+              
+              {/* Enhanced decorative elements - geometric futuristic corners */}
+              <div className="absolute top-3 left-3 h-10 w-10 border-t-2 border-l-2 border-white/40 rounded-tl-lg"></div>
+              <div className="absolute bottom-3 right-3 h-10 w-10 border-b-2 border-r-2 border-white/40 rounded-br-lg"></div>
+              
+              {/* Data circuit lines - top right */}
+              <div className="absolute top-0 right-0 w-20 h-20 opacity-30 pointer-events-none">
+                <div className="absolute top-8 right-0 w-full h-[1px] bg-gradient-to-l from-transparent via-fuchsia-500/80 to-transparent"></div>
+                <div className="absolute top-0 right-8 h-full w-[1px] bg-gradient-to-b from-transparent via-fuchsia-500/80 to-transparent"></div>
+                <div className="absolute top-14 right-8 w-2 h-2 bg-fuchsia-500/80 rounded-full animate-pulse-slow"></div>
+              </div>
+              
+              {/* Data circuit lines - bottom left */}
+              <div className="absolute bottom-0 left-0 w-20 h-20 opacity-30 pointer-events-none">
+                <div className="absolute bottom-8 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/80 to-transparent"></div>
+                <div className="absolute bottom-0 left-8 h-full w-[1px] bg-gradient-to-t from-transparent via-purple-500/80 to-transparent"></div>
+                <div className="absolute bottom-14 left-8 w-2 h-2 bg-purple-500/80 rounded-full animate-pulse-slow"></div>
+              </div>
+              
+              {/* Avatar image with enhanced holographic effects */}
+              <div className="mb-8 relative h-44 w-44 mx-auto perspective-3d">
+                {/* Ambient glow */}
+                <div className="absolute -inset-6 rounded-full" 
                      style={{
-                       opacity: hoveredAvatar === avatar.id ? 0.4 : 0.1,
-                       background: `radial-gradient(circle, ${avatar.color}50 0%, transparent 70%)`,
-                       transition: 'opacity 0.5s ease'
+                       opacity: hoveredAvatar === avatar.id ? 0.5 : 0.2,
+                       background: `radial-gradient(circle, ${avatar.color}60 0%, transparent 70%)`,
+                       transition: 'opacity 0.5s ease',
+                       filter: 'blur(10px)',
+                       animation: 'pulse 3s infinite alternate'
                      }}>
                 </div>
                 
-                {/* Holographic ring */}
-                <div className={`absolute inset-0 rounded-full border border-${avatar.color}/30 
+                {/* Multiple holographic rings */}
+                <div className={`absolute inset-0 rounded-full border-2 border-${avatar.color}/40 
                                  ${hoveredAvatar === avatar.id ? 'animate-spin-slow' : ''}`}
+                     style={{ transform: 'scale(1.1)' }}
                 ></div>
                 
+                <div className={`absolute inset-0 rounded-full border border-${avatar.color}/20
+                                 ${hoveredAvatar === avatar.id ? 'animate-spin-slow' : ''}`}
+                     style={{ transform: 'scale(1.2)', animationDirection: 'reverse', animationDuration: '12s' }}
+                ></div>
+                
+                {/* Floating particles around avatar */}
+                <div className="absolute inset-0 scale-150">
+                  <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-white rounded-full animate-float1 opacity-70"></div>
+                  <div className="absolute bottom-1/4 right-1/4 w-1 h-1 bg-white rounded-full animate-float2 opacity-70"></div>
+                  <div className="absolute top-3/4 right-1/3 w-1 h-1 bg-white rounded-full animate-float3 opacity-70"></div>
+                </div>
+                
+                {/* Avatar image with 3D hover effect */}
                 <img 
                   src={avatar.image} 
                   alt={avatar.name} 
-                  className="h-full w-full object-contain relative z-10 transform transition-transform duration-500"
+                  className="h-full w-full object-contain relative z-10 transition-all duration-500"
                   style={{
-                    transform: hoveredAvatar === avatar.id ? 'scale(1.1) translateY(-5px)' : 'scale(1)',
-                    filter: hoveredAvatar === avatar.id ? 'drop-shadow(0 0 8px ' + avatar.color + '50)' : 'none'
+                    transform: hoveredAvatar === avatar.id ? 'scale(1.15) translateY(-8px) rotateY(5deg)' : 'scale(1)',
+                    filter: hoveredAvatar === avatar.id ? `drop-shadow(0 0 12px ${avatar.color})` : 'none'
                   }}
                 />
               </div>
@@ -237,18 +283,36 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
                 </ul>
               </div>
               
-              {/* Selection button */}
+              {/* Enhanced futuristic selection button */}
               <div className="absolute bottom-6 inset-x-0 flex justify-center">
                 <button 
-                  className="px-6 py-2 rounded-full text-white text-sm font-medium"
+                  className="px-6 py-2.5 rounded-full text-white text-sm font-medium relative overflow-hidden group"
                   style={{
                     background: `linear-gradient(45deg, ${avatar.color}, ${
-                      avatar.color === '#5e35b1' ? '#3f51b5' : '#ff4081'
+                      avatar.color === '#5e35b1' ? '#3f51b5' : '#d946ef'
                     })`,
-                    boxShadow: `0 4px 12px ${avatar.color}40`
+                    boxShadow: `0 4px 20px ${avatar.color}60`
                   }}
                 >
-                  اختر شخصية {avatar.name}
+                  {/* Button glow effect */}
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transform -translate-x-full group-hover:translate-x-full transition-all duration-1000"></span>
+                  
+                  {/* Moving border light effect */}
+                  <span className="absolute top-0 left-0 w-3 h-full bg-gradient-to-b from-white/0 via-white/40 to-white/0 group-hover:animate-scan" style={{animationDuration: '1.5s'}}></span>
+                  
+                  {/* Inner blur glow */}
+                  <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                        style={{
+                          background: `radial-gradient(circle at center, ${avatar.color}70 0%, transparent 70%)`,
+                          filter: 'blur(8px)'
+                        }}>
+                  </span>
+                  
+                  {/* Arabic text with gentle glow */}
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-glow">
+                    <span>اختر شخصية {avatar.name}</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  </span>
                 </button>
               </div>
             </div>
