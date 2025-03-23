@@ -606,6 +606,16 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           <i className={`fas fa-${showAiAssistant ? 'eye-slash' : 'robot'} mr-2`}></i>
           {showAiAssistant ? 'إخفاء المساعد الذكي' : 'إظهار المساعد الذكي'}
         </Button>
+
+        {/* Voice Control Toggle Button */}
+        <Button
+          variant="outline"
+          className="absolute top-28 right-4 z-50 bg-gradient-to-r from-teal-600 to-blue-600 border-0"
+          onClick={() => setVoiceControlEnabled(!voiceControlEnabled)}
+        >
+          <i className={`fas fa-${voiceControlEnabled ? 'microphone-slash' : 'microphone'} mr-2`}></i>
+          {voiceControlEnabled ? 'تعطيل التحكم الصوتي' : 'تفعيل التحكم الصوتي'}
+        </Button>
         
         {/* Current location indicator */}
         <div className="absolute top-16 left-4 bg-black/70 px-3 py-1.5 rounded-full text-sm z-50 border border-white/10">
@@ -736,6 +746,15 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           onNavigate={handleSectionNavigation}
           avatar={selectedAvatar}
           minimized={true} // Changed to true to make it smaller
+        />
+      )}
+      
+      {/* AI Voice Controls */}
+      {voiceControlEnabled && (
+        <AIVoiceControls
+          onCommand={handleVoiceCommand}
+          enabled={voiceControlEnabled}
+          minimized={true}
         />
       )}
     </>
