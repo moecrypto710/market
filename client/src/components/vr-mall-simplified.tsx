@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import CulturalTransition from "@/components/cultural-transition";
 import confetti from 'canvas-confetti';
 import AiShoppingAssistant from "./ai-shopping-assistant";
+import CameraIntegration from "./camera-integration";
 
 // Types
 interface AvatarProps {
@@ -129,6 +130,9 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const [showSpecialEffect, setShowSpecialEffect] = useState(false);
   const [specialEffectType, setSpecialEffectType] = useState<'sparkle' | 'confetti' | 'hologram'>('sparkle');
   const [showAiAssistant, setShowAiAssistant] = useState(true);
+  const [showCameraMode, setShowCameraMode] = useState(false);
+  const [cameraMode, setCameraMode] = useState<'product-try-on' | 'avatar-creation' | 'ar-measure'>('product-try-on');
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   
   // References
   const mallRef = useRef<HTMLDivElement>(null);
@@ -441,7 +445,22 @@ export default function VRMallSimplified({ products }: VRMallProps) {
                   </ul>
                 </div>
                 
-                <div className="mt-auto">
+                <div className="mt-auto space-y-2">
+                  {/* Try On button - only for clothing and shoes */}
+                  {(selectedProduct.category === 'clothing' || selectedProduct.name.includes('حذاء')) && (
+                    <Button 
+                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 mb-2"
+                      onClick={() => {
+                        setCameraMode('product-try-on');
+                        setShowCameraMode(true);
+                        setShow3DView(false);
+                      }}
+                    >
+                      <i className="fas fa-camera mr-2"></i>
+                      تجربة المنتج افتراضيًا
+                    </Button>
+                  )}
+                  
                   <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600">
                     <i className="fas fa-shopping-cart mr-2"></i>
                     إضافة إلى السلة
