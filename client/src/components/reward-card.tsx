@@ -1,13 +1,10 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Reward } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
-import { redeemReward } from "@/lib/api";
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import confetti from "canvas-confetti";
+import { useToast } from "@/components/ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RewardCardProps {
   reward: Reward;
@@ -19,50 +16,48 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
   const [claimed, setClaimed] = useState(false);
   const queryClient = useQueryClient();
 
-  const progressPercentage = Math.min(Math.round((userPoints / reward.pointsRequired) * 100), 100);
-
-  const redeemMutation = useMutation({
-    mutationFn: () => redeemReward(reward.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+  const handleClaim = async () => {
+    if (claimed || userPoints < reward.points) return;
+    
+    try {
+      const response = await fetch(`/api/rewards/${reward.id}/claim`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      if (!response.ok) throw new Error('Failed to claim reward');
+      
       setClaimed(true);
-
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#FFD700', '#FFC107', '#673AB7', '#3F51B5'],
-      });
-
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      
       toast({
-        title: "مبروك!",
-        description: `تم استبدال المكافأة: ${reward.name}`,
+        title: "تم المطالبة بالمكافأة",
+        description: `تمت المطالبة بـ ${reward.title} بنجاح!`,
       });
-    },
-    onError: (error: Error) => {
+    } catch (error) {
       toast({
-        title: "خطأ",
-        description: error.message || "حدث خطأ أثناء استبدال المكافأة",
+        title: "فشل المطالبة",
+        description: "حدث خطأ أثناء المطالبة بالمكافأة",
         variant: "destructive",
       });
-    },
-  });
+    }
+  };
 
   return (
-    <Card>
+    <Card className="relative overflow-hidden">
       <CardHeader>
-        <CardTitle>{reward.name}</CardTitle>
+        <CardTitle>{reward.title}</CardTitle>
         <CardDescription>{reward.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <Progress value={progressPercentage} className="mb-4" />
         <div className="flex justify-between items-center">
-          <span>{reward.pointsRequired} نقطة</span>
-          <Button
-            onClick={() => redeemMutation.mutate()}
-            disabled={userPoints < reward.pointsRequired || claimed}
+          <span className="text-lg font-bold">{reward.points} نقطة</span>
+          <Button 
+            onClick={handleClaim}
+            disabled={claimed || userPoints < reward.points}
+            variant={claimed ? "outline" : "default"}
           >
-            {claimed ? 'تم الاستبدال' : 'استبدال'}
+            {claimed ? "تم المطالبة" : "مطالبة"}
           </Button>
         </div>
       </CardContent>
