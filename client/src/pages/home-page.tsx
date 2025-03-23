@@ -13,8 +13,11 @@ import VRMallSimplified from "@/components/vr-mall-simplified";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
 import BrandsSection from "@/components/brands-section";
+import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
+import { motion } from "framer-motion";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 export default function HomePage() {
   const { user } = useAuth();

@@ -31,7 +31,13 @@ interface VRMallProps {
 
 // Avatar Selection Component
 function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) => void }) {
-  // Simplified avatar options
+  // State for animation effects
+  const [hoveredAvatar, setHoveredAvatar] = useState<number | null>(null);
+  const [showDetails, setShowDetails] = useState<number | null>(null);
+  const [selectionStarted, setSelectionStarted] = useState(false);
+  const [selectedPreview, setSelectedPreview] = useState<AvatarProps | null>(null);
+  
+  // Enhanced avatar options with futuristic styles
   const avatars = [
     { 
       id: 1, 
@@ -44,7 +50,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
         "تخفيضات إضافية 10% على الإلكترونيات",
         "وصول حصري لآخر التقنيات"
       ],
-      color: "#7e22ce",
+      color: "#5e35b1",
       specialFeature: "محلل المواصفات",
       specialFeatureDescription: "قدرة خاصة على تحليل مواصفات المنتجات التقنية ومقارنتها بسرعة"
     },
@@ -59,41 +65,190 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
         "نصائح أزياء شخصية",
         "تجربة افتراضية للملابس"
       ],
-      color: "#7e22ce",
+      color: "#e91e63",
       specialFeature: "مستشارة الأناقة",
       specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية"
     }
   ];
 
+  // Handle avatar selection with animation
+  const handleSelect = (avatar: AvatarProps) => {
+    setSelectedPreview(avatar);
+    setSelectionStarted(true);
+    
+    // Delay actual selection to allow for animation
+    setTimeout(() => {
+      onSelect(avatar);
+    }, 1500);
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-black/80 border border-purple-800/30 rounded-xl p-8 flex flex-col items-center text-center">
-        <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
-        <p className="text-white/70 mb-6">اختر شخصية للتسوق في مول أمريكي الافتراضي</p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+      {/* Ambient background with animated gradient */}
+      <div className="fixed inset-0 bg-black z-0">
+        <div className="absolute inset-0 bg-[#070314] opacity-90"></div>
+        <div 
+          className="absolute inset-0 opacity-30" 
+          style={{
+            backgroundImage: `radial-gradient(circle at 30% 40%, rgba(94, 53, 177, 0.4) 0%, transparent 60%), 
+                               radial-gradient(circle at 70% 60%, rgba(236, 64, 122, 0.4) 0%, transparent 60%)`,
+            animation: 'pulse 8s infinite alternate'
+          }}
+        ></div>
         
-        <div className="flex gap-8 w-full justify-center">
+        {/* Floating holographic particles */}
+        <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float1"></div>
+        <div className="absolute top-3/4 left-2/3 w-1 h-1 bg-purple-400 rounded-full animate-float2"></div>
+        <div className="absolute top-1/2 left-3/4 w-1.5 h-1.5 bg-pink-400 rounded-full animate-float3"></div>
+        <div className="absolute top-1/3 left-1/2 w-1 h-1 bg-indigo-400 rounded-full animate-float2"></div>
+        
+        {/* Grid floor effect */}
+        <div className="absolute inset-x-0 bottom-0 h-[30vh] perspective-[1000px]">
+          <div 
+            className="absolute inset-0 transform-gpu"
+            style={{
+              backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
+              backgroundSize: '40px 40px',
+              transform: 'rotateX(60deg)',
+              transformOrigin: 'center bottom',
+            }}
+          ></div>
+        </div>
+      </div>
+      
+      {/* Selection started overlay with transition effect */}
+      {selectionStarted && selectedPreview && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center">
+          <div className="absolute inset-0 bg-black opacity-0 animate-fade-in"></div>
+          <div className="relative transform scale-150 animate-zoom-in">
+            <img 
+              src={selectedPreview.image} 
+              alt={selectedPreview.name} 
+              className="h-64 w-64 object-contain relative z-10" 
+            />
+            <div className="absolute -inset-8 rounded-full animate-pulse"
+                 style={{background: `radial-gradient(circle, ${selectedPreview.color}80 0%, transparent 70%)`}}
+            ></div>
+          </div>
+        </div>
+      )}
+      
+      <div className="relative z-10 w-full max-w-5xl flex flex-col items-center">
+        {/* Header with futuristic design */}
+        <div className="relative mb-8 text-center">
+          <h2 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+            اختر الشخصية الافتراضية
+          </h2>
+          <p className="text-white/70 text-lg">
+            اختر شخصية للتسوق في مول أمريكي الافتراضي
+          </p>
+          
+          {/* Decorative elements */}
+          <div className="absolute -left-4 top-1/2 h-0.5 w-12 bg-gradient-to-r from-transparent to-pink-500/80"></div>
+          <div className="absolute -right-4 top-1/2 h-0.5 w-12 bg-gradient-to-l from-transparent to-purple-500/80"></div>
+        </div>
+        
+        <div className="flex gap-12 w-full justify-center">
           {avatars.map((avatar) => (
             <div
               key={avatar.id}
-              className="relative bg-black border border-purple-800/30 p-6 rounded-lg cursor-pointer transition-all duration-300 hover:border-purple-500/50 w-64"
-              onClick={() => onSelect(avatar)}
+              className={`
+                relative bg-black border border-${hoveredAvatar === avatar.id ? avatar.color : 'purple-800/30'} 
+                p-8 rounded-xl cursor-pointer transition-all duration-500 
+                hover:border-${avatar.color} w-[280px] h-[400px] transform perspective-[1000px]
+                ${hoveredAvatar === avatar.id ? 'scale-105 shadow-lg shadow-' + avatar.color + '/20' : ''}
+              `}
+              style={{
+                background: `radial-gradient(circle at ${hoveredAvatar === avatar.id ? '30%' : '50%'} ${hoveredAvatar === avatar.id ? '30%' : '50%'}, 
+                rgba(${avatar.color === '#5e35b1' ? '94, 53, 177' : '233, 30, 99'}, 0.2) 0%, 
+                rgba(0, 0, 0, 0.95) 70%)`,
+                transform: hoveredAvatar === avatar.id ? 'rotateY(-5deg)' : 'rotateY(0deg)',
+                boxShadow: hoveredAvatar === avatar.id ? `0 10px 30px -5px ${avatar.color}30` : 'none',
+                transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+              }}
+              onClick={() => handleSelect(avatar)}
+              onMouseEnter={() => {
+                setHoveredAvatar(avatar.id);
+                setShowDetails(avatar.id);
+              }}
+              onMouseLeave={() => {
+                setHoveredAvatar(null);
+                setShowDetails(null);
+              }}
             >
-              <div className="mb-4 relative h-40 w-40 mx-auto">
+              {/* Decorative elements */}
+              <div className="absolute top-3 left-3 h-8 w-8 border-t border-l border-white/20 rounded-tl-lg"></div>
+              <div className="absolute bottom-3 right-3 h-8 w-8 border-b border-r border-white/20 rounded-br-lg"></div>
+              
+              {/* Avatar image with effects */}
+              <div className="mb-6 relative h-40 w-40 mx-auto">
+                <div className="absolute -inset-4 rounded-full animate-pulse" 
+                     style={{
+                       opacity: hoveredAvatar === avatar.id ? 0.4 : 0.1,
+                       background: `radial-gradient(circle, ${avatar.color}50 0%, transparent 70%)`,
+                       transition: 'opacity 0.5s ease'
+                     }}>
+                </div>
+                
+                {/* Holographic ring */}
+                <div className={`absolute inset-0 rounded-full border border-${avatar.color}/30 
+                                 ${hoveredAvatar === avatar.id ? 'animate-spin-slow' : ''}`}
+                ></div>
+                
                 <img 
                   src={avatar.image} 
                   alt={avatar.name} 
-                  className="h-full w-full object-contain relative z-10" 
+                  className="h-full w-full object-contain relative z-10 transform transition-transform duration-500"
+                  style={{
+                    transform: hoveredAvatar === avatar.id ? 'scale(1.1) translateY(-5px)' : 'scale(1)',
+                    filter: hoveredAvatar === avatar.id ? 'drop-shadow(0 0 8px ' + avatar.color + '50)' : 'none'
+                  }}
                 />
               </div>
               
-              <h3 className="text-2xl font-bold mb-2 text-center">{avatar.name}</h3>
+              {/* Avatar details */}
+              <h3 className="text-2xl font-bold mb-2 text-center text-transparent bg-clip-text bg-gradient-to-r"
+                  style={{
+                    backgroundImage: `linear-gradient(to right, ${avatar.color}, white)`
+                  }}
+              >
+                {avatar.name}
+              </h3>
+              
               <p className="text-sm text-white/70 mb-4 text-center">{avatar.personality}</p>
               
-              <div className="flex justify-center">
+              {/* Special feature indicator */}
+              <div className="absolute top-4 right-4 flex items-center">
+                <div className="w-2 h-2 rounded-full animate-pulse" 
+                     style={{backgroundColor: avatar.color}}></div>
+                <span className="text-xs text-white/50 mr-1">{avatar.specialFeature}</span>
+              </div>
+              
+              {/* Avatar benefits - show on hover */}
+              <div className={`mt-2 overflow-hidden transition-all duration-500 ${showDetails === avatar.id ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <h4 className="text-xs uppercase text-white/50 mb-2 tracking-wider">المميزات الخاصة</h4>
+                <ul className="text-xs space-y-1 text-white/80 pr-2">
+                  {avatar.benefits.map((benefit, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-xs text-pink-400">✦</span>
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              {/* Selection button */}
+              <div className="absolute bottom-6 inset-x-0 flex justify-center">
                 <button 
-                  className="px-4 py-2 rounded-lg text-white text-lg font-medium bg-purple-700 hover:bg-purple-800"
+                  className="px-6 py-2 rounded-full text-white text-sm font-medium"
+                  style={{
+                    background: `linear-gradient(45deg, ${avatar.color}, ${
+                      avatar.color === '#5e35b1' ? '#3f51b5' : '#ff4081'
+                    })`,
+                    boxShadow: `0 4px 12px ${avatar.color}40`
+                  }}
                 >
-                  اختر {avatar.name}
+                  اختر شخصية {avatar.name}
                 </button>
               </div>
             </div>
@@ -111,6 +266,28 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const [showTransition, setShowTransition] = useState(false);
   const [transitionStyle, setTransitionStyle] = useState('default');
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
+  
+  // Enhanced VR features
+  const [rotationAngle, setRotationAngle] = useState(0);
+  const [viewMode, setViewMode] = useState<'2d' | '3d' | '360' | 'ar'>('3d');
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [isRotating, setIsRotating] = useState(false);
+  const [gesturePositions, setGesturePositions] = useState<{x: number, y: number}[]>([]);
+  const [mouseDown, setMouseDown] = useState(false);
+  const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
+  const [virtualHand, setVirtualHand] = useState({ x: 0, y: 0, visible: false });
+  const [showRoomScale, setShowRoomScale] = useState(false);
+  const [sectionAmbience, setSectionAmbience] = useState<{
+    soundEffect?: string;
+    particleEffect?: 'sparkles' | 'dust' | 'holograms' | 'none';
+    lightIntensity: number;
+    fogDensity: number;
+  }>({
+    soundEffect: undefined,
+    particleEffect: 'none',
+    lightIntensity: 0.5,
+    fogDensity: 0.2
+  });
   const [currentSection, setCurrentSection] = useState<string>('entrance');
   const [ambientColor, setAmbientColor] = useState('#5e35b1');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -388,10 +565,15 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             }}
           ></div>
           
-          <div className="relative w-[80%] h-[80%] max-w-4xl bg-[#0a0120]/90 border border-white/20 rounded-xl p-8 flex flex-col z-10">
+          <div className="relative w-[80%] h-[80%] max-w-4xl bg-black/90 border border-pink-500/30 rounded-xl p-8 flex flex-col z-10"
+               style={{
+                 background: `radial-gradient(circle at top right, rgba(219, 39, 119, 0.3) 0%, rgba(0, 0, 0, 0.95) 70%)`,
+                 boxShadow: '0 0 30px rgba(219, 39, 119, 0.3)'
+               }}
+          >
             {/* Close button */}
             <button 
-              className="absolute top-4 right-4 text-white/60 hover:text-white text-xl"
+              className="absolute top-4 right-4 text-pink-400/80 hover:text-pink-400 text-xl z-50"
               onClick={() => {
                 setShow3DView(false);
                 setSelectedProduct(null);
@@ -401,12 +583,103 @@ export default function VRMallSimplified({ products }: VRMallProps) {
               <i className="fas fa-times"></i>
             </button>
             
+            {/* View mode selector */}
+            <div className="absolute top-4 left-4 flex space-x-2 z-50">
+              <button 
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${viewMode === '3d' ? 'bg-pink-600 text-white' : 'bg-black/40 text-white/70 hover:bg-black/60'}`}
+                onClick={() => setViewMode('3d')}
+              >
+                3D
+              </button>
+              <button 
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${viewMode === '360' ? 'bg-pink-600 text-white' : 'bg-black/40 text-white/70 hover:bg-black/60'}`}
+                onClick={() => setViewMode('360')}
+              >
+                360°
+              </button>
+              <button 
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${viewMode === 'ar' ? 'bg-pink-600 text-white' : 'bg-black/40 text-white/70 hover:bg-black/60'}`}
+                onClick={() => {
+                  setViewMode('ar');
+                  setShowCameraMode(true);
+                  setCameraMode('product-try-on');
+                }}
+              >
+                AR
+              </button>
+            </div>
+            
             <div className="flex flex-col md:flex-row h-full">
               {/* 3D Product View */}
-              <div className="md:w-2/3 h-full relative">
+              <div className="md:w-2/3 h-full relative overflow-hidden rounded-lg">
+                {/* Ambient background effect based on product category */}
+                <div className="absolute inset-0 opacity-30"
+                     style={{
+                       background: `radial-gradient(circle at center, ${
+                         selectedProduct?.category === 'electronics' ? '#5e35b1' :
+                         selectedProduct?.category === 'clothing' ? '#e91e63' : '#9c27b0'
+                       } 0%, transparent 70%)`
+                     }}
+                ></div>
+                
+                {/* Grid floor effect */}
+                <div className="absolute inset-0 perspective-[1000px]">
+                  <div className="absolute bottom-0 left-0 right-0 h-[400px] transform-gpu"
+                       style={{
+                         background: `linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 90%, rgba(${
+                           selectedProduct?.category === 'electronics' ? '94, 53, 177' :
+                           selectedProduct?.category === 'clothing' ? '233, 30, 99' : '156, 39, 176'
+                         }, 0.3) 100%)`,
+                         backgroundSize: '30px 30px',
+                         backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), 
+                                           linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)`,
+                         transform: 'rotateX(60deg)',
+                         transformOrigin: 'bottom'
+                       }}
+                  >
+                  </div>
+                </div>
+                
                 <div className="absolute inset-0 flex items-center justify-center">
                   {/* 3D Effect Container */}
-                  <div className="relative w-80 h-80">
+                  <div className="relative w-80 h-80" 
+                       style={{
+                         transform: viewMode === '360' ? `rotateY(${rotationAngle}deg)` : 'rotateY(0deg)',
+                         transition: isRotating ? 'none' : 'transform 0.3s ease-out'
+                       }}
+                       onMouseDown={(e) => {
+                         if (viewMode === '360') {
+                           setMouseDown(true);
+                           setLastMousePosition({ x: e.clientX, y: e.clientY });
+                         }
+                       }}
+                       onMouseMove={(e) => {
+                         if (mouseDown && viewMode === '360') {
+                           setIsRotating(true);
+                           const deltaX = e.clientX - lastMousePosition.x;
+                           setRotationAngle(prev => prev + deltaX * 0.5);
+                           setLastMousePosition({ x: e.clientX, y: e.clientY });
+                         }
+                       }}
+                       onMouseUp={() => {
+                         setMouseDown(false);
+                         setTimeout(() => setIsRotating(false), 100);
+                       }}
+                       onMouseLeave={() => {
+                         setMouseDown(false);
+                         setTimeout(() => setIsRotating(false), 100);
+                       }}
+                  >
+                    {/* Product platform/shadow */}
+                    <div className="absolute bottom-[-40px] w-64 h-10 left-1/2 transform -translate-x-1/2 rounded-full bg-black"
+                         style={{
+                           boxShadow: `0 0 20px 5px rgba(${
+                             selectedProduct?.category === 'electronics' ? '94, 53, 177' :
+                             selectedProduct?.category === 'clothing' ? '233, 30, 99' : '156, 39, 176'
+                           }, 0.3)`
+                         }}
+                    ></div>
+                    
                     {/* 3D effect with moving shadows and highlights */}
                     <div 
                       className="absolute inset-0 rounded-full opacity-20"
