@@ -12,6 +12,8 @@ interface CommunityQRCodeProps {
   showIcons?: boolean;
   buttonVariant?: "default" | "outline" | "secondary" | "ghost";
   buttonSize?: "default" | "sm" | "lg" | "icon";
+  purchased?: boolean;
+  productId?: number;
 }
 
 export default function CommunityQRCode({

@@ -64,7 +64,7 @@ function ProductCard({
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
-      <div className="relative pb-[60%] overflow-hidden bg-black/5">
+      <div className="relative pb-[60%] overflow-hidden bg-black/5 cursor-pointer" onClick={() => window.location.href = `/product/${product.id}`}>
         {product.imageUrl && (
           <img
             src={product.imageUrl}
@@ -91,7 +91,12 @@ function ProductCard({
       <CardHeader className="py-3 px-4">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-bold text-lg mb-1">{product.name}</h3>
+            <h3 
+              className="font-bold text-lg mb-1 hover:text-blue-500 cursor-pointer" 
+              onClick={() => window.location.href = `/product/${product.id}`}
+            >
+              {product.name}
+            </h3>
             <Badge variant="outline" className="text-xs capitalize">
               {getCategoryLabel(product.category)}
             </Badge>
