@@ -33,8 +33,8 @@ export default function HomePage() {
     <div className="container mx-auto px-4 py-6">
       {/* Banner */}
       <div className="bg-black text-white border border-white/20 rounded-lg p-5 mb-6 text-center">
-        <h1 className="text-xl font-bold mb-2">أهلا بك في متجر ستايل إيكو</h1>
-        <p>تسوق أحدث منتجات ستايل إيكو بتصميمات عصرية وحصرية</p>
+        <h1 className="text-2xl font-bold mb-2">أهلا بك في مول أمريكي</h1>
+        <p>تسوق أحدث منتجات الماركات العالمية بتجربة واقع افتراضي حصرية</p>
       </div>
       
       {/* Featured Products */}
