@@ -45,24 +45,39 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden border-0 shadow-sm">
+    <Card className="overflow-hidden border border-white/30 bg-black text-white hover:shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-all duration-300">
       <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-3">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="font-bold text-lg">{reward.name}</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">{reward.description}</p>
+            <h3 className="font-bold text-lg text-white tracking-wide">{reward.name}</h3>
+            <p className="text-sm text-white/70 mt-1">{reward.description}</p>
           </div>
-          <Badge variant={canClaim ? "default" : "outline"} className={canClaim ? "bg-[#5e35b1]" : ""}>
+          <Badge 
+            variant={canClaim ? "default" : "outline"} 
+            className={canClaim ? "bg-white text-black border-none" : "border-white/70 text-white bg-transparent"}
+          >
             {reward.pointsRequired} نقطة
           </Badge>
+        </div>
+        
+        <div className="w-full h-1 bg-white/10 rounded-full mb-4">
+          <div 
+            className="h-1 rounded-full bg-white transition-all duration-500"
+            style={{ width: canClaim ? '100%' : `${Math.min(99, Math.floor((userPoints / reward.pointsRequired) * 100))}%` }}
+          ></div>
         </div>
         
         <Button 
           onClick={handleClaim}
           disabled={claimed || !canClaim}
           variant={claimed ? "outline" : "default"}
-          className={`w-full ${claimed ? "" : "bg-[#5e35b1]"}`}
-          size="sm"
+          className={`w-full font-bold tracking-wide py-5 ${
+            claimed 
+              ? "border-white/50 text-white/70 hover:bg-white/10" 
+              : canClaim 
+                ? "bg-white text-black hover:bg-white/90" 
+                : "bg-white/20 text-white hover:bg-white/30"
+          }`}
         >
           {claimed ? "تم المطالبة" : canClaim ? "مطالبة الآن" : "نقاط غير كافية"}
         </Button>
