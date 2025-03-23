@@ -48,8 +48,8 @@ function ProductCard({
     },
   });
 
-  // Format price from cents to dollars
-  const formattedPrice = (product.price / 100).toFixed(2);
+  // Format price in Egyptian Pounds (EGP)
+  const formattedPrice = product.price.toLocaleString('ar-EG');
   
   // Get appropriate category label in Arabic
   const getCategoryLabel = (category: string) => {
@@ -81,7 +81,7 @@ function ProductCard({
         
         {/* Price tag with EGP */}
         <div className="absolute top-3 left-3 bg-white/90 dark:bg-black/80 px-2 py-1 rounded-md shadow-md text-sm font-bold">
-          {(product.price / 100).toFixed(2)} ج.م
+          {formattedPrice} جنيه
         </div>
         
         {/* Promotion badge for special products */}
@@ -163,8 +163,9 @@ function ProductCard({
         {/* Pricing and Rating section */}
         <div className="flex justify-between items-center w-full mb-2">
           <div className="flex items-center">
-            <div className="font-bold text-xl text-[#5e35b1]">
-              {formattedPrice} ج.م
+            <div className="font-bold text-xl text-[#5e35b1] flex items-center">
+              <span>{formattedPrice}</span>
+              <span className="mr-1 text-sm">جنيه مصري</span>
             </div>
             {product.commissionRate > 0 && (
               <span className="text-xs ml-2 text-green-600">

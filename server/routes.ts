@@ -77,7 +77,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (!affiliate) {
         // Create a new affiliate record if it doesn't exist
-        const newAffiliate = await storage.createAffiliate({ userId, earnings: 0, conversions: 0 });
+        const newAffiliate = await storage.createAffiliate({ 
+          userId, 
+          earnings: 0, 
+          conversions: 0,
+          tier: "basic",
+          customCommissionRate: null,
+          paymentInfo: null,
+          biography: null,
+          specialty: null
+        });
         return res.json(newAffiliate);
       }
       
