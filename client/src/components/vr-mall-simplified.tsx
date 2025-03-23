@@ -134,6 +134,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const [showCameraMode, setShowCameraMode] = useState(false);
   const [cameraMode, setCameraMode] = useState<'product-try-on' | 'avatar-creation' | 'ar-measure'>('product-try-on');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [voiceControlEnabled, setVoiceControlEnabled] = useState(true);
   
   // References
   const mallRef = useRef<HTMLDivElement>(null);
@@ -192,6 +193,75 @@ export default function VRMallSimplified({ products }: VRMallProps) {
       spread: 70,
       origin: { y: 0.6 }
     });
+  }
+  
+  // Handle voice commands
+  function handleVoiceCommand(command: string, params?: any) {
+    switch(command.toLowerCase()) {
+      case 'move':
+      case 'انتقل':
+        if (params && typeof params === 'string') {
+          const section = params.toLowerCase();
+          if (['entrance', 'electronics', 'clothing', 'food', 'plaza', 'المدخل', 'الإلكترونيات', 'الأزياء', 'المطاعم', 'الساحة'].includes(section)) {
+            let targetSection = section;
+            if (section === 'المدخل') targetSection = 'entrance';
+            if (section === 'الإلكترونيات') targetSection = 'electronics';
+            if (section === 'الأزياء') targetSection = 'clothing';
+            if (section === 'المطاعم') targetSection = 'food';
+            if (section === 'الساحة') targetSection = 'plaza';
+            
+            handleSectionNavigation(targetSection);
+            toast({
+              title: "جاري التنقل",
+              description: `التنقل إلى ${getAreaName(targetSection)}`
+            });
+          }
+        }
+        break;
+      
+      case 'show':
+      case 'عرض':
+        if (params === 'assistant' || params === 'المساعد') {
+          setShowAiAssistant(true);
+        }
+        break;
+        
+      case 'hide':
+      case 'إخفاء':
+        if (params === 'assistant' || params === 'المساعد') {
+          setShowAiAssistant(false);
+        }
+        break;
+        
+      case 'exit':
+      case 'خروج':
+        exitVR();
+        break;
+        
+      case 'search':
+      case 'بحث':
+        if (params && typeof params === 'string') {
+          const searchTerm = params.toLowerCase();
+          const matchedProduct = products.find(p => 
+            p.name.toLowerCase().includes(searchTerm) || 
+            p.description.toLowerCase().includes(searchTerm)
+          );
+          
+          if (matchedProduct) {
+            handleShowProduct(matchedProduct);
+            toast({
+              title: "تم العثور على المنتج",
+              description: `عرض ${matchedProduct.name}`
+            });
+          } else {
+            toast({
+              title: "عفواً",
+              description: "لم يتم العثور على منتجات مطابقة"
+            });
+          }
+        }
+        break;
+    }
   }
   
   // Handle navigation between sections
