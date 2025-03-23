@@ -669,7 +669,7 @@ export default function VRMall({ products }: VRMallProps) {
   
   // If no avatar selected, show avatar selection UI
   if (!selectedAvatar) {
-    return renderAvatarSelectionUI(AVATARS, handleSelectAvatar);
+    return <AvatarSelectionScreen onSelect={handleSelectAvatar} />;
   }
   
   // Group products by category
