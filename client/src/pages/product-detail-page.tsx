@@ -160,11 +160,16 @@ export default function ProductDetailPage() {
         {/* Product Image with AR and QR */}
         <div className="relative">
           <div 
-            className="aspect-square bg-gradient-to-br from-black to-pink-950 rounded-xl overflow-hidden relative border-2 border-pink-500/50 transition-all duration-500 group hover:shadow-[0_0_25px_rgba(236,72,153,0.7)] animate-fadeIn"
+            className="aspect-square rounded-xl overflow-hidden relative border-2 transition-all duration-500 group animate-fadeIn"
             style={{
               perspective: '1000px',
               transformStyle: 'preserve-3d',
-              boxShadow: showHologram ? '0 0 15px rgba(236,72,153,0.5), 0 0 30px rgba(236,72,153,0.2)' : '0 0 15px rgba(236,72,153,0.5)',
+              background: `linear-gradient(to bottom right, black, rgba(0,0,0,0.8))`,
+              borderColor: `${ambientColors.glow}50`,
+              boxShadow: showHologram 
+                ? `0 0 15px ${ambientColors.glow}80, 0 0 30px ${ambientColors.glow}40` 
+                : `0 0 15px ${ambientColors.glow}80`,
+              transition: 'all 0.5s ease',
             }}
             onMouseMove={(e) => {
               if (!isRotating) {
@@ -212,8 +217,9 @@ export default function ProductDetailPage() {
               style={{opacity: showHologram ? 1 : 0, transition: 'opacity 0.5s ease-in'}}
             >
               <div 
-                className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-pink-400 to-transparent" 
+                className="absolute inset-x-0 h-[2px]" 
                 style={{
+                  background: `linear-gradient(to right, transparent, ${ambientColors.glow}, transparent)`,
                   animation: 'scan 2s ease-in-out infinite',
                   top: '0%',
                   opacity: 0.7,
@@ -223,33 +229,65 @@ export default function ProductDetailPage() {
             
             {/* Holographic effect */}
             <div 
-              className={`absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 transition-opacity duration-700 ${showHologram ? 'opacity-30' : 'opacity-0'} group-hover:opacity-40`}
+              className={`absolute inset-0 transition-opacity duration-700 ${showHologram ? 'opacity-30' : 'opacity-0'} group-hover:opacity-40`}
               style={{
+                background: `linear-gradient(to right, ${ambientColors.glow}10, ${ambientColors.glow}20)`,
                 backgroundSize: '200% 200%',
                 animation: 'shimmer 3s ease-in-out infinite',
               }}
             ></div>
             
             {/* Prism light effect on corners */}
-            <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-pink-500/20 to-transparent rounded-br-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-            <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-purple-500/20 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div 
+              className="absolute top-0 left-0 w-20 h-20 rounded-br-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              style={{
+                background: `linear-gradient(to bottom right, ${ambientColors.glow}30, transparent)`,
+              }}
+            ></div>
+            <div 
+              className="absolute bottom-0 right-0 w-20 h-20 rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+              style={{
+                background: `linear-gradient(to top left, ${ambientColors.glow}30, transparent)`,
+              }}
+            ></div>
             
             {/* Promotional badge */}
             {validProduct.commissionRate > 8 && (
-              <Badge variant="secondary" className="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-1 text-sm animate-pulse shadow-lg z-10">
+              <Badge 
+                variant="secondary" 
+                className="absolute top-4 right-4 text-white px-3 py-1 text-sm animate-pulse shadow-lg z-10"
+                style={{
+                  background: `linear-gradient(to right, ${ambientColors.glow}CC, ${ambientColors.glow}99)`,
+                }}
+              >
                 عرض خاص
               </Badge>
             )}
             
             {/* 3D rotation indicator */}
-            <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center border border-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <i className="fas fa-cube text-pink-400 text-xs"></i>
+            <div 
+              className="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                borderColor: `${ambientColors.glow}30`,
+                borderWidth: '1px',
+                borderStyle: 'solid',
+              }}
+            >
+              <i 
+                className="fas fa-cube text-xs"
+                style={{ color: ambientColors.glow }}
+              ></i>
             </div>
             
             {/* Product name on hover */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
               <h3 className="text-xl font-bold text-white">{validProduct.name}</h3>
-              <p className="text-pink-300 text-sm">{getCategoryLabel(validProduct.category)}</p>
+              <p 
+                className="text-sm"
+                style={{ color: ambientColors.glow }}
+              >
+                {getCategoryLabel(validProduct.category)}
+              </p>
             </div>
             
             {/* Scan animation and shimmer effects */}
@@ -280,10 +318,25 @@ export default function ProductDetailPage() {
           
           {/* AR and QR buttons below image */}
           <div className="mt-6 flex justify-between gap-4">
-            <AugmentedReality product={validProduct} button size="default" className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 shadow-lg hover:shadow-pink-500/30 transition-all duration-300" />
+            <AugmentedReality 
+              product={validProduct} 
+              button 
+              size="default" 
+              className="text-white shadow-lg transition-all duration-300" 
+              style={{
+                background: `linear-gradient(to right, ${ambientColors.glow}CC, ${ambientColors.glow}99)`,
+                boxShadow: `0 4px 12px -2px ${ambientColors.glow}30`,
+              }}
+            />
             
             {validProduct.category === 'clothing' || validProduct.category === 'sports' && (
-              <Button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 shadow-lg hover:shadow-blue-500/30 transition-all duration-300">
+              <Button 
+                className="text-white shadow-lg transition-all duration-300"
+                style={{
+                  background: `linear-gradient(to right, ${ambientColors.glow}CC, ${ambientColors.glow}99)`,
+                  boxShadow: `0 4px 12px -2px ${ambientColors.glow}30`,
+                }}
+              >
                 <i className="fas fa-tshirt mr-2"></i>
                 جرب المنتج
               </Button>
@@ -297,7 +350,11 @@ export default function ProductDetailPage() {
               showLabel
               title={`تسوق ${validProduct.name} الآن!`}
               text={`وجدت هذا المنتج الرائع: ${validProduct.name} - ${validProduct.description}`}
-              className="border-pink-500/50 hover:bg-pink-500/10 transition-colors duration-300"
+              className="hover:bg-black/30 transition-colors duration-300"
+              style={{
+                borderColor: `${ambientColors.glow}50`,
+                color: ambientColors.glow
+              }}
             />
           </div>
         </div>
