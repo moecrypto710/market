@@ -233,12 +233,64 @@ export default function VRShop({ products }: VRShopProps) {
     return groups;
   }, {} as Record<string, Product[]>);
   
-  // Calculate store sections based on categories
+  // Brand partners with locations in the VR mall
+  const brandPartners = [
+    { 
+      id: 1, 
+      name: "تك ستار", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=TechStar&backgroundColor=5e35b1",
+      category: "electronics",
+      x: 20, 
+      y: 25,
+      featured: true,
+    },
+    { 
+      id: 2, 
+      name: "فاشن أرابيا", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=FashionArabia&backgroundColor=e91e63",
+      category: "clothing",
+      x: 70, 
+      y: 25,
+      featured: true,
+    },
+    { 
+      id: 3, 
+      name: "الديار", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=HomeDeco&backgroundColor=4caf50",
+      category: "home",
+      x: 20, 
+      y: 75,
+      featured: false,
+    },
+    { 
+      id: 4, 
+      name: "الرياضي", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=SportsPro&backgroundColor=2196f3",
+      category: "sports",
+      x: 70, 
+      y: 75,
+      featured: false,
+    },
+    { 
+      id: 5, 
+      name: "سمارت ديفايس", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=SmartDevices&backgroundColor=ff9800",
+      category: "electronics",
+      x: 30, 
+      y: 35,
+      featured: true,
+    },
+  ];
+
+  // Calculate store sections based on categories and add partnership mall structure
   const storeSections = [
-    { id: 'electronics', name: 'إلكترونيات', x: 25, y: 30, width: 30, height: 30 },
-    { id: 'clothing', name: 'ملابس', x: 65, y: 30, width: 30, height: 30 },
-    { id: 'home', name: 'منزل', x: 25, y: 70, width: 30, height: 25 },
-    { id: 'sports', name: 'رياضة', x: 65, y: 70, width: 30, height: 25 },
+    { id: 'electronics', name: 'إلكترونيات', x: 25, y: 30, width: 30, height: 30, type: 'category' },
+    { id: 'clothing', name: 'ملابس', x: 65, y: 30, width: 30, height: 30, type: 'category' },
+    { id: 'home', name: 'منزل', x: 25, y: 70, width: 30, height: 25, type: 'category' },
+    { id: 'sports', name: 'رياضة', x: 65, y: 70, width: 30, height: 25, type: 'category' },
+    { id: 'partnership-zone', name: 'منطقة الشراكات', x: 45, y: 50, width: 15, height: 15, type: 'special' },
+    { id: 'food-court', name: 'المطاعم', x: 45, y: 90, width: 25, height: 10, type: 'special' },
+    { id: 'entrance', name: 'المدخل', x: 45, y: 10, width: 25, height: 10, type: 'special' },
   ];
   
   // Get current section based on avatar position
@@ -410,6 +462,45 @@ export default function VRShop({ products }: VRShopProps) {
         <div className="absolute right-[30%] top-[50%] w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
           <i className="fas fa-tag text-white/20 text-2xl"></i>
         </div>
+        
+        {/* Special mall areas */}
+        <div className="absolute left-[45%] top-[50%] w-14 h-14 bg-[#5e35b1]/30 rounded-full flex items-center justify-center">
+          <i className="fas fa-handshake text-white/50 text-2xl"></i>
+        </div>
+        <div className="absolute left-[45%] top-[90%] w-14 h-14 bg-[#4caf50]/30 rounded-full flex items-center justify-center">
+          <i className="fas fa-utensils text-white/50 text-2xl"></i>
+        </div>
+        <div className="absolute left-[45%] top-[10%] w-14 h-14 bg-[#2196f3]/30 rounded-full flex items-center justify-center">
+          <i className="fas fa-door-open text-white/50 text-2xl"></i>
+        </div>
+        
+        {/* Brand partner stores */}
+        {brandPartners.map(brand => (
+          <div
+            key={brand.id}
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+            style={{ 
+              left: `${brand.x}%`, 
+              top: `${brand.y}%`,
+            }}
+          >
+            <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${brand.featured ? 'border-amber-400' : 'border-white/20'}`}>
+              <img 
+                src={brand.logo} 
+                alt={brand.name} 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className={`mt-1 px-2 py-0.5 rounded-full text-xs bg-black/50 ${brand.featured ? 'border border-amber-400/50' : ''}`}>
+              {brand.name}
+            </div>
+            {brand.featured && (
+              <div className="mt-1 px-1 py-0.5 bg-amber-500/80 rounded-full text-[8px] text-black font-bold">
+                شريك مميز
+              </div>
+            )}
+          </div>
+        ))}
         
         {/* Avatar */}
         <div 
