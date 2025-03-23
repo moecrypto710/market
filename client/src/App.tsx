@@ -78,7 +78,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <VRProvider>
-          <div className="min-h-screen font-[Tajawal] bg-gradient-to-br from-[#3b2fa3] to-[#7e57c2] text-white">
+          <div className="min-h-screen font-[Tajawal] bg-black text-white">
             <Header />
             <main className="pb-20">
               <Router />
