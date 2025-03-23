@@ -77,13 +77,6 @@ export const products = pgTable("products", {
   featured: boolean("featured").default(false),
   threeDModelUrl: text("three_d_model_url"),
   viewCount: integer("view_count").default(0),
-  // حقول خاصة بركن التراث الثقافي
-  heritageStory: text("heritage_story"),
-  heritageRegion: text("heritage_region"),
-  heritageEra: text("heritage_era"),
-  heritageMaterials: text("heritage_materials"),
-  heritageImageUrl: text("heritage_image_url"),
-  heritageVideoUrl: text("heritage_video_url"),
 });
 
 // Rewards and loyalty
