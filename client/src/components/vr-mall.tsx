@@ -1215,12 +1215,95 @@ export default function VRMall({ products }: VRMallProps) {
             width: `${section.width}%`,
             height: `${section.height}%`,
           }}>
-            {/* Modern floating shelves with holographic elements */}
-            <div className="relative w-full h-full">
-              {/* Virtual display shelves */}
-              <div className="absolute left-1/4 top-1/4 w-1/2 h-1/2 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
-              <div className="absolute left-1/8 top-3/4 w-3/4 h-1/6 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
-              <div className="absolute right-1/8 top-1/8 w-1/4 h-2/3 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
+            {/* Enhanced shopping area with Arabic styling and modern tech elements */}
+            <div className="relative w-full h-full group">
+              {/* Decorative Arabic-inspired patterns */}
+              <div className="absolute inset-0 opacity-10" 
+                style={{
+                  backgroundImage: 'url("https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/arabic-pattern_wqcgvr.png")',
+                  backgroundSize: '120px',
+                  backgroundBlendMode: 'soft-light',
+                  mixBlendMode: 'overlay'
+                }}>
+              </div>
+                
+              {/* Virtual display shelves with improved styling */}
+              <div className="absolute left-1/4 top-1/4 w-1/2 h-1/2 
+                            border border-white/20 rounded-lg 
+                            bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm
+                            transition-all duration-300 transform group-hover:scale-105"
+                  style={{
+                    boxShadow: `0 0 20px ${
+                      section.id === 'electronics' ? '#03a9f415' : 
+                      section.id === 'clothing' ? '#e91e6315' : 
+                      section.id === 'home' ? '#4caf5015' : 
+                      section.id === 'sports' ? '#2196f315' : '#5e35b115'
+                    }`
+                  }}>
+                {/* Product showcase hologram effect */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative h-4/5 w-4/5 flex items-center justify-center overflow-hidden">
+                    <div className="absolute w-full h-full bg-gradient-to-t from-transparent via-white/5 to-transparent 
+                                   animate-scanner rounded-lg"></div>
+                    <i className={`text-6xl opacity-30 ${
+                      section.id === 'electronics' ? 'fas fa-laptop text-blue-400' : 
+                      section.id === 'clothing' ? 'fas fa-tshirt text-pink-400' : 
+                      section.id === 'home' ? 'fas fa-couch text-green-400' : 
+                      section.id === 'sports' ? 'fas fa-dumbbell text-purple-400' : 
+                      'fas fa-shopping-bag text-amber-400'
+                    }`}></i>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Modern interactive signage with Arabic calligraphy */}
+              <div className="absolute left-0 top-0 w-2/5 h-1/5 
+                            border border-white/10 rounded-lg 
+                            bg-black/30 backdrop-blur-sm overflow-hidden"
+                style={{
+                  backgroundImage: 'linear-gradient(45deg, rgba(255,255,255,0.05) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.05) 75%, transparent 75%, transparent)',
+                  backgroundSize: '8px 8px'
+                }}>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-sm font-bold">{section.name}</div>
+                    <div className="text-[8px] opacity-70">تسوق الآن</div>
+                  </div>
+                </div>
+                {/* Animated dots */}
+                <div className="absolute bottom-1 right-1 flex">
+                  <div className="w-1 h-1 bg-blue-400 rounded-full animate-ping delay-100"></div>
+                  <div className="w-1 h-1 bg-pink-400 rounded-full animate-ping delay-200 ml-0.5"></div>
+                  <div className="w-1 h-1 bg-amber-400 rounded-full animate-ping delay-300 ml-0.5"></div>
+                </div>
+              </div>
+              
+              {/* Digital product display stands */}
+              <div className="absolute right-1/8 bottom-1/8 w-1/5 h-2/5 
+                            border border-white/20 rounded-lg 
+                            bg-gradient-to-br from-black/30 to-black/10 backdrop-blur-sm">
+                {/* Digital price tag */}
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 
+                               text-[8px] px-2 py-0.5 bg-black/60 rounded-full border border-white/10">
+                  عروض خاصة
+                </div>
+                {/* Holographic floating effect */}
+                <div className="absolute inset-4 flex items-center justify-center">
+                  <div className="w-full h-full relative">
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-transparent 
+                                   animate-float4 rounded-full" 
+                        style={{
+                          boxShadow: `0 0 15px ${
+                            section.id === 'electronics' ? '#03a9f410' : 
+                            section.id === 'clothing' ? '#e91e6310' : 
+                            section.id === 'home' ? '#4caf5010' : 
+                            section.id === 'sports' ? '#2196f310' : '#5e35b110'
+                          }`
+                        }}>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ))}
