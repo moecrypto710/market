@@ -102,7 +102,7 @@ const AVATARS = [
 export default function VRMall({ products }: VRMallProps) {
   const { toast } = useToast();
   
-  // Original state variables - maintain the same order
+  // All state variables in the correct order to match previous render
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarProps | null>(null);
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -114,8 +114,6 @@ export default function VRMall({ products }: VRMallProps) {
   const [selectedFeature, setSelectedFeature] = useState<any | null>(null);
   const [showFeatureDetails, setShowFeatureDetails] = useState(false);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
-  
-  // New avatar enhancement state variables
   const [isMoving, setIsMoving] = useState(false);
   const [moveDirection, setMoveDirection] = useState('شمال');
   const [userLevel, setUserLevel] = useState(1);
