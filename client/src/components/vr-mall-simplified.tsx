@@ -44,7 +44,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
         "تخفيضات إضافية 10% على الإلكترونيات",
         "وصول حصري لآخر التقنيات"
       ],
-      color: "#5e35b1",
+      color: "#7e22ce",
       specialFeature: "محلل المواصفات",
       specialFeatureDescription: "قدرة خاصة على تحليل مواصفات المنتجات التقنية ومقارنتها بسرعة"
     },
@@ -59,15 +59,15 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
         "نصائح أزياء شخصية",
         "تجربة افتراضية للملابس"
       ],
-      color: "#e91e63",
+      color: "#7e22ce",
       specialFeature: "مستشارة الأناقة",
       specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية"
     }
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
+    <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-black/80 border border-purple-800/30 rounded-xl p-8 flex flex-col items-center text-center">
         <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
         <p className="text-white/70 mb-6">اختر شخصية للتسوق في مول أمريكي الافتراضي</p>
         
@@ -75,27 +75,15 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
           {avatars.map((avatar) => (
             <div
               key={avatar.id}
-              className="relative bg-gradient-to-b from-black/60 to-black/40 border border-white/10 hover:border-white/30 p-6 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 w-64"
-              style={{ 
-                boxShadow: `0 0 20px ${avatar.color}30`,
-                borderColor: avatar.color 
-              }}
+              className="relative bg-black border border-purple-800/30 p-6 rounded-lg cursor-pointer transition-all duration-300 hover:border-purple-500/50 w-64"
               onClick={() => onSelect(avatar)}
             >
               <div className="mb-4 relative h-40 w-40 mx-auto">
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-black/40 to-black/10 backdrop-blur-md border border-white/10"></div>
                 <img 
                   src={avatar.image} 
                   alt={avatar.name} 
                   className="h-full w-full object-contain relative z-10" 
                 />
-                <div 
-                  className="absolute inset-0 rounded-full opacity-20"
-                  style={{ 
-                    background: `radial-gradient(circle, ${avatar.color} 0%, transparent 70%)`,
-                    filter: "blur(8px)"
-                  }}
-                ></div>
               </div>
               
               <h3 className="text-2xl font-bold mb-2 text-center">{avatar.name}</h3>
@@ -103,8 +91,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
               
               <div className="flex justify-center">
                 <button 
-                  className="px-4 py-2 rounded-lg text-white text-lg font-medium transition-all"
-                  style={{ backgroundColor: avatar.color }}
+                  className="px-4 py-2 rounded-lg text-white text-lg font-medium bg-purple-700 hover:bg-purple-800"
                 >
                   اختر {avatar.name}
                 </button>
@@ -600,21 +587,21 @@ export default function VRMallSimplified({ products }: VRMallProps) {
         {/* AI Assistant Toggle Button */}
         <Button
           variant="outline"
-          className="absolute top-16 right-4 z-50 bg-gradient-to-r from-blue-600 to-purple-600 border-0"
+          className="absolute top-16 right-4 z-50 bg-purple-800 border border-purple-700/50"
           onClick={() => setShowAiAssistant(!showAiAssistant)}
         >
           <i className={`fas fa-${showAiAssistant ? 'eye-slash' : 'robot'} mr-2`}></i>
-          {showAiAssistant ? 'إخفاء المساعد الذكي' : 'إظهار المساعد الذكي'}
+          {showAiAssistant ? 'إخفاء المساعد' : 'إظهار المساعد'}
         </Button>
 
         {/* Voice Control Toggle Button */}
         <Button
           variant="outline"
-          className="absolute top-28 right-4 z-50 bg-gradient-to-r from-teal-600 to-blue-600 border-0"
+          className="absolute top-28 right-4 z-50 bg-purple-800 border border-purple-700/50"
           onClick={() => setVoiceControlEnabled(!voiceControlEnabled)}
         >
           <i className={`fas fa-${voiceControlEnabled ? 'microphone-slash' : 'microphone'} mr-2`}></i>
-          {voiceControlEnabled ? 'تعطيل التحكم الصوتي' : 'تفعيل التحكم الصوتي'}
+          {voiceControlEnabled ? 'تعطيل الصوت' : 'تفعيل الصوت'}
         </Button>
         
         {/* Current location indicator */}
