@@ -101,6 +101,8 @@ const AVATARS = [
 
 export default function VRMall({ products }: VRMallProps) {
   const { toast } = useToast();
+  
+  // Original state variables - maintain the same order
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarProps | null>(null);
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -808,26 +810,57 @@ export default function VRMall({ products }: VRMallProps) {
     
     const newSection = getCurrentSection();
     
-    // If entered a new section with features
-    if (newSection && newSection !== activeSection && newSection.features) {
+    // If entered a new section that's different from the current active section
+    if (newSection && newSection !== activeSection) {
+      // Store the previous section before updating active section
+      setPreviousSection(activeSection);
       setActiveSection(newSection);
       
-      // Show notification about section features
-      toast({
-        title: `أهلاً بك في ${newSection.name}!`,
-        description: `اكتشف الميزات المتاحة في هذه المنطقة: ${newSection.features.map(f => f.name).join('، ')}`,
-        duration: 5000,
-      });
-      
-      // If this is a first-time visit to any section with features
-      if (!completedTasks.includes('visitSection')) {
-        setCompletedTasks(prev => [...prev, 'visitSection']);
+      // Only show transition animation if moving between different section types
+      if (activeSection && newSection.type !== activeSection.type) {
+        // Determine the transition style based on the sections involved
+        const transitionMap: Record<string, string> = {
+          'entrance_category': 'modern',
+          'category_special': 'futuristic',
+          'special_category': 'cultural',
+          'plaza_category': 'geometric',
+          'category_plaza': 'calligraphy',
+          'wing_category': 'arabesque',
+          'default': 'fade'
+        };
         
+        const transitionKey = activeSection && newSection
+          ? `${activeSection.type}_${newSection.type}`
+          : 'default';
+          
+        setTransitionStyle(transitionMap[transitionKey] || 'fade');
+        setShowTransition(true);
+        
+        // Hide transition after animation completes
+        setTimeout(() => {
+          setShowTransition(false);
+        }, 1500);
+      }
+      
+      // Only show notification for sections with features
+      if (newSection.features) {
+        // Show notification about section features
         toast({
-          title: "تلميح من المساعد الذكي",
-          description: "انقر على أيقونات الميزات المتوفرة في المنطقة للتفاعل معها وتجربة مزايا المول الافتراضي",
-          duration: 6000,
+          title: `أهلاً بك في ${newSection.name}!`,
+          description: `اكتشف الميزات المتاحة في هذه المنطقة: ${newSection.features.map(f => f.name).join('، ')}`,
+          duration: 5000,
         });
+        
+        // If this is a first-time visit to any section with features
+        if (!completedTasks.includes('visitSection')) {
+          setCompletedTasks(prev => [...prev, 'visitSection']);
+          
+          toast({
+            title: "تلميح من المساعد الذكي",
+            description: "انقر على أيقونات الميزات المتوفرة في المنطقة للتفاعل معها وتجربة مزايا المول الافتراضي",
+            duration: 6000,
+          });
+        }
       }
     } 
     // If leaving a section
