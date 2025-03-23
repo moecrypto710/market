@@ -262,77 +262,91 @@ export class MemStorage implements IStorage {
       this.users.set(user.id, user);
     });
     
-    // Sample products
+    // Sample products with Style Echo cyberpunk designs
     const productData: Omit<Product, "id">[] = [
       {
-        name: "جلابية مصرية تقليدية",
-        description: "جلابية مصرية أصيلة بتطريز يدوي فاخر ومصنوعة من القطن المصري عالي الجودة",
+        name: "تيشيرت ستايل إيكو الرياضي",
+        description: "تيشيرت رياضي بتكنولوجيا نيون متطورة، مصمم بنمط الواقع الافتراضي، مناسب للأنشطة الرياضية العصرية",
         price: 1200,
-        imageUrl: "https://images.unsplash.com/photo-1590074072786-a66914d668f1",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 10,
         vrEnabled: true,
         brandId: 1,
         featured: true,
-        threeDModelUrl: "/models/galabiya.glb",
+        threeDModelUrl: "/models/style-echo-tshirt.glb",
         viewCount: 342
       },
       {
-        name: "عباية خليجية مطرزة",
-        description: "عباية أنيقة بتصميم عصري ومطرزة يدويًا، مناسبة للمناسبات الخاصة",
+        name: "طقم ستايل إيكو الكامل",
+        description: "طقم رياضي فاخر بألوان متوهجة وتصميم مستقبلي، يوفر راحة فائقة مع تقنية تبريد متطورة",
         price: 1850,
-        imageUrl: "https://images.unsplash.com/photo-1624222247344-550fb60ae46f",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-outfit_xtorq8.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 12,
         vrEnabled: true,
         brandId: 2,
         featured: true,
-        threeDModelUrl: "/models/abaya.glb",
+        threeDModelUrl: "/models/style-echo-outfit.glb",
         viewCount: 289
       },
       {
-        name: "قفطان مغربي فاخر",
-        description: "قفطان بألوان زاهية وتطريز ذهبي فخم، مستوحى من التراث المغربي الأصيل",
+        name: "هودي ستايل إيكو المستقبلي",
+        description: "هودي أسود بتصميم مستقبلي مع إضاءات نيون متفاعلة، مصنوع من خامات متطورة مقاومة للماء ومناسب للبيئات الرقمية",
         price: 2200,
-        imageUrl: "https://images.unsplash.com/photo-1603798125914-7b5d27789648",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 15,
         vrEnabled: true,
         brandId: 3,
         featured: true,
-        threeDModelUrl: "/models/kaftan.glb",
+        threeDModelUrl: "/models/style-echo-hoodie.glb",
         viewCount: 418
       },
       {
-        name: "طربوش تقليدي",
-        description: "طربوش أحمر مصنوع يدويًا بأعلى جودة، قطعة تراثية أصيلة",
-        price: 450,
-        imageUrl: "https://images.unsplash.com/photo-1582458131866-380408738747",
+        name: "حذاء ستايل إيكو الرياضي",
+        description: "حذاء رياضي متعدد الألوان بتصميم مستقبلي، مزود بإضاءات LED تفاعلية ونظام تهوية ذكي",
+        price: 1800,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
         category: "clothing",
         inStock: true,
-        commissionRate: 8,
+        commissionRate: 12,
         vrEnabled: true,
         brandId: 1,
-        featured: false,
-        threeDModelUrl: "/models/tarboosh.glb",
-        viewCount: 156
+        featured: true,
+        threeDModelUrl: "/models/style-echo-shoes.glb",
+        viewCount: 356
       },
       {
-        name: "سروال شرقي فضفاض",
-        description: "سروال قطني فضفاض بتصميم عصري، مريح ومناسب للصيف",
+        name: "شراب ستايل إيكو النيون",
+        description: "شراب بتصميم سايبربانك بألوان نيون مميزة وإضاءات متوهجة، مناسب للاستخدام اليومي والفعاليات الرياضية",
         price: 550,
-        imageUrl: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-socks_rnm8bj.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 9,
         vrEnabled: true,
         brandId: 2,
         featured: false,
-        threeDModelUrl: "/models/pants.glb",
+        threeDModelUrl: "/models/style-echo-socks.glb",
         viewCount: 203
+      },
+      {
+        name: "قبعة ستايل إيكو المستقبلية",
+        description: "قبعة سوداء بتصميم عصري وشعار ستايل إيكو المضيء، مناسبة للاستخدام اليومي وفعاليات الواقع الافتراضي",
+        price: 690,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
+        category: "clothing",
+        inStock: true,
+        commissionRate: 10,
+        vrEnabled: true,
+        brandId: 3,
+        featured: true,
+        threeDModelUrl: "/models/style-echo-cap.glb",
+        viewCount: 278
       }
     ];
 
@@ -341,15 +355,15 @@ export class MemStorage implements IStorage {
       this.products.set(id, { ...product, id });
     });
 
-    // Sample rewards
+    // Sample rewards with Style Echo theme
     const rewardData: Omit<Reward, "id">[] = [
       {
-        name: "خصم 300 جنيه",
-        description: "على طلبك التالي من الملابس العربية",
+        name: "خصم 300 جنيه على منتجات ستايل إيكو",
+        description: "استمتع بخصم على طلبك التالي من منتجات ستايل إيكو المستقبلية",
         pointsRequired: 1000,
         isActive: true,
         tier: "basic",
-        imageUrl: "https://images.unsplash.com/photo-1607082349566-187342175e2f",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
         expiryDate: new Date("2025-12-31")
       },
       {
@@ -358,16 +372,16 @@ export class MemStorage implements IStorage {
         pointsRequired: 750,
         isActive: true,
         tier: "basic",
-        imageUrl: "https://images.unsplash.com/photo-1586024351226-3ad39725b061",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
         expiryDate: new Date("2025-12-31")
       },
       {
-        name: "جلابية تقليدية هدية",
-        description: "احصل على جلابية مصرية أصيلة مجانًا مع طلبك القادم",
+        name: "تيشيرت ستايل إيكو هدية",
+        description: "احصل على تيشيرت ستايل إيكو الرياضي مجانًا مع طلبك القادم",
         pointsRequired: 2000,
         isActive: true,
         tier: "premium",
-        imageUrl: "https://images.unsplash.com/photo-1590074072786-a66914d668f1",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
         expiryDate: new Date("2025-12-31")
       }
     ];

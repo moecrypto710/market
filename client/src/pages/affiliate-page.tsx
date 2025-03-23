@@ -22,24 +22,24 @@ export default function AffiliatePage() {
       <h2 className="text-2xl font-bold mb-6">التسويق بالعمولة</h2>
       
       {/* Affiliate Dashboard */}
-      <div className="bg-black/40 backdrop-blur-md rounded-lg p-6 mb-6 border border-[#00ffcd]/30">
+      <div className="bg-black rounded-lg p-6 mb-6 border border-white/10">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="text-center">
-            <span className="bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] bg-clip-text text-transparent text-2xl font-bold block">${earnings}</span>
+            <span className="text-white text-2xl font-bold block">${earnings}</span>
             <p className="text-sm text-white/70">الأرباح هذا الشهر</p>
           </div>
           <div className="text-center">
-            <span className="bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] bg-clip-text text-transparent text-2xl font-bold block">{conversions}</span>
+            <span className="text-white text-2xl font-bold block">{conversions}</span>
             <p className="text-sm text-white/70">التحويلات الناجحة</p>
           </div>
         </div>
         
         <div className="flex justify-between items-center">
-          <button className="bg-[#00ffcd] text-black py-2 px-4 rounded-lg font-bold hover:bg-[#00d6ae] transition duration-300 shadow-[0_0_15px_rgba(0,255,205,0.5)]">
+          <button className="bg-black text-white py-2 px-4 rounded-lg font-bold border border-[#00ffcd] hover:bg-[#00ffcd]/10 transition duration-300">
             <i className="fas fa-money-bill-wave ml-2"></i>
             سحب الأرباح
           </button>
-          <button className="bg-[#ff00aa] py-2 px-4 rounded-lg font-bold hover:bg-[#d6008e] text-black transition duration-300 shadow-[0_0_15px_rgba(255,0,170,0.5)]">
+          <button className="bg-black text-white py-2 px-4 rounded-lg font-bold border border-white hover:bg-white/10 transition duration-300">
             <i className="fas fa-chart-line ml-2"></i>
             تقارير مفصلة
           </button>
@@ -47,15 +47,15 @@ export default function AffiliatePage() {
       </div>
       
       {/* Affiliate Link */}
-      <div className="bg-black/40 backdrop-blur-md rounded-lg p-4 mb-6 border border-[#ff00aa]/30">
-        <h3 className="text-lg font-bold mb-2 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] bg-clip-text text-transparent">رابط الإحالة الخاص بك</h3>
+      <div className="bg-black rounded-lg p-4 mb-6 border border-white/10">
+        <h3 className="text-lg font-bold mb-2 text-white">رابط الإحالة الخاص بك</h3>
         <CopyLink affiliateCode={user?.affiliateCode || ''} />
         <div className="flex justify-between mt-3">
-          <button className="flex items-center justify-center bg-gradient-to-r from-[#00ffcd] to-[#00aeff] text-black py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%] shadow-[0_0_10px_rgba(0,255,205,0.5)]">
+          <button className="flex items-center justify-center bg-black text-white py-2 px-4 rounded-lg hover:bg-white/5 transition duration-300 w-[48%] border border-white/20">
             <i className="fab fa-facebook-f ml-2"></i>
             فيسبوك
           </button>
-          <button className="flex items-center justify-center bg-gradient-to-r from-[#ff00aa] to-[#ff7300] text-black py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%] shadow-[0_0_10px_rgba(255,0,170,0.5)]">
+          <button className="flex items-center justify-center bg-black text-white py-2 px-4 rounded-lg hover:bg-white/5 transition duration-300 w-[48%] border border-white/20">
             <i className="fab fa-twitter ml-2"></i>
             تويتر
           </button>
