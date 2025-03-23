@@ -164,7 +164,7 @@ function ProductCard({
         <div className="flex justify-between items-center w-full mb-2">
           <div className="flex items-center">
             <div className="font-bold text-xl text-[#5e35b1]">
-              ${formattedPrice}
+              {formattedPrice} ج.م
             </div>
             {product.commissionRate > 0 && (
               <span className="text-xs ml-2 text-green-600">
@@ -218,6 +218,28 @@ function ProductCard({
             productId={product.id}
           />
         </div>
+        
+        {/* Partnership offers - Display for products with partnership */}
+        {product.commissionRate > 5 && (
+          <div className="mt-2 p-2 bg-gradient-to-r from-[#5e35b1]/10 to-transparent rounded-md border border-[#5e35b1]/20">
+            <div className="flex items-center text-xs">
+              <i className="fas fa-handshake text-[#5e35b1] mr-2"></i>
+              <div>
+                <span className="font-bold text-[#5e35b1]">عروض الشراكة:</span>
+                <div className="flex mt-1 flex-wrap gap-1">
+                  {product.commissionRate > 8 ? (
+                    <>
+                      <Badge variant="outline" className="bg-[#5e35b1]/10 border-[#5e35b1]/20 text-[#5e35b1] text-xs">شراكة بنسبة {Math.round(product.commissionRate * 2)}%</Badge>
+                      <Badge variant="outline" className="bg-green-100 border-green-200 text-green-700 text-xs">توصيل مجاني للشركاء</Badge>
+                    </>
+                  ) : (
+                    <Badge variant="outline" className="bg-[#5e35b1]/10 border-[#5e35b1]/20 text-[#5e35b1] text-xs">شراكة بنسبة {Math.round(product.commissionRate * 2)}%</Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </CardFooter>
     </Card>
   );

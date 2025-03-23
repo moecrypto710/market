@@ -257,13 +257,27 @@ export default function VRShop({ products }: VRShopProps) {
   return (
     <div 
       ref={shopRef}
-      className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 overflow-hidden"
+      className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 overflow-hidden"
       style={{
         backgroundImage: 'url("https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&w=1600&blur=50")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
+      {/* Immersive VR controls and status */}
+      <div className="absolute top-4 left-4 z-50 flex items-center gap-2 bg-black/60 rounded-lg p-2 backdrop-blur-sm border border-white/10">
+        <div className="rounded-full w-3 h-3 bg-green-500 animate-pulse"></div>
+        <span className="text-xs text-white">جلسة الواقع الافتراضي نشطة</span>
+        <div className="mr-4 border-r border-white/20 h-4"></div>
+        <div className="flex items-center gap-1">
+          <i className="fas fa-keyboard text-white/60 text-xs"></i>
+          <span className="text-white/60 text-xs">أسهم التحكم للحركة</span>
+        </div>
+        <div className="flex items-center gap-1 mr-2">
+          <i className="fas fa-mouse text-white/60 text-xs"></i>
+          <span className="text-white/60 text-xs">سحب للتحريك</span>
+        </div>
+      </div>
       {/* Shop map in corner */}
       <div className="absolute top-4 right-4 bg-black/70 rounded-lg p-2 z-50">
         <div className="relative w-32 h-32 bg-white/10 rounded-lg overflow-hidden border border-white/20">
@@ -475,8 +489,14 @@ export default function VRShop({ products }: VRShopProps) {
             <div className="flex-1">
               <h3 className="font-bold text-lg">{selectedProduct.name}</h3>
               <p className="text-sm text-white/70">{selectedProduct.description}</p>
-              <div className="mt-1 font-bold text-[#fff59d]">
-                ${(selectedProduct.price / 100).toFixed(2)}
+              <div className="mt-1 font-bold text-[#fff59d] flex items-center">
+                {(selectedProduct.price / 100).toFixed(2)} ج.م
+                {selectedProduct.commissionRate > 5 && (
+                  <Badge variant="outline" className="mr-2 bg-[#5e35b1]/20 border-[#5e35b1]/40 text-[#a48def] text-[10px]">
+                    <i className="fas fa-handshake mr-1"></i>
+                    شراكة {Math.round(selectedProduct.commissionRate * 2)}%
+                  </Badge>
+                )}
               </div>
             </div>
           </div>

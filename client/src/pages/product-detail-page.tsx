@@ -114,9 +114,55 @@ export default function ProductDetailPage() {
           
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
           
-          <div className="text-2xl font-bold mb-6">${formattedPrice}</div>
+          <div className="text-2xl font-bold mb-6 text-[#5e35b1]">{formattedPrice} ج.م</div>
           
           <p className="mb-6 text-gray-700">{product.description}</p>
+          
+          {/* Partnership offers section - if available */}
+          {product.commissionRate > 5 && (
+            <Card className="mb-6 border border-[#5e35b1]/20 bg-gradient-to-r from-[#5e35b1]/5 to-transparent">
+              <CardContent className="pt-6">
+                <div className="flex items-center mb-3">
+                  <i className="fas fa-handshake text-[#5e35b1] mr-2 text-xl"></i>
+                  <h3 className="font-bold text-lg text-[#5e35b1]">عروض الشراكة</h3>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="bg-[#5e35b1]/10 border-[#5e35b1]/20 text-[#5e35b1]">
+                      <i className="fas fa-percentage mr-1"></i>
+                      شراكة بنسبة {Math.round(product.commissionRate * 2)}%
+                    </Badge>
+                    
+                    {product.commissionRate > 8 && (
+                      <>
+                        <Badge variant="outline" className="bg-green-100 border-green-200 text-green-700">
+                          <i className="fas fa-truck mr-1"></i>
+                          توصيل مجاني للشركاء
+                        </Badge>
+                        <Badge variant="outline" className="bg-blue-100 border-blue-200 text-blue-700">
+                          <i className="fas fa-medal mr-1"></i>
+                          خدمة عملاء خاصة
+                        </Badge>
+                      </>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    انضم لبرنامج الشراكة واحصل على عمولة حصرية عن كل عملية بيع تتم من خلال رابط الإحالة الخاص بك
+                  </p>
+                  <div className="flex gap-2 mt-2">
+                    <Button variant="outline" size="sm" className="bg-[#5e35b1]/10 hover:bg-[#5e35b1]/20 text-[#5e35b1] border-[#5e35b1]/20">
+                      <i className="fas fa-info-circle mr-1"></i>
+                      المزيد عن الشراكة
+                    </Button>
+                    <Button variant="secondary" size="sm">
+                      <i className="fas fa-handshake mr-1"></i>
+                      اشترك الآن
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           
           {/* Features section */}
           <Card className="mb-6">
