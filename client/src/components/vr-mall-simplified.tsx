@@ -9,6 +9,7 @@ import CulturalTransition from "@/components/cultural-transition";
 import confetti from 'canvas-confetti';
 import AiShoppingAssistant from "./ai-shopping-assistant";
 import CameraIntegration from "./camera-integration";
+import AIVoiceControls from "./ai-voice-controls";
 
 // Types
 interface AvatarProps {
