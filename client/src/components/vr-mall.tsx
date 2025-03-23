@@ -305,6 +305,13 @@ export default function VRMall({ products }: VRMallProps) {
     // Mark view product task as complete if not already 
     if (!completedTasks.includes('viewProduct')) {
       setCompletedTasks(prev => [...prev, 'viewProduct']);
+      
+      // Display AI helper tip for first-time product interaction
+      toast({
+        title: "تلميح من المساعد الذكي",
+        description: "يمكنك التفاعل مع المنتج بالنقر على الأزرار أدناه لمزيد من التفاصيل أو إضافته للسلة",
+        duration: 5000,
+      });
     }
     
     // Increase user level for interaction with products
@@ -324,7 +331,20 @@ export default function VRMall({ products }: VRMallProps) {
       <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center">
         <div className="bg-gradient-to-tr from-[#2a1f6f] to-[#5e35b1]/80 rounded-lg p-8 max-w-3xl w-full shadow-xl shadow-purple-900/20">
           <h2 className="text-3xl font-bold text-center mb-2 text-white">اختر شخصيتك الافتراضية</h2>
-          <p className="text-white/60 text-center mb-8">اختر الشخصية التي تفضلها لتجربة التسوق</p>
+          <p className="text-white/60 text-center mb-4">اختر الشخصية التي تفضلها لتجربة التسوق</p>
+          
+          {/* AI Assistant Tips */}
+          <div className="mb-6 p-3 bg-gradient-to-r from-[#00ffcd]/10 to-[#ff00aa]/10 rounded-lg border border-[#00ffcd]/20 flex items-start">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] flex-shrink-0 flex items-center justify-center mr-3 mt-1">
+              <i className="fas fa-robot text-black"></i>
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-[#00ffcd] mb-1">نصائح المساعد الذكي</h3>
+              <p className="text-xs text-white/80 leading-relaxed">
+                اختر شخصية تناسب اهتماماتك للحصول على توصيات مخصصة. يمكنك التحرك في المول باستخدام أسهم لوحة المفاتيح أو سحب الشخصية بالماوس. للمساعدة في أي وقت، انقر على أيقونة المساعد الذكي في الزاوية اليمنى السفلية.
+              </p>
+            </div>
+          </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {AVATARS.map(avatar => (
@@ -333,7 +353,16 @@ export default function VRMall({ products }: VRMallProps) {
                 className="bg-white/10 rounded-xl p-4 cursor-pointer transition-all duration-300 
                            hover:bg-white/20 hover:scale-105 hover:shadow-lg border border-white/10 
                            hover:border-[#ffeb3b]/50 flex flex-col items-center"
-                onClick={() => setSelectedAvatar(avatar)}
+                onClick={() => {
+                  setSelectedAvatar(avatar);
+                  
+                  // Show welcome toast with tips
+                  toast({
+                    title: `أهلاً ${avatar.name}!`,
+                    description: "استخدم الأسهم للتنقل في المول، وانقر على المنتجات لاستعراضها. المساعد الذكي جاهز لمساعدتك!",
+                    duration: 5000,
+                  });
+                }}
               >
                 <div className="w-20 h-20 mb-3 rounded-full overflow-hidden border-2 border-white/20 shadow-lg">
                   <img src={avatar.image} alt={avatar.name} className="w-full h-full object-cover" />

@@ -7,10 +7,14 @@ import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
 import VRMall from "@/components/vr-mall";
+import AIAssistant from "@/components/ai-assistant";
+import { useState, useEffect } from "react";
 
 export default function HomePage() {
   const { user } = useAuth();
   const { vrEnabled } = useVR();
+  const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
+  const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
   
   const { data: products } = useQuery<Product[]>({
     queryKey: ['/api/products'],
@@ -32,8 +36,35 @@ export default function HomePage() {
   const nextRewardLevel = 1000;
   const progressPercentage = Math.min(100, (currentPoints / nextRewardLevel) * 100);
   
+  // Set initial AI assistant question based on VR mode
+  useEffect(() => {
+    if (vrEnabled) {
+      setAiInitialQuestion("كيف يمكنني استخدام مول الواقع الافتراضي؟");
+    } else {
+      setAiInitialQuestion(undefined);
+    }
+  }, [vrEnabled]);
+  
+  // Track viewed products for personalized recommendations
+  useEffect(() => {
+    if (products) {
+      // Get random featured products to simulate viewed items
+      const randomSelection = [...products]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
+      setViewedProducts(randomSelection);
+    }
+  }, [products]);
+  
   return (
     <div className="container mx-auto px-4 py-6">
+      {/* AI Assistant - always available */}
+      <AIAssistant 
+        initialQuestion={aiInitialQuestion} 
+        viewedProducts={viewedProducts}
+        minimized={!vrEnabled} 
+      />
+      
       {/* VR Mall Experience */}
       {vrEnabled && products && <VRMall products={products} />}
       
@@ -44,6 +75,16 @@ export default function HomePage() {
           <div className="bg-black text-white border border-white/20 rounded-lg p-5 mb-6 text-center">
             <h1 className="text-2xl font-bold mb-2">أهلا بك في مول أمريكي</h1>
             <p>تسوق أحدث منتجات الماركات العالمية بتجربة واقع افتراضي حصرية</p>
+            <Button 
+              onClick={() => {
+                setAiInitialQuestion("كيف أبدأ تجربة الواقع الافتراضي؟");
+                setTimeout(() => window.scrollTo(0, 0), 100);
+              }}
+              className="mt-3 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] hover:opacity-90 text-black font-bold"
+            >
+              <i className="fas fa-vr-cardboard ml-2"></i>
+              ابدأ تجربة الواقع الافتراضي بمساعدة الذكاء الاصطناعي
+            </Button>
           </div>
           
           {/* Featured Products */}
