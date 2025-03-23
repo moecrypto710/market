@@ -1163,41 +1163,185 @@ export default function VRMall({ products }: VRMallProps) {
 
       {/* Virtual shop floor */}
       <div className="absolute inset-10 bg-white/5 rounded-xl border border-white/10">
-        {/* Store sections/zones */}
+        {/* Store sections/zones with enhanced Arabic-inspired design */}
         {storeSections.map(section => (
           <div
             key={section.id}
-            className="absolute border-2 border-white/10 rounded-xl bg-white/5"
+            className="absolute rounded-xl group overflow-hidden transition-all duration-300"
             style={{
               left: `${section.x - section.width/2}%`,
               top: `${section.y - section.height/2}%`,
               width: `${section.width}%`,
               height: `${section.height}%`,
+              border: currentSection?.id === section.id ? '2px solid rgba(255,255,255,0.3)' : '2px solid rgba(255,255,255,0.1)',
+              boxShadow: currentSection?.id === section.id 
+                ? '0 0 20px rgba(94,53,177,0.3)' 
+                : 'none',
+              background: currentSection?.id === section.id 
+                ? 'rgba(255,255,255,0.08)' 
+                : 'rgba(255,255,255,0.05)',
             }}
           >
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/60 px-3 py-1 rounded-full text-sm">
-              {section.name}
+            {/* Section floor pattern inspired by Arabic geometric designs */}
+            <div className="absolute inset-0 opacity-20" 
+              style={{
+                backgroundImage: `url(${
+                  section.id === 'electronics' ? 'https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/tech-pattern_kycdpq.png' :
+                  section.id === 'clothing' ? 'https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/fashion-pattern_n0wttu.png' :
+                  section.id === 'home' ? 'https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/home-pattern_jhudng.png' :
+                  section.id === 'sports' ? 'https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/sports-pattern_u1djdl.png' :
+                  'https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/arabic-pattern_wqcgvr.png'
+                })`,
+                backgroundSize: '120px',
+                backgroundBlendMode: 'overlay',
+                opacity: currentSection?.id === section.id ? 0.25 : 0.15,
+                transition: 'opacity 0.5s ease'
+              }}>
+            </div>
+
+            {/* Ambient section glow - lights up when active */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500"
+              style={{
+                background: `radial-gradient(circle at center, ${
+                  section.id === 'electronics' ? 'rgba(3, 169, 244, 0.3)' :
+                  section.id === 'clothing' ? 'rgba(233, 30, 99, 0.3)' :
+                  section.id === 'home' ? 'rgba(76, 175, 80, 0.3)' :
+                  section.id === 'sports' ? 'rgba(33, 150, 243, 0.3)' :
+                  'rgba(94, 53, 177, 0.3)'
+                } 0%, transparent 70%)`
+              }}>
+            </div>
+
+            {/* Section name with modern calligraphy-inspired design */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full text-sm
+                         bg-gradient-to-r from-black/80 to-black/60 backdrop-blur-sm
+                         border border-white/20 shadow-lg transition-all duration-300
+                         group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              <div className="flex items-center gap-2">
+                <span className="font-bold">{section.name}</span>
+                {section.type === 'category' && (
+                  <i className={`fas ${
+                    section.id === 'electronics' ? 'fa-microchip text-blue-400' :
+                    section.id === 'clothing' ? 'fa-tshirt text-pink-400' :
+                    section.id === 'home' ? 'fa-couch text-green-400' :
+                    section.id === 'sports' ? 'fa-dumbbell text-purple-400' :
+                    'fa-shopping-bag text-amber-400'
+                  } text-sm opacity-80`}></i>
+                )}
+              </div>
             </div>
             
-            {/* Section-specific visuals */}
-            {section.id === 'electronics' && (
-              <div className="absolute top-4 left-4 text-4xl opacity-20">
-                <i className="fas fa-laptop"></i>
-              </div>
-            )}
-            {section.id === 'clothing' && (
-              <div className="absolute top-4 left-4 text-4xl opacity-20">
-                <i className="fas fa-tshirt"></i>
-              </div>
-            )}
-            {section.id === 'home' && (
-              <div className="absolute top-4 left-4 text-4xl opacity-20">
-                <i className="fas fa-couch"></i>
-              </div>
-            )}
-            {section.id === 'sports' && (
-              <div className="absolute top-4 left-4 text-4xl opacity-20">
-                <i className="fas fa-dumbbell"></i>
+            {/* Section-specific visuals with improved styling */}
+            <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+              {section.id === 'electronics' && (
+                <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 flex items-center justify-center">
+                  <div className="relative">
+                    <i className="fas fa-laptop text-6xl text-blue-400 opacity-10"></i>
+                    <div className="absolute -top-12 -left-8 text-5xl opacity-5">
+                      <i className="fas fa-mobile-alt"></i>
+                    </div>
+                    <div className="absolute -bottom-10 -right-10 text-5xl opacity-5">
+                      <i className="fas fa-headphones"></i>
+                    </div>
+                    <div className="absolute -bottom-8 -left-10 text-4xl opacity-5">
+                      <i className="fas fa-camera"></i>
+                    </div>
+                    {/* Circuit board pattern */}
+                    <div className="absolute inset-0 opacity-20"
+                      style={{
+                        backgroundImage: 'linear-gradient(to right, rgba(3,169,244,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(3,169,244,0.1) 1px, transparent 1px)',
+                        backgroundSize: '20px 20px'
+                      }}>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {section.id === 'clothing' && (
+                <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 flex items-center justify-center">
+                  <div className="relative">
+                    <i className="fas fa-tshirt text-6xl text-pink-400 opacity-10"></i>
+                    <div className="absolute -top-12 -left-8 text-5xl opacity-5">
+                      <i className="fas fa-hat-cowboy"></i>
+                    </div>
+                    <div className="absolute -bottom-10 -right-10 text-5xl opacity-5">
+                      <i className="fas fa-shoe-prints"></i>
+                    </div>
+                    <div className="absolute -bottom-8 -left-10 text-4xl opacity-5">
+                      <i className="fas fa-glasses"></i>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {section.id === 'home' && (
+                <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 flex items-center justify-center">
+                  <div className="relative">
+                    <i className="fas fa-couch text-6xl text-green-400 opacity-10"></i>
+                    <div className="absolute -top-12 -left-8 text-5xl opacity-5">
+                      <i className="fas fa-chair"></i>
+                    </div>
+                    <div className="absolute -bottom-10 -right-10 text-5xl opacity-5">
+                      <i className="fas fa-bed"></i>
+                    </div>
+                    <div className="absolute -bottom-8 -left-10 text-4xl opacity-5">
+                      <i className="fas fa-lamp"></i>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {section.id === 'sports' && (
+                <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 flex items-center justify-center">
+                  <div className="relative">
+                    <i className="fas fa-dumbbell text-6xl text-purple-400 opacity-10"></i>
+                    <div className="absolute -top-12 -left-8 text-5xl opacity-5">
+                      <i className="fas fa-running"></i>
+                    </div>
+                    <div className="absolute -bottom-10 -right-10 text-5xl opacity-5">
+                      <i className="fas fa-basketball-ball"></i>
+                    </div>
+                    <div className="absolute -bottom-8 -left-10 text-4xl opacity-5">
+                      <i className="fas fa-bicycle"></i>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Entrance visualization */}
+              {section.type === 'entrance' && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-1/2 h-1/2 flex items-center justify-center">
+                    <i className="fas fa-door-open text-6xl text-amber-400 opacity-10"></i>
+                    <div className="absolute w-full h-full rounded-full opacity-20"
+                      style={{
+                        backgroundImage: 'radial-gradient(circle, rgba(255, 152, 0, 0.2) 0%, transparent 70%)'
+                      }}>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Special area visualization */}
+              {section.type === 'special' && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-1/2 h-1/2 flex items-center justify-center">
+                    <i className="fas fa-star text-6xl text-amber-400 opacity-10"></i>
+                    <div className="absolute w-full h-full rounded-full opacity-20"
+                      style={{
+                        backgroundImage: 'radial-gradient(circle, rgba(245, 0, 87, 0.2) 0%, transparent 70%)'
+                      }}>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Interactive indicator */}
+            {currentSection?.id === section.id && (
+              <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/50 rounded-full px-2 py-0.5">
+                <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+                <span className="text-[10px] text-white/70">منطقة نشطة</span>
               </div>
             )}
           </div>
@@ -1436,45 +1580,90 @@ export default function VRMall({ products }: VRMallProps) {
           <i className="fas fa-door-open text-white/50 text-2xl"></i>
         </div>
         
-        {/* Brand partner stores */}
-        {brandPartners.map(brand => (
+        {/* Generic Store Platforms */}
+        {storeSections.filter(section => section.type === 'store').map(section => (
           <div
-            key={brand.id}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer"
+            key={section.id}
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
             style={{ 
-              left: `${brand.x}%`, 
-              top: `${brand.y}%`,
+              left: `${section.x}%`, 
+              top: `${section.y}%`,
             }}
             onClick={() => {
-              setSelectedBrand(brand);
-              setShowStoreDetails(true);
+              toast({
+                title: "منصة متاجر متاحة",
+                description: "هذه المساحة متاحة للإيجار لعرض المنتجات",
+                duration: 3000,
+              });
             }}
           >
-            <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${brand.featured ? 'border-amber-400' : 'border-white/20'}`}>
-              <img 
-                src={brand.logo} 
-                alt={brand.name} 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className={`mt-1 px-2 py-0.5 rounded-full text-xs bg-black/50 ${brand.featured ? 'border border-amber-400/50' : ''}`}>
-              {brand.name}
-            </div>
-            {brand.featured && (
-              <div className="mt-1 px-1 py-0.5 bg-amber-500/80 rounded-full text-[8px] text-black font-bold">
-                شريك مميز
+            {/* Store platform with futuristic design */}
+            <div className="relative w-24 h-24">
+              {/* Platform base with modern arabic architectural influence */}
+              <div className="absolute bottom-0 w-full h-2/3 bg-gradient-to-t from-[#1a1a2e] to-[#16213e] 
+                              rounded-lg overflow-hidden border border-white/10
+                              shadow-lg transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(94,53,177,0.5)]">
+                {/* Decorative Arabic pattern */}
+                <div className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage: 'url("https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/arabic-pattern_wqcgvr.png")',
+                    backgroundSize: '60px',
+                    backgroundBlendMode: 'overlay'
+                  }}>
+                </div>
+                
+                {/* Available space hologram */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-xs opacity-70 font-bold">متجر متاح</div>
+                    <div className="text-[8px] opacity-50">المساحة للإيجار</div>
+                  </div>
+                </div>
+                
+                {/* Interactive elements */}
+                <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1">
+                  <div className="w-1 h-1 bg-blue-400 rounded-full animate-pulse"></div>
+                  <div className="w-1 h-1 bg-purple-400 rounded-full animate-pulse delay-100"></div>
+                  <div className="w-1 h-1 bg-pink-400 rounded-full animate-pulse delay-200"></div>
+                </div>
               </div>
-            )}
+              
+              {/* Holographic projector */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-10">
+                <div className="relative w-full h-full">
+                  {/* Projection light beam */}
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-t from-[#5e35b1] to-transparent opacity-40"></div>
+                  
+                  {/* Holographic projection */}
+                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 w-16 h-14 
+                                  bg-gradient-to-t from-[#5e35b140] to-transparent 
+                                  rounded-lg opacity-70 flex items-center justify-center
+                                  group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-8 h-8 relative">
+                      <div className="absolute inset-0 flex items-center justify-center animate-float4">
+                        <i className="fas fa-store-alt text-white/60 text-xl"></i>
+                      </div>
+                      {/* Scanning effect */}
+                      <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/60 animate-scan"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
-            {/* Store type badge */}
-            <div className={`
-              absolute top-0 -right-1 w-4 h-4 flex items-center justify-center rounded-full text-[6px] font-bold
-              ${brand.storeType === 'premium' ? 'bg-amber-500' : 
-                brand.storeType === 'entrance' ? 'bg-red-500' : 'bg-blue-500'}
-            `}>
-              {brand.storeSize === 'large' ? 'L' : 
-               brand.storeSize === 'medium' ? 'M' : 
-               brand.storeSize === 'flagship' ? 'XL' : 'S'}
+            {/* Platform info */}
+            <div className="mt-2 text-center">
+              <div className="text-xs bg-black/50 px-2 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                منصة {section.id}
+              </div>
+            </div>
+            
+            {/* Lease prompt - only visible on hover */}
+            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-80 
+                           transition-opacity duration-300 text-[10px] bg-black/70 px-2 py-0.5 rounded-full
+                           border border-white/10">
+              <i className="fas fa-info-circle mr-1 text-[8px]"></i>
+              اضغط للتفاصيل
             </div>
           </div>
         ))}
