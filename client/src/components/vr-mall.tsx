@@ -100,25 +100,77 @@ const AVATARS = [
   },
 ];
 
-// Simple avatar selection component renderer
-function renderAvatarSelection(
+// Simple avatar selection renderer (as a static JSX element, not a function)
+const renderAvatarSelectionUI = (
   avatars: AvatarProps[], 
-  onSelect: (avatar: AvatarProps) => void
-) {
-  return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
-        <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
-        <p className="text-white/70 mb-6">كل شخصية لديها قدرات خاصة ومميزات فريدة في المول الافتراضي</p>
-        
-        <AvatarSelection 
-          avatars={avatars} 
-          onSelectAvatar={onSelect} 
-        />
+  onSelectCallback: (avatar: AvatarProps) => void
+) => (
+  <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
+    <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
+      <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
+      <p className="text-white/70 mb-6">كل شخصية لديها قدرات خاصة ومميزات فريدة في المول الافتراضي</p>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+        {avatars.map((avatar) => (
+          <div
+            key={avatar.id}
+            className="relative bg-gradient-to-b from-black/60 to-black/40 border border-white/10 hover:border-white/30 p-4 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 group"
+            style={{ 
+              boxShadow: `0 0 20px rgba(${avatar.color ? parseInt(avatar.color.substring(1, 3), 16) : 0}, ${avatar.color ? parseInt(avatar.color.substring(3, 5), 16) : 0}, ${avatar.color ? parseInt(avatar.color.substring(5, 7), 16) : 0}, 0.1)`,
+              borderColor: avatar.color 
+            }}
+            onClick={() => onSelectCallback(avatar)}
+          >
+            <div className="absolute -top-3 -right-3 bg-black/70 rounded-full p-1 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-xs px-2">
+                <i className="fas fa-star text-yellow-400 mr-1"></i>
+                {avatar.specialFeature}
+              </span>
+            </div>
+            
+            <div className="mb-3 relative h-32 w-32 mx-auto">
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-black/40 to-black/10 backdrop-blur-md border border-white/10"></div>
+              <img 
+                src={avatar.image} 
+                alt={avatar.name} 
+                className="h-full w-full object-contain relative z-10" 
+              />
+              <div 
+                className="absolute inset-0 rounded-full opacity-20"
+                style={{ 
+                  background: `radial-gradient(circle, ${avatar.color || "#5e35b1"} 0%, transparent 70%)`,
+                  filter: "blur(8px)"
+                }}
+              ></div>
+            </div>
+            
+            <h3 className="text-xl font-bold mb-1 text-center">{avatar.name}</h3>
+            <p className="text-sm text-white/70 mb-3 text-center">{avatar.personality}</p>
+            
+            <h4 className="text-xs font-semibold uppercase text-white/50 mb-1 text-center">الميزات الخاصة</h4>
+            <ul className="text-sm list-disc list-inside space-y-1 mb-3">
+              {avatar.benefits.map((benefit, idx) => (
+                <li key={idx} className="text-white/80 text-right truncate hover:text-clip">{benefit}</li>
+              ))}
+            </ul>
+            
+            <div className="mt-auto text-center">
+              <span 
+                className="inline-block px-3 py-1 rounded-full text-xs font-medium"
+                style={{ 
+                  backgroundColor: `${avatar.color}40`,
+                  color: avatar.color
+                }}
+              >
+                {avatar.favoriteCategory === "all" ? "جميع المنتجات" : avatar.favoriteCategory}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
-  );
-}
+  </div>
+);
 
 // Main component
 export default function VRMall({ products }: VRMallProps) {
@@ -685,7 +737,7 @@ export default function VRMall({ products }: VRMallProps) {
   
   // If no avatar selected, show avatar selection UI
   if (!selectedAvatar) {
-    return renderAvatarSelection(AVATARS, handleSelectAvatar);
+    return renderAvatarSelectionUI(AVATARS, handleSelectAvatar);
   }
   
   // Group products by category
