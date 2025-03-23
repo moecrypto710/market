@@ -6,10 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Product } from "@shared/schema";
 import AugmentedReality from './augmented-reality';
 import SocialShare from './social-share';
+import CommunityQRCode from './community-qrcode';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
 import { queryClient } from '@/lib/queryClient';
+import { Link } from "wouter";
 
 interface ProductCardProps {
   product: Product;
@@ -116,25 +118,38 @@ function ProductCard({
         </CardContent>
       )}
       
-      <CardFooter className="p-4 mt-auto flex justify-between items-center">
-        <Button 
-          className="flex-1 mr-2"
-          onClick={() => addToCartMutation.mutate()}
-          disabled={addToCartMutation.isPending}
-        >
-          <i className="fas fa-shopping-cart mr-2"></i>
-          {addToCartMutation.isPending ? 'جاري الإضافة...' : 'إضافة للسلة'}
-        </Button>
+      <CardFooter className="p-4 mt-auto flex flex-col gap-3">
+        <div className="flex justify-between items-center w-full">
+          <Button 
+            className="flex-1 mr-2"
+            onClick={() => addToCartMutation.mutate()}
+            disabled={addToCartMutation.isPending}
+          >
+            <i className="fas fa-shopping-cart mr-2"></i>
+            {addToCartMutation.isPending ? 'جاري الإضافة...' : 'إضافة للسلة'}
+          </Button>
+          
+          {showSocial && (
+            <SocialShare 
+              productId={product.id} 
+              productName={product.name} 
+              imageUrl={product.imageUrl}
+              variant="outline"
+              size="icon"
+            />
+          )}
+        </div>
         
-        {showSocial && (
-          <SocialShare 
-            productId={product.id} 
-            productName={product.name} 
-            imageUrl={product.imageUrl}
-            variant="outline"
-            size="icon"
+        {/* Community QR code button */}
+        <div className="w-full mt-1">
+          <CommunityQRCode 
+            whatsappUrl="https://chat.whatsapp.com/yourgroup" 
+            telegramUrl="https://t.me/yourchannel"
+            buttonText="انضم إلى مجتمعنا للحصول على عروض حصرية" 
+            buttonVariant="secondary"
+            buttonSize="default"
           />
-        )}
+        </div>
       </CardFooter>
     </Card>
   );

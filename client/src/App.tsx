@@ -9,6 +9,7 @@ import AffiliatePage from "@/pages/affiliate-page";
 import PaymentPage from "@/pages/payment-page";
 import AccountPage from "@/pages/account-page";
 import AuthPage from "@/pages/auth-page";
+import ProductDetailPage from "@/pages/product-detail-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import BottomNav from "./components/layout/bottom-nav";
@@ -20,6 +21,7 @@ function Router() {
     <Switch>
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/" component={HomePage} />
+      <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsPage} />
       <ProtectedRoute path="/affiliate" component={AffiliatePage} />
       <ProtectedRoute path="/payment" component={PaymentPage} />
