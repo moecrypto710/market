@@ -67,15 +67,15 @@ export default function HomePage() {
           <Progress value={progressPercentage} className="h-2 bg-white/10" />
           <div className="flex justify-between text-sm mt-2 text-white/70">
             <span>{currentPoints} / {nextRewardLevel}</span>
-            <span>المكافأة التالية: خصم 300 جنيه</span>
+            <span>المكافأة التالية: خصم 500 جنيه على منتجات نايكي</span>
           </div>
         </div>
       )}
       
       {/* Simple Promo */}
       <div className="bg-black text-white border border-white/20 rounded-lg p-4 mb-8 text-center">
-        <h2 className="font-bold mb-2">خصم 20% على منتجات ستايل إيكو</h2>
-        <p className="mb-3 text-white/70">استخدم الكود: STYLE20</p>
+        <h2 className="font-bold mb-2">خصم 20% على منتجات الماركات العالمية</h2>
+        <p className="mb-3 text-white/70">استخدم الكود: AMRIKYY20</p>
         <Button className="bg-white text-black hover:bg-white/80">تسوق الآن</Button>
       </div>
     </div>

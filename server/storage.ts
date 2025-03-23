@@ -262,91 +262,91 @@ export class MemStorage implements IStorage {
       this.users.set(user.id, user);
     });
     
-    // Sample products with Style Echo cyberpunk designs
+    // Sample brand products for Amrikyy Mall
     const productData: Omit<Product, "id">[] = [
       {
-        name: "تيشيرت ستايل إيكو الرياضي",
-        description: "تيشيرت رياضي بتكنولوجيا نيون متطورة، مصمم بنمط الواقع الافتراضي، مناسب للأنشطة الرياضية العصرية",
-        price: 1200,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
+        name: "حذاء نايكي اير جوردان ريترو",
+        description: "حذاء رياضي أصلي من نايكي، مستوحى من تصميم مايكل جوردان الكلاسيكي مع تقنية الهواء المضغوط للراحة المثالية",
+        price: 4200,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 10,
         vrEnabled: true,
         brandId: 1,
         featured: true,
-        threeDModelUrl: "/models/style-echo-tshirt.glb",
-        viewCount: 342
+        threeDModelUrl: "/models/nike-jordan.glb",
+        viewCount: 542
       },
       {
-        name: "طقم ستايل إيكو الكامل",
-        description: "طقم رياضي فاخر بألوان متوهجة وتصميم مستقبلي، يوفر راحة فائقة مع تقنية تبريد متطورة",
-        price: 1850,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-outfit_xtorq8.jpg",
+        name: "تيشيرت أديداس أوريجينال",
+        description: "تيشيرت رياضي أصلي من أديداس بشعار الثلاث ورقات الشهير، مصنوع من قطن عضوي 100% للراحة الفائقة",
+        price: 1250,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 12,
         vrEnabled: true,
         brandId: 2,
         featured: true,
-        threeDModelUrl: "/models/style-echo-outfit.glb",
-        viewCount: 289
+        threeDModelUrl: "/models/adidas-tshirt.glb",
+        viewCount: 389
       },
       {
-        name: "هودي ستايل إيكو المستقبلي",
-        description: "هودي أسود بتصميم مستقبلي مع إضاءات نيون متفاعلة، مصنوع من خامات متطورة مقاومة للماء ومناسب للبيئات الرقمية",
-        price: 2200,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
+        name: "بنطلون ليفايز الأصلي",
+        description: "جينز ليفايز الأصلي بقصة مستقيمة كلاسيكية، مصنوع من قطن عالي الجودة مع تقنية الغسيل المتطورة للمظهر العصري",
+        price: 2400,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-outfit_xtorq8.jpg",
         category: "clothing",
         inStock: true,
         commissionRate: 15,
         vrEnabled: true,
         brandId: 3,
         featured: true,
-        threeDModelUrl: "/models/style-echo-hoodie.glb",
+        threeDModelUrl: "/models/levis-jeans.glb",
         viewCount: 418
       },
       {
-        name: "حذاء ستايل إيكو الرياضي",
-        description: "حذاء رياضي متعدد الألوان بتصميم مستقبلي، مزود بإضاءات LED تفاعلية ونظام تهوية ذكي",
-        price: 1800,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
-        category: "clothing",
-        inStock: true,
-        commissionRate: 12,
-        vrEnabled: true,
-        brandId: 1,
-        featured: true,
-        threeDModelUrl: "/models/style-echo-shoes.glb",
-        viewCount: 356
-      },
-      {
-        name: "شراب ستايل إيكو النيون",
-        description: "شراب بتصميم سايبربانك بألوان نيون مميزة وإضاءات متوهجة، مناسب للاستخدام اليومي والفعاليات الرياضية",
-        price: 550,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-socks_rnm8bj.jpg",
-        category: "clothing",
-        inStock: true,
-        commissionRate: 9,
-        vrEnabled: true,
-        brandId: 2,
-        featured: false,
-        threeDModelUrl: "/models/style-echo-socks.glb",
-        viewCount: 203
-      },
-      {
-        name: "قبعة ستايل إيكو المستقبلية",
-        description: "قبعة سوداء بتصميم عصري وشعار ستايل إيكو المضيء، مناسبة للاستخدام اليومي وفعاليات الواقع الافتراضي",
-        price: 690,
+        name: "سماعات آبل إيربودز برو",
+        description: "سماعات آبل إيربودز برو الأصلية مع خاصية إلغاء الضوضاء النشطة وجودة صوت استثنائية ومقاومة للماء والعرق",
+        price: 5500,
         imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
-        category: "clothing",
+        category: "electronics",
         inStock: true,
-        commissionRate: 10,
+        commissionRate: 18,
         vrEnabled: true,
-        brandId: 3,
+        brandId: 4,
         featured: true,
-        threeDModelUrl: "/models/style-echo-cap.glb",
-        viewCount: 278
+        threeDModelUrl: "/models/apple-airpods.glb",
+        viewCount: 756
+      },
+      {
+        name: "حقيبة ظهر نورث فيس",
+        description: "حقيبة ظهر نورث فيس الأصلية متعددة الاستخدامات، مقاومة للماء مع مساحة لابتوب وجيوب متعددة للتنظيم المثالي",
+        price: 2950,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
+        category: "sports",
+        inStock: true,
+        commissionRate: 14,
+        vrEnabled: true,
+        brandId: 5,
+        featured: true,
+        threeDModelUrl: "/models/northface-backpack.glb",
+        viewCount: 403
+      },
+      {
+        name: "ساعة سامسونج جالاكسي ووتش",
+        description: "ساعة ذكية من سامسونج مع شاشة AMOLED وتتبع اللياقة البدنية المتقدم ومقاومة الماء حتى 50 متر",
+        price: 6800,
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-socks_rnm8bj.jpg",
+        category: "electronics",
+        inStock: true,
+        commissionRate: 16,
+        vrEnabled: true,
+        brandId: 6,
+        featured: false,
+        threeDModelUrl: "/models/samsung-watch.glb",
+        viewCount: 503
       }
     ];
 
@@ -355,33 +355,42 @@ export class MemStorage implements IStorage {
       this.products.set(id, { ...product, id });
     });
 
-    // Sample rewards with Style Echo theme
+    // Sample rewards with brand products
     const rewardData: Omit<Reward, "id">[] = [
       {
-        name: "خصم 300 جنيه على منتجات ستايل إيكو",
-        description: "استمتع بخصم على طلبك التالي من منتجات ستايل إيكو المستقبلية",
+        name: "خصم 500 جنيه على منتجات نايكي",
+        description: "استمتع بخصم على طلبك التالي من منتجات نايكي الأصلية في مول أمريكي",
         pointsRequired: 1000,
-        isActive: true,
-        tier: "basic",
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
-        expiryDate: new Date("2025-12-31")
-      },
-      {
-        name: "شحن مجاني",
-        description: "توصيل مجاني لمشترياتك القادمة في جميع أنحاء مصر",
-        pointsRequired: 750,
         isActive: true,
         tier: "basic",
         imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
         expiryDate: new Date("2025-12-31")
       },
       {
-        name: "تيشيرت ستايل إيكو هدية",
-        description: "احصل على تيشيرت ستايل إيكو الرياضي مجانًا مع طلبك القادم",
+        name: "شحن مجاني",
+        description: "توصيل مجاني لمشترياتك القادمة من أي ماركة في مول أمريكي لجميع أنحاء مصر",
+        pointsRequired: 750,
+        isActive: true,
+        tier: "basic",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "قسيمة هدية بقيمة 1000 جنيه",
+        description: "احصل على قسيمة هدية بقيمة 1000 جنيه لاستخدامها على أي منتجات في مول أمريكي",
         pointsRequired: 2000,
         isActive: true,
         tier: "premium",
         imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
+        expiryDate: new Date("2025-12-31")
+      },
+      {
+        name: "عضوية VIP لمدة شهر",
+        description: "احصل على عضوية VIP تمنحك خصم 15% على جميع المنتجات وشحن مجاني لمدة شهر كامل",
+        pointsRequired: 3000,
+        isActive: true,
+        tier: "premium",
+        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
         expiryDate: new Date("2025-12-31")
       }
     ];
