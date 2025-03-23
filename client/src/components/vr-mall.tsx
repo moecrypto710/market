@@ -657,7 +657,7 @@ export default function VRMall({ products }: VRMallProps) {
   if (!selectedAvatar) {
     return <AvatarSelection 
              avatars={AVATARS} 
-             onSelectAvatar={(avatar) => setSelectedAvatar(avatar)} 
+             onSelectAvatar={handleAvatarSelect} 
            />;
   }
   
@@ -803,9 +803,18 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
-  // Handle transition completion
+  // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
     setShowTransition(false);
+  };
+  
+  // Handle avatar selection - separated to avoid hooks ordering issues
+  const handleAvatarSelect = (avatar: AvatarProps) => {
+    setSelectedAvatar(avatar);
+    toast({
+      title: `مرحبا ${avatar.name}!`,
+      description: `لقد اخترت ${avatar.name} - ${avatar.personality}`,
+    });
   };
   
   // Update active section when avatar moves between sections
