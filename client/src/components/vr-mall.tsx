@@ -119,6 +119,9 @@ export default function VRMall({ products }: VRMallProps) {
   const [userLevel, setUserLevel] = useState(1);
   const [interactionState, setInteractionState] = useState<string | null>(null);
   const [lastMoveTime, setLastMoveTime] = useState(0);
+  const [showTransition, setShowTransition] = useState(false);
+  const [transitionStyle, setTransitionStyle] = useState<string>('default');
+  const [previousSection, setPreviousSection] = useState<any | null>(null);
   
   const mallRef = useRef<HTMLDivElement>(null);
   const { vrEnabled, gestureControlEnabled, toggleVR } = useVR();
