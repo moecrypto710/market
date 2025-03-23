@@ -803,7 +803,13 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
+  // Handle transition completion
+  const handleTransitionFinish = () => {
+    setShowTransition(false);
+  };
+  
   // Update active section when avatar moves between sections
+
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled) return;
     
@@ -864,11 +870,6 @@ export default function VRMall({ products }: VRMallProps) {
       setShowFeatureDetails(false);
     }
   }, [avatarPosition, storeSections, selectedAvatar, vrEnabled, activeSection, completedTasks]);
-  
-  // Handle transition completion
-  const handleTransitionFinish = () => {
-    setShowTransition(false);
-  };
 
   return (
     <>
