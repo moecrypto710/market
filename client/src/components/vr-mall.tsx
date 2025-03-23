@@ -912,25 +912,35 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
-  // Helper function to get ambient color scheme based on current section
-  function getCurrentColors() {
-    if (!currentSection) return categoryColors.default;
+  // We'll use a state variable for current colors to ensure consistent hooks ordering
+  const [sectionColors, setSectionColors] = useState(categoryColors.default);
+  
+  // Update colors when section changes
+  useEffect(() => {
+    if (!currentSection) {
+      setSectionColors(categoryColors.default);
+      return;
+    }
     
     // If section has an explicit category, use it
     if (currentSection.category && 
         Object.prototype.hasOwnProperty.call(categoryColors, currentSection.category)) {
-      return categoryColors[currentSection.category as keyof typeof categoryColors];
+      setSectionColors(categoryColors[currentSection.category as keyof typeof categoryColors]);
+      return;
     }
     
     // For category sections, use their id
     if (currentSection.type === 'category' && 
         Object.prototype.hasOwnProperty.call(categoryColors, currentSection.id)) {
-      return categoryColors[currentSection.id as keyof typeof categoryColors];
+      setSectionColors(categoryColors[currentSection.id as keyof typeof categoryColors]);
+      return;
     }
     
     // Fallback to default colors
-    return categoryColors.default;
-  }
+    setSectionColors(categoryColors.default);
+  }, [currentSection]);
+  
+
   
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
