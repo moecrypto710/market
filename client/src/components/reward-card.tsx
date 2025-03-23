@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Reward } from "@shared/schema";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -37,8 +37,7 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
     } catch (error) {
       toast({
         title: "فشل المطالبة",
-        description: "حدث خطأ أثناء المطالبة بالمكافأة",
-        variant: "destructive",
+        description: "حدث خطأ أثناء المطالبة بالمكافأة"
       });
     }
   };
