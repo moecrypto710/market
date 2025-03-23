@@ -16,6 +16,7 @@ interface AugmentedRealityProps {
   button?: boolean;
   size?: "default" | "sm" | "lg";
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function AugmentedReality({
