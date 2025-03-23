@@ -268,7 +268,7 @@ export class MemStorage implements IStorage {
         name: "حذاء نايكي اير جوردان ريترو",
         description: "حذاء رياضي أصلي من نايكي، مستوحى من تصميم مايكل جوردان الكلاسيكي مع تقنية الهواء المضغوط للراحة المثالية",
         price: 4200,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
+        imageUrl: "/images/product-templates/nike-shoes.svg",
         category: "clothing",
         inStock: true,
         commissionRate: 10,
@@ -282,7 +282,7 @@ export class MemStorage implements IStorage {
         name: "تيشيرت أديداس أوريجينال",
         description: "تيشيرت رياضي أصلي من أديداس بشعار الثلاث ورقات الشهير، مصنوع من قطن عضوي 100% للراحة الفائقة",
         price: 1250,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
+        imageUrl: "/images/product-templates/adidas-tshirt.svg",
         category: "clothing",
         inStock: true,
         commissionRate: 12,
@@ -296,7 +296,7 @@ export class MemStorage implements IStorage {
         name: "بنطلون ليفايز الأصلي",
         description: "جينز ليفايز الأصلي بقصة مستقيمة كلاسيكية، مصنوع من قطن عالي الجودة مع تقنية الغسيل المتطورة للمظهر العصري",
         price: 2400,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-outfit_xtorq8.jpg",
+        imageUrl: "/images/product-templates/levis-jeans.svg",
         category: "clothing",
         inStock: true,
         commissionRate: 15,
@@ -310,7 +310,7 @@ export class MemStorage implements IStorage {
         name: "سماعات آبل إيربودز برو",
         description: "سماعات آبل إيربودز برو الأصلية مع خاصية إلغاء الضوضاء النشطة وجودة صوت استثنائية ومقاومة للماء والعرق",
         price: 5500,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
+        imageUrl: "/images/product-templates/apple-airpods.svg",
         category: "electronics",
         inStock: true,
         commissionRate: 18,
@@ -321,31 +321,31 @@ export class MemStorage implements IStorage {
         viewCount: 756
       },
       {
-        name: "حقيبة ظهر نورث فيس",
-        description: "حقيبة ظهر نورث فيس الأصلية متعددة الاستخدامات، مقاومة للماء مع مساحة لابتوب وجيوب متعددة للتنظيم المثالي",
-        price: 2950,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
-        category: "sports",
+        name: "هاتف سامسونج جالكسي S22",
+        description: "هاتف ذكي من سامسونج مع شاشة AMOLED وكاميرا متطورة وأداء فائق مع بطارية تدوم طوال اليوم",
+        price: 18500,
+        imageUrl: "/images/product-templates/samsung-galaxy.svg",
+        category: "electronics",
         inStock: true,
         commissionRate: 14,
         vrEnabled: true,
         brandId: 5,
         featured: true,
-        threeDModelUrl: "/models/northface-backpack.glb",
-        viewCount: 403
+        threeDModelUrl: "/models/samsung-phone.glb",
+        viewCount: 603
       },
       {
-        name: "ساعة سامسونج جالاكسي ووتش",
-        description: "ساعة ذكية من سامسونج مع شاشة AMOLED وتتبع اللياقة البدنية المتقدم ومقاومة الماء حتى 50 متر",
-        price: 6800,
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-socks_rnm8bj.jpg",
+        name: "ساعة أبل ووتش سيريس 8",
+        description: "ساعة ذكية من أبل مع شاشة رتينا دائماً مضاءة، ومقاومة للماء، مع مستشعرات متقدمة لتتبع الصحة واللياقة البدنية",
+        price: 13200,
+        imageUrl: "/images/product-templates/apple-airpods.svg", // Temporarily using airpods SVG until we create a watch SVG
         category: "electronics",
         inStock: true,
         commissionRate: 16,
         vrEnabled: true,
-        brandId: 6,
+        brandId: 4,
         featured: false,
-        threeDModelUrl: "/models/samsung-watch.glb",
+        threeDModelUrl: "/models/apple-watch.glb",
         viewCount: 503
       }
     ];
@@ -363,7 +363,7 @@ export class MemStorage implements IStorage {
         pointsRequired: 1000,
         isActive: true,
         tier: "basic",
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-shoes_oyhvyf.jpg",
+        imageUrl: "/images/product-templates/nike-shoes.svg",
         expiryDate: new Date("2025-12-31")
       },
       {
@@ -372,7 +372,7 @@ export class MemStorage implements IStorage {
         pointsRequired: 750,
         isActive: true,
         tier: "basic",
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-cap_qsjvgm.jpg",
+        imageUrl: "/images/product-templates/samsung-galaxy.svg",
         expiryDate: new Date("2025-12-31")
       },
       {
@@ -381,7 +381,7 @@ export class MemStorage implements IStorage {
         pointsRequired: 2000,
         isActive: true,
         tier: "premium",
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-tshirt_qosfn2.jpg",
+        imageUrl: "/images/product-templates/adidas-tshirt.svg",
         expiryDate: new Date("2025-12-31")
       },
       {
@@ -390,7 +390,7 @@ export class MemStorage implements IStorage {
         pointsRequired: 3000,
         isActive: true,
         tier: "premium",
-        imageUrl: "https://res.cloudinary.com/dvu0agxjg/image/upload/v1710957111/style-echo-hoodie_qmsdqk.jpg",
+        imageUrl: "/images/product-templates/apple-airpods.svg",
         expiryDate: new Date("2025-12-31")
       }
     ];

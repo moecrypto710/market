@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="600" height="400" fill="#000000"/>
+  
+  <!-- Phone Outline -->
+  <rect x="220" y="80" width="160" height="240" rx="20" fill="#111111" stroke="white" stroke-width="3"/>
+  
+  <!-- Screen -->
+  <rect x="230" y="90" width="140" height="220" rx="10" fill="#000033"/>
+  
+  <!-- Camera Bump -->
+  <rect x="235" y="100" width="40" height="15" rx="5" fill="#222222" stroke="white" stroke-width="1"/>
+  
+  <!-- Camera Lenses -->
+  <circle cx="245" cy="107.5" r="5" fill="#333333" stroke="white" stroke-width="1"/>
+  <circle cx="260" cy="107.5" r="5" fill="#333333" stroke="white" stroke-width="1"/>
+  
+  <!-- Front Facing Camera -->
+  <circle cx="300" cy="100" r="3" fill="#333333" stroke="white" stroke-width="0.5"/>
+  
+  <!-- UI Elements -->
+  <rect x="245" y="130" width="110" height="15" rx="3" fill="#1a237e" stroke="white" stroke-width="0.5"/>
+  <rect x="245" y="155" width="110" height="15" rx="3" fill="#1a237e" stroke="white" stroke-width="0.5"/>
+  <rect x="245" y="180" width="50" height="50" rx="3" fill="#1a237e" stroke="white" stroke-width="0.5"/>
+  <rect x="305" y="180" width="50" height="50" rx="3" fill="#1a237e" stroke="white" stroke-width="0.5"/>
+  <rect x="245" y="240" width="110" height="60" rx="3" fill="#1a237e" stroke="white" stroke-width="0.5"/>
+  
+  <!-- Samsung Logo -->
+  <g transform="translate(300, 55) scale(0.5)">
+    <path d="M-100 0H100" stroke="white" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-80 -10C-80 -10 -60 -25 -30 -25C0 -25 0 -10 0 0C0 10 0 25 30 25C60 25 80 10 80 10" stroke="white" stroke-width="10" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Product Label -->
+  <rect x="50" y="320" width="500" height="50" rx="5" fill="black" stroke="white" stroke-width="1"/>
+  <text x="300" y="350" font-family="Arial" font-size="18" fill="white" text-anchor="middle">Samsung Galaxy S22 - هاتف سامسونج جالكسي S22</text>
+  
+  <!-- Glow Effects -->
+  <ellipse cx="300" cy="200" rx="180" ry="140" fill="url(#glow1)" fill-opacity="0.3"/>
+  
+  <!-- Definitions -->
+  <defs>
+    <radialGradient id="glow1" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0%" stop-color="#1a237e" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
