@@ -8,8 +8,21 @@
   .animate-spin-slow {
     animation: spin 8s linear infinite;
   }
+  
+  .shadow-glow {
+    box-shadow: 0 0 15px rgba(14, 165, 233, 0.7);
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(14, 165, 233, 0.7);
+  }
+  
+  .hover-glow:hover {
+    filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.7));
+  }
 }
 
+/* Holographic scan effect */
 @keyframes scan {
   0% {
     background-position: 0 0;
@@ -19,16 +32,117 @@
   }
 }
 
+/* Floating animations with different timings */
 @keyframes float {
-  0% {
+  0%, 100% {
     transform: translateY(0);
   }
   50% {
     transform: translateY(-10px);
   }
-  100% {
-    transform: translateY(0);
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0);
   }
+  25% {
+    transform: translate(5px, -5px);
+  }
+  50% {
+    transform: translate(0, -10px);
+  }
+  75% {
+    transform: translate(-5px, -5px);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-7px, -7px);
+  }
+  50% {
+    transform: translate(0, -14px);
+  }
+  75% {
+    transform: translate(7px, -7px);
+  }
+}
+
+@keyframes float3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(8px, 5px);
+  }
+  66% {
+    transform: translate(-8px, 10px);
+  }
+}
+
+@keyframes float4 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-10px, -3px);
+  }
+  66% {
+    transform: translate(10px, -6px);
+  }
+}
+
+@keyframes float5 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(7px, 5px) rotate(5deg);
+  }
+  50% {
+    transform: translate(0, 10px) rotate(0deg);
+  }
+  75% {
+    transform: translate(-7px, 5px) rotate(-5deg);
+  }
+}
+
+/* Pulse animation for ambient effects */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Glowing effect for holographic elements */
+@keyframes glow {
+  0%, 100% {
+    filter: brightness(1) drop-shadow(0 0 5px rgba(14, 165, 233, 0.7));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(14, 165, 233, 0.9));
+  }
+}
+
+/* Avatar dot pulse */
+.avatar::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  border: 1px solid white;
+  animation: pulse 2s infinite;
 }
 
 @keyframes spin {
@@ -40,50 +154,20 @@
   }
 }
 
-/* VR Shop Custom Animations */
-@keyframes pulse {
+/* VR Shop Custom Animations - Enhanced scale pulse */
+@keyframes scale-pulse {
   0% {
-    box-shadow: 0 0 10px rgba(94, 53, 177, 0.6);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 20px rgba(94, 53, 177, 0.8);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
     transform: scale(1.05);
   }
   100% {
-    box-shadow: 0 0 10px rgba(94, 53, 177, 0.6);
+    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
     transform: scale(1);
   }
-}
-
-@keyframes float1 {
-  0% { transform: translate(0, 0); opacity: 0.7; }
-  50% { transform: translate(20px, -30px); opacity: 0.3; }
-  100% { transform: translate(0, 0); opacity: 0.7; }
-}
-
-@keyframes float2 {
-  0% { transform: translate(0, 0); opacity: 0.5; }
-  50% { transform: translate(-30px, -20px); opacity: 0.2; }
-  100% { transform: translate(0, 0); opacity: 0.5; }
-}
-
-@keyframes float3 {
-  0% { transform: translate(0, 0); opacity: 0.6; }
-  50% { transform: translate(25px, -15px); opacity: 0.3; }
-  100% { transform: translate(0, 0); opacity: 0.6; }
-}
-
-@keyframes float4 {
-  0% { transform: translate(0, 0); opacity: 0.4; }
-  50% { transform: translate(-15px, -25px); opacity: 0.1; }
-  100% { transform: translate(0, 0); opacity: 0.4; }
-}
-
-@keyframes float5 {
-  0% { transform: translate(0, 0); opacity: 0.6; }
-  50% { transform: translate(10px, -40px); opacity: 0.3; }
-  100% { transform: translate(0, 0); opacity: 0.6; }
 }
 
 /* New VR animations for cyberpunk experience */

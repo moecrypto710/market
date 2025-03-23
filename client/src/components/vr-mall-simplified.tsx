@@ -174,6 +174,47 @@ export default function VRMallSimplified({ products }: VRMallProps) {
     setSelectedAvatar(null);
   }
   
+  // Handle showing product in 3D view
+  function handleShowProduct(product: Product) {
+    setSelectedProduct(product);
+    setShow3DView(true);
+    setShowSpecialEffect(true);
+    setSpecialEffectType('hologram');
+    
+    // Trigger confetti effect
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+  
+  // Handle navigation between sections
+  function handleSectionNavigation(section: string) {
+    // Calculate new position based on section
+    let newPosition = { ...avatarPosition };
+    
+    switch(section) {
+      case 'entrance':
+        newPosition = { x: 50, y: 15 };
+        break;
+      case 'electronics':
+        newPosition = { x: 30, y: 40 };
+        break;
+      case 'clothing':
+        newPosition = { x: 70, y: 40 };
+        break;
+      case 'food':
+        newPosition = { x: 50, y: 80 };
+        break;
+      case 'plaza':
+        newPosition = { x: 50, y: 50 };
+        break;
+    }
+    
+    setAvatarPosition(newPosition);
+  }
+  
   // Set up keyboard controls
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled) return;
@@ -486,6 +527,16 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           خروج من الواقع الافتراضي
         </Button>
         
+        {/* AI Assistant Toggle Button */}
+        <Button
+          variant="outline"
+          className="absolute top-16 right-4 z-50 bg-gradient-to-r from-blue-600 to-purple-600 border-0"
+          onClick={() => setShowAiAssistant(!showAiAssistant)}
+        >
+          <i className={`fas fa-${showAiAssistant ? 'eye-slash' : 'robot'} mr-2`}></i>
+          {showAiAssistant ? 'إخفاء المساعد الذكي' : 'إظهار المساعد الذكي'}
+        </Button>
+        
         {/* Current location indicator */}
         <div className="absolute top-16 left-4 bg-black/70 px-3 py-1.5 rounded-full text-sm z-50 border border-white/10">
           <div className="flex items-center gap-2">
@@ -598,6 +649,17 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           }
         </div>
       </div>
+      {/* AI Shopping Assistant */}
+      {showAiAssistant && selectedAvatar && (
+        <AiShoppingAssistant
+          currentSection={currentSection}
+          products={products}
+          onProductSelect={handleShowProduct}
+          onNavigate={handleSectionNavigation}
+          avatar={selectedAvatar}
+          minimized={false}
+        />
+      )}
     </>
   );
 }
