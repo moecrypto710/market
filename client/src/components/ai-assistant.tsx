@@ -288,18 +288,18 @@ export default function AIAssistant({
     // Minimized state - just show the chat button
     return (
       <Button
-        className="fixed bottom-4 right-4 rounded-full w-14 h-14 p-0 bg-[#7c4dff] hover:bg-[#651fff] shadow-lg z-40"
+        className="fixed bottom-4 right-4 rounded-full w-14 h-14 p-0 bg-[#00ffcd] hover:bg-[#00d6ae] shadow-lg z-40"
         onClick={() => setIsOpen(true)}
       >
-        <i className="fas fa-robot text-2xl"></i>
+        <i className="fas fa-robot text-2xl text-black"></i>
       </Button>
     );
   }
 
   return (
     <div className="fixed bottom-4 right-4 z-40 w-80 sm:w-96">
-      <Card className="shadow-xl border-[#7c4dff]/20">
-        <div className="bg-[#7c4dff] text-white p-3 rounded-t-lg flex justify-between items-center">
+      <Card className="shadow-xl border-[#00ffcd]/20">
+        <div className="bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] text-black p-3 rounded-t-lg flex justify-between items-center">
           <div className="flex items-center">
             <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center mr-2">
               <i className="fas fa-robot"></i>
@@ -362,7 +362,7 @@ export default function AIAssistant({
                     <div 
                       className={`max-w-[85%] p-3 rounded-lg ${
                         message.role === "user" 
-                          ? "bg-[#7c4dff] text-white rounded-tr-none" 
+                          ? "bg-gradient-to-br from-[#ff00aa] to-[#00ffcd] text-black rounded-tr-none" 
                           : "bg-white dark:bg-gray-800 shadow border border-gray-200 dark:border-gray-700 rounded-tl-none"
                       }`}
                     >
