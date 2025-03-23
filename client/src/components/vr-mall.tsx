@@ -912,28 +912,6 @@ export default function VRMall({ products }: VRMallProps) {
   
   const currentSection = getCurrentSection();
   
-  // Get ambient color scheme based on current section
-  const getCurrentColors = () => {
-    if (!currentSection) return categoryColors.default;
-    
-    // If section has an explicit category, use it
-    if (currentSection.category && 
-        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.category)) {
-      return categoryColors[currentSection.category as keyof typeof categoryColors];
-    }
-    
-    // For category sections, use their id
-    if (currentSection.type === 'category' && 
-        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.id)) {
-      return categoryColors[currentSection.id as keyof typeof categoryColors];
-    }
-    
-    // Fallback to default colors
-    return categoryColors.default;
-  }
-  
-  const currentColors = getCurrentColors();
-  
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
     setShowTransition(false);
@@ -960,12 +938,12 @@ export default function VRMall({ products }: VRMallProps) {
       let newLighting;
       
       // First check if the section id matches a specific category
-      if (categoryLighting[sectionId]) {
-        newLighting = categoryLighting[sectionId];
+      if (Object.prototype.hasOwnProperty.call(categoryLighting, sectionId)) {
+        newLighting = categoryLighting[sectionId as keyof typeof categoryLighting];
       } 
       // Otherwise use the section type
-      else if (categoryLighting[sectionType]) {
-        newLighting = categoryLighting[sectionType];
+      else if (Object.prototype.hasOwnProperty.call(categoryLighting, sectionType)) {
+        newLighting = categoryLighting[sectionType as keyof typeof categoryLighting];
       } 
       // Default lighting
       else {
