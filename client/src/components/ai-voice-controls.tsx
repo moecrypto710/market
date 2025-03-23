@@ -147,22 +147,118 @@ export default function AIVoiceControls({
     if (!enabled || !vrEnabled) return;
     
     setIsListening(true);
+    setProcessingStage('listening');
+    
+    // Reset recognition results
+    setRecognitionResults([]);
+    
     toast({
       title: 'جاري الاستماع...',
-      description: 'قل أمراً مثل "انتقل إلى الملابس" أو "أظهر سلة التسوق"'
+      description: 'قل أمراً مثل "انتقل إلى الملابس" أو "أظهر سلة التسوق"',
+      variant: 'default',
     });
     
-    // Simulate processing time
+    // Simulate voice recognition
+    // In a real app, we would use the Web Speech API here
     setTimeout(() => {
-      // Pick a random command to simulate recognition
-      const randomCommand = availableCommands[Math.floor(Math.random() * availableCommands.length)];
-      setTranscript(randomCommand.text);
-      
-      // Process the command
-      processCommand(randomCommand.text);
+      // If current product exists, simulate the user saying something about it
+      if (currentProduct && Math.random() > 0.5) {
+        // Simulate asking about the current product
+        const productCommand = availableCommands.find(c => 
+          c.action === 'addToCart' || c.action === 'tryOn' || c.action === 'view3D'
+        );
+        
+        if (productCommand) {
+          setTranscript(productCommand.text);
+          processCommand(productCommand.text);
+        }
+      } else {
+        // Pick a random command to simulate recognition with some probability of choosing one related to current section
+        let randomCommand;
+        
+        if (currentSection && Math.random() > 0.3) {
+          // Try to find section-specific command
+          const sectionCommands = availableCommands.filter(cmd => 
+            (cmd.params as any)?.section === currentSection || 
+            cmd.action === 'showSizes' || 
+            cmd.action === 'compare'
+          );
+          
+          if (sectionCommands.length > 0) {
+            randomCommand = sectionCommands[Math.floor(Math.random() * sectionCommands.length)];
+          }
+        }
+        
+        // Fallback to any command if no section-specific command was found
+        if (!randomCommand) {
+          randomCommand = availableCommands[Math.floor(Math.random() * availableCommands.length)];
+        }
+        
+        // Simulate recognizing either the main command text or one of its variations (more realistic)
+        const useVariation = enhancedRecognition && randomCommand.arabicVariations && Math.random() > 0.5;
+        const recognizedText = useVariation 
+          ? randomCommand.arabicVariations![Math.floor(Math.random() * randomCommand.arabicVariations!.length)]
+          : randomCommand.text;
+        
+        setTranscript(recognizedText);
+        processCommand(recognizedText);
+      }
       
       setIsListening(false);
     }, 2000);
+  };
+  
+  // Find command by text or variation (enhanced pattern matching)
+  const findMatchingCommand = (input: string) => {
+    const normalizedInput = input.trim().toLowerCase();
+    
+    // First try exact match
+    let matchedCommand = availableCommands.find(c => 
+      c.text.toLowerCase() === normalizedInput
+    );
+    
+    // If no exact match, try variations if enhancedRecognition is enabled
+    if (!matchedCommand && enhancedRecognition) {
+      matchedCommand = availableCommands.find(c => 
+        // Check if any Arabic variation matches
+        c.arabicVariations?.some(variation => variation.toLowerCase() === normalizedInput)
+      );
+      
+      // If still no match, try fuzzy matching (more advanced)
+      if (!matchedCommand) {
+        // Check for partial matches that contain at least 70% of the words
+        matchedCommand = availableCommands.find(c => {
+          // Check main text
+          const mainTextWords = c.text.toLowerCase().split(' ');
+          const inputWords = normalizedInput.split(' ');
+          
+          // Count how many words from command text appear in input
+          const matchedWords = mainTextWords.filter(word => 
+            inputWords.some(inputWord => inputWord.includes(word) || word.includes(inputWord))
+          );
+          
+          // If more than 70% of words match, consider it a match
+          if (matchedWords.length / mainTextWords.length >= 0.7) {
+            return true;
+          }
+          
+          // Also check variations with the same logic
+          if (c.arabicVariations) {
+            return c.arabicVariations.some(variation => {
+              const variationWords = variation.toLowerCase().split(' ');
+              const matchedVariationWords = variationWords.filter(word => 
+                inputWords.some(inputWord => inputWord.includes(word) || word.includes(inputWord))
+              );
+              return matchedVariationWords.length / variationWords.length >= 0.7;
+            });
+          }
+          
+          return false;
+        });
+      }
+    }
+    
+    return matchedCommand;
   };
   
   // Process the recognized command
@@ -170,26 +266,44 @@ export default function AIVoiceControls({
     // Add to history
     setCommandHistory(prev => [command, ...prev].slice(0, 5));
     
-    // Find the matching command
-    const matchedCommand = availableCommands.find(c => c.text === command);
+    // Show analyzing state
+    setProcessingStage('analyzing');
     
-    if (matchedCommand) {
-      toast({
-        title: 'تم تنفيذ الأمر',
-        description: `تم تنفيذ: ${command}`
-      });
+    // Simulate voice processing delay
+    setTimeout(() => {
+      // Find the matching command using enhanced pattern matching
+      const matchedCommand = findMatchingCommand(command);
       
-      // Call the onCommand callback if provided
-      if (onCommand) {
-        onCommand(matchedCommand.action, matchedCommand.params);
+      if (matchedCommand) {
+        // Set confidence level (simulated)
+        const confidence = Math.random() * 0.3 + 0.7; // Random between 0.7 and 1.0
+        setConfidenceLevel(confidence);
+        
+        setProcessingStage('executing');
+        toast({
+          title: 'تم تنفيذ الأمر',
+          description: `تم تنفيذ: ${matchedCommand.text} (${Math.round(confidence * 100)}% دقة)`,
+          variant: 'default'
+        });
+        
+        // Call the onCommand callback if provided
+        if (onCommand) {
+          onCommand(matchedCommand.action, matchedCommand.params);
+        }
+      } else {
+        setConfidenceLevel(0);
+        toast({
+          title: 'لم يتم التعرف على الأمر',
+          description: 'حاول مرة أخرى بأمر مختلف',
+          variant: 'destructive'
+        });
       }
-    } else {
-      toast({
-        title: 'لم يتم التعرف على الأمر',
-        description: 'حاول مرة أخرى بأمر مختلف',
-        variant: 'destructive'
-      });
-    }
+      
+      // Reset processing stage
+      setTimeout(() => {
+        setProcessingStage('idle');
+      }, 1000);
+    }, 800);
   };
   
   // Manually execute a command (for testing purposes)
@@ -207,51 +321,51 @@ export default function AIVoiceControls({
         <Button
           variant="outline"
           size="icon"
-          className={`rounded-full w-12 h-12 shadow-glow futuristic-border ${isListening ? 'animate-pulse bg-red-500/20' : 'bg-black/80'}`}
+          className={`rounded-full w-12 h-12 shadow-glow futuristic-border ${isListening ? 'animate-pulse bg-pink-500/20' : 'bg-black/80'}`}
           onClick={handleStartListening}
           disabled={isListening}
         >
-          <i className={`fas ${isListening ? 'fa-microphone-alt text-red-500' : 'fa-microphone text-purple-400'} text-xl`}></i>
+          <i className={`fas ${isListening ? 'fa-microphone-alt text-pink-500' : 'fa-microphone text-pink-400'} text-xl`}></i>
         </Button>
         
         {/* Pulse animation when listening */}
         {isListening && (
-          <div className="absolute inset-0 rounded-full border-2 border-red-500/50 animate-ping"></div>
+          <div className="absolute inset-0 rounded-full border-2 border-pink-500/50 animate-ping"></div>
         )}
       </div>
       
       {/* Command display (only shown when not minimized) */}
       {!minimized && (
-        <div className="mt-2 glass-effect p-3 rounded-lg text-white text-sm max-w-[300px] border futuristic-border">
+        <div className="mt-2 bg-black/70 backdrop-blur-lg p-3 rounded-lg text-white text-sm max-w-[300px] border border-pink-500/20 shadow-lg">
           <div className="flex justify-between items-center mb-2">
-            <h4 className="font-bold neon-text">التحكم الصوتي</h4>
+            <h4 className="font-bold text-pink-400">التحكم الصوتي</h4>
             <Button 
               variant="ghost" 
               size="sm" 
-              className="h-6 w-6 p-0"
+              className="h-6 w-6 p-0 hover:bg-pink-500/20"
               onClick={() => setShowCommandList(!showCommandList)}
             >
-              <i className={`fas ${showCommandList ? 'fa-chevron-up' : 'fa-chevron-down'} text-xs`}></i>
+              <i className={`fas ${showCommandList ? 'fa-chevron-up' : 'fa-chevron-down'} text-xs text-pink-400`}></i>
             </Button>
           </div>
           
           {transcript && (
-            <div className="mb-2 p-2 bg-purple-500/10 rounded border border-purple-500/30">
-              <p className="text-sm text-center">{transcript}</p>
+            <div className="mb-2 p-2 bg-pink-500/10 rounded border border-pink-500/30">
+              <p className="text-sm text-center text-white">{transcript}</p>
             </div>
           )}
           
           {/* Available commands */}
           {showCommandList && (
             <div className="mt-3">
-              <h5 className="text-xs font-semibold mb-2 text-purple-300">الأوامر المتاحة:</h5>
+              <h5 className="text-xs font-semibold mb-2 text-pink-300">الأوامر المتاحة:</h5>
               <div className="grid grid-cols-2 gap-1">
                 {availableCommands.map((cmd, i) => (
                   <Button 
                     key={i} 
                     variant="ghost" 
                     size="sm"
-                    className="text-xs h-7 justify-start hover:bg-purple-500/20"
+                    className="text-xs h-7 justify-start hover:bg-pink-500/20 text-white"
                     onClick={() => executeCommand(cmd.text, cmd.action, cmd.params)}
                   >
                     {cmd.text}
@@ -264,12 +378,24 @@ export default function AIVoiceControls({
           {/* Command history */}
           {commandHistory.length > 0 && !showCommandList && (
             <div className="mt-3">
-              <h5 className="text-xs font-semibold mb-1 text-purple-300">آخر الأوامر:</h5>
+              <h5 className="text-xs font-semibold mb-1 text-pink-300">آخر الأوامر:</h5>
               <div className="space-y-1">
                 {commandHistory.map((cmd, i) => (
                   <p key={i} className="text-xs text-white/70">{cmd}</p>
                 ))}
               </div>
+            </div>
+          )}
+          
+          {/* Processing visualization (only shown when in processing stage) */}
+          {processingStage === 'analyzing' && (
+            <div className="mt-2 p-2 bg-pink-950/30 rounded border border-pink-500/20">
+              <div className="flex items-center justify-center">
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-ping mr-1" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-ping mr-1" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-2 h-2 bg-pink-400 rounded-full animate-ping" style={{ animationDelay: '600ms' }}></div>
+              </div>
+              <p className="text-xs text-center mt-1 text-pink-200">تحليل الأمر الصوتي...</p>
             </div>
           )}
         </div>
