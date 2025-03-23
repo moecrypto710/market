@@ -10,6 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import AvatarSelection, { AvatarProps } from "@/components/avatar-selection";
+import CulturalTransition from "@/components/cultural-transition";
 
 interface VRMallProps {
   products: Product[];
@@ -833,11 +834,6 @@ export default function VRMall({ products }: VRMallProps) {
           
         setTransitionStyle(transitionMap[transitionKey] || 'fade');
         setShowTransition(true);
-        
-        // Hide transition after animation completes
-        setTimeout(() => {
-          setShowTransition(false);
-        }, 1500);
       }
       
       // Only show notification for sections with features
@@ -869,13 +865,26 @@ export default function VRMall({ products }: VRMallProps) {
     }
   }, [avatarPosition, storeSections, selectedAvatar, vrEnabled, activeSection, completedTasks]);
   
+  // Handle transition completion
+  const handleTransitionFinish = () => {
+    setShowTransition(false);
+  };
+
   return (
-    <div 
-      ref={mallRef}
-      className="fixed inset-0 bg-[#070314]/95 backdrop-blur-md z-50 overflow-hidden"
-      style={{
-        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
-      }}
+    <>
+      {/* Cultural transition animation between sections */}
+      <CulturalTransition 
+        show={showTransition} 
+        style={transitionStyle as any} 
+        onFinish={handleTransitionFinish} 
+      />
+      
+      <div 
+        ref={mallRef}
+        className="fixed inset-0 bg-[#070314]/95 backdrop-blur-md z-50 overflow-hidden"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
+        }}
     >
       {/* Dynamic atmosphere effects */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
@@ -1880,5 +1889,6 @@ export default function VRMall({ products }: VRMallProps) {
         </div>
       )}
     </div>
+    </>
   );
 }
