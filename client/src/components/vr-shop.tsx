@@ -987,107 +987,236 @@ export default function VRShop({ products }: VRShopProps) {
       
       {/* Store details popup */}
       {showStoreDetails && selectedBrand && (
-        <div className="fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm">
-          <div className="bg-gradient-to-b from-[#1a1a2e] to-[#16213e] rounded-xl p-6 max-w-2xl w-full mx-4 shadow-2xl border border-[#5e35b1]/20">
-            <div className="flex items-start justify-between mb-6">
-              <div className="flex items-center">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 mr-4">
-                  <img src={selectedBrand.logo} alt={selectedBrand.name} className="w-full h-full object-cover" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">{selectedBrand.name}</h2>
-                  <div className="flex items-center mt-1 space-x-2 space-x-reverse">
-                    <Badge variant="outline" className="bg-[#5e35b1]/10 text-[#a48def] border-[#5e35b1]/20">
-                      {selectedBrand.category === 'electronics' ? 'إلكترونيات' :
-                       selectedBrand.category === 'clothing' ? 'ملابس' :
-                       selectedBrand.category === 'home' ? 'منزل' : 'رياضة'}
-                    </Badge>
-                    
-                    {selectedBrand.featured && (
-                      <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20">
-                        <i className="fas fa-star mr-1 text-[10px]"></i>
-                        شريك مميز
+        <div className="fixed inset-0 flex items-center justify-center z-[100] bg-black/80 backdrop-blur-md">
+          <div className="bg-black relative rounded-xl p-0 max-w-4xl w-full mx-4 shadow-2xl border border-white/20 overflow-hidden">
+            {/* Store header background image */}
+            <div className="absolute inset-0 opacity-20 z-0">
+              <img 
+                src={selectedBrand.storeImage} 
+                alt={`${selectedBrand.name} store`} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+            </div>
+            
+            {/* Store content */}
+            <div className="relative z-10 p-6">
+              <div className="flex flex-col md:flex-row md:items-start justify-between mb-8">
+                <div className="flex flex-col md:flex-row md:items-center">
+                  {/* Store logo with glowing border */}
+                  <div 
+                    className="w-20 h-20 rounded-full overflow-hidden mb-4 md:mb-0 md:mr-6 border-2 mx-auto md:mx-0"
+                    style={{ 
+                      borderColor: selectedBrand.color,
+                      boxShadow: `0 0 20px ${selectedBrand.color}40`
+                    }}
+                  >
+                    <img src={selectedBrand.logo} alt={selectedBrand.name} className="w-full h-full object-cover" />
+                  </div>
+                  
+                  <div className="text-center md:text-right">
+                    <h2 className="text-3xl font-bold mb-2 text-white tracking-wide">{selectedBrand.name}</h2>
+                    <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 mt-2">
+                      <Badge 
+                        variant="outline" 
+                        className="border rounded-full py-1 px-3 text-xs tracking-wide"
+                        style={{ 
+                          backgroundColor: `${selectedBrand.color}20`, 
+                          color: selectedBrand.color, 
+                          borderColor: `${selectedBrand.color}40`
+                        }}
+                      >
+                        {selectedBrand.category === 'electronics' ? 'إلكترونيات' :
+                         selectedBrand.category === 'clothing' ? 'ملابس' :
+                         selectedBrand.category === 'home' ? 'منزل' : 'رياضة'}
                       </Badge>
-                    )}
-                    
-                    <Badge variant="outline" className={`
-                      ${selectedBrand.storeType === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
-                        selectedBrand.storeType === 'entrance' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
-                        'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
-                      {selectedBrand.storeType === 'premium' ? 'متجر مميز' :
-                       selectedBrand.storeType === 'entrance' ? 'بمدخل المول' : 'متجر عادي'}
-                    </Badge>
+                      
+                      {selectedBrand.featured && (
+                        <Badge variant="outline" className="bg-white/10 text-white border-white/30 rounded-full py-1 px-3 text-xs tracking-wide">
+                          <i className="fas fa-star mr-1 text-[10px] text-amber-400"></i>
+                          شريك مميز
+                        </Badge>
+                      )}
+                      
+                      <Badge 
+                        variant="outline" 
+                        className="rounded-full py-1 px-3 text-xs tracking-wide border"
+                        style={{ 
+                          backgroundColor: `${selectedBrand.storeType === 'premium' ? '#f59e0b' : 
+                            selectedBrand.storeType === 'entrance' ? '#ef4444' : '#3b82f6'}20`,
+                          color: `${selectedBrand.storeType === 'premium' ? '#f59e0b' : 
+                            selectedBrand.storeType === 'entrance' ? '#ef4444' : '#3b82f6'}`,
+                          borderColor: `${selectedBrand.storeType === 'premium' ? '#f59e0b' : 
+                            selectedBrand.storeType === 'entrance' ? '#ef4444' : '#3b82f6'}40`
+                        }}
+                      >
+                        {selectedBrand.storeType === 'premium' ? 'متجر مميز' :
+                         selectedBrand.storeType === 'entrance' ? 'بمدخل المول' : 'متجر عادي'}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
+                
+                <button 
+                  className="absolute top-2 right-2 text-white/60 hover:text-white rounded-full w-10 h-10 flex items-center justify-center bg-black/60 hover:bg-black/80 border border-white/10"
+                  onClick={() => {
+                    setShowStoreDetails(false);
+                    setSelectedBrand(null);
+                  }}
+                >
+                  <i className="fas fa-times"></i>
+                </button>
               </div>
               
-              <button 
-                className="text-white/60 hover:text-white rounded-full w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10"
-                onClick={() => {
-                  setShowStoreDetails(false);
-                  setSelectedBrand(null);
-                }}
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div className="p-4 bg-white/5 rounded-lg mb-6">
-              <p className="text-white/80">{selectedBrand.description}</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
-                  <i className="fas fa-store text-[#a48def]"></i>
+              {/* Store interior image */}
+              <div className="rounded-lg overflow-hidden mb-6 h-56 relative">
+                <img 
+                  src={selectedBrand.storeImage} 
+                  alt={`${selectedBrand.name} interior`} 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-4">
+                  <p className="text-white/90 text-sm md:text-base leading-relaxed">
+                    {selectedBrand.description}
+                  </p>
                 </div>
-                <div className="text-lg font-bold">{selectedBrand.productCount}</div>
-                <div className="text-sm text-white/60">منتج</div>
               </div>
               
-              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
-                  <i className="fas fa-ruler-combined text-[#a48def]"></i>
+              {/* Store stats */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div 
+                  className="p-4 rounded-lg flex flex-col items-center border"
+                  style={{ 
+                    backgroundColor: `${selectedBrand.color}10`,
+                    borderColor: `${selectedBrand.color}30`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                    style={{ 
+                      backgroundColor: `${selectedBrand.color}20`
+                    }}
+                  >
+                    <i className="fas fa-store" style={{ color: selectedBrand.color }}></i>
+                  </div>
+                  <div className="text-lg font-bold text-white">{selectedBrand.productCount}</div>
+                  <div className="text-sm text-white/60">منتج</div>
                 </div>
-                <div className="text-lg font-bold">
-                  {selectedBrand.storeSize === 'large' ? 'كبير' :
-                   selectedBrand.storeSize === 'medium' ? 'متوسط' :
-                   selectedBrand.storeSize === 'flagship' ? 'رئيسي' : 'صغير'}
+                
+                <div 
+                  className="p-4 rounded-lg flex flex-col items-center border"
+                  style={{ 
+                    backgroundColor: `${selectedBrand.color}10`,
+                    borderColor: `${selectedBrand.color}30`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                    style={{ 
+                      backgroundColor: `${selectedBrand.color}20`
+                    }}
+                  >
+                    <i className="fas fa-ruler-combined" style={{ color: selectedBrand.color }}></i>
+                  </div>
+                  <div className="text-lg font-bold text-white">
+                    {selectedBrand.storeSize === 'large' ? 'كبير' :
+                     selectedBrand.storeSize === 'medium' ? 'متوسط' :
+                     selectedBrand.storeSize === 'flagship' ? 'رئيسي' : 'صغير'}
+                  </div>
+                  <div className="text-sm text-white/60">حجم المتجر</div>
                 </div>
-                <div className="text-sm text-white/60">حجم المتجر</div>
+                
+                <div 
+                  className="p-4 rounded-lg flex flex-col items-center border"
+                  style={{ 
+                    backgroundColor: `${selectedBrand.color}10`,
+                    borderColor: `${selectedBrand.color}30`
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-2"
+                    style={{ 
+                      backgroundColor: `${selectedBrand.color}20`
+                    }}
+                  >
+                    <i className="fas fa-medal" style={{ color: selectedBrand.color }}></i>
+                  </div>
+                  <div className="text-lg font-bold text-white">
+                    {selectedBrand.featured ? 'ذهبي' : 'فضي'}
+                  </div>
+                  <div className="text-sm text-white/60">مستوى الشراكة</div>
+                </div>
               </div>
               
-              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
-                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
-                  <i className="fas fa-medal text-[#a48def]"></i>
+              {/* VR Features Section */}
+              <div className="p-5 rounded-lg mb-6 border" style={{ 
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderColor: 'rgba(255,255,255,0.2)',
+                background: 'linear-gradient(to right, rgba(0,0,0,0.8), transparent), url(https://res.cloudinary.com/dvu0agxjg/image/upload/v1711323599/vr-grid-pattern_txbqxu.jpg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}>
+                <h3 className="font-bold mb-4 flex items-center text-lg text-white">
+                  <i className="fas fa-vr-cardboard text-white mr-3"></i>
+                  تجارب الواقع الافتراضي في {selectedBrand.name}
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                  {selectedBrand.vrFeatures?.map((feature, index) => (
+                    <div key={index} className="bg-white/5 backdrop-blur-sm p-3 rounded-lg border border-white/10 flex items-center">
+                      <i className="fas fa-check-circle text-white mr-2"></i>
+                      <span className="text-white/90 text-sm">{feature}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-lg font-bold">
-                  {selectedBrand.featured ? 'ذهبي' : 'فضي'}
-                </div>
-                <div className="text-sm text-white/60">مستوى الشراكة</div>
               </div>
-            </div>
-            
-            <div className="bg-gradient-to-r from-[#5e35b1]/20 to-transparent p-4 rounded-lg mb-6 border border-[#5e35b1]/10">
-              <h3 className="font-bold mb-2 flex items-center">
-                <i className="fas fa-handshake text-[#a48def] mr-2"></i>
-                فرص الشراكة مع {selectedBrand.name}
-              </h3>
-              <p className="text-sm text-white/70">
-                يمكنك الإنضمام لبرنامج الشراكة مع {selectedBrand.name} والحصول على عمولة بنسبة تصل إلى 15% على كل عملية بيع تتم من خلال رابط الإحالة الخاص بك. كما يمكنك الحصول على منتجات حصرية ومزايا إضافية.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <button className="bg-[#5e35b1] text-white py-2 px-4 rounded-lg">
-                <i className="fas fa-shopping-bag mr-2"></i>
-                تصفح المنتجات
-              </button>
               
-              <button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-2 px-4 rounded-lg">
-                <i className="fas fa-vr-cardboard mr-2"></i>
-                زيارة المتجر الافتراضي
-              </button>
+              {/* Partnership Section */}
+              <div className="p-5 rounded-lg mb-6 border" style={{ 
+                backgroundColor: `${selectedBrand.color}10`, 
+                borderColor: `${selectedBrand.color}30`,
+                backgroundImage: `linear-gradient(to right, ${selectedBrand.color}20, transparent)`
+              }}>
+                <h3 className="font-bold mb-3 flex items-center text-lg text-white">
+                  <i className="fas fa-handshake mr-3" style={{ color: selectedBrand.color }}></i>
+                  فرص الشراكة مع {selectedBrand.name}
+                </h3>
+                <p className="text-white/80 mb-2">
+                  يمكنك الإنضمام لبرنامج الشراكة مع {selectedBrand.name} والحصول على عمولة بنسبة تصل إلى 15% على كل عملية بيع تتم من خلال رابط الإحالة الخاص بك.
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-white/70">
+                  <div className="flex items-center"><i className="fas fa-percentage text-xs mr-1" style={{ color: selectedBrand.color }}></i> نسب عمولة مرتفعة</div>
+                  <div className="flex items-center"><i className="fas fa-gift text-xs mr-1" style={{ color: selectedBrand.color }}></i> منتجات حصرية</div>
+                  <div className="flex items-center"><i className="fas fa-tag text-xs mr-1" style={{ color: selectedBrand.color }}></i> خصومات خاصة</div>
+                </div>
+              </div>
+              
+              {/* Action buttons */}
+              <div className="grid grid-cols-2 gap-4">
+                <button 
+                  className="bg-white text-black font-bold py-3 px-4 rounded-lg hover:bg-white/90 transition flex items-center justify-center"
+                  onClick={() => {
+                    setShowStoreDetails(false);
+                    setSelectedBrand(null);
+                    // Navigate to partnership page
+                    window.location.href = '/partnership';
+                  }}
+                >
+                  <i className="fas fa-handshake mr-2"></i>
+                  انضم كشريك
+                </button>
+                
+                <button 
+                  className="bg-transparent border border-white/20 text-white font-bold py-3 px-4 rounded-lg hover:bg-white/10 transition flex items-center justify-center"
+                  onClick={() => {
+                    setShowStoreDetails(false);
+                    setSelectedBrand(null);
+                  }}
+                >
+                  <i className="fas fa-shopping-bag mr-2"></i>
+                  تصفح المنتجات
+                </button>
+              </div>
             </div>
           </div>
         </div>
