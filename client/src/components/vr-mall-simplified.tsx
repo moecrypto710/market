@@ -460,9 +460,9 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
         }}
       >
-        {/* Dynamic atmosphere effects */}
+        {/* Simplified atmosphere effects */}
         <div className="absolute inset-0 overflow-hidden opacity-20">
-          {/* Abstract grid lines */}
+          {/* Abstract grid lines - clean and minimal */}
           <div className="absolute inset-0" style={{ 
             backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(255, 255, 255, 0.1) 100%)',
             backgroundSize: '60px 60px',
@@ -470,62 +470,19 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             transformOrigin: 'center bottom',
           }}></div>
           
-          {/* Holographic overlay */}
-          <div className="absolute inset-0 holographic-bg opacity-10"></div>
+          {/* Subtle holographic overlay */}
+          <div className="absolute inset-0 holographic-bg opacity-5"></div>
           
-          {/* Scanning lines */}
-          <div className="absolute left-0 right-0 h-[1px] w-full bg-blue-400/30 animate-scan-slow"></div>
-          
-          {/* Enhanced floating particles with more interactive elements */}
-          <div className="absolute top-0 left-0 w-2 h-2 bg-purple-500 rounded-full animate-float1"></div>
+          {/* Just a few key particles for ambient effect */}
           <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float2"></div>
           <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-amber-400 rounded-full animate-float3"></div>
-          <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-purple-300 rounded-full animate-float4"></div>
-          <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-float5"></div>
-          
-          {/* New interactive elements */}
-          <div className="absolute top-[15%] left-[25%] w-3 h-3 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-glow-pulse"></div>
-          <div className="absolute bottom-[20%] right-[20%] w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full animate-float-slow"></div>
-          
-          {/* Arabic-inspired geometric patterns */}
-          <div className="absolute top-[10%] right-[10%] w-20 h-20 border-2 border-white/10 rounded-full animate-pattern-rotate opacity-20">
-            <div className="absolute inset-2 border border-white/5 rounded-full"></div>
-            <div className="absolute inset-4 border border-white/5 rounded-full"></div>
-            <div className="absolute inset-6 border border-white/5 rounded-full"></div>
-          </div>
-          
-          <div className="absolute bottom-[15%] left-[15%] w-16 h-16 animate-pattern-rotate opacity-30">
-            <div className="absolute inset-0 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
-            <div className="absolute inset-2 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
-            <div className="absolute inset-4 border border-white/10" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }}></div>
-          </div>
         </div>
         
-        {/* Dynamic Ambient Mood Lighting */}
+        {/* Simplified ambient mood lighting */}
         <div 
-          className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-30 transition-all duration-1000"
+          className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-20 transition-all duration-1000"
           style={{ 
             backgroundImage: `linear-gradient(to top, ${ambientColor}20, transparent, transparent)` 
-          }}
-        ></div>
-        
-        {/* Primary ambient glow - top */}
-        <div 
-          className="absolute top-0 left-1/4 w-1/2 h-1/3 blur-3xl rounded-full transition-all duration-1000"
-          style={{ 
-            backgroundColor: `${ambientColor}10`,
-            opacity: 0.2,
-            animation: 'pulse 6s infinite'
-          }}
-        ></div>
-        
-        {/* Secondary ambient glow - bottom */}
-        <div 
-          className="absolute bottom-0 right-1/4 w-1/2 h-1/4 blur-3xl rounded-full transition-all duration-1000"
-          style={{ 
-            backgroundColor: `${ambientColor}10`,
-            opacity: 0.15,
-            animation: 'pulse 7s infinite'
           }}
         ></div>
         
@@ -585,45 +542,43 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           />
         </div>
         
-        {/* Mall sections - simplified representation */}
-        <div className="absolute inset-10 grid grid-cols-4 grid-rows-4 gap-4">
-          {/* Entrance */}
-          <div className={`col-span-4 row-span-1 rounded-xl flex items-center justify-center ${currentSection === 'entrance' ? 'bg-purple-500/20 border-2 border-purple-500/30' : 'bg-white/5 border border-white/10'}`}>
-            <div className="text-center">
-              <i className="fas fa-door-open text-4xl mb-2 text-purple-400 opacity-60"></i>
-              <h3 className="text-xl font-bold">المدخل الرئيسي</h3>
+        {/* Mall sections - simplified representation with minimal design */}
+        <div className="absolute inset-10 flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-4 h-full">
+            {/* Electronics */}
+            <div 
+              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+                currentSection === 'electronics' 
+                  ? 'bg-blue-500/20 border-2 border-blue-500/30 shadow-glow' 
+                  : 'bg-white/5 border border-white/10 hover:bg-white/10'
+              }`}
+              onClick={() => handleSectionNavigation('electronics')}
+            >
+              <div className="text-center">
+                <i className="fas fa-microchip text-3xl mb-1 text-blue-400"></i>
+                <h3 className="text-lg font-bold">الإلكترونيات</h3>
+              </div>
             </div>
-          </div>
-          
-          {/* Electronics */}
-          <div className={`col-span-2 row-span-2 rounded-xl flex items-center justify-center ${currentSection === 'electronics' ? 'bg-blue-500/20 border-2 border-blue-500/30' : 'bg-white/5 border border-white/10'}`}>
-            <div className="text-center">
-              <i className="fas fa-microchip text-4xl mb-2 text-blue-400 opacity-60"></i>
-              <h3 className="text-xl font-bold">الإلكترونيات</h3>
-              <p className="mt-2 text-sm opacity-70">أحدث الأجهزة والتقنيات</p>
-            </div>
-          </div>
-          
-          {/* Clothing */}
-          <div className={`col-span-2 row-span-2 rounded-xl flex items-center justify-center ${currentSection === 'clothing' ? 'bg-pink-500/20 border-2 border-pink-500/30' : 'bg-white/5 border border-white/10'}`}>
-            <div className="text-center">
-              <i className="fas fa-tshirt text-4xl mb-2 text-pink-400 opacity-60"></i>
-              <h3 className="text-xl font-bold">الأزياء</h3>
-              <p className="mt-2 text-sm opacity-70">أحدث صيحات الموضة</p>
-            </div>
-          </div>
-          
-          {/* Food court */}
-          <div className={`col-span-4 row-span-1 rounded-xl flex items-center justify-center ${currentSection === 'food' ? 'bg-orange-500/20 border-2 border-orange-500/30' : 'bg-white/5 border border-white/10'}`}>
-            <div className="text-center">
-              <i className="fas fa-utensils text-4xl mb-2 text-orange-400 opacity-60"></i>
-              <h3 className="text-xl font-bold">المطاعم</h3>
+            
+            {/* Clothing */}
+            <div 
+              className={`rounded-xl flex items-center justify-center cursor-pointer transition-all ${
+                currentSection === 'clothing' 
+                  ? 'bg-pink-500/20 border-2 border-pink-500/30 shadow-glow' 
+                  : 'bg-white/5 border border-white/10 hover:bg-white/10'
+              }`}
+              onClick={() => handleSectionNavigation('clothing')}
+            >
+              <div className="text-center">
+                <i className="fas fa-tshirt text-3xl mb-1 text-pink-400"></i>
+                <h3 className="text-lg font-bold">الأزياء</h3>
+              </div>
             </div>
           </div>
         </div>
         
-        {/* Product showcase for current section */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4 z-50">
+        {/* Product showcase for current section - simplified cards */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 z-50">
           {products
             .filter(product => {
               if (currentSection === 'electronics') return product.category === 'electronics';
@@ -634,37 +589,27 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             .map(product => (
               <div 
                 key={product.id} 
-                className="w-48 h-64 bg-black/60 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 transition-all hover:scale-105 hover:border-white/40"
+                className="w-40 h-56 bg-black/60 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 transition-all hover:scale-105 hover:border-white/40 cursor-pointer"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShow3DView(true);
+                  setShowSpecialEffect(true);
+                  setSpecialEffectType('hologram');
+                }}
               >
-                <div className="h-32 bg-gradient-to-b from-black/0 to-black/40 p-2 flex items-center justify-center">
+                <div className="h-28 bg-gradient-to-b from-black/0 to-black/20 p-2 flex items-center justify-center">
                   <img 
                     src={product.imageUrl || 'https://via.placeholder.com/150'} 
                     alt={product.name} 
                     className="h-full object-contain"
                   />
                 </div>
-                <div className="p-3">
-                  <h3 className="font-bold text-sm mb-1">{product.name}</h3>
-                  <p className="text-white/70 text-xs mb-2 line-clamp-2">{product.description}</p>
+                <div className="p-2">
+                  <h3 className="font-bold text-sm">{product.name}</h3>
+                  <p className="text-white/60 text-xs mb-1 line-clamp-1">{product.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-amber-400">{product.price} ج.م</span>
-                    <button 
-                      className="bg-white/10 hover:bg-white/20 rounded px-2 py-1 text-xs"
-                      onClick={() => {
-                        setSelectedProduct(product);
-                        setShow3DView(true);
-                        setShowSpecialEffect(true);
-                        setSpecialEffectType('hologram');
-                        
-                        // Show toast
-                        toast({
-                          title: "عرض المنتج ثلاثي الأبعاد",
-                          description: `استخدم الفأرة لتدوير المنتج والتحكم بالعرض المجسم`
-                        });
-                      }}
-                    >
-                      عرض ثلاثي الأبعاد
-                    </button>
+                    <div className="text-xs text-white/60">3D عرض</div>
                   </div>
                 </div>
               </div>
