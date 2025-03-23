@@ -100,18 +100,11 @@ const AVATARS = [
   },
 ];
 
-// Separate component for avatar selection to fix hooks ordering issues
-function AvatarSelectionWrapper({ onAvatarSelected }: { onAvatarSelected: (avatar: AvatarProps) => void }) {
-  const { toast } = useToast();
-  
-  const handleAvatarSelect = (avatar: AvatarProps) => {
-    onAvatarSelected(avatar);
-    toast({
-      title: `مرحبا ${avatar.name}!`,
-      description: `لقد اخترت ${avatar.name} - ${avatar.personality}`,
-    });
-  };
-  
+// Simple avatar selection component renderer
+function renderAvatarSelection(
+  avatars: AvatarProps[], 
+  onSelect: (avatar: AvatarProps) => void
+) {
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
       <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
@@ -119,8 +112,8 @@ function AvatarSelectionWrapper({ onAvatarSelected }: { onAvatarSelected: (avata
         <p className="text-white/70 mb-6">كل شخصية لديها قدرات خاصة ومميزات فريدة في المول الافتراضي</p>
         
         <AvatarSelection 
-          avatars={AVATARS} 
-          onSelectAvatar={handleAvatarSelect} 
+          avatars={avatars} 
+          onSelectAvatar={onSelect} 
         />
       </div>
     </div>
@@ -681,9 +674,18 @@ export default function VRMall({ products }: VRMallProps) {
     return null;
   }
   
-  // If no avatar selected, show avatar selection using our wrapper component
+  // Avatar selection handler - defined early to avoid hooks ordering issues
+  const handleSelectAvatar = (avatar: AvatarProps) => {
+    setSelectedAvatar(avatar);
+    toast({
+      title: `مرحبا ${avatar.name}!`,
+      description: `لقد اخترت ${avatar.name} - ${avatar.personality}`,
+    });
+  };
+  
+  // If no avatar selected, show avatar selection UI
   if (!selectedAvatar) {
-    return <AvatarSelectionWrapper onAvatarSelected={setSelectedAvatar} />;
+    return renderAvatarSelection(AVATARS, handleSelectAvatar);
   }
   
   // Group products by category
