@@ -14,35 +14,87 @@ interface VRMallProps {
   products: Product[];
 }
 
-// Avatar selections with personality traits
+// Avatar selections with personality traits and special abilities
 const AVATARS = [
   { 
     id: 1, 
-    name: "أحمد", 
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=John&backgroundColor=b6e3f4",
-    personality: "محب للتكنولوجيا",
-    favoriteCategory: "electronics"
+    name: "عمر",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Omar&backgroundColor=b6e3f4",
+    personality: "مهتم بالتكنولوجيا والإلكترونيات الحديثة",
+    favoriteCategory: "electronics",
+    personalStyle: "عصري تقني",
+    benefits: [
+      "تخفيضات إضافية 10% على الإلكترونيات",
+      "وصول حصري لآخر التقنيات",
+      "دليل تقني متخصص"
+    ],
+    color: "#5e35b1",
+    specialFeature: "محلل المواصفات",
+    specialFeatureDescription: "قدرة خاصة على تحليل مواصفات المنتجات التقنية ومقارنتها بسرعة"
   },
   { 
     id: 2, 
-    name: "سارة", 
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Jane&backgroundColor=c0aede",
-    personality: "أنيقة ومتابعة للموضة",
-    favoriteCategory: "clothing"
+    name: "ليلى",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Laila&backgroundColor=ffdfbf",
+    personality: "عاشقة للموضة والأزياء التقليدية والحديثة",
+    favoriteCategory: "clothing",
+    personalStyle: "أنيق عصري",
+    benefits: [
+      "نصائح أزياء شخصية",
+      "وصول مبكر للتشكيلات الجديدة",
+      "تجربة افتراضية للملابس"
+    ],
+    color: "#e91e63",
+    specialFeature: "مستشار الأناقة",
+    specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية وفقاً لشخصيتك ومناسباتك"
   },
   { 
     id: 3, 
-    name: "ياسين", 
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Kid&backgroundColor=d1d4f9",
-    personality: "نشيط ورياضي",
-    favoriteCategory: "sports"
+    name: "سلمى",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Salma&backgroundColor=d1d4f9",
+    personality: "مهتمة بالديكور المنزلي وتصميم المساحات",
+    favoriteCategory: "home",
+    personalStyle: "كلاسيكي أنيق",
+    benefits: [
+      "تصميم ثلاثي الأبعاد لمنزلك",
+      "استشارات ديكور مجانية",
+      "تخفيضات على الأثاث"
+    ],
+    color: "#4caf50",
+    specialFeature: "مصمم المساحات",
+    specialFeatureDescription: "قدرة خاصة على تصور المنتجات في مساحات منزلك قبل الشراء"
   },
   { 
     id: 4, 
-    name: "ليلى", 
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Lily&backgroundColor=f9d1d1",
-    personality: "مهتمة بالديكور المنزلي",
-    favoriteCategory: "home"
+    name: "محمد",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Mohamed&backgroundColor=c0aede",
+    personality: "رياضي ومهتم باللياقة البدنية والأنشطة الحركية",
+    favoriteCategory: "sports",
+    personalStyle: "رياضي حيوي",
+    benefits: [
+      "اختبار المعدات الرياضية",
+      "خطط تدريب شخصية",
+      "عضوية في نادي الرياضيين"
+    ],
+    color: "#2196f3",
+    specialFeature: "مدرب اللياقة",
+    specialFeatureDescription: "قدرة خاصة على اختبار المعدات الرياضية وتقييم مناسبتها لأهدافك"
+  },
+  { 
+    id: 5, 
+    name: "نور",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Noor&backgroundColor=ffd1dc",
+    personality: "مهتمة بالتسوق الذكي والعروض الحصرية",
+    favoriteCategory: "vip-lounge",
+    personalStyle: "فاخر عصري",
+    benefits: [
+      "وصول حصري لقسم كبار الزوار",
+      "عروض خاصة على المنتجات الفاخرة",
+      "خدمة مساعد تسوق شخصي"
+    ],
+    color: "#9c27b0",
+    specialFeature: "صائد العروض",
+    specialFeatureDescription: "قدرة خاصة على اكتشاف أفضل العروض والتخفيضات في المول"
   },
 ];
 
