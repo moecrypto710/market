@@ -176,22 +176,21 @@ export default function AuthPage() {
             </TabsList>
 
             <TabsContent value="login">
-              <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
+              <div className="bg-black border border-white/30 rounded-lg p-6">
                 {/* Quick Login Options */}
                 <div className="mb-6">
-                  <div className="bg-[#ffeb3b]/10 p-4 rounded-lg mb-6 border border-[#ffeb3b]/30">
-                    <h3 className="text-center text-lg font-bold mb-2 text-[#ffeb3b]">دخول سريع</h3>
+                  <div className="bg-black p-4 rounded-lg mb-6 border border-white/30">
+                    <h3 className="text-center text-lg font-bold mb-2 text-white">دخول سريع</h3>
                     <p className="text-center text-white/70 text-sm mb-4">جرب تطبيقنا فوراً بدون تسجيل حساب جديد</p>
                     <div className="grid gap-3">
                       {GUEST_ACCOUNTS.map((account) => (
                         <Button 
                           key={account.username}
                           variant="outline" 
-                          className={`border-white/20 hover:bg-white/10 hover:text-white group h-14 relative overflow-hidden`}
+                          className="border-white/20 hover:bg-white hover:text-black group h-14 relative overflow-hidden"
                           onClick={() => handleQuickLogin(account)}
                           disabled={quickLoginLoading || loginMutation.isPending}
                         >
-                          <div className={`absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity ${account.color}`}></div>
                           <div className="relative flex items-center justify-center w-full">
                             <i className={`${account.icon} mr-2 text-xl`}></i>
                             <span className="text-lg">تسوق كـ {account.username}</span>
@@ -204,7 +203,7 @@ export default function AuthPage() {
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <Button 
                       variant="outline" 
-                      className="border-white/20 hover:bg-blue-600 hover:text-white"
+                      className="border-white/20 hover:bg-white hover:text-black"
                       onClick={() => handleLoginWithSocial('facebook')}
                       disabled={quickLoginLoading || loginMutation.isPending}
                     >
@@ -213,7 +212,7 @@ export default function AuthPage() {
                     </Button>
                     <Button 
                       variant="outline" 
-                      className="border-white/20 hover:bg-red-600 hover:text-white"
+                      className="border-white/20 hover:bg-white hover:text-black"
                       onClick={() => handleLoginWithSocial('google')}
                       disabled={quickLoginLoading || loginMutation.isPending}
                     >
@@ -288,7 +287,7 @@ export default function AuthPage() {
 
                     <Button 
                       type="submit" 
-                      className="w-full bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]"
+                      className="w-full bg-white text-black hover:bg-white/80"
                       disabled={loginMutation.isPending}
                     >
                       {loginMutation.isPending ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
@@ -299,7 +298,7 @@ export default function AuthPage() {
             </TabsContent>
 
             <TabsContent value="register">
-              <div className="bg-white/10 backdrop-blur-md rounded-lg p-6">
+              <div className="bg-black border border-white/30 rounded-lg p-6">
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
                     <FormField
@@ -398,7 +397,7 @@ export default function AuthPage() {
                     <div className="grid grid-cols-2 gap-3">
                       <Button 
                         variant="outline" 
-                        className="border-white/20 hover:bg-blue-600 hover:text-white"
+                        className="border-white/20 hover:bg-white hover:text-black"
                         onClick={() => handleLoginWithSocial('facebook')}
                         type="button"
                         disabled={registerMutation.isPending}
@@ -408,7 +407,7 @@ export default function AuthPage() {
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="border-white/20 hover:bg-red-600 hover:text-white"
+                        className="border-white/20 hover:bg-white hover:text-black"
                         onClick={() => handleLoginWithSocial('google')}
                         type="button"
                         disabled={registerMutation.isPending}
@@ -420,7 +419,7 @@ export default function AuthPage() {
 
                     <Button 
                       type="submit" 
-                      className="w-full bg-[#ffeb3b] text-[#2a1f6f] hover:bg-[#fdd835]"
+                      className="w-full bg-white text-black hover:bg-white/80"
                       disabled={registerMutation.isPending}
                     >
                       {registerMutation.isPending ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
@@ -434,12 +433,12 @@ export default function AuthPage() {
       </div>
 
       <div className="w-full md:w-1/2 px-4 py-10 md:p-10 flex items-center justify-center">
-        <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 w-full max-w-md">
-          <h2 className="text-2xl font-bold mb-4">استمتع بتجربة تسوق فريدة</h2>
+        <div className="bg-black border border-white/30 rounded-lg p-6 w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4 text-white">استمتع بتجربة تسوق فريدة</h2>
           <div className="space-y-4 text-white/80">
             <div className="flex items-start space-x-3 space-x-reverse">
-              <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                <i className="fas fa-vr-cardboard"></i>
+              <div className="bg-black border border-white/30 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                <i className="fas fa-vr-cardboard text-white"></i>
               </div>
               <div>
                 <h3 className="font-bold text-white mb-1">تجربة واقع افتراضي</h3>
@@ -448,8 +447,8 @@ export default function AuthPage() {
             </div>
 
             <div className="flex items-start space-x-3 space-x-reverse">
-              <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                <i className="fas fa-gift"></i>
+              <div className="bg-black border border-white/30 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                <i className="fas fa-gift text-white"></i>
               </div>
               <div>
                 <h3 className="font-bold text-white mb-1">مكافآت حصرية</h3>
@@ -458,8 +457,8 @@ export default function AuthPage() {
             </div>
 
             <div className="flex items-start space-x-3 space-x-reverse">
-              <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                <i className="fas fa-users"></i>
+              <div className="bg-black border border-white/30 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                <i className="fas fa-users text-white"></i>
               </div>
               <div>
                 <h3 className="font-bold text-white mb-1">برنامج الإحالة</h3>
@@ -468,8 +467,8 @@ export default function AuthPage() {
             </div>
 
             <div className="flex items-start space-x-3 space-x-reverse">
-              <div className="bg-[#7e57c2]/50 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                <i className="fas fa-lock"></i>
+              <div className="bg-black border border-white/30 w-8 h-8 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                <i className="fas fa-lock text-white"></i>
               </div>
               <div>
                 <h3 className="font-bold text-white mb-1">دفع آمن ومتعدد</h3>
