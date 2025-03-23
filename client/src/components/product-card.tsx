@@ -116,7 +116,7 @@ function ProductCard({
   return (
     <Card 
       ref={cardRef}
-      className="overflow-hidden h-full flex flex-col bg-black text-white group relative border border-purple-800/30"
+      className="overflow-hidden h-full flex flex-col bg-black text-white group relative border border-pink-500/30 shadow-md"
       style={{
         transform: vrEnabled ? `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
         transition: 'transform 0.1s ease-out'
@@ -124,9 +124,9 @@ function ProductCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* AI Insight Popup - Simple version */}
+      {/* AI Insight Popup - Pink version */}
       {showAIInsight && vrEnabled && (
-        <div className="absolute top-0 right-0 z-30 bg-purple-900/60 p-2 m-2 rounded-lg max-w-[80%] text-xs text-white">
+        <div className="absolute top-0 right-0 z-30 bg-pink-600/70 p-2 m-2 rounded-lg max-w-[80%] text-xs text-white">
           <div className="flex items-start gap-2">
             <span className="mt-1">💡</span>
             <div>
@@ -138,7 +138,7 @@ function ProductCard({
       )}
       
       <Link href={`/product/${product.id}`}>
-        <div className="relative pb-[80%] overflow-hidden cursor-pointer border-b border-purple-800/30">
+        <div className="relative pb-[80%] overflow-hidden cursor-pointer border-b border-pink-500/30">
           {/* Simple image overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-black/70 z-10"></div>
           
@@ -150,15 +150,15 @@ function ProductCard({
             />
           )}
           
-          {/* Price tag - simplified */}
-          <div className="absolute top-3 left-3 bg-black/80 px-2 py-1 rounded-md font-bold text-sm z-20">
+          {/* Price tag - pink version */}
+          <div className="absolute top-3 left-3 bg-black/80 border border-pink-500/30 px-2 py-1 rounded-md font-bold text-sm z-20">
             {formattedPrice} جنيه
           </div>
           
-          {/* Sale badge - simplified */}
+          {/* Sale badge - pink version */}
           {product.commissionRate > 8 && (
             <div className="absolute top-3 right-3 z-20">
-              <Badge className="bg-purple-700 text-white">
+              <Badge className="bg-pink-600 text-white">
                 خصم {product.commissionRate}%
               </Badge>
             </div>
@@ -168,7 +168,7 @@ function ProductCard({
       
       <CardHeader className="p-4 pb-0 relative z-10">
         <div className="flex justify-between items-center mb-2">
-          <Badge variant="outline" className="text-xs border-purple-800/50">
+          <Badge variant="outline" className="text-xs border-pink-500/50">
             {getCategoryLabel(product.category)}
           </Badge>
           
@@ -179,7 +179,7 @@ function ProductCard({
           )}
         </div>
         
-        <h3 className="font-bold text-lg mt-2 line-clamp-1">
+        <h3 className="font-bold text-lg mt-2 line-clamp-1 text-pink-100">
           {product.name}
         </h3>
         
@@ -190,14 +190,14 @@ function ProductCard({
       
       <CardFooter className="p-4 mt-auto flex flex-col gap-3 relative z-10">
         <div className="flex justify-between items-center w-full">
-          <div className="font-bold text-lg">
+          <div className="font-bold text-lg text-pink-200">
             {formattedPrice} ج.م
           </div>
           
-          {/* Simplified star rating */}
+          {/* Star rating with pink */}
           <div className="text-xs flex items-center">
             <span className="mr-1 text-white/50 text-xs">تقييم:</span>
-            <span className="text-yellow-400">★★★★</span>
+            <span className="text-pink-400">★★★★</span>
             <span className="text-white/30">☆</span>
           </div>
         </div>
@@ -205,7 +205,7 @@ function ProductCard({
         <div className="flex flex-col gap-2">
           {(product.category === 'clothing' || product.category === 'sports') && vrEnabled && (
             <Button 
-              className="w-full bg-blue-700 text-white hover:bg-blue-800 font-bold"
+              className="w-full bg-blue-600 text-white hover:bg-blue-700 font-bold"
               onClick={() => {
                 toast({
                   title: "جاري فتح تجربة المنتج",
@@ -221,7 +221,7 @@ function ProductCard({
           )}
         
           <Button 
-            className="w-full bg-purple-700 text-white hover:bg-purple-800 font-bold"
+            className="w-full bg-pink-600 text-white hover:bg-pink-700 font-bold"
             onClick={() => addToCartMutation.mutate()}
             disabled={addToCartMutation.isPending}
           >
