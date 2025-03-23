@@ -636,6 +636,26 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           }
         </div>
       </div>
+      {/* Camera Integration for product try-on */}
+      {showCameraMode && selectedProduct && (
+        <CameraIntegration
+          onCapture={(imageSrc) => {
+            setCapturedImage(imageSrc);
+            setShowCameraMode(false);
+            toast({
+              title: "تم التقاط الصورة بنجاح",
+              description: "يمكنك الآن استخدام الصورة في تجربة المنتج",
+            });
+          }}
+          onClose={() => {
+            setShowCameraMode(false);
+            setShow3DView(true); // Return to product view
+          }}
+          mode={cameraMode}
+          productImageUrl={selectedProduct.imageUrl}
+        />
+      )}
+      
       {/* AI Shopping Assistant */}
       {showAiAssistant && selectedAvatar && (
         <AiShoppingAssistant
@@ -644,7 +664,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           onProductSelect={handleShowProduct}
           onNavigate={handleSectionNavigation}
           avatar={selectedAvatar}
-          minimized={false}
+          minimized={true} // Changed to true to make it smaller
         />
       )}
     </>
