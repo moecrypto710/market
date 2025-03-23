@@ -12,12 +12,12 @@ interface RewardCardProps {
 }
 
 export function RewardCard({ reward, userPoints }: RewardCardProps) {
-  const { toast } = useToast();
   const [claimed, setClaimed] = useState(false);
+  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const handleClaim = async () => {
-    if (claimed || userPoints < reward.points) return;
+    if (claimed || userPoints < reward.pointsRequired) return;
     
     try {
       const response = await fetch(`/api/rewards/${reward.id}/claim`, {
@@ -32,7 +32,7 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
       
       toast({
         title: "تم المطالبة بالمكافأة",
-        description: `تمت المطالبة بـ ${reward.title} بنجاح!`,
+        description: `تمت المطالبة بـ ${reward.name} بنجاح!`,
       });
     } catch (error) {
       toast({
@@ -46,15 +46,15 @@ export function RewardCard({ reward, userPoints }: RewardCardProps) {
   return (
     <Card className="relative overflow-hidden">
       <CardHeader>
-        <CardTitle>{reward.title}</CardTitle>
+        <CardTitle>{reward.name}</CardTitle>
         <CardDescription>{reward.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between items-center">
-          <span className="text-lg font-bold">{reward.points} نقطة</span>
+          <span className="text-lg font-bold">{reward.pointsRequired} نقطة</span>
           <Button 
             onClick={handleClaim}
-            disabled={claimed || userPoints < reward.points}
+            disabled={claimed || userPoints < reward.pointsRequired}
             variant={claimed ? "outline" : "default"}
           >
             {claimed ? "تم المطالبة" : "مطالبة"}
