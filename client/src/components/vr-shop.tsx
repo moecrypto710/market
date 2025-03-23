@@ -9,11 +9,36 @@ interface VRShopProps {
   products: Product[];
 }
 
-// Avatar selections
+// Avatar selections with personality traits
 const AVATARS = [
-  { id: 1, name: "رجل", image: "https://api.dicebear.com/7.x/personas/svg?seed=John&backgroundColor=b6e3f4" },
-  { id: 2, name: "امرأة", image: "https://api.dicebear.com/7.x/personas/svg?seed=Jane&backgroundColor=c0aede" },
-  { id: 3, name: "طفل", image: "https://api.dicebear.com/7.x/personas/svg?seed=Kid&backgroundColor=d1d4f9" },
+  { 
+    id: 1, 
+    name: "أحمد", 
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=John&backgroundColor=b6e3f4",
+    personality: "محب للتكنولوجيا",
+    favoriteCategory: "electronics"
+  },
+  { 
+    id: 2, 
+    name: "سارة", 
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Jane&backgroundColor=c0aede",
+    personality: "أنيقة ومتابعة للموضة",
+    favoriteCategory: "clothing"
+  },
+  { 
+    id: 3, 
+    name: "ياسين", 
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Kid&backgroundColor=d1d4f9",
+    personality: "نشيط ورياضي",
+    favoriteCategory: "sports"
+  },
+  { 
+    id: 4, 
+    name: "ليلى", 
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Lily&backgroundColor=f9d1d1",
+    personality: "مهتمة بالديكور المنزلي",
+    favoriteCategory: "home"
+  },
 ];
 
 export default function VRShop({ products }: VRShopProps) {
@@ -152,27 +177,45 @@ export default function VRShop({ products }: VRShopProps) {
   // If no avatar selected, show avatar selection
   if (!selectedAvatar) {
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center">
-        <div className="bg-white/10 rounded-lg p-6 max-w-md w-full">
-          <h2 className="text-2xl font-bold text-center mb-6">اختر شخصيتك الافتراضية</h2>
+      <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center">
+        <div className="bg-gradient-to-tr from-[#2a1f6f] to-[#5e35b1]/80 rounded-lg p-8 max-w-3xl w-full shadow-xl shadow-purple-900/20">
+          <h2 className="text-3xl font-bold text-center mb-2 text-white">اختر شخصيتك الافتراضية</h2>
+          <p className="text-white/60 text-center mb-8">اختر الشخصية التي تفضلها لتجربة التسوق</p>
           
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {AVATARS.map(avatar => (
               <div 
                 key={avatar.id}
-                className="flex flex-col items-center cursor-pointer hover:scale-105 transition duration-200"
+                className="bg-white/10 rounded-xl p-4 cursor-pointer transition-all duration-300 
+                           hover:bg-white/20 hover:scale-105 hover:shadow-lg border border-white/10 
+                           hover:border-[#ffeb3b]/50 flex flex-col items-center"
                 onClick={() => setSelectedAvatar(avatar)}
               >
-                <div className="w-20 h-20 mb-2 rounded-full overflow-hidden border-2 border-transparent hover:border-[#ffeb3b]">
+                <div className="w-20 h-20 mb-3 rounded-full overflow-hidden border-2 border-white/20 shadow-lg">
                   <img src={avatar.image} alt={avatar.name} className="w-full h-full object-cover" />
                 </div>
-                <span className="text-sm">{avatar.name}</span>
+                <h3 className="font-bold text-lg mb-1">{avatar.name}</h3>
+                <p className="text-xs text-white/70 text-center">{avatar.personality}</p>
+                
+                <div className="mt-3 text-xs flex items-center">
+                  <span className="px-2 py-1 bg-[#ffeb3b]/20 text-[#ffeb3b] rounded-full">
+                    يفضل: {
+                      avatar.favoriteCategory === 'electronics' ? 'إلكترونيات' :
+                      avatar.favoriteCategory === 'clothing' ? 'ملابس' :
+                      avatar.favoriteCategory === 'home' ? 'منزل' : 'رياضة'
+                    }
+                  </span>
+                </div>
+                
+                <button className="mt-4 w-full py-2 bg-[#ffeb3b] text-[#2a1f6f] rounded-lg font-bold text-sm hover:bg-[#ffeb3b]/90 transition">
+                  اختيار
+                </button>
               </div>
             ))}
           </div>
           
-          <div className="text-center text-sm text-white/60 mt-6">
-            اختر شخصية افتراضية لتتجول في المتجر
+          <div className="text-center text-sm text-white/60 mt-8">
+            سيتم توجيهك إلى المتجر الافتراضي بعد اختيار الشخصية
           </div>
         </div>
       </div>
