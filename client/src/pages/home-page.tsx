@@ -32,14 +32,14 @@ export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-6">
       {/* Banner */}
-      <div className="bg-[#5e35b1] text-white rounded-lg p-5 mb-6 text-center">
-        <h1 className="text-xl font-bold mb-2">أهلا بك في متجر الملابس التقليدية</h1>
-        <p>تسوق أجمل الملابس العربية التقليدية بأفضل الأسعار</p>
+      <div className="bg-black text-white border border-white/20 rounded-lg p-5 mb-6 text-center">
+        <h1 className="text-xl font-bold mb-2">أهلا بك في متجر ستايل إيكو</h1>
+        <p>تسوق أحدث منتجات ستايل إيكو بتصميمات عصرية وحصرية</p>
       </div>
       
       {/* Featured Products */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">منتجات مميزة</h2>
+        <h2 className="text-xl font-bold mb-4 text-white">منتجات مميزة</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products?.slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} />
@@ -49,7 +49,7 @@ export default function HomePage() {
       
       {/* Categories */}
       <div className="mb-8">
-        <h2 className="text-xl font-bold mb-4">تصفح حسب الفئة</h2>
+        <h2 className="text-xl font-bold mb-4 text-white">تصفح حسب الفئة</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
@@ -59,13 +59,13 @@ export default function HomePage() {
       
       {/* Rewards Simple Banner */}
       {user && (
-        <div className="bg-[#f5f5f5] dark:bg-gray-800 rounded-lg p-4 mb-8">
+        <div className="bg-black text-white border border-white/20 rounded-lg p-4 mb-8">
           <div className="flex justify-between items-center mb-2">
             <h2 className="font-bold">نقاط المكافآت</h2>
-            <span className="font-bold text-[#5e35b1]">{currentPoints} نقطة</span>
+            <span className="font-bold text-white">{currentPoints} نقطة</span>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
-          <div className="flex justify-between text-sm mt-2 text-gray-600 dark:text-gray-400">
+          <Progress value={progressPercentage} className="h-2 bg-white/10" />
+          <div className="flex justify-between text-sm mt-2 text-white/70">
             <span>{currentPoints} / {nextRewardLevel}</span>
             <span>المكافأة التالية: خصم 300 جنيه</span>
           </div>
@@ -73,10 +73,10 @@ export default function HomePage() {
       )}
       
       {/* Simple Promo */}
-      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-8 text-center">
-        <h2 className="font-bold mb-2">خصم 20% على الملابس التقليدية</h2>
-        <p className="mb-3 text-gray-600 dark:text-gray-400">استخدم الكود: TRAD20</p>
-        <Button className="bg-[#5e35b1]">تسوق الآن</Button>
+      <div className="bg-black text-white border border-white/20 rounded-lg p-4 mb-8 text-center">
+        <h2 className="font-bold mb-2">خصم 20% على منتجات ستايل إيكو</h2>
+        <p className="mb-3 text-white/70">استخدم الكود: STYLE20</p>
+        <Button className="bg-white text-black hover:bg-white/80">تسوق الآن</Button>
       </div>
     </div>
   );

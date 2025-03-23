@@ -56,7 +56,7 @@ function ProductCard({
   };
 
   return (
-    <Card className="overflow-hidden transition-shadow duration-300 h-full flex flex-col hover:shadow-lg border border-gray-200">
+    <Card className="overflow-hidden transition-shadow duration-300 h-full flex flex-col hover:shadow-lg border border-white/20 bg-black text-white">
       <div 
         className="relative pb-[80%] overflow-hidden cursor-pointer" 
         onClick={() => window.location.href = `/product/${product.id}`}
@@ -70,13 +70,13 @@ function ProductCard({
         )}
         
         {/* Price tag */}
-        <div className="absolute top-2 left-2 bg-white px-2 py-1 rounded shadow-sm font-bold text-sm">
+        <div className="absolute top-2 left-2 bg-black border border-white/50 px-2 py-1 rounded shadow-sm font-bold text-sm">
           {formattedPrice} جنيه
         </div>
         
         {/* Sale badge */}
         {product.commissionRate > 8 && (
-          <Badge className="absolute top-2 right-2 bg-red-500 text-white">
+          <Badge className="absolute top-2 right-2 bg-white text-black">
             خصم
           </Badge>
         )}
@@ -84,38 +84,38 @@ function ProductCard({
       
       <CardHeader className="p-3 pb-0">
         <div className="flex justify-between items-center mb-1">
-          <Badge variant="outline" className="text-xs">
+          <Badge variant="outline" className="text-xs bg-black text-white border-white/50">
             {getCategoryLabel(product.category)}
           </Badge>
           
           {product.inStock ? (
-            <span className="text-xs text-green-600">متوفر</span>
+            <span className="text-xs text-white">متوفر</span>
           ) : (
-            <span className="text-xs text-gray-500">غير متوفر</span>
+            <span className="text-xs text-white/50">غير متوفر</span>
           )}
         </div>
         
-        <h3 className="font-bold text-lg mt-1 line-clamp-1">{product.name}</h3>
+        <h3 className="font-bold text-lg mt-1 line-clamp-1 text-white">{product.name}</h3>
         
-        <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+        <p className="text-sm text-white/70 mt-1 line-clamp-2">
           {product.description}
         </p>
       </CardHeader>
       
       <CardFooter className="p-3 mt-auto flex flex-col gap-2">
         <div className="flex justify-between items-center w-full">
-          <div className="font-bold text-lg text-[#5e35b1]">
+          <div className="font-bold text-lg text-white">
             {formattedPrice} ج.م
           </div>
           
           {/* Simple star rating */}
-          <div className="text-xs text-yellow-500">
+          <div className="text-xs text-white">
             ★★★★☆
           </div>
         </div>
         
         <Button 
-          className="w-full bg-[#5e35b1] hover:bg-[#4527a0]"
+          className="w-full bg-white text-black hover:bg-white/80"
           onClick={() => addToCartMutation.mutate()}
           disabled={addToCartMutation.isPending}
         >
