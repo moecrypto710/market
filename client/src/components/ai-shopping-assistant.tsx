@@ -13,6 +13,14 @@ interface AiShoppingAssistantProps {
     favoriteCategory: string;
   };
   minimized?: boolean;
+  enhancedAI?: boolean; // Enable more advanced AI features
+  userPreferences?: {
+    favoriteColors?: string[];
+    favoriteStyles?: string[];
+    recentSearches?: string[];
+    priceRange?: {min: number; max: number};
+    size?: string;
+  };
 }
 
 export default function AiShoppingAssistant({
@@ -22,6 +30,8 @@ export default function AiShoppingAssistant({
   onNavigate,
   avatar,
   minimized = false,
+  enhancedAI = true,
+  userPreferences,
 }: AiShoppingAssistantProps) {
   const [isMinimized, setIsMinimized] = useState(minimized);
   const [messages, setMessages] = useState<Array<{content: string; sender: 'ai' | 'user'}>>([]);
