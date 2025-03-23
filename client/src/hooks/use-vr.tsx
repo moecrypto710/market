@@ -110,7 +110,7 @@ export function VRProvider({ children }: { children: ReactNode }) {
       // When enabling VR, show a toast notification
       toast({
         title: "تم تفعيل وضع الواقع الافتراضي",
-        description: "يمكنك الآن التجول في المتجر بشخصيتك الافتراضية وتجربة المنتجات.",
+        description: "يمكنك الآن التجول في المول بشخصيتك الافتراضية وتجربة المنتجات.",
       });
     }
   }, [isVRSupported, vrEnabled, toast]);

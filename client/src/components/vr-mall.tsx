@@ -510,7 +510,7 @@ export default function VRMall({ products }: VRMallProps) {
   
   return (
     <div 
-      ref={shopRef}
+      ref={mallRef}
       className="fixed inset-0 bg-[#070314]/95 backdrop-blur-md z-50 overflow-hidden"
       style={{
         backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(16, 6, 54, 0.2) 50%, rgba(7, 3, 20, 0.3) 100%)',
