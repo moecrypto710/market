@@ -683,6 +683,114 @@ export default function VRShop({ products }: VRShopProps) {
           </div>
         </div>
       )}
+      
+      {/* Store details popup */}
+      {showStoreDetails && selectedBrand && (
+        <div className="fixed inset-0 flex items-center justify-center z-[100] bg-black/40 backdrop-blur-sm">
+          <div className="bg-gradient-to-b from-[#1a1a2e] to-[#16213e] rounded-xl p-6 max-w-2xl w-full mx-4 shadow-2xl border border-[#5e35b1]/20">
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex items-center">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 mr-4">
+                  <img src={selectedBrand.logo} alt={selectedBrand.name} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold">{selectedBrand.name}</h2>
+                  <div className="flex items-center mt-1 space-x-2 space-x-reverse">
+                    <Badge variant="outline" className="bg-[#5e35b1]/10 text-[#a48def] border-[#5e35b1]/20">
+                      {selectedBrand.category === 'electronics' ? 'إلكترونيات' :
+                       selectedBrand.category === 'clothing' ? 'ملابس' :
+                       selectedBrand.category === 'home' ? 'منزل' : 'رياضة'}
+                    </Badge>
+                    
+                    {selectedBrand.featured && (
+                      <Badge variant="outline" className="bg-amber-500/10 text-amber-400 border-amber-500/20">
+                        <i className="fas fa-star mr-1 text-[10px]"></i>
+                        شريك مميز
+                      </Badge>
+                    )}
+                    
+                    <Badge variant="outline" className={`
+                      ${selectedBrand.storeType === 'premium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 
+                        selectedBrand.storeType === 'entrance' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 
+                        'bg-blue-500/10 text-blue-400 border-blue-500/20'}`}>
+                      {selectedBrand.storeType === 'premium' ? 'متجر مميز' :
+                       selectedBrand.storeType === 'entrance' ? 'بمدخل المول' : 'متجر عادي'}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+              
+              <button 
+                className="text-white/60 hover:text-white rounded-full w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-white/10"
+                onClick={() => {
+                  setShowStoreDetails(false);
+                  setSelectedBrand(null);
+                }}
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <div className="p-4 bg-white/5 rounded-lg mb-6">
+              <p className="text-white/80">{selectedBrand.description}</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
+                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
+                  <i className="fas fa-store text-[#a48def]"></i>
+                </div>
+                <div className="text-lg font-bold">{selectedBrand.productCount}</div>
+                <div className="text-sm text-white/60">منتج</div>
+              </div>
+              
+              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
+                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
+                  <i className="fas fa-ruler-combined text-[#a48def]"></i>
+                </div>
+                <div className="text-lg font-bold">
+                  {selectedBrand.storeSize === 'large' ? 'كبير' :
+                   selectedBrand.storeSize === 'medium' ? 'متوسط' :
+                   selectedBrand.storeSize === 'flagship' ? 'رئيسي' : 'صغير'}
+                </div>
+                <div className="text-sm text-white/60">حجم المتجر</div>
+              </div>
+              
+              <div className="bg-white/5 p-4 rounded-lg flex flex-col items-center">
+                <div className="w-10 h-10 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-2">
+                  <i className="fas fa-medal text-[#a48def]"></i>
+                </div>
+                <div className="text-lg font-bold">
+                  {selectedBrand.featured ? 'ذهبي' : 'فضي'}
+                </div>
+                <div className="text-sm text-white/60">مستوى الشراكة</div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-[#5e35b1]/20 to-transparent p-4 rounded-lg mb-6 border border-[#5e35b1]/10">
+              <h3 className="font-bold mb-2 flex items-center">
+                <i className="fas fa-handshake text-[#a48def] mr-2"></i>
+                فرص الشراكة مع {selectedBrand.name}
+              </h3>
+              <p className="text-sm text-white/70">
+                يمكنك الإنضمام لبرنامج الشراكة مع {selectedBrand.name} والحصول على عمولة بنسبة تصل إلى 15% على كل عملية بيع تتم من خلال رابط الإحالة الخاص بك. كما يمكنك الحصول على منتجات حصرية ومزايا إضافية.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <button className="bg-[#5e35b1] text-white py-2 px-4 rounded-lg">
+                <i className="fas fa-shopping-bag mr-2"></i>
+                تصفح المنتجات
+              </button>
+              
+              <button className="bg-gradient-to-r from-amber-500 to-amber-600 text-white py-2 px-4 rounded-lg">
+                <i className="fas fa-vr-cardboard mr-2"></i>
+                زيارة المتجر الافتراضي
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
