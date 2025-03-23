@@ -77,7 +77,16 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser & { affiliateCode: string }): Promise<User> {
     const id = this.currentId.users++;
-    const user: User = { ...insertUser, id, points: 0 };
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      points: 0,
+      membershipTier: "basic",
+      membershipStartDate: new Date(),
+      membershipEndDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      avatar: null,
+      lastLogin: new Date()
+    };
     this.users.set(id, user);
     return user;
   }
@@ -210,6 +219,11 @@ export class MemStorage implements IStorage {
         fullName: "مستخدم تجريبي",
         points: 500,
         affiliateCode: "TESTUSER",
+        membershipTier: "premium",
+        membershipStartDate: new Date("2024-01-01"),
+        membershipEndDate: new Date("2025-12-31"),
+        avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61",
+        lastLogin: new Date()
       },
       {
         id: this.currentId.users++,
@@ -220,6 +234,11 @@ export class MemStorage implements IStorage {
         fullName: "زائر",
         points: 100,
         affiliateCode: "GUEST001",
+        membershipTier: "basic",
+        membershipStartDate: new Date("2024-03-01"),
+        membershipEndDate: new Date("2025-03-01"),
+        avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d",
+        lastLogin: new Date()
       },
       {
         id: this.currentId.users++,
@@ -230,6 +249,11 @@ export class MemStorage implements IStorage {
         fullName: "متسوق",
         points: 200,
         affiliateCode: "SHOPPER001",
+        membershipTier: "basic",
+        membershipStartDate: new Date("2024-02-15"),
+        membershipEndDate: new Date("2025-02-15"),
+        avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
+        lastLogin: new Date()
       }
     ];
     
@@ -241,54 +265,74 @@ export class MemStorage implements IStorage {
     // Sample products
     const productData: Omit<Product, "id">[] = [
       {
-        name: "ساعة ذكية متطورة",
-        description: "تتبع النشاط البدني والإشعارات الذكية",
-        price: 29900,
-        imageUrl: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
-        category: "electronics",
-        inStock: true,
-        commissionRate: 10,
-        vrEnabled: true
-      },
-      {
-        name: "سماعات لاسلكية",
-        description: "صوت نقي وجودة عالية",
-        price: 19900,
-        imageUrl: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
-        category: "electronics",
-        inStock: true,
-        commissionRate: 8,
-        vrEnabled: true
-      },
-      {
-        name: "حذاء رياضي",
-        description: "مناسب للتمارين والجري اليومي",
-        price: 14900,
-        imageUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12",
-        category: "sports",
-        inStock: true,
-        commissionRate: 7,
-        vrEnabled: true
-      },
-      {
-        name: "قميص قطني",
-        description: "مريح وأنيق لكل المناسبات",
-        price: 5990,
-        imageUrl: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633",
+        name: "جلابية مصرية تقليدية",
+        description: "جلابية مصرية أصيلة بتطريز يدوي فاخر ومصنوعة من القطن المصري عالي الجودة",
+        price: 1200,
+        imageUrl: "https://images.unsplash.com/photo-1590074072786-a66914d668f1",
         category: "clothing",
         inStock: true,
-        commissionRate: 6,
-        vrEnabled: false
+        commissionRate: 10,
+        vrEnabled: true,
+        brandId: 1,
+        featured: true,
+        threeDModelUrl: "/models/galabiya.glb",
+        viewCount: 342
       },
       {
-        name: "مصباح طاولة",
-        description: "إضاءة هادئة وتصميم عصري",
-        price: 7990,
-        imageUrl: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c",
-        category: "home",
+        name: "عباية خليجية مطرزة",
+        description: "عباية أنيقة بتصميم عصري ومطرزة يدويًا، مناسبة للمناسبات الخاصة",
+        price: 1850,
+        imageUrl: "https://images.unsplash.com/photo-1624222247344-550fb60ae46f",
+        category: "clothing",
+        inStock: true,
+        commissionRate: 12,
+        vrEnabled: true,
+        brandId: 2,
+        featured: true,
+        threeDModelUrl: "/models/abaya.glb",
+        viewCount: 289
+      },
+      {
+        name: "قفطان مغربي فاخر",
+        description: "قفطان بألوان زاهية وتطريز ذهبي فخم، مستوحى من التراث المغربي الأصيل",
+        price: 2200,
+        imageUrl: "https://images.unsplash.com/photo-1603798125914-7b5d27789648",
+        category: "clothing",
+        inStock: true,
+        commissionRate: 15,
+        vrEnabled: true,
+        brandId: 3,
+        featured: true,
+        threeDModelUrl: "/models/kaftan.glb",
+        viewCount: 418
+      },
+      {
+        name: "طربوش تقليدي",
+        description: "طربوش أحمر مصنوع يدويًا بأعلى جودة، قطعة تراثية أصيلة",
+        price: 450,
+        imageUrl: "https://images.unsplash.com/photo-1582458131866-380408738747",
+        category: "clothing",
+        inStock: true,
+        commissionRate: 8,
+        vrEnabled: true,
+        brandId: 1,
+        featured: false,
+        threeDModelUrl: "/models/tarboosh.glb",
+        viewCount: 156
+      },
+      {
+        name: "سروال شرقي فضفاض",
+        description: "سروال قطني فضفاض بتصميم عصري، مريح ومناسب للصيف",
+        price: 550,
+        imageUrl: "https://images.unsplash.com/photo-1584030373081-f37b7bb4fa8e",
+        category: "clothing",
         inStock: true,
         commissionRate: 9,
-        vrEnabled: true
+        vrEnabled: true,
+        brandId: 2,
+        featured: false,
+        threeDModelUrl: "/models/pants.glb",
+        viewCount: 203
       }
     ];
 
@@ -300,22 +344,31 @@ export class MemStorage implements IStorage {
     // Sample rewards
     const rewardData: Omit<Reward, "id">[] = [
       {
-        name: "خصم $10",
-        description: "على طلبك التالي",
+        name: "خصم 300 جنيه",
+        description: "على طلبك التالي من الملابس العربية",
         pointsRequired: 1000,
-        isActive: true
+        isActive: true,
+        tier: "basic",
+        imageUrl: "https://images.unsplash.com/photo-1607082349566-187342175e2f",
+        expiryDate: new Date("2025-12-31")
       },
       {
         name: "شحن مجاني",
-        description: "للطلب التالي",
+        description: "توصيل مجاني لمشترياتك القادمة في جميع أنحاء مصر",
         pointsRequired: 750,
-        isActive: true
+        isActive: true,
+        tier: "basic",
+        imageUrl: "https://images.unsplash.com/photo-1586024351226-3ad39725b061",
+        expiryDate: new Date("2025-12-31")
       },
       {
-        name: "هدية مجانية",
-        description: "مع طلبك التالي",
-        pointsRequired: 1500,
-        isActive: true
+        name: "جلابية تقليدية هدية",
+        description: "احصل على جلابية مصرية أصيلة مجانًا مع طلبك القادم",
+        pointsRequired: 2000,
+        isActive: true,
+        tier: "premium",
+        imageUrl: "https://images.unsplash.com/photo-1590074072786-a66914d668f1",
+        expiryDate: new Date("2025-12-31")
       }
     ];
 
