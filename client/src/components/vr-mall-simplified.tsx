@@ -1058,7 +1058,11 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             .map(product => (
               <div 
                 key={product.id} 
-                className="w-40 h-56 bg-black/60 backdrop-blur-sm rounded-lg overflow-hidden border border-white/20 transition-all hover:scale-105 hover:border-white/40 cursor-pointer"
+                className="w-44 h-64 bg-black/60 backdrop-blur-sm rounded-xl overflow-hidden futuristic-border transition-all hover:scale-105 cursor-pointer group"
+                style={{
+                  background: `radial-gradient(circle at 30% 30%, rgba(217, 70, 239, 0.15) 0%, rgba(0, 0, 0, 0.8) 70%)`,
+                  boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.5)'
+                }}
                 onClick={() => {
                   setSelectedProduct(product);
                   setShow3DView(true);
@@ -1066,19 +1070,65 @@ export default function VRMallSimplified({ products }: VRMallProps) {
                   setSpecialEffectType('hologram');
                 }}
               >
-                <div className="h-28 bg-gradient-to-b from-black/0 to-black/20 p-2 flex items-center justify-center">
+                {/* Decorative corner elements */}
+                <div className="absolute top-2 left-2 h-8 w-8 border-t border-l border-fuchsia-500/40 rounded-tl-lg"></div>
+                <div className="absolute bottom-2 right-2 h-8 w-8 border-b border-r border-fuchsia-500/40 rounded-br-lg"></div>
+                
+                {/* Holographic overlay */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 holographic-bg"></div>
+                
+                {/* Scanline effect */}
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"
+                  style={{
+                    background: 'linear-gradient(to bottom, transparent, transparent 49.9%, rgba(217, 70, 239, 0.5) 50%, transparent 50.1%)',
+                    backgroundSize: '100% 8px',
+                    animation: 'scanline 8s linear infinite',
+                    pointerEvents: 'none'
+                  }}
+                ></div>
+                
+                {/* Product image with enhanced hover effect */}
+                <div className="h-36 p-3 flex items-center justify-center relative">
+                  <div className="absolute inset-0 bg-gradient-to-b from-fuchsia-600/5 to-transparent"></div>
+                  <div className="absolute bottom-0 w-full h-20" style={{
+                    background: 'linear-gradient(to top, rgba(217, 70, 239, 0.1), transparent)'
+                  }}></div>
+                  
+                  {/* Product platform - disk light effect */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 rounded-full bg-fuchsia-500/30 blur-sm group-hover:bg-fuchsia-500/50 transition-all duration-500"></div>
+                  
+                  {/* Product image with float effect */}
                   <img 
                     src={product.imageUrl || 'https://via.placeholder.com/150'} 
                     alt={product.name} 
-                    className="h-full object-contain"
+                    className="h-full object-contain relative z-10 transition-all duration-700 group-hover:scale-110 group-hover:translate-y-[-5px]"
+                    style={{
+                      filter: 'drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5))'
+                    }}
                   />
                 </div>
-                <div className="p-2">
-                  <h3 className="font-bold text-sm">{product.name}</h3>
-                  <p className="text-white/60 text-xs mb-1 line-clamp-1">{product.description}</p>
+                
+                {/* Product info with enhanced styling */}
+                <div className="p-3 relative">
+                  {/* Highlight line */}
+                  <div className="absolute top-0 left-3 right-3 h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent"></div>
+                  
+                  {/* Product name with glow effect */}
+                  <h3 className="font-bold text-sm text-white group-hover:text-glow transition-all duration-300">{product.name}</h3>
+                  
+                  {/* Product description */}
+                  <p className="text-white/60 text-xs mb-2 line-clamp-1 mt-1">{product.description}</p>
+                  
+                  {/* Price and view button */}
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-amber-400">{product.price} ج.م</span>
-                    <div className="text-xs text-white/60">3D عرض</div>
+                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-300">{product.price} ج.م</span>
+                    
+                    {/* 3D View indicator */}
+                    <div className="text-xs flex items-center gap-1">
+                      <span className="text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors">3D</span>
+                      <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse-slow"></div>
+                    </div>
                   </div>
                 </div>
               </div>
