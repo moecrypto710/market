@@ -56,6 +56,14 @@ export default function VRShop({ products }: VRShopProps) {
   const [isTryingOn, setIsTryingOn] = useState(false);
   const [showHelpMenu, setShowHelpMenu] = useState(false);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  
+  // New avatar enhancement state variables
+  const [isMoving, setIsMoving] = useState(false);
+  const [moveDirection, setMoveDirection] = useState('شمال');
+  const [userLevel, setUserLevel] = useState(1);
+  const [interactionState, setInteractionState] = useState<string | null>(null);
+  const [lastMoveTime, setLastMoveTime] = useState(0);
+  
   const shopRef = useRef<HTMLDivElement>(null);
   const { vrEnabled, gestureControlEnabled } = useVR();
   
@@ -66,34 +74,70 @@ export default function VRShop({ products }: VRShopProps) {
     startY: 0,
   });
   
-  // Handle keyboard movement
+  // Handle keyboard movement with movement visualization
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled) return;
     
     const handleKeyDown = (e: KeyboardEvent) => {
       const STEP = 5;
+      const now = Date.now();
       
+      // Set moving state and direction based on key
       switch (e.key) {
         case "ArrowUp":
           setAvatarPosition(prev => ({ ...prev, y: Math.max(10, prev.y - STEP) }));
+          setIsMoving(true);
+          setMoveDirection("للأمام");
           break;
         case "ArrowDown":
           setAvatarPosition(prev => ({ ...prev, y: Math.min(90, prev.y + STEP) }));
+          setIsMoving(true);
+          setMoveDirection("للخلف");
           break;
         case "ArrowLeft":
           setAvatarPosition(prev => ({ ...prev, x: Math.max(10, prev.x - STEP) }));
+          setIsMoving(true);
+          setMoveDirection("لليسار");
           break;
         case "ArrowRight":
           setAvatarPosition(prev => ({ ...prev, x: Math.min(90, prev.x + STEP) }));
+          setIsMoving(true);
+          setMoveDirection("لليمين");
           break;
+        default:
+          return; // Not a movement key
+      }
+      
+      // Show interaction state
+      setInteractionState("يتحرك");
+      setLastMoveTime(now);
+      
+      // Mark 'move' task as complete if not already
+      if (!completedTasks.includes('move')) {
+        setCompletedTasks(prev => [...prev, 'move']);
+      }
+    };
+    
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+        // Small delay before setting isMoving to false for smoother animation
+        setTimeout(() => {
+          setIsMoving(false);
+          setInteractionState(null);
+        }, 150);
       }
     };
     
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedAvatar, vrEnabled]);
+    window.addEventListener("keyup", handleKeyUp);
+    
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [selectedAvatar, vrEnabled, completedTasks]);
   
-  // Handle avatar dragging
+  // Handle avatar dragging with gesture controls
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled || !shopRef.current) return;
     
@@ -102,6 +146,15 @@ export default function VRShop({ products }: VRShopProps) {
         dragRef.current.isDragging = true;
         dragRef.current.startX = e.clientX;
         dragRef.current.startY = e.clientY;
+        
+        // Indicate dragging has started
+        setIsMoving(true);
+        setInteractionState("يتم السحب");
+        
+        // Mark 'move' task as complete if not already
+        if (!completedTasks.includes('move')) {
+          setCompletedTasks(prev => [...prev, 'move']);
+        }
       }
     };
     
@@ -110,6 +163,15 @@ export default function VRShop({ products }: VRShopProps) {
       
       const deltaX = e.clientX - dragRef.current.startX;
       const deltaY = e.clientY - dragRef.current.startY;
+      
+      // Determine movement direction for better visual feedback
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal movement is dominant
+        setMoveDirection(deltaX > 0 ? "لليمين" : "لليسار");
+      } else {
+        // Vertical movement is dominant
+        setMoveDirection(deltaY > 0 ? "للأسفل" : "للأعلى");
+      }
       
       dragRef.current.startX = e.clientX;
       dragRef.current.startY = e.clientY;
@@ -120,10 +182,19 @@ export default function VRShop({ products }: VRShopProps) {
         x: Math.min(90, Math.max(10, prev.x + (deltaX / shopRect.width) * 100)),
         y: Math.min(90, Math.max(10, prev.y + (deltaY / shopRect.height) * 100)),
       }));
+      
+      // Update last move time
+      setLastMoveTime(Date.now());
     };
     
     const handleMouseUp = () => {
       dragRef.current.isDragging = false;
+      
+      // Small delay before stopping the moving state for smoother animation
+      setTimeout(() => {
+        setIsMoving(false);
+        setInteractionState(null);
+      }, 150);
     };
     
     window.addEventListener("mousedown", handleMouseDown);
@@ -135,7 +206,7 @@ export default function VRShop({ products }: VRShopProps) {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [selectedAvatar, vrEnabled]);
+  }, [selectedAvatar, vrEnabled, completedTasks]);
   
   // Add to cart mutation
   const addToCartMutation = useMutation({
@@ -159,25 +230,72 @@ export default function VRShop({ products }: VRShopProps) {
     },
   });
   
-  // Check if avatar is near a product
+  // Check if avatar is near a product with enhanced interaction
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled) return;
     
-    // Find product near avatar
+    // Find product near avatar using improved product positioning
     const nearbyProduct = products.find((product, index) => {
-      const productX = 20 + (index % 3) * 30; // Distribute products in 3 columns
-      const productY = 30 + Math.floor(index / 3) * 30; // And multiple rows
+      // Get product section (or default to clothing section)
+      const productCategory = product.category || 'clothing';
+      const section = storeSections.find(s => 
+        s.id === productCategory || 
+        (s.type === 'category' && productCategory.includes(s.id))
+      ) || storeSections.find(s => s.id === 'clothing');
+      
+      if (!section) return false;
+      
+      // Calculate grid position within the section
+      const productsInCategory = products.filter(p => p.category === productCategory).length;
+      const productsPerRow = Math.min(productsInCategory, 4);
+      const rowIndex = Math.floor(index / productsPerRow);
+      const colIndex = index % productsPerRow;
+      
+      const gridX = section.x - section.width/2 + section.width * (colIndex + 0.5) / productsPerRow;
+      const gridY = section.y - section.height/2 + section.height * (rowIndex + 0.5) / Math.ceil(productsInCategory / productsPerRow);
       
       const distance = Math.sqrt(
-        Math.pow(productX - avatarPosition.x, 2) + 
-        Math.pow(productY - avatarPosition.y, 2)
+        Math.pow(gridX - avatarPosition.x, 2) + 
+        Math.pow(gridY - avatarPosition.y, 2)
       );
       
-      return distance < 15; // Proximity threshold
+      return distance < 20; // Enhanced proximity threshold
     });
     
+    // If we found a nearby product and it's different from currently selected
+    if (nearbyProduct && nearbyProduct.id !== selectedProduct?.id) {
+      // Show interaction state
+      setInteractionState("قريب من منتج");
+      
+      // Mark 'viewProduct' task as complete if not already
+      if (!completedTasks.includes('viewProduct')) {
+        setCompletedTasks(prev => [...prev, 'viewProduct']);
+      }
+    } 
+    // If we lose proximity to a product
+    else if (!nearbyProduct && selectedProduct) {
+      setInteractionState(null);
+    }
+    
     setSelectedProduct(nearbyProduct || null);
-  }, [avatarPosition, products, selectedAvatar, vrEnabled]);
+  }, [avatarPosition, products, selectedAvatar, vrEnabled, selectedProduct, completedTasks, storeSections]);
+  
+  // Handle product interaction - selecting/clicking a product
+  const handleProductClick = (product: Product) => {
+    // Set interaction state based on action
+    setInteractionState("يستعرض المنتج");
+    
+    // Mark view product task as complete if not already 
+    if (!completedTasks.includes('viewProduct')) {
+      setCompletedTasks(prev => [...prev, 'viewProduct']);
+    }
+    
+    // Increase user level for interaction with products
+    setUserLevel(prevLevel => Math.min(10, prevLevel + 1));
+    
+    // Set the selected product
+    setSelectedProduct(product);
+  };
   
   if (!vrEnabled) {
     return null;
