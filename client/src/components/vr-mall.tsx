@@ -101,7 +101,7 @@ const AVATARS = [
 
 export default function VRMall({ products }: VRMallProps) {
   const { toast } = useToast();
-  const [selectedAvatar, setSelectedAvatar] = useState<typeof AVATARS[0] | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<AvatarProps | null>(null);
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<typeof brandPartners[0] | null>(null);

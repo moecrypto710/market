@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 
-interface AvatarProps {
+export interface AvatarProps {
   id: number;
   name: string;
   image: string;

@@ -71,20 +71,73 @@ export default function HomePage() {
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (
         <>
-          {/* Banner */}
-          <div className="bg-black text-white border border-white/20 rounded-lg p-5 mb-6 text-center">
-            <h1 className="text-2xl font-bold mb-2">أهلا بك في مول أمريكي</h1>
-            <p>تسوق أحدث منتجات الماركات العالمية بتجربة واقع افتراضي حصرية</p>
-            <Button 
-              onClick={() => {
-                setAiInitialQuestion("كيف أبدأ تجربة الواقع الافتراضي؟");
-                setTimeout(() => window.scrollTo(0, 0), 100);
-              }}
-              className="mt-3 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] hover:opacity-90 text-black font-bold"
-            >
-              <i className="fas fa-vr-cardboard ml-2"></i>
-              ابدأ تجربة الواقع الافتراضي بمساعدة الذكاء الاصطناعي
-            </Button>
+          {/* Banner with advanced styling */}
+          <div className="bg-black border border-white/10 rounded-lg mb-6 overflow-hidden relative">
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-20">
+              <div className="absolute top-0 left-1/4 w-1/2 h-full bg-gradient-to-b from-purple-600/30 via-transparent to-transparent"></div>
+              <div className="absolute -top-20 right-20 w-40 h-40 rounded-full bg-pink-600/10 filter blur-xl"></div>
+              <div className="absolute -bottom-10 left-10 w-28 h-28 rounded-full bg-blue-600/10 filter blur-lg"></div>
+              
+              {/* Floating particles */}
+              <div className="absolute top-10 left-[15%] w-2 h-2 bg-purple-500 rounded-full animate-float1"></div>
+              <div className="absolute top-[40%] right-[20%] w-1 h-1 bg-blue-400 rounded-full animate-float2"></div>
+              <div className="absolute bottom-10 left-[30%] w-1.5 h-1.5 bg-pink-400 rounded-full animate-float3"></div>
+            </div>
+            
+            <div className="p-6 md:p-8 text-center relative z-10">
+              <div className="inline-block px-4 py-1 mb-4 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/20">
+                <span className="text-sm font-medium text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">تجربة تسوق مستقبلية</span>
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold mb-3 text-white">
+                أهلا بك في مول أمريكي
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">VR</span>
+              </h1>
+              
+              <p className="text-white/70 text-lg max-w-2xl mx-auto mb-5">
+                تسوق أحدث منتجات الماركات العالمية بتجربة واقع افتراضي حصرية وطريقة دخول بسيطة
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+                <Button 
+                  onClick={() => {
+                    setAiInitialQuestion("كيف أبدأ تجربة الواقع الافتراضي؟");
+                    setTimeout(() => window.scrollTo(0, 0), 100);
+                  }}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold px-6 py-6 h-auto w-full sm:w-auto relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                  <div className="flex items-center justify-center">
+                    <i className="fas fa-vr-cardboard text-xl ml-3"></i>
+                    <span>ابدأ تجربة الواقع الافتراضي</span>
+                  </div>
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  className="border-white/20 hover:bg-white hover:text-black font-medium px-6 py-6 h-auto w-full sm:w-auto relative overflow-hidden group"
+                  onClick={() => window.location.href = '/auth'}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-purple-600/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="flex items-center justify-center">
+                    <i className="fas fa-user text-xl ml-3"></i>
+                    <span>تسجيل دخول سريع</span>
+                  </div>
+                </Button>
+              </div>
+              
+              <div className="mt-8 text-white/40 flex items-center justify-center text-sm">
+                <div className="flex items-center mr-6">
+                  <i className="fas fa-shield-alt mr-2"></i>
+                  <span>تسجيل دخول آمن</span>
+                </div>
+                <div className="flex items-center">
+                  <i className="fas fa-bolt mr-2"></i>
+                  <span>دخول بنقرة واحدة</span>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Featured Products */}

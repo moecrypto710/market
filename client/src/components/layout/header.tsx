@@ -5,16 +5,29 @@ export default function Header() {
   const { vrEnabled, toggleVR } = useVR();
   
   return (
-    <header className="bg-black text-white text-center py-4 px-2 sticky top-0 z-50 border-b border-gray-800">
-      <h1 className="text-2xl font-bold">Amrikyy</h1>
-      <p className="text-sm text-white/70">تجربة تسوق افتراضية مميزة</p>
+    <header className="bg-black text-white text-center py-4 px-2 sticky top-0 z-50 border-b border-gray-700/20 shadow-md shadow-purple-900/10 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0 opacity-10">
+        <div className="absolute top-0 left-1/4 w-1/2 h-full bg-gradient-to-r from-purple-600/0 via-purple-600/20 to-purple-600/0"></div>
+        <div className="absolute top-0 left-0 w-full h-full" style={{
+          backgroundImage: 'radial-gradient(circle at 50% -20%, rgba(124, 58, 237, 0.15), transparent 70%)'
+        }}></div>
+      </div>
+
+      <div className="relative z-10">
+        <h1 className="text-2xl font-bold">
+          مول أمريكي
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">VR</span>
+        </h1>
+        <p className="text-sm text-white/70">تجربة تسوق افتراضية مميزة</p>
+      </div>
       
       <div 
-        className="absolute left-4 top-1/2 -translate-y-1/2 animate-pulse cursor-pointer"
+        className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer transform transition-transform hover:scale-105"
         onClick={toggleVR}
       >
-        <span className="bg-white text-black px-2 py-1 rounded-full text-xs font-bold flex items-center">
-          <i className="fas fa-vr-cardboard ml-1"></i> VR
+        <span className={`${vrEnabled ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' : 'bg-white text-black'} px-3 py-1 rounded-full text-xs font-bold flex items-center shadow-lg`}>
+          <i className={`fas fa-vr-cardboard ml-1 ${vrEnabled ? 'animate-pulse' : ''}`}></i> VR
         </span>
       </div>
       

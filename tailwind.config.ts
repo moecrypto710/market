@@ -79,10 +79,49 @@ export default {
             height: "0",
           },
         },
+        "pulse-slow": {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '0.5',
+          },
+        },
+        "float1": {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-10px) translateX(5px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
+        "float2": {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(10px) translateX(-5px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
+        "float3": {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-15px) translateX(-7px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
+        "float4": {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(8px) translateX(10px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
+        "float5": {
+          '0%': { transform: 'translateY(0) translateX(0)' },
+          '50%': { transform: 'translateY(-12px) translateX(-3px)' },
+          '100%': { transform: 'translateY(0) translateX(0)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-slow": "pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float1": "float1 10s ease-in-out infinite",
+        "float2": "float2 12s ease-in-out infinite",
+        "float3": "float3 9s ease-in-out infinite",
+        "float4": "float4 14s ease-in-out infinite",
+        "float5": "float5 11s ease-in-out infinite",
       },
     },
   },
