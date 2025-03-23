@@ -165,8 +165,17 @@ export default function AuthPage() {
       <div className="w-full md:w-1/2 px-4 md:px-10 flex items-center justify-center">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Amrikyy</h1>
-            <p className="text-white/70">تجربة تسوق افتراضية في عالم العرب</p>
+            <h1 className="text-4xl font-bold mb-3">
+              مول أمريكي
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">VR</span>
+            </h1>
+            <p className="text-white/70 text-lg">تجربة تسوق افتراضية في عالم العرب</p>
+            <div className="flex justify-center mt-4 mb-2">
+              <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-sm">
+                <i className="fas fa-vr-cardboard mr-2 text-purple-400"></i>
+                <span className="text-white/90">تسوق بتقنية الواقع الافتراضي</span>
+              </div>
+            </div>
           </div>
 
           <Tabs defaultValue="login" className="w-full">

@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
-import AvatarSelection from "@/components/avatar-selection";
+import AvatarSelection, { AvatarProps } from "@/components/avatar-selection";
 
 interface VRMallProps {
   products: Product[];
