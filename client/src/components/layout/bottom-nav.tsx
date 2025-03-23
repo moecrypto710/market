@@ -6,8 +6,8 @@ export default function BottomNav() {
   const navItems = [
     { path: "/", label: "الرئيسية", icon: "home" },
     { path: "/rewards", label: "المكافآت", icon: "gift" },
+    { path: "/store-rental", label: "متاجر", icon: "store" },
     { path: "/affiliate", label: "الإحالة", icon: "users" },
-    { path: "/payment", label: "الدفع", icon: "credit-card" },
     { path: "/account", label: "حسابي", icon: "user" }
   ];
   
