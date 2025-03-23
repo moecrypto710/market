@@ -16,19 +16,18 @@ interface VRMallProps {
   products: Product[];
 }
 
-// Avatar selections with personality traits and special abilities
+// Simplified avatar selections - just boy and girl options
 const AVATARS = [
   { 
     id: 1, 
-    name: "عمر",
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Omar&backgroundColor=b6e3f4",
+    name: "أحمد",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Ahmed&backgroundColor=b6e3f4",
     personality: "مهتم بالتكنولوجيا والإلكترونيات الحديثة",
     favoriteCategory: "electronics",
     personalStyle: "عصري تقني",
     benefits: [
       "تخفيضات إضافية 10% على الإلكترونيات",
-      "وصول حصري لآخر التقنيات",
-      "دليل تقني متخصص"
+      "وصول حصري لآخر التقنيات"
     ],
     color: "#5e35b1",
     specialFeature: "محلل المواصفات",
@@ -36,141 +35,74 @@ const AVATARS = [
   },
   { 
     id: 2, 
-    name: "ليلى",
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Laila&backgroundColor=ffdfbf",
-    personality: "عاشقة للموضة والأزياء التقليدية والحديثة",
+    name: "سارة",
+    image: "https://api.dicebear.com/7.x/personas/svg?seed=Sara&backgroundColor=ffdfbf",
+    personality: "مهتمة بالموضة والأزياء العصرية",
     favoriteCategory: "clothing",
     personalStyle: "أنيق عصري",
     benefits: [
       "نصائح أزياء شخصية",
-      "وصول مبكر للتشكيلات الجديدة",
       "تجربة افتراضية للملابس"
     ],
     color: "#e91e63",
-    specialFeature: "مستشار الأناقة",
-    specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية وفقاً لشخصيتك ومناسباتك"
-  },
-  { 
-    id: 3, 
-    name: "سلمى",
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Salma&backgroundColor=d1d4f9",
-    personality: "مهتمة بالديكور المنزلي وتصميم المساحات",
-    favoriteCategory: "home",
-    personalStyle: "كلاسيكي أنيق",
-    benefits: [
-      "تصميم ثلاثي الأبعاد لمنزلك",
-      "استشارات ديكور مجانية",
-      "تخفيضات على الأثاث"
-    ],
-    color: "#4caf50",
-    specialFeature: "مصمم المساحات",
-    specialFeatureDescription: "قدرة خاصة على تصور المنتجات في مساحات منزلك قبل الشراء"
-  },
-  { 
-    id: 4, 
-    name: "محمد",
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Mohamed&backgroundColor=c0aede",
-    personality: "رياضي ومهتم باللياقة البدنية والأنشطة الحركية",
-    favoriteCategory: "sports",
-    personalStyle: "رياضي حيوي",
-    benefits: [
-      "اختبار المعدات الرياضية",
-      "خطط تدريب شخصية",
-      "عضوية في نادي الرياضيين"
-    ],
-    color: "#2196f3",
-    specialFeature: "مدرب اللياقة",
-    specialFeatureDescription: "قدرة خاصة على اختبار المعدات الرياضية وتقييم مناسبتها لأهدافك"
-  },
-  { 
-    id: 5, 
-    name: "نور",
-    image: "https://api.dicebear.com/7.x/personas/svg?seed=Noor&backgroundColor=ffd1dc",
-    personality: "مهتمة بالتسوق الذكي والعروض الحصرية",
-    favoriteCategory: "vip-lounge",
-    personalStyle: "فاخر عصري",
-    benefits: [
-      "وصول حصري لقسم كبار الزوار",
-      "عروض خاصة على المنتجات الفاخرة",
-      "خدمة مساعد تسوق شخصي"
-    ],
-    color: "#9c27b0",
-    specialFeature: "صائد العروض",
-    specialFeatureDescription: "قدرة خاصة على اكتشاف أفضل العروض والتخفيضات في المول"
-  },
+    specialFeature: "مستشارة الأناقة",
+    specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية"
+  }
 ];
 
-// Simple avatar selection renderer (as a static JSX element, not a function)
-const renderAvatarSelectionUI = (
-  avatars: AvatarProps[], 
-  onSelectCallback: (avatar: AvatarProps) => void
-) => (
-  <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
-    <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
-      <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
-      <p className="text-white/70 mb-6">كل شخصية لديها قدرات خاصة ومميزات فريدة في المول الافتراضي</p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        {avatars.map((avatar) => (
-          <div
-            key={avatar.id}
-            className="relative bg-gradient-to-b from-black/60 to-black/40 border border-white/10 hover:border-white/30 p-4 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 group"
-            style={{ 
-              boxShadow: `0 0 20px rgba(${avatar.color ? parseInt(avatar.color.substring(1, 3), 16) : 0}, ${avatar.color ? parseInt(avatar.color.substring(3, 5), 16) : 0}, ${avatar.color ? parseInt(avatar.color.substring(5, 7), 16) : 0}, 0.1)`,
-              borderColor: avatar.color 
-            }}
-            onClick={() => onSelectCallback(avatar)}
-          >
-            <div className="absolute -top-3 -right-3 bg-black/70 rounded-full p-1 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
-              <span className="text-xs px-2">
-                <i className="fas fa-star text-yellow-400 mr-1"></i>
-                {avatar.specialFeature}
-              </span>
+// Avatar Selection component directly within the VR Mall component
+function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) => void }) {
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
+        <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
+        <p className="text-white/70 mb-6">اختر شخصية للتسوق في مول أمريكي الافتراضي</p>
+        
+        <div className="flex gap-8 w-full justify-center">
+          {AVATARS.map((avatar) => (
+            <div
+              key={avatar.id}
+              className="relative bg-gradient-to-b from-black/60 to-black/40 border border-white/10 hover:border-white/30 p-6 rounded-lg cursor-pointer transition-all duration-300 transform hover:scale-105 w-64"
+              style={{ 
+                boxShadow: `0 0 20px ${avatar.color}30`,
+                borderColor: avatar.color 
+              }}
+              onClick={() => onSelect(avatar)}
+            >
+              <div className="mb-4 relative h-40 w-40 mx-auto">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-black/40 to-black/10 backdrop-blur-md border border-white/10"></div>
+                <img 
+                  src={avatar.image} 
+                  alt={avatar.name} 
+                  className="h-full w-full object-contain relative z-10" 
+                />
+                <div 
+                  className="absolute inset-0 rounded-full opacity-20"
+                  style={{ 
+                    background: `radial-gradient(circle, ${avatar.color} 0%, transparent 70%)`,
+                    filter: "blur(8px)"
+                  }}
+                ></div>
+              </div>
+              
+              <h3 className="text-2xl font-bold mb-2 text-center">{avatar.name}</h3>
+              <p className="text-sm text-white/70 mb-4 text-center">{avatar.personality}</p>
+              
+              <div className="flex justify-center">
+                <button 
+                  className="px-4 py-2 rounded-lg text-white text-lg font-medium transition-all"
+                  style={{ backgroundColor: avatar.color }}
+                >
+                  اختر {avatar.name}
+                </button>
+              </div>
             </div>
-            
-            <div className="mb-3 relative h-32 w-32 mx-auto">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-black/40 to-black/10 backdrop-blur-md border border-white/10"></div>
-              <img 
-                src={avatar.image} 
-                alt={avatar.name} 
-                className="h-full w-full object-contain relative z-10" 
-              />
-              <div 
-                className="absolute inset-0 rounded-full opacity-20"
-                style={{ 
-                  background: `radial-gradient(circle, ${avatar.color || "#5e35b1"} 0%, transparent 70%)`,
-                  filter: "blur(8px)"
-                }}
-              ></div>
-            </div>
-            
-            <h3 className="text-xl font-bold mb-1 text-center">{avatar.name}</h3>
-            <p className="text-sm text-white/70 mb-3 text-center">{avatar.personality}</p>
-            
-            <h4 className="text-xs font-semibold uppercase text-white/50 mb-1 text-center">الميزات الخاصة</h4>
-            <ul className="text-sm list-disc list-inside space-y-1 mb-3">
-              {avatar.benefits.map((benefit, idx) => (
-                <li key={idx} className="text-white/80 text-right truncate hover:text-clip">{benefit}</li>
-              ))}
-            </ul>
-            
-            <div className="mt-auto text-center">
-              <span 
-                className="inline-block px-3 py-1 rounded-full text-xs font-medium"
-                style={{ 
-                  backgroundColor: `${avatar.color}40`,
-                  color: avatar.color
-                }}
-              >
-                {avatar.favoriteCategory === "all" ? "جميع المنتجات" : avatar.favoriteCategory}
-              </span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+}
 
 // Main component
 export default function VRMall({ products }: VRMallProps) {
