@@ -128,6 +128,12 @@ export default function VRMall({ products }: VRMallProps) {
   const [showTransition, setShowTransition] = useState(false);
   const [transitionStyle, setTransitionStyle] = useState<string>('default');
   const [previousSection, setPreviousSection] = useState<any | null>(null);
+  const [ambientLighting, setAmbientLighting] = useState({
+    primaryColor: '#5e35b1',
+    secondaryColor: '#ff9800',
+    intensity: 0.2,
+    pulseRate: 'slow'
+  });
   
   const mallRef = useRef<HTMLDivElement>(null);
   const { vrEnabled, gestureControlEnabled, toggleVR } = useVR();
@@ -295,6 +301,45 @@ export default function VRMall({ products }: VRMallProps) {
     },
   });
   
+  // Add category-specific color schemes for ambient lighting
+  const categoryColors = {
+    electronics: {
+      primary: '#5e35b1',      // Deep purple for tech
+      secondary: '#03a9f4',    // Light blue accent
+      ambient: 'rgba(94, 53, 177, 0.15)',
+      particles: ['#5e35b1', '#03a9f4', '#651fff', '#3d5afe'],
+      fogGradient: 'radial-gradient(circle at 50% 50%, rgba(94, 53, 177, 0.1) 0%, rgba(3, 169, 244, 0.05) 70%, transparent 100%)'
+    },
+    clothing: {
+      primary: '#e91e63',      // Pink for fashion
+      secondary: '#ff9800',    // Orange accent
+      ambient: 'rgba(233, 30, 99, 0.15)',
+      particles: ['#e91e63', '#ff9800', '#f50057', '#ff3d00'],
+      fogGradient: 'radial-gradient(circle at 50% 50%, rgba(233, 30, 99, 0.1) 0%, rgba(255, 152, 0, 0.05) 70%, transparent 100%)'
+    },
+    home: {
+      primary: '#4caf50',      // Green for home decor
+      secondary: '#8bc34a',    // Light green accent
+      ambient: 'rgba(76, 175, 80, 0.15)',
+      particles: ['#4caf50', '#8bc34a', '#00c853', '#64dd17'],
+      fogGradient: 'radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.1) 0%, rgba(139, 195, 74, 0.05) 70%, transparent 100%)'
+    },
+    sports: {
+      primary: '#2196f3',      // Blue for sports
+      secondary: '#00bcd4',    // Teal accent
+      ambient: 'rgba(33, 150, 243, 0.15)',
+      particles: ['#2196f3', '#00bcd4', '#0091ea', '#00b8d4'],
+      fogGradient: 'radial-gradient(circle at 50% 50%, rgba(33, 150, 243, 0.1) 0%, rgba(0, 188, 212, 0.05) 70%, transparent 100%)'
+    },
+    default: {
+      primary: '#9c27b0',      // Purple for general areas
+      secondary: '#673ab7',    // Deep purple accent
+      ambient: 'rgba(156, 39, 176, 0.15)',
+      particles: ['#9c27b0', '#673ab7', '#aa00ff', '#6200ea'],
+      fogGradient: 'radial-gradient(circle at 50% 50%, rgba(156, 39, 176, 0.1) 0%, rgba(103, 58, 183, 0.05) 70%, transparent 100%)'
+    }
+  };
+
   // Mall layout sections definition - stores, categories, and navigation points
   const storeSections = [
     // Main mall structure
@@ -306,6 +351,7 @@ export default function VRMall({ products }: VRMallProps) {
       icon: 'door-open', 
       backgroundColor: 'rgba(0,0,0,0.3)', 
       borderColor: 'rgba(255,255,255,0.3)',
+      category: 'default',
       features: [
         {
           id: 'ai-welcome',
@@ -801,6 +847,58 @@ export default function VRMall({ products }: VRMallProps) {
   // Mall floor plan with realistic store locations and experiences - already defined above
   
   // Get current section based on avatar position
+  // Category to lighting color mapping
+  const categoryLighting = {
+    'electronics': {
+      primaryColor: '#03a9f4', // Blue
+      secondaryColor: '#0ea5e9',
+      intensity: 0.25,
+      pulseRate: 'fast'
+    },
+    'clothing': {
+      primaryColor: '#e91e63', // Pink
+      secondaryColor: '#ec4899',
+      intensity: 0.2,
+      pulseRate: 'medium'
+    },
+    'home': {
+      primaryColor: '#4caf50', // Green
+      secondaryColor: '#22c55e',
+      intensity: 0.15,
+      pulseRate: 'slow'
+    },
+    'sports': {
+      primaryColor: '#2196f3', // Blue
+      secondaryColor: '#a855f7', 
+      intensity: 0.3,
+      pulseRate: 'fast'
+    },
+    'entrance': {
+      primaryColor: '#5e35b1', // Purple
+      secondaryColor: '#7c3aed',
+      intensity: 0.2,
+      pulseRate: 'medium'
+    },
+    'plaza': {
+      primaryColor: '#9c27b0', // Purple
+      secondaryColor: '#d946ef',
+      intensity: 0.25,
+      pulseRate: 'medium'
+    },
+    'special': {
+      primaryColor: '#ff9800', // Orange
+      secondaryColor: '#f59e0b',
+      intensity: 0.3,
+      pulseRate: 'slow'
+    },
+    'vip': {
+      primaryColor: '#9333ea', // Purple
+      secondaryColor: '#c026d3',
+      intensity: 0.4,
+      pulseRate: 'slow'
+    }
+  };
+
   const getCurrentSection = () => {
     return storeSections.find(section => {
       return (
@@ -813,6 +911,28 @@ export default function VRMall({ products }: VRMallProps) {
   };
   
   const currentSection = getCurrentSection();
+  
+  // Get ambient color scheme based on current section
+  const getCurrentColors = () => {
+    if (!currentSection) return categoryColors.default;
+    
+    // If section has an explicit category, use it
+    if (currentSection.category && 
+        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.category)) {
+      return categoryColors[currentSection.category as keyof typeof categoryColors];
+    }
+    
+    // For category sections, use their id
+    if (currentSection.type === 'category' && 
+        Object.prototype.hasOwnProperty.call(categoryColors, currentSection.id)) {
+      return categoryColors[currentSection.id as keyof typeof categoryColors];
+    }
+    
+    // Fallback to default colors
+    return categoryColors.default;
+  }
+  
+  const currentColors = getCurrentColors();
   
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
@@ -831,6 +951,34 @@ export default function VRMall({ products }: VRMallProps) {
       // Store the previous section before updating active section
       setPreviousSection(activeSection);
       setActiveSection(newSection);
+      
+      // Update ambient lighting based on section type or id
+      const sectionType = newSection.type;
+      const sectionId = newSection.id;
+      
+      // Choose lighting based on section type or specific id
+      let newLighting;
+      
+      // First check if the section id matches a specific category
+      if (categoryLighting[sectionId]) {
+        newLighting = categoryLighting[sectionId];
+      } 
+      // Otherwise use the section type
+      else if (categoryLighting[sectionType]) {
+        newLighting = categoryLighting[sectionType];
+      } 
+      // Default lighting
+      else {
+        newLighting = {
+          primaryColor: '#5e35b1',
+          secondaryColor: '#7c3aed',
+          intensity: 0.2,
+          pulseRate: 'medium'
+        };
+      }
+      
+      // Apply new ambient lighting with animation
+      setAmbientLighting(newLighting);
       
       // Only show transition animation if moving between different section types
       if (activeSection && newSection.type !== activeSection.type) {
@@ -879,6 +1027,14 @@ export default function VRMall({ products }: VRMallProps) {
       setActiveSection(null);
       setSelectedFeature(null);
       setShowFeatureDetails(false);
+      
+      // Reset to default lighting
+      setAmbientLighting({
+        primaryColor: '#5e35b1',
+        secondaryColor: '#ff9800',
+        intensity: 0.2,
+        pulseRate: 'slow'
+      });
     }
   }, [avatarPosition, storeSections, selectedAvatar, vrEnabled, activeSection, completedTasks]);
 
@@ -916,10 +1072,47 @@ export default function VRMall({ products }: VRMallProps) {
         <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-indigo-400 rounded-full animate-float5"></div>
       </div>
       
-      {/* Atmospheric fog/glow */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#5e35b1]/10 via-transparent to-transparent opacity-30"></div>
-      <div className="absolute top-0 left-1/4 w-1/2 h-1/4 bg-[#5e35b1]/5 blur-3xl rounded-full"></div>
-      <div className="absolute bottom-0 right-1/4 w-1/2 h-1/5 bg-[#ff9800]/5 blur-3xl rounded-full"></div>
+      {/* Dynamic Ambient Mood Lighting */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-30 transition-all duration-1000"
+        style={{ 
+          backgroundImage: `linear-gradient(to top, ${ambientLighting.primaryColor}20, transparent, transparent)` 
+        }}
+      ></div>
+      
+      {/* Primary ambient glow - top */}
+      <div 
+        className="absolute top-0 left-1/4 w-1/2 h-1/3 blur-3xl rounded-full transition-all duration-1000"
+        style={{ 
+          backgroundColor: `${ambientLighting.primaryColor}10`,
+          opacity: ambientLighting.intensity,
+          animation: ambientLighting.pulseRate === 'fast' ? 'pulse-fast 4s infinite' : 
+                    ambientLighting.pulseRate === 'medium' ? 'pulse 6s infinite' : 
+                    'pulse-slow 8s infinite'
+        }}
+      ></div>
+      
+      {/* Secondary ambient glow - bottom */}
+      <div 
+        className="absolute bottom-0 right-1/4 w-1/2 h-1/4 blur-3xl rounded-full transition-all duration-1000"
+        style={{ 
+          backgroundColor: `${ambientLighting.secondaryColor}10`,
+          opacity: ambientLighting.intensity * 0.7,
+          animation: ambientLighting.pulseRate === 'fast' ? 'pulse-fast 5s infinite' : 
+                    ambientLighting.pulseRate === 'medium' ? 'pulse 7s infinite' : 
+                    'pulse-slow 9s infinite'
+        }}
+      ></div>
+      
+      {/* Additional ambient accent light */}
+      <div 
+        className="absolute top-1/3 right-1/4 w-1/4 h-1/4 blur-3xl rounded-full transition-all duration-1000"
+        style={{ 
+          backgroundColor: `${ambientLighting.secondaryColor}08`,
+          opacity: ambientLighting.intensity * 0.5,
+          animation: 'float3 15s infinite'
+        }}
+      ></div>
       {/* Immersive VR controls and status */}
       <div className="absolute top-4 left-4 z-50 flex items-center gap-2 bg-black/60 rounded-lg p-2 backdrop-blur-sm border border-white/10">
         <div className="rounded-full w-3 h-3 bg-green-500 animate-pulse"></div>
