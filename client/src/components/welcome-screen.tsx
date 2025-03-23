@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import confetti from 'canvas-confetti';
 
 interface WelcomeScreenProps {
   onComplete: () => void;
@@ -8,9 +9,11 @@ interface WelcomeScreenProps {
 }
 
 export default function WelcomeScreen({ onComplete, skipAnimation = false }: WelcomeScreenProps) {
-  const [animationState, setAnimationState] = useState<'initial' | 'pattern' | 'logo' | 'text' | 'complete'>('initial');
+  const [animationState, setAnimationState] = useState<'initial' | 'pattern' | 'calligraphy' | 'logo' | 'text' | 'complete'>('initial');
   const [skipIntro, setSkipIntro] = useState(skipAnimation);
+  const [showParticles, setShowParticles] = useState(false);
   const { user } = useAuth();
+  const confettiRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (skipIntro) {
@@ -18,21 +21,47 @@ export default function WelcomeScreen({ onComplete, skipAnimation = false }: Wel
       return;
     }
 
-    // Sequence the animations
-    const patternTimer = setTimeout(() => setAnimationState('pattern'), 500);
-    const logoTimer = setTimeout(() => setAnimationState('logo'), 1800);
-    const textTimer = setTimeout(() => setAnimationState('text'), 2500);
-    const completeTimer = setTimeout(() => setAnimationState('complete'), 5000);
+    // Sequence the animations with better timing
+    const patternTimer = setTimeout(() => {
+      setAnimationState('pattern');
+      setShowParticles(true);
+    }, 500);
+    
+    const calligraphyTimer = setTimeout(() => setAnimationState('calligraphy'), 1500);
+    const logoTimer = setTimeout(() => setAnimationState('logo'), 2400);
+    const textTimer = setTimeout(() => setAnimationState('text'), 3200);
+    
+    // Trigger confetti when logo appears
+    const confettiTimer = setTimeout(() => {
+      if (confettiRef.current) {
+        const myConfetti = confetti.create(confettiRef.current, {
+          resize: true,
+          useWorker: true,
+        });
+        
+        myConfetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.4 },
+          colors: ['#5e35b1', '#9c27b0', '#ff9800', '#ffeb3b'],
+          shapes: ['circle', 'square'],
+        });
+      }
+    }, 2500);
+    
+    const completeTimer = setTimeout(() => setAnimationState('complete'), 8000);
     
     // Auto-complete animation after a delay if user doesn't skip
     const autoCompleteTimer = setTimeout(() => {
       onComplete();
-    }, 7000);
+    }, 10000);
     
     return () => {
       clearTimeout(patternTimer);
+      clearTimeout(calligraphyTimer);
       clearTimeout(logoTimer);
       clearTimeout(textTimer);
+      clearTimeout(confettiTimer);
       clearTimeout(completeTimer);
       clearTimeout(autoCompleteTimer);
     };
