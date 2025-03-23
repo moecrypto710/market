@@ -50,6 +50,8 @@ export default function VRShop({ products }: VRShopProps) {
   const [selectedBrand, setSelectedBrand] = useState<typeof brandPartners[0] | null>(null);
   const [showStoreDetails, setShowStoreDetails] = useState(false);
   const [isTryingOn, setIsTryingOn] = useState(false);
+  const [showHelpMenu, setShowHelpMenu] = useState(false);
+  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const shopRef = useRef<HTMLDivElement>(null);
   const { vrEnabled, gestureControlEnabled } = useVR();
   
@@ -572,9 +574,9 @@ export default function VRShop({ products }: VRShopProps) {
           </div>
         ))}
         
-        {/* Avatar */}
+        {/* Avatar with movement effects */}
         <div 
-          className="avatar absolute w-16 h-16 cursor-move transform -translate-x-1/2 -translate-y-1/2"
+          className="avatar absolute cursor-move transform -translate-x-1/2 -translate-y-1/2"
           style={{ 
             left: `${avatarPosition.x}%`, 
             top: `${avatarPosition.y}%`,
@@ -582,12 +584,33 @@ export default function VRShop({ products }: VRShopProps) {
             zIndex: 10
           }}
         >
-          <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#ffeb3b] relative">
+          {/* Glow effect around avatar (pulsing) */}
+          <div 
+            className="absolute inset-0 rounded-full bg-[#ffeb3b]/20 animate-pulse"
+            style={{
+              transform: 'scale(1.5)',
+              filter: 'blur(8px)',
+              opacity: 0.5
+            }}
+          ></div>
+          
+          {/* Movement indicator arrow */}
+          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 animate-bounce">
+            <div className="h-3 w-6 bg-[#ffeb3b] clip-arrow opacity-60"></div>
+          </div>
+          
+          {/* Avatar character */}
+          <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-[#ffeb3b] relative shadow-lg shadow-[#ffeb3b]/20">
             <img 
               src={selectedAvatar.image} 
               alt={selectedAvatar.name} 
               className="w-full h-full object-cover"
             />
+            
+            {/* Name tag above avatar */}
+            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/70 px-2 py-1 rounded-full text-xs whitespace-nowrap">
+              {selectedAvatar.name}
+            </div>
             
             {/* If trying on a product, show it on the avatar */}
             {isTryingOn && selectedProduct && (
@@ -601,12 +624,17 @@ export default function VRShop({ products }: VRShopProps) {
                     mixBlendMode: 'overlay'
                   }}
                 />
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-[#5e35b1] px-2 py-1 rounded-full text-[10px] text-white whitespace-nowrap">
+                  تجربة {selectedProduct.name}
+                </div>
               </div>
             )}
           </div>
           
           {/* Shadow below avatar */}
           <div className="w-12 h-3 bg-black/30 rounded-full mx-auto -mt-1 blur-sm"></div>
+          
+          {/* Animation effects handled by global css */}
         </div>
         
         {/* Section indicator */}
@@ -634,7 +662,25 @@ export default function VRShop({ products }: VRShopProps) {
           <i className="fas fa-sync-alt mr-1"></i>
           تغيير الشخصية
         </button>
+        
+        <div className="h-6 w-px bg-white/20"></div>
+        
+        <button 
+          className="text-sm text-white/80 hover:text-white"
+          onClick={() => setShowHelpMenu(!showHelpMenu)}
+        >
+          <i className="fas fa-question-circle mr-1"></i>
+          مساعدة
+        </button>
       </div>
+      
+      {/* Help floating button - always visible */}
+      <button
+        className="fixed bottom-20 right-6 z-50 bg-[#ffeb3b] text-[#2a1f6f] rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+        onClick={() => setShowHelpMenu(!showHelpMenu)}
+      >
+        <i className="fas fa-question-circle text-xl"></i>
+      </button>
       
       {/* Product interaction panel when near a product */}
       {selectedProduct && (
