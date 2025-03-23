@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,18 @@ export default function ProductDetailPage() {
   const { productId } = useParams();
   const { toast } = useToast();
   const id = parseInt(productId || '0');
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [isRotating, setIsRotating] = useState(false);
+  const [showHologram, setShowHologram] = useState(false);
+  
+  // Activate hologram effect on mount with a delay for cooler appearance
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowHologram(true);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fetch product details
   const { data: product, error, isLoading } = useQuery<Product>({
@@ -77,9 +89,42 @@ export default function ProductDetailPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image with AR and QR */}
         <div className="relative">
-          <div className="aspect-square bg-gradient-to-br from-black to-pink-950 rounded-xl overflow-hidden relative border-2 border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.5)] transition-all duration-500 group hover:shadow-[0_0_25px_rgba(236,72,153,0.7)] animate-fadeIn">
+          <div 
+            className="aspect-square bg-gradient-to-br from-black to-pink-950 rounded-xl overflow-hidden relative border-2 border-pink-500/50 transition-all duration-500 group hover:shadow-[0_0_25px_rgba(236,72,153,0.7)] animate-fadeIn"
+            style={{
+              perspective: '1000px',
+              transformStyle: 'preserve-3d',
+              boxShadow: showHologram ? '0 0 15px rgba(236,72,153,0.5), 0 0 30px rgba(236,72,153,0.2)' : '0 0 15px rgba(236,72,153,0.5)',
+            }}
+            onMouseMove={(e) => {
+              if (!isRotating) {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                setRotateX((y - centerY) / 20);
+                setRotateY(-(x - centerX) / 20);
+              }
+            }}
+            onMouseEnter={() => setIsRotating(false)}
+            onMouseLeave={() => {
+              setIsRotating(true);
+              setTimeout(() => {
+                setRotateX(0);
+                setRotateY(0);
+              }, 1000);
+            }}
+          >
             {validProduct.imageUrl && (
-              <div className="absolute inset-0 group-hover:scale-110 transition-transform duration-700 ease-in-out">
+              <div 
+                className="absolute inset-0 group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                style={{
+                  transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                  transformStyle: 'preserve-3d',
+                  transition: isRotating ? 'transform 1s ease-out' : 'transform 0.2s ease-out',
+                }}
+              >
                 <img
                   src={validProduct.imageUrl}
                   alt={validProduct.name}
@@ -91,21 +136,64 @@ export default function ProductDetailPage() {
             {/* Overlay with glowing effect */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
             
+            {/* Holographic scanning line effect */}
+            <div 
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{opacity: showHologram ? 1 : 0, transition: 'opacity 0.5s ease-in'}}
+            >
+              <div 
+                className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-pink-400 to-transparent" 
+                style={{
+                  animation: 'scan 2s ease-in-out infinite',
+                  top: '0%',
+                  opacity: 0.7,
+                }}
+              ></div>
+            </div>
+            
             {/* Holographic effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-30 transition-opacity duration-700"></div>
+            <div 
+              className={`absolute inset-0 bg-gradient-to-r from-pink-500/10 to-purple-500/10 transition-opacity duration-700 ${showHologram ? 'opacity-30' : 'opacity-0'} group-hover:opacity-40`}
+              style={{
+                backgroundSize: '200% 200%',
+                animation: 'shimmer 3s ease-in-out infinite',
+              }}
+            ></div>
+            
+            {/* Prism light effect on corners */}
+            <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-pink-500/20 to-transparent rounded-br-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+            <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-purple-500/20 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             
             {/* Promotional badge */}
             {validProduct.commissionRate > 8 && (
-              <Badge variant="secondary" className="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-1 text-sm animate-pulse shadow-lg">
+              <Badge variant="secondary" className="absolute top-4 right-4 bg-gradient-to-r from-pink-600 to-pink-500 text-white px-3 py-1 text-sm animate-pulse shadow-lg z-10">
                 عرض خاص
               </Badge>
             )}
             
+            {/* 3D rotation indicator */}
+            <div className="absolute top-4 left-4 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center border border-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i className="fas fa-cube text-pink-400 text-xs"></i>
+            </div>
+            
             {/* Product name on hover */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
               <h3 className="text-xl font-bold text-white">{validProduct.name}</h3>
               <p className="text-pink-300 text-sm">{getCategoryLabel(validProduct.category)}</p>
             </div>
+            
+            {/* Scan animation and shimmer effects */}
+            <style dangerouslySetInnerHTML={{ __html: `
+              @keyframes scan {
+                0%, 100% { top: 0%; }
+                50% { top: 100%; }
+              }
+              @keyframes shimmer {
+                0% { background-position: 0% 0%; }
+                50% { background-position: 100% 100%; }
+                100% { background-position: 0% 0%; }
+              }
+            `}} />
           </div>
           
           {/* Add 3D rotation effect with CSS */}
