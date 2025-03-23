@@ -145,7 +145,7 @@ function ProductCard({
           )}
         </div>
         
-        {/* Community QR code button */}
+        {/* Community QR code button - purchase gated */}
         <div className="w-full mt-1">
           <CommunityQRCode 
             whatsappUrl="https://chat.whatsapp.com/yourgroup" 
@@ -153,6 +153,8 @@ function ProductCard({
             buttonText="انضم إلى مجتمعنا للحصول على عروض حصرية" 
             buttonVariant="secondary"
             buttonSize="default"
+            purchased={false} // This would be set based on user purchase history
+            productId={product.id}
           />
         </div>
       </CardFooter>

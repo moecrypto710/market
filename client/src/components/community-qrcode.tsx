@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "../hooks/use-toast";
 
 interface CommunityQRCodeProps {
   whatsappUrl?: string;
@@ -22,22 +23,57 @@ export default function CommunityQRCode({
   buttonText = "انضم إلى مجتمعنا",
   showIcons = true,
   buttonVariant = "default",
-  buttonSize = "default"
+  buttonSize = "default",
+  purchased = false,
+  productId
 }: CommunityQRCodeProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
+  
+  // Simulate purchase check - in a real app, this would check with an API
+  const handleAccessAttempt = () => {
+    if (purchased) {
+      setIsDialogOpen(true);
+    } else {
+      toast({
+        title: "مجتمع حصري للعملاء",
+        description: "يرجى شراء هذا المنتج للوصول إلى مجتمعنا الحصري والحصول على عروض خاصة ودعم متميز.",
+        variant: "destructive",
+      });
+      
+      // Simulate purchase prompt
+      setTimeout(() => {
+        toast({
+          title: "كيف يمكنني الانضمام؟",
+          description: "اضغط على 'إضافة للسلة' واتمم عملية الشراء للانضمام إلى مجتمعنا الحصري.",
+        });
+      }, 1500);
+    }
+  };
   
   return (
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
-          <Button variant={buttonVariant} size={buttonSize} className="rtl gap-2">
-            {showIcons && <i className="fas fa-users mr-1"></i>}
-            {buttonText}
-          </Button>
-        </DialogTrigger>
+        <Button 
+          variant={buttonVariant} 
+          size={buttonSize} 
+          className="rtl gap-2 w-full" 
+          onClick={handleAccessAttempt}
+        >
+          {showIcons && <i className="fas fa-users mr-1"></i>}
+          {buttonText}
+          {!purchased && <i className="fas fa-lock ml-2 text-xs"></i>}
+        </Button>
+
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-center text-xl">انضم إلينا على منصات التواصل</DialogTitle>
+            <DialogTitle className="text-center text-xl">
+              انضم إلينا على منصات التواصل
+              {purchased && <span className="text-green-500 block text-sm mt-1">
+                <i className="fas fa-check-circle mr-1"></i> 
+                عميل مميز
+              </span>}
+            </DialogTitle>
           </DialogHeader>
           
           <div className="p-4">
@@ -107,6 +143,11 @@ export default function CommunityQRCode({
                 </Card>
               </TabsContent>
             </Tabs>
+            
+            <div className="mt-6 text-center text-sm text-gray-500">
+              <p>احصل على مساعدة حصرية ودعم فني متميز من مجتمعنا</p>
+              <p className="mt-1">بالإضافة إلى عروض وخصومات خاصة للأعضاء</p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
