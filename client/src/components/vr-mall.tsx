@@ -100,6 +100,34 @@ const AVATARS = [
   },
 ];
 
+// Separate component for avatar selection to fix hooks ordering issues
+function AvatarSelectionWrapper({ onAvatarSelected }: { onAvatarSelected: (avatar: AvatarProps) => void }) {
+  const { toast } = useToast();
+  
+  const handleAvatarSelect = (avatar: AvatarProps) => {
+    onAvatarSelected(avatar);
+    toast({
+      title: `مرحبا ${avatar.name}!`,
+      description: `لقد اخترت ${avatar.name} - ${avatar.personality}`,
+    });
+  };
+  
+  return (
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-lg flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-black/60 border border-white/20 rounded-xl p-8 flex flex-col items-center text-center">
+        <h2 className="text-3xl font-bold mb-2">اختر الشخصية الافتراضية</h2>
+        <p className="text-white/70 mb-6">كل شخصية لديها قدرات خاصة ومميزات فريدة في المول الافتراضي</p>
+        
+        <AvatarSelection 
+          avatars={AVATARS} 
+          onSelectAvatar={handleAvatarSelect} 
+        />
+      </div>
+    </div>
+  );
+}
+
+// Main component
 export default function VRMall({ products }: VRMallProps) {
   const { toast } = useToast();
   
@@ -107,7 +135,7 @@ export default function VRMall({ products }: VRMallProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarProps | null>(null);
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<typeof brandPartners[0] | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<any | null>(null);
   const [showStoreDetails, setShowStoreDetails] = useState(false);
   const [isTryingOn, setIsTryingOn] = useState(false);
   const [showHelpMenu, setShowHelpMenu] = useState(false);
@@ -653,12 +681,9 @@ export default function VRMall({ products }: VRMallProps) {
     return null;
   }
   
-  // If no avatar selected, show avatar selection using our new component
+  // If no avatar selected, show avatar selection using our wrapper component
   if (!selectedAvatar) {
-    return <AvatarSelection 
-             avatars={AVATARS} 
-             onSelectAvatar={handleAvatarSelect} 
-           />;
+    return <AvatarSelectionWrapper onAvatarSelected={setSelectedAvatar} />;
   }
   
   // Group products by category
@@ -806,15 +831,6 @@ export default function VRMall({ products }: VRMallProps) {
   // Handle transition completion - defined inline to avoid hooks ordering issues
   const handleTransitionFinish = () => {
     setShowTransition(false);
-  };
-  
-  // Handle avatar selection - separated to avoid hooks ordering issues
-  const handleAvatarSelect = (avatar: AvatarProps) => {
-    setSelectedAvatar(avatar);
-    toast({
-      title: `مرحبا ${avatar.name}!`,
-      description: `لقد اخترت ${avatar.name} - ${avatar.personality}`,
-    });
   };
   
   // Update active section when avatar moves between sections
