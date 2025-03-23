@@ -48,6 +48,59 @@
   100% { transform: translate(0, 0); opacity: 0.6; }
 }
 
+/* New VR animations for cyberpunk experience */
+@keyframes float-slow {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes scan-slow {
+  0% { top: 0; opacity: 0.8; }
+  100% { top: 100%; opacity: 0.2; }
+}
+
+@keyframes glow-pulse {
+  0% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
+  100% { filter: brightness(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+}
+
+.animate-float-slow {
+  animation: float-slow 3s ease-in-out infinite;
+}
+
+.animate-scan-slow {
+  animation: scan-slow 2s linear infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Holographic effect */
+.holographic-bg {
+  background: linear-gradient(to right, 
+    rgba(0,0,0,0.7) 0%,
+    rgba(94,53,177,0.1) 25%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(94,53,177,0.1) 75%,
+    rgba(0,0,0,0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: holographic-move 5s linear infinite;
+}
+
+@keyframes holographic-move {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Arrow clip path for avatar navigation */
+.clip-arrow {
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
 /* Welcome Screen Arabic-Themed Animations */
 @keyframes float-particle {
   0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }

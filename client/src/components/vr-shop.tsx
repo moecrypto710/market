@@ -521,7 +521,25 @@ export default function VRShop({ products }: VRShopProps) {
         <div className="absolute left-1/2 top-10 bottom-10 w-0.5 bg-white/10 -translate-x-1/2"></div>
         <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-white/10 -translate-y-1/2"></div>
         
-        {/* Products displayed on shelves - For now, all products should be displayed as clothing */}
+        {/* Virtual shop displays with product showcases */}
+        {storeSections.filter(section => section.type === 'category').map(section => (
+          <div key={section.id} className="absolute" style={{
+            left: `${section.x - section.width/2}%`,
+            top: `${section.y - section.height/2}%`,
+            width: `${section.width}%`,
+            height: `${section.height}%`,
+          }}>
+            {/* Modern floating shelves with holographic elements */}
+            <div className="relative w-full h-full">
+              {/* Virtual display shelves */}
+              <div className="absolute left-1/4 top-1/4 w-1/2 h-1/2 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
+              <div className="absolute left-1/8 top-3/4 w-3/4 h-1/6 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
+              <div className="absolute right-1/8 top-1/8 w-1/4 h-2/3 border border-white/10 rounded-lg bg-black/30 backdrop-blur-sm"></div>
+            </div>
+          </div>
+        ))}
+
+        {/* Products displayed with cyberpunk styling and 3D-like effects */}
         {products.map((product, index) => {
           // Force all products to be displayed in the clothing section for now
           const section = storeSections[1]; // clothing section
@@ -542,32 +560,90 @@ export default function VRShop({ products }: VRShopProps) {
           const randomOffsetX = (Math.random() - 0.5) * 5;
           const randomOffsetY = (Math.random() - 0.5) * 5;
           
+          // Calculate distance from avatar to this product for effects
+          const distance = Math.sqrt(
+            Math.pow(avatarPosition.x - gridX, 2) + 
+            Math.pow(avatarPosition.y - gridY, 2)
+          );
+          
+          // Apply proximity effects based on avatar distance
+          const isNearby = distance < 15;
+          const isSelected = selectedProduct?.id === product.id;
+          
           return (
             <div 
               key={product.id}
-              className="absolute w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center hover:scale-110 transition-transform cursor-pointer"
+              className={`absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center transition-all duration-300 cursor-pointer
+                        ${isSelected ? 'scale-125 z-30' : isNearby ? 'scale-110 z-20' : 'scale-100 z-10'}`}
               style={{ 
                 left: `${gridX + randomOffsetX}%`, 
                 top: `${gridY + randomOffsetY}%`,
-                zIndex: selectedProduct?.id === product.id ? 5 : 1
+                // Slight 3D perspective tilt
+                transform: `translate(-50%, -50%) ${isNearby ? 'perspective(1000px) rotateY(10deg)' : ''}`,
+                filter: isSelected ? 'brightness(1.3)' : isNearby ? 'brightness(1.1)' : 'brightness(1)',
               }}
               onClick={() => setSelectedProduct(product)}
             >
-              <div className={`w-16 h-16 rounded-md overflow-hidden shadow-lg ${selectedProduct?.id === product.id ? 'ring-2 ring-[#ffeb3b] scale-110' : ''}`}>
+              {/* Product display with holographic effect */}
+              <div className={`relative w-24 h-24 mb-2 rounded-lg overflow-hidden shadow-xl
+                            transition-all duration-300 ease-out
+                            ${isSelected ? 'ring-2 ring-white shadow-[0_0_15px_rgba(255,255,255,0.5)]' : 
+                               isNearby ? 'ring-1 ring-white/50 shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 
+                               'border border-white/20'}`}
+              >
+                {/* Background effects */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/50 via-transparent to-transparent"></div>
+                
+                {/* Main product image */}
                 <img 
                   src={product.imageUrl} 
                   alt={product.name} 
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-transform duration-500 
+                              ${isNearby ? 'scale-110' : 'scale-100'}`}
                 />
-              </div>
-              <div className="text-xs mt-1 px-2 py-0.5 bg-black/70 backdrop-blur-sm rounded-full whitespace-nowrap max-w-[120px] overflow-hidden text-ellipsis">
-                {product.name}
+                
+                {/* Holographic scan line effect */}
+                <div className={`absolute inset-x-0 h-[1px] bg-white/60 shadow-[0_0_5px_rgba(255,255,255,0.5)] 
+                                top-0 animate-scan-slow ${isNearby ? 'opacity-100' : 'opacity-40'}`}></div>
+                
+                {/* Overlay effect */}
+                <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/30 
+                                ${isSelected ? 'opacity-20' : 'opacity-40'}`}></div>
+                
+                {/* VR indicator */}
+                {product.vrEnabled && (
+                  <div className="absolute bottom-1 right-1 bg-[#5e35b1]/80 rounded-full w-5 h-5 flex items-center justify-center">
+                    <i className="fas fa-vr-cardboard text-[8px] text-white"></i>
+                  </div>
+                )}
               </div>
               
-              {/* Price tag */}
-              <div className="absolute -right-2 -top-2 bg-amber-500 text-black text-xs font-bold px-1.5 py-0.5 rounded-full transform rotate-12 border border-amber-300">
-                {(product.price / 100).toFixed(0)} ج.م
+              {/* Product info with cyberpunk style */}
+              <div className={`flex flex-col items-center transition-all duration-300 
+                              ${isNearby ? 'opacity-100' : 'opacity-80'}`}>
+                {/* Product name */}
+                <div className={`text-xs text-center px-2 py-1 rounded-md backdrop-blur-sm whitespace-nowrap max-w-[140px] overflow-hidden text-ellipsis
+                              bg-gradient-to-r ${isSelected ? 'from-black/90 to-black/80' : 'from-black/80 to-black/60'}
+                              border ${isSelected ? 'border-white/30' : 'border-white/10'}`}>
+                  <span className={`font-bold ${isSelected ? 'text-white' : 'text-white/90'}`}>{product.name}</span>
+                </div>
+                
+                {/* Price with glowing effect */}
+                <div className={`mt-1 px-3 py-0.5 text-xs font-bold rounded-full 
+                              ${isSelected ? 
+                                'bg-white text-black shadow-[0_0_10px_rgba(255,255,255,0.5)]' : 
+                                'bg-black/70 text-white border border-white/20'}`}>
+                  {product.price.toLocaleString()} ج.م
+                </div>
               </div>
+              
+              {/* Interaction prompt - only when nearby and not selected */}
+              {isNearby && !isSelected && (
+                <div className="absolute -bottom-5 animate-bounce opacity-80 text-[10px] bg-black/50 px-2 py-0.5 rounded-full">
+                  <i className="fas fa-hand-pointer mr-1 text-[8px]"></i>
+                  اضغط للعرض
+                </div>
+              )}
             </div>
           );
         })}
@@ -634,67 +710,167 @@ export default function VRShop({ products }: VRShopProps) {
           </div>
         ))}
         
-        {/* Avatar with movement effects */}
+        {/* VR Avatar with enhanced cyberpunk effects */}
         <div 
-          className="avatar absolute cursor-move transform -translate-x-1/2 -translate-y-1/2"
+          className={`avatar absolute cursor-move transform -translate-x-1/2 -translate-y-1/2 
+                    ${isMoving ? 'scale-105' : 'scale-100'} transition-transform`}
           style={{ 
             left: `${avatarPosition.x}%`, 
             top: `${avatarPosition.y}%`,
-            transition: gestureControlEnabled ? 'none' : 'left 0.3s ease, top 0.3s ease',
-            zIndex: 10
+            transition: gestureControlEnabled ? 'none' : 'left 0.4s ease-out, top 0.4s ease-out',
+            zIndex: 100
           }}
         >
-          {/* Glow effect around avatar (pulsing) */}
-          <div 
-            className="absolute inset-0 rounded-full bg-[#ffeb3b]/20 animate-pulse"
-            style={{
-              transform: 'scale(1.5)',
-              filter: 'blur(8px)',
-              opacity: 0.5
-            }}
-          ></div>
+          {/* Holographic floor projection - only visible when moving */}
+          {isMoving && (
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-3 rounded-full blur-lg opacity-30"
+                style={{
+                  background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.7) 0%, rgba(94,53,177,0.3) 50%, transparent 70%)',
+                  animation: 'pulse 1.5s ease-in-out infinite alternate'
+                }}>
+            </div>
+          )}
           
-          {/* Movement indicator arrow */}
-          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-6 h-6 animate-bounce">
-            <div className="h-3 w-6 bg-[#ffeb3b] clip-arrow opacity-60"></div>
+          {/* Movement path trail effect */}
+          <div className="absolute inset-0 z-[-1]">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div 
+                key={i}
+                className="absolute w-full h-full rounded-full"
+                style={{
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  transform: `scale(${1 + i * 0.15})`,
+                  opacity: isMoving ? (0.7 - i * 0.15) : 0,
+                  transition: 'opacity 0.3s ease',
+                  filter: 'blur(1px)'
+                }}
+              ></div>
+            ))}
           </div>
           
-          {/* Avatar character */}
-          <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-[#ffeb3b] relative shadow-lg shadow-[#ffeb3b]/20">
-            <img 
-              src={selectedAvatar.image} 
-              alt={selectedAvatar.name} 
-              className="w-full h-full object-cover"
-            />
-            
-            {/* Name tag above avatar */}
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/70 px-2 py-1 rounded-full text-xs whitespace-nowrap">
-              {selectedAvatar.name}
+          {/* Futuristic targeting reticle */}
+          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-24 h-24 pointer-events-none">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" className={`opacity-${isMoving ? '80' : '30'} transition-opacity duration-500`}>
+              <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="6,4" className="animate-pattern-rotate" />
+              <line x1="10" y1="50" x2="30" y2="50" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+              <line x1="70" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+              <line x1="50" y1="10" x2="50" y2="30" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+              <line x1="50" y1="70" x2="50" y2="90" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+            </svg>
+          </div>
+          
+          {/* Navigation direction indicator */}
+          {isMoving && (
+            <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+              <div className="h-5 w-10 clip-arrow bg-gradient-to-b from-white to-transparent opacity-70"></div>
+              <div className="text-[10px] text-white/70 whitespace-nowrap bg-black/40 px-2 py-0.5 rounded-full mt-1">
+                {moveDirection}
+              </div>
+            </div>
+          )}
+          
+          {/* Avatar character with cyberpunk styling */}
+          <div className="relative">
+            <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              {/* Holographic scan effect */}
+              <div className="absolute inset-x-0 h-[1px] bg-white/60 animate-scan-slow z-30"></div>
+              
+              {/* Digital interference effect for cyber look */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#5e35b1]/10 to-transparent opacity-70 z-20 mix-blend-overlay"></div>
+              
+              {/* Avatar image */}
+              <img 
+                src={selectedAvatar.image} 
+                alt={selectedAvatar.name} 
+                className={`w-full h-full object-cover transition-all duration-300 ${isTryingOn ? 'opacity-80' : 'opacity-100'}`}
+              />
+              
+              {/* Cyberpunk overlay frame */}
+              <div className="absolute inset-0 border-2 border-white/10 rounded-full"></div>
+              <div className="absolute inset-0 border border-white/5 rounded-full" style={{ transform: 'scale(0.9)' }}></div>
+              
+              {/* Avatar status indicators */}
+              <div className="absolute bottom-1 right-1 w-5 h-5 bg-black/60 rounded-full flex items-center justify-center border border-white/30" 
+                   title="VR Mode Active">
+                <i className="fas fa-vr-cardboard text-[8px] text-white"></i>
+              </div>
+              
+              <div className="absolute bottom-1 left-1 w-5 h-5 bg-green-500/80 rounded-full flex items-center justify-center border border-white/30 animate-pulse"
+                   title="Online Status">
+                <i className="fas fa-signal text-[8px] text-white"></i>
+              </div>
             </div>
             
-            {/* If trying on a product, show it on the avatar */}
-            {isTryingOn && selectedProduct && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <img 
-                  src={selectedProduct.imageUrl} 
-                  alt={selectedProduct.name} 
-                  className="w-2/3 h-2/3 object-contain"
-                  style={{ 
-                    filter: 'brightness(1.2) contrast(0.8)',
-                    mixBlendMode: 'overlay'
-                  }}
-                />
-                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-[#5e35b1] px-2 py-1 rounded-full text-[10px] text-white whitespace-nowrap">
-                  تجربة {selectedProduct.name}
+            {/* Floating user info panel */}
+            <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 min-w-[120px]">
+              <div className="relative bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20">
+                {/* Username with level */}
+                <div className="text-center">
+                  <span className="text-white font-medium text-sm">{selectedAvatar.name}</span>
+                  <div className="flex items-center justify-center gap-1 mt-0.5">
+                    <span className="text-[10px] text-white/70">المستوى</span>
+                    <span className="bg-[#5e35b1] text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                      {userLevel}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Status chip */}
+                <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-black/80 text-[10px] text-white/80 px-2 py-0.5 rounded-full border border-white/10 whitespace-nowrap">
+                  {isMoving ? 'يتحرك...' : 'متصل'}
                 </div>
               </div>
-            )}
+            </div>
           </div>
           
-          {/* Shadow below avatar */}
-          <div className="w-12 h-3 bg-black/30 rounded-full mx-auto -mt-1 blur-sm"></div>
+          {/* Virtual try-on overlay */}
+          {isTryingOn && selectedProduct && (
+            <div className="absolute top-0 left-0 w-full">
+              <div className="relative">
+                {/* Product visualization */}
+                <div className="absolute top-2 -left-24 w-20 h-20 bg-black/50 backdrop-blur-md rounded-lg border border-white/20 p-1.5 flex flex-col items-center">
+                  <img 
+                    src={selectedProduct.imageUrl} 
+                    alt={selectedProduct.name} 
+                    className="w-14 h-14 object-contain animate-float-slow"
+                  />
+                  <div className="text-[9px] text-white/80 text-center mt-1 line-clamp-1">
+                    {selectedProduct.name}
+                  </div>
+                </div>
+                
+                {/* Try-on status */}
+                <div className="absolute -right-32 top-6 bg-[#5e35b1]/80 text-white text-[10px] px-2 py-1 rounded-full border border-white/20 whitespace-nowrap animate-pulse">
+                  <i className="fas fa-tshirt mr-1 text-[8px]"></i>
+                  تجربة افتراضية
+                </div>
+                
+                {/* Simulated product on avatar - overlay effect */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <img 
+                    src={selectedProduct.imageUrl} 
+                    alt={selectedProduct.name} 
+                    className="w-16 h-16 object-contain absolute z-20"
+                    style={{ 
+                      filter: 'brightness(1.2) contrast(0.9)',
+                      mixBlendMode: 'overlay'
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           
-          {/* Animation effects handled by global css */}
+          {/* Interaction state indicators */}
+          {interactionState && (
+            <div className="absolute -left-32 top-0 bg-black/70 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-md border border-white/10">
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span>{interactionState}</span>
+              </div>
+            </div>
+          )}
         </div>
         
         {/* Section indicator */}
