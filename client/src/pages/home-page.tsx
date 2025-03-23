@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 
 export default function HomePage() {
   const { user } = useAuth();
-  const { vrEnabled } = useVR();
+  const { vrEnabled, toggleVR } = useVR();
   const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
   const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
   
@@ -102,7 +102,11 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
                 <Button 
                   onClick={() => {
-                    setAiInitialQuestion("كيف أبدأ تجربة الواقع الافتراضي؟");
+                    // Toggle VR mode using the properly extracted toggleVR function
+                    toggleVR();
+                    
+                    // Set AI question for guidance
+                    setAiInitialQuestion("كيف أستخدم تجربة الواقع الافتراضي؟");
                     setTimeout(() => window.scrollTo(0, 0), 100);
                   }}
                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-bold px-6 py-6 h-auto w-full sm:w-auto relative overflow-hidden group"
