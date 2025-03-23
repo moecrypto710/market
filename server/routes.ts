@@ -26,13 +26,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(products);
   });
 
-  app.get("/api/products/promoted", async (req, res) => {
-    const products = await storage.getPromotedProducts();
-    res.json(products);
-  });
-  
+  // IMPORTANT: The specific route must come before the parameterized route
+  // Otherwise, Express will treat "promoted" as an ID parameter
   app.get("/api/products/:id", async (req, res) => {
     try {
+      // Special case for the promoted endpoint
+      if (req.params.id === 'promoted') {
+        const products = await storage.getPromotedProducts();
+        return res.json(products);
+      }
+      
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "معرف المنتج غير صالح" });

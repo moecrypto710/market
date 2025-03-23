@@ -20,3 +20,9 @@ export async function getRewards(): Promise<Reward[]> {
   if (!res.ok) throw new Error("Failed to fetch rewards");
   return res.json();
 }
+
+export async function getProduct(productId: number): Promise<Product> {
+  const res = await fetch(`/api/products/${productId}`);
+  if (!res.ok) throw new Error(`Failed to fetch product with ID ${productId}`);
+  return res.json();
+}

@@ -18,6 +18,7 @@ interface SocialShareProps {
   variant?: "default" | "outline" | "secondary";
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function SocialShare({ 

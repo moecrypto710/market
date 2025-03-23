@@ -13,6 +13,7 @@ import CommunityQRCode from '@/components/community-qrcode';
 import { useToast } from '@/hooks/use-toast';
 import SocialShare from '@/components/social-share';
 import { Product } from '@shared/schema';
+import { getProduct } from '@/lib/api';
 
 export default function ProductDetailPage() {
   const { productId } = useParams();
@@ -75,7 +76,10 @@ export default function ProductDetailPage() {
   // Fetch product details
   const { data: product, error, isLoading } = useQuery<Product>({
     queryKey: ['/api/products', id],
-    queryFn: getQueryFn({ on401: 'returnNull' }),
+    queryFn: async () => {
+      if (!id) throw new Error('No product ID provided');
+      return getProduct(id);
+    },
     enabled: !!id
   });
 
