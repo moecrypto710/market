@@ -394,30 +394,12 @@ export class MemStorage implements IStorage {
         expiryDate: new Date("2025-12-31")
       },
       {
-        name: "وصول مبكر لمنتجات سامسونج الجديدة",
-        description: "كن من أوائل من يحصل على منتجات سامسونج الجديدة قبل طرحها في الأسواق، مع خصم خاص 10% على أول طلب من الإصدارات الجديدة",
-        pointsRequired: 3500,
-        isActive: true,
-        tier: "premium",
-        imageUrl: "/images/product-templates/samsung-galaxy.svg",
-        expiryDate: new Date("2025-12-31")
-      },
-      {
         name: "متجر افتراضي مجاني لمدة شهر",
         description: "احصل على متجر افتراضي مجاني في مول أمريكي لمدة شهر كامل لعرض منتجاتك الخاصة أو منتجات شركائك مع دعم فني كامل",
         pointsRequired: 5000,
         isActive: true,
         tier: "vip",
         imageUrl: "/images/product-templates/levis-jeans.svg",
-        expiryDate: new Date("2025-12-31")
-      },
-      {
-        name: "جلسة استشارية مع مصمم أزياء",
-        description: "جلسة خاصة لمدة ساعة مع أحد مصممي الأزياء المعتمدين لدينا لتحصل على نصائح حصرية تناسب أسلوبك واحتياجاتك",
-        pointsRequired: 4000,
-        isActive: true,
-        tier: "vip",
-        imageUrl: "/images/product-templates/adidas-tshirt.svg",
         expiryDate: new Date("2025-12-31")
       },
       {
