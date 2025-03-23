@@ -257,9 +257,51 @@ export default function PartnershipOffers({
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="text-center mb-10">
-        <h2 className="text-3xl font-bold mb-4">برنامج الشراكات</h2>
+        <h2 className="text-3xl font-bold mb-4">برنامج الشراكات للشركات</h2>
+        <div className="bg-[#5e35b1]/10 p-5 rounded-lg mb-6 max-w-3xl mx-auto">
+          <div className="flex items-center justify-center mb-3">
+            <i className="fas fa-building text-[#5e35b1] text-3xl mr-3"></i>
+            <h3 className="text-xl font-bold text-[#5e35b1]">فرص الشراكة الحصرية للشركات</h3>
+          </div>
+          <p className="text-gray-700">
+            نقدم برامج شراكة مصممة خصيصًا للشركات والعلامات التجارية لتوسيع انتشارها وزيادة مبيعاتها من خلال منصتنا المتطورة والمميزة بتقنيات الواقع الافتراضي والمعزز.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white p-5 rounded-lg shadow-md flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-3">
+              <i className="fas fa-store text-[#5e35b1] text-xl"></i>
+            </div>
+            <h3 className="font-bold mb-2">متاجر افتراضية</h3>
+            <p className="text-sm text-gray-600 text-center">
+              احصل على متجر خاص بك في المول الافتراضي لعرض منتجاتك بتقنية ثلاثية الأبعاد
+            </p>
+          </div>
+          
+          <div className="bg-white p-5 rounded-lg shadow-md flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-3">
+              <i className="fas fa-handshake text-[#5e35b1] text-xl"></i>
+            </div>
+            <h3 className="font-bold mb-2">عمولات تنافسية</h3>
+            <p className="text-sm text-gray-600 text-center">
+              استفد من برنامج العمولات للشركاء مع معدلات أعلى وتسويات مالية سريعة
+            </p>
+          </div>
+          
+          <div className="bg-white p-5 rounded-lg shadow-md flex flex-col items-center">
+            <div className="w-16 h-16 rounded-full bg-[#5e35b1]/20 flex items-center justify-center mb-3">
+              <i className="fas fa-chart-bar text-[#5e35b1] text-xl"></i>
+            </div>
+            <h3 className="font-bold mb-2">تحليلات متقدمة</h3>
+            <p className="text-sm text-gray-600 text-center">
+              تقارير تفصيلية عن أداء منتجاتك ومتجرك الافتراضي وسلوك المستخدمين
+            </p>
+          </div>
+        </div>
+        
         <p className="text-gray-600 max-w-3xl mx-auto">
-          نوفر فرص شراكة متنوعة للشركات والعلامات التجارية لعرض منتجاتها في متجرنا بتقنيات متطورة وعائد مجزي
+          انضم إلى مجموعة من أفضل العلامات التجارية واستفد من فرص النمو الهائلة في سوق التسوق الافتراضي
         </p>
       </div>
 

@@ -47,6 +47,8 @@ export default function VRShop({ products }: VRShopProps) {
   const [selectedAvatar, setSelectedAvatar] = useState<typeof AVATARS[0] | null>(null);
   const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<typeof brandPartners[0] | null>(null);
+  const [showStoreDetails, setShowStoreDetails] = useState(false);
   const [isTryingOn, setIsTryingOn] = useState(false);
   const shopRef = useRef<HTMLDivElement>(null);
   const { vrEnabled, gestureControlEnabled } = useVR();
@@ -243,6 +245,10 @@ export default function VRShop({ products }: VRShopProps) {
       x: 20, 
       y: 25,
       featured: true,
+      storeSize: "large",
+      storeType: "premium",
+      description: "متجر متخصص في أحدث المنتجات التكنولوجية والإلكترونيات الذكية",
+      productCount: 24,
     },
     { 
       id: 2, 
@@ -252,6 +258,10 @@ export default function VRShop({ products }: VRShopProps) {
       x: 70, 
       y: 25,
       featured: true,
+      storeSize: "large",
+      storeType: "premium",
+      description: "أحدث صيحات الموضة العربية والعالمية بتصاميم مميزة وحصرية",
+      productCount: 42,
     },
     { 
       id: 3, 
@@ -261,6 +271,10 @@ export default function VRShop({ products }: VRShopProps) {
       x: 20, 
       y: 75,
       featured: false,
+      storeSize: "medium",
+      storeType: "standard",
+      description: "كل ما تحتاجه لمنزلك من أثاث عصري وتجهيزات منزلية أنيقة",
+      productCount: 18,
     },
     { 
       id: 4, 
@@ -270,6 +284,10 @@ export default function VRShop({ products }: VRShopProps) {
       x: 70, 
       y: 75,
       featured: false,
+      storeSize: "medium",
+      storeType: "standard",
+      description: "كل ما يخص الرياضة من ملابس ومعدات وأدوات رياضية احترافية",
+      productCount: 15,
     },
     { 
       id: 5, 
@@ -279,6 +297,36 @@ export default function VRShop({ products }: VRShopProps) {
       x: 30, 
       y: 35,
       featured: true,
+      storeSize: "medium",
+      storeType: "premium",
+      description: "متخصصون في الأجهزة الذكية وإنترنت الأشياء وتقنيات المنزل الذكي",
+      productCount: 29,
+    },
+    { 
+      id: 6, 
+      name: "لاكشري ستايل", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=LuxuryStyle&backgroundColor=9c27b0",
+      category: "clothing",
+      x: 80, 
+      y: 40,
+      featured: true,
+      storeSize: "small",
+      storeType: "entrance",
+      description: "منتجات فاخرة وماركات عالمية حصرية للعملاء المميزين",
+      productCount: 12,
+    },
+    { 
+      id: 7, 
+      name: "تك هب", 
+      logo: "https://api.dicebear.com/7.x/identicon/svg?seed=TechHub&backgroundColor=03a9f4",
+      category: "electronics",
+      x: 45, 
+      y: 15,
+      featured: true,
+      storeSize: "flagship",
+      storeType: "entrance",
+      description: "المتجر الرئيسي للتكنولوجيا الحديثة وأحدث المنتجات التقنية",
+      productCount: 50,
     },
   ];
 
@@ -411,46 +459,53 @@ export default function VRShop({ products }: VRShopProps) {
         <div className="absolute left-1/2 top-10 bottom-10 w-0.5 bg-white/10 -translate-x-1/2"></div>
         <div className="absolute top-1/2 left-10 right-10 h-0.5 bg-white/10 -translate-y-1/2"></div>
         
-        {/* Products displayed on shelves */}
+        {/* Products displayed on shelves - For now, all products should be displayed as clothing */}
         {products.map((product, index) => {
-          // Determine which section to place the product in
-          const sectionIndex = ['electronics', 'clothing', 'home', 'sports'].indexOf(product.category);
-          const section = storeSections[sectionIndex === -1 ? index % 4 : sectionIndex];
+          // Force all products to be displayed in the clothing section for now
+          const section = storeSections[1]; // clothing section
           
-          // Calculate position within the section
-          const productsInSection = productsByCategory[product.category]?.length || 1;
-          const productIndexInSection = productsByCategory[product.category]?.indexOf(product) || 0;
+          // Calculate position within the clothing section
+          const productsCount = products.length;
+          const rows = Math.ceil(productsCount / 4);
+          const cols = Math.min(productsCount, 4);
           
-          const rows = Math.ceil(productsInSection / 3);
-          const cols = Math.min(productsInSection, 3);
+          const rowIndex = Math.floor(index / 4);
+          const colIndex = index % 4;
           
-          const rowIndex = Math.floor(productIndexInSection / 3);
-          const colIndex = productIndexInSection % 3;
-          
-          // Calculate grid position within section
+          // Calculate grid position within section with better distribution
           const gridX = section.x - section.width/2 + section.width * (colIndex + 0.5) / cols;
           const gridY = section.y - section.height/2 + section.height * (rowIndex + 0.5) / rows;
+          
+          // Add slight random offset for more natural look
+          const randomOffsetX = (Math.random() - 0.5) * 5;
+          const randomOffsetY = (Math.random() - 0.5) * 5;
           
           return (
             <div 
               key={product.id}
-              className="absolute w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+              className="absolute w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center hover:scale-110 transition-transform cursor-pointer"
               style={{ 
-                left: `${gridX}%`, 
-                top: `${gridY}%`,
-                transition: 'transform 0.3s ease'
+                left: `${gridX + randomOffsetX}%`, 
+                top: `${gridY + randomOffsetY}%`,
+                zIndex: selectedProduct?.id === product.id ? 5 : 1
               }}
+              onClick={() => setSelectedProduct(product)}
             >
-              <div className={`w-16 h-16 rounded-md overflow-hidden ${selectedProduct?.id === product.id ? 'ring-2 ring-[#ffeb3b]' : ''}`}>
+              <div className={`w-16 h-16 rounded-md overflow-hidden shadow-lg ${selectedProduct?.id === product.id ? 'ring-2 ring-[#ffeb3b] scale-110' : ''}`}>
                 <img 
                   src={product.imageUrl} 
                   alt={product.name} 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="text-xs mt-1 px-1 py-0.5 bg-black/50 rounded-full whitespace-nowrap">
+              <div className="text-xs mt-1 px-2 py-0.5 bg-black/70 backdrop-blur-sm rounded-full whitespace-nowrap max-w-[120px] overflow-hidden text-ellipsis">
                 {product.name}
-              </span>
+              </div>
+              
+              {/* Price tag */}
+              <div className="absolute -right-2 -top-2 bg-amber-500 text-black text-xs font-bold px-1.5 py-0.5 rounded-full transform rotate-12 border border-amber-300">
+                {(product.price / 100).toFixed(0)} ج.م
+              </div>
             </div>
           );
         })}
@@ -478,10 +533,14 @@ export default function VRShop({ products }: VRShopProps) {
         {brandPartners.map(brand => (
           <div
             key={brand.id}
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer"
             style={{ 
               left: `${brand.x}%`, 
               top: `${brand.y}%`,
+            }}
+            onClick={() => {
+              setSelectedBrand(brand);
+              setShowStoreDetails(true);
             }}
           >
             <div className={`w-12 h-12 rounded-full overflow-hidden border-2 ${brand.featured ? 'border-amber-400' : 'border-white/20'}`}>
@@ -499,6 +558,17 @@ export default function VRShop({ products }: VRShopProps) {
                 شريك مميز
               </div>
             )}
+            
+            {/* Store type badge */}
+            <div className={`
+              absolute top-0 -right-1 w-4 h-4 flex items-center justify-center rounded-full text-[6px] font-bold
+              ${brand.storeType === 'premium' ? 'bg-amber-500' : 
+                brand.storeType === 'entrance' ? 'bg-red-500' : 'bg-blue-500'}
+            `}>
+              {brand.storeSize === 'large' ? 'L' : 
+               brand.storeSize === 'medium' ? 'M' : 
+               brand.storeSize === 'flagship' ? 'XL' : 'S'}
+            </div>
           </div>
         ))}
         
