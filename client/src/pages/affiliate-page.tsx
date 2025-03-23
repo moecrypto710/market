@@ -47,15 +47,15 @@ export default function AffiliatePage() {
       </div>
       
       {/* Affiliate Link */}
-      <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-6">
-        <h3 className="text-lg font-bold mb-2">رابط الإحالة الخاص بك</h3>
+      <div className="bg-black/40 backdrop-blur-md rounded-lg p-4 mb-6 border border-[#ff00aa]/30">
+        <h3 className="text-lg font-bold mb-2 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] bg-clip-text text-transparent">رابط الإحالة الخاص بك</h3>
         <CopyLink affiliateCode={user?.affiliateCode || ''} />
         <div className="flex justify-between mt-3">
-          <button className="flex items-center justify-center bg-[#3b5998] text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%]">
+          <button className="flex items-center justify-center bg-gradient-to-r from-[#00ffcd] to-[#00aeff] text-black py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%] shadow-[0_0_10px_rgba(0,255,205,0.5)]">
             <i className="fab fa-facebook-f ml-2"></i>
             فيسبوك
           </button>
-          <button className="flex items-center justify-center bg-[#1DA1F2] text-white py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%]">
+          <button className="flex items-center justify-center bg-gradient-to-r from-[#ff00aa] to-[#ff7300] text-black py-2 px-4 rounded-lg hover:opacity-90 transition duration-300 w-[48%] shadow-[0_0_10px_rgba(255,0,170,0.5)]">
             <i className="fab fa-twitter ml-2"></i>
             تويتر
           </button>

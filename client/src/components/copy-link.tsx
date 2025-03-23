@@ -36,11 +36,11 @@ export default function CopyLink({ affiliateCode }: CopyLinkProps) {
         type="text" 
         value={affiliateLink} 
         readOnly 
-        className="w-full bg-white/20 rounded-r-lg py-2 px-3 text-white outline-none" 
+        className="w-full bg-black/30 border border-[#00ffcd]/20 rounded-r-lg py-2 px-3 text-white outline-none" 
       />
       <button 
         onClick={handleCopy}
-        className="bg-[#ffeb3b] text-[#2a1f6f] py-2 px-4 rounded-l-lg font-bold hover:bg-[#fdd835] transition duration-300"
+        className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] text-black py-2 px-4 rounded-l-lg font-bold hover:opacity-90 transition duration-300 shadow-[0_0_10px_rgba(0,255,205,0.5)]"
       >
         {isCopied ? "تم النسخ" : "نسخ"}
       </button>
