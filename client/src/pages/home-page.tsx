@@ -6,6 +6,8 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import VRShop from "@/components/vr-shop";
+import AIAssistant from "@/components/ai-assistant";
+import BrandsSection from "@/components/brands-section";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -142,7 +144,19 @@ export default function HomePage() {
             <span>خصم $10</span>
           </div>
         </div>
+        
+        {/* Brands Section */}
+        <div className="mb-12">
+          <BrandsSection featuredOnly={true} maxBrands={4} />
+        </div>
       </div>
+      
+      {/* AI Assistant */}
+      <AIAssistant 
+        minimized={true} 
+        initialQuestion={user ? `ما هي أفضل المنتجات المناسبة لي يا ${user?.username}؟` : undefined}
+        viewedProducts={products?.slice(0, 2) || []} 
+      />
     </>
   );
 }

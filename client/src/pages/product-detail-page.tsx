@@ -12,6 +12,7 @@ import AugmentedReality from '@/components/augmented-reality';
 import CommunityQRCode from '@/components/community-qrcode';
 import { useToast } from '@/hooks/use-toast';
 import SocialShare from '@/components/social-share';
+import { Product } from '@shared/schema';
 
 export default function ProductDetailPage() {
   const { productId } = useParams();
@@ -19,7 +20,7 @@ export default function ProductDetailPage() {
   const id = parseInt(productId || '0');
 
   // Fetch product details
-  const { data: product, error, isLoading } = useQuery({
+  const { data: product, error, isLoading } = useQuery<Product>({
     queryKey: ['/api/products', id],
     queryFn: getQueryFn({ on401: 'returnNull' }),
     enabled: !!id
@@ -44,7 +45,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  if (error || !product) {
+  if (error || !product || !('id' in product)) {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">خطأ في تحميل المنتج</h1>
@@ -53,6 +54,9 @@ export default function ProductDetailPage() {
       </div>
     );
   }
+  
+  // At this point we know product is a valid Product type with all required fields
+  const validProduct = product as Product;
 
   // Get appropriate category label in Arabic
   const getCategoryLabel = (category: string) => {
@@ -66,7 +70,7 @@ export default function ProductDetailPage() {
   };
 
   // Format price from cents to dollars
-  const formattedPrice = (product.price / 100).toFixed(2);
+  const formattedPrice = (validProduct.price / 100).toFixed(2);
 
   return (
     <div className="container mx-auto py-8 px-4 rtl">
@@ -74,16 +78,16 @@ export default function ProductDetailPage() {
         {/* Product Image with AR and QR */}
         <div className="relative">
           <div className="aspect-square bg-black/5 rounded-lg overflow-hidden relative">
-            {product.imageUrl && (
+            {validProduct.imageUrl && (
               <img
-                src={product.imageUrl}
-                alt={product.name}
+                src={validProduct.imageUrl}
+                alt={validProduct.name}
                 className="w-full h-full object-cover"
               />
             )}
             
             {/* Promotional badge */}
-            {product.commissionRate > 8 && (
+            {validProduct.commissionRate > 8 && (
               <Badge variant="secondary" className="absolute top-4 right-4 bg-[#f44336] text-white px-3 py-1 text-sm">
                 عرض خاص
               </Badge>
@@ -92,16 +96,16 @@ export default function ProductDetailPage() {
           
           {/* AR and QR buttons below image */}
           <div className="mt-4 flex justify-between">
-            <AugmentedReality product={product} button size="default" />
+            <AugmentedReality product={validProduct} button size="default" />
             
             <SocialShare 
-              productId={product.id} 
-              productName={product.name} 
-              imageUrl={product.imageUrl}
+              productId={validProduct.id} 
+              productName={validProduct.name} 
+              imageUrl={validProduct.imageUrl}
               variant="outline"
               showLabel
-              title={`تسوق ${product.name} الآن!`}
-              text={`وجدت هذا المنتج الرائع: ${product.name} - ${product.description}`}
+              title={`تسوق ${validProduct.name} الآن!`}
+              text={`وجدت هذا المنتج الرائع: ${validProduct.name} - ${validProduct.description}`}
             />
           </div>
         </div>
@@ -109,17 +113,17 @@ export default function ProductDetailPage() {
         {/* Product Info and Actions */}
         <div>
           <Badge variant="outline" className="mb-2">
-            {getCategoryLabel(product.category)}
+            {getCategoryLabel(validProduct.category)}
           </Badge>
           
-          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+          <h1 className="text-3xl font-bold mb-2">{validProduct.name}</h1>
           
           <div className="text-2xl font-bold mb-6 text-[#5e35b1]">{formattedPrice} ج.م</div>
           
-          <p className="mb-6 text-gray-700">{product.description}</p>
+          <p className="mb-6 text-gray-700">{validProduct.description}</p>
           
           {/* Partnership offers section - if available */}
-          {product.commissionRate > 5 && (
+          {validProduct.commissionRate > 5 && (
             <Card className="mb-6 border border-[#5e35b1]/20 bg-gradient-to-r from-[#5e35b1]/5 to-transparent">
               <CardContent className="pt-6">
                 <div className="flex items-center mb-3">
@@ -130,10 +134,10 @@ export default function ProductDetailPage() {
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="outline" className="bg-[#5e35b1]/10 border-[#5e35b1]/20 text-[#5e35b1]">
                       <i className="fas fa-percentage mr-1"></i>
-                      شراكة بنسبة {Math.round(product.commissionRate * 2)}%
+                      شراكة بنسبة {Math.round(validProduct.commissionRate * 2)}%
                     </Badge>
                     
-                    {product.commissionRate > 8 && (
+                    {validProduct.commissionRate > 8 && (
                       <>
                         <Badge variant="outline" className="bg-green-100 border-green-200 text-green-700">
                           <i className="fas fa-truck mr-1"></i>
@@ -172,7 +176,7 @@ export default function ProductDetailPage() {
                 <li>جودة ممتازة</li>
                 <li>ضمان لمدة عام</li>
                 <li>شحن سريع</li>
-                {product.vrEnabled && <li>دعم الواقع الافتراضي</li>}
+                {validProduct.vrEnabled && <li>دعم الواقع الافتراضي</li>}
               </ul>
             </CardContent>
           </Card>
@@ -181,7 +185,7 @@ export default function ProductDetailPage() {
           <Button className="w-full mb-4 h-12 text-lg" onClick={() => {
             toast({
               title: "تمت الإضافة للسلة",
-              description: `تمت إضافة ${product.name} إلى سلة التسوق.`,
+              description: `تمت إضافة ${validProduct.name} إلى سلة التسوق.`,
             });
           }}>
             <i className="fas fa-shopping-cart ml-2"></i>
@@ -197,7 +201,7 @@ export default function ProductDetailPage() {
               whatsappUrl="https://chat.whatsapp.com/yourgroup" 
               telegramUrl="https://t.me/yourchannel"
               purchased={true} // Simulating that the product is purchased on the detail page
-              productId={product.id}
+              productId={validProduct.id}
             />
             <p className="text-xs text-center mt-2 text-green-500">
               <i className="fas fa-check-circle mr-1"></i>
@@ -212,7 +216,7 @@ export default function ProductDetailPage() {
       {/* Personalized Recommendations */}
       <div className="mb-12">
         <h2 className="text-2xl font-bold mb-6">قد يعجبك أيضاً</h2>
-        <PersonalizedRecommendations maxItems={4} viewedProducts={[product.id]} />
+        <PersonalizedRecommendations maxItems={4} viewedProducts={[validProduct.id]} />
       </div>
     </div>
   );

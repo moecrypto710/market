@@ -88,7 +88,10 @@ export default function AIAssistant({
         
         // Personalize based on viewed products
         if (viewedProducts.length > 0) {
-          const categories = [...new Set(viewedProducts.map(p => p.category))];
+          const categorySet = new Set<string>();
+          viewedProducts.forEach(p => categorySet.add(p.category));
+          const categories = Array.from(categorySet);
+          
           const categoryNames = categories.map(cat => 
             cat === 'electronics' ? 'الإلكترونيات' :
             cat === 'clothing' ? 'الملابس' :
