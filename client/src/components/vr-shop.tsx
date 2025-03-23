@@ -336,15 +336,30 @@ export default function VRShop({ products }: VRShopProps) {
     },
   ];
 
-  // Calculate store sections based on categories and add partnership mall structure
+  // Mall floor plan with realistic store locations and experiences
   const storeSections = [
-    { id: 'electronics', name: 'إلكترونيات', x: 25, y: 30, width: 30, height: 30, type: 'category' },
-    { id: 'clothing', name: 'ملابس', x: 65, y: 30, width: 30, height: 30, type: 'category' },
-    { id: 'home', name: 'منزل', x: 25, y: 70, width: 30, height: 25, type: 'category' },
-    { id: 'sports', name: 'رياضة', x: 65, y: 70, width: 30, height: 25, type: 'category' },
-    { id: 'partnership-zone', name: 'منطقة الشراكات', x: 45, y: 50, width: 15, height: 15, type: 'special' },
-    { id: 'food-court', name: 'المطاعم', x: 45, y: 90, width: 25, height: 10, type: 'special' },
-    { id: 'entrance', name: 'المدخل', x: 45, y: 10, width: 25, height: 10, type: 'special' },
+    // Main mall structure
+    { id: 'main-entrance', name: 'المدخل الرئيسي', x: 50, y: 5, width: 30, height: 10, type: 'entrance', icon: 'door-open', backgroundColor: 'rgba(0,0,0,0.3)', borderColor: 'rgba(255,255,255,0.3)' },
+    { id: 'central-plaza', name: 'الساحة المركزية', x: 50, y: 40, width: 20, height: 20, type: 'plaza', icon: 'compass', backgroundColor: 'rgba(94,53,177,0.1)', borderColor: 'rgba(94,53,177,0.3)' },
+    { id: 'west-wing', name: 'الجناح الغربي', x: 25, y: 30, width: 40, height: 50, type: 'wing', backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.1)' },
+    { id: 'east-wing', name: 'الجناح الشرقي', x: 75, y: 30, width: 40, height: 50, type: 'wing', backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.1)' },
+    { id: 'food-court', name: 'منطقة المطاعم', x: 50, y: 85, width: 40, height: 15, type: 'special', icon: 'utensils', backgroundColor: 'rgba(244,114,182,0.1)', borderColor: 'rgba(244,114,182,0.2)' },
+    { id: 'vr-experience', name: 'تجربة الواقع الافتراضي', x: 50, y: 60, width: 15, height: 15, type: 'special', icon: 'vr-cardboard', backgroundColor: 'rgba(234,179,8,0.1)', borderColor: 'rgba(234,179,8,0.2)' },
+    
+    // Category zones
+    { id: 'electronics', name: 'منطقة الإلكترونيات', x: 25, y: 30, width: 25, height: 25, type: 'category', icon: 'laptop', backgroundColor: 'rgba(14,165,233,0.05)', borderColor: 'rgba(14,165,233,0.15)' },
+    { id: 'clothing', name: 'منطقة الأزياء', x: 75, y: 30, width: 25, height: 25, type: 'category', icon: 'tshirt', backgroundColor: 'rgba(236,72,153,0.05)', borderColor: 'rgba(236,72,153,0.15)' },
+    { id: 'home', name: 'منطقة المنزل', x: 25, y: 70, width: 25, height: 20, type: 'category', icon: 'couch', backgroundColor: 'rgba(34,197,94,0.05)', borderColor: 'rgba(34,197,94,0.15)' },
+    { id: 'sports', name: 'منطقة الرياضة', x: 75, y: 70, width: 25, height: 20, type: 'category', icon: 'dumbbell', backgroundColor: 'rgba(249,115,22,0.05)', borderColor: 'rgba(249,115,22,0.15)' },
+    
+    // Premium stores with better positioning
+    { id: 'tech-flagship', name: 'متجر التكنولوجيا الرئيسي', x: 50, y: 20, width: 12, height: 12, type: 'store', storeId: 7, backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.3)', isPremium: true },
+    { id: 'fashion-premium', name: 'متجر الأزياء الفاخر', x: 65, y: 20, width: 10, height: 10, type: 'store', storeId: 6, backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.3)', isPremium: true },
+    { id: 'tech-star', name: 'تك ستار', x: 20, y: 25, width: 10, height: 10, type: 'store', storeId: 1, backgroundColor: 'rgba(94,53,177,0.1)', borderColor: 'rgba(94,53,177,0.2)' },
+    { id: 'fashion-arabia', name: 'فاشن أرابيا', x: 80, y: 25, width: 10, height: 10, type: 'store', storeId: 2, backgroundColor: 'rgba(233,30,99,0.1)', borderColor: 'rgba(233,30,99,0.2)' },
+    { id: 'smart-devices', name: 'سمارت ديفايس', x: 30, y: 35, width: 8, height: 8, type: 'store', storeId: 5, backgroundColor: 'rgba(255,152,0,0.1)', borderColor: 'rgba(255,152,0,0.2)' },
+    { id: 'home-deco', name: 'الديار', x: 20, y: 75, width: 10, height: 10, type: 'store', storeId: 3, backgroundColor: 'rgba(76,175,80,0.1)', borderColor: 'rgba(76,175,80,0.2)' },
+    { id: 'sports-pro', name: 'الرياضي', x: 80, y: 75, width: 10, height: 10, type: 'store', storeId: 4, backgroundColor: 'rgba(33,150,243,0.1)', borderColor: 'rgba(33,150,243,0.2)' },
   ];
   
   // Get current section based on avatar position
