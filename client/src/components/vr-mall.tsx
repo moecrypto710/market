@@ -121,7 +121,7 @@ export default function VRMall({ products }: VRMallProps) {
   const [lastMoveTime, setLastMoveTime] = useState(0);
   
   const mallRef = useRef<HTMLDivElement>(null);
-  const { vrEnabled, gestureControlEnabled } = useVR();
+  const { vrEnabled, gestureControlEnabled, toggleVR } = useVR();
   
   // Track if the user is dragging the avatar
   const dragRef = useRef({
@@ -1345,6 +1345,16 @@ export default function VRMall({ products }: VRMallProps) {
         >
           <i className="fas fa-question-circle mr-1"></i>
           مساعدة
+        </button>
+        
+        <div className="h-6 w-px bg-white/20"></div>
+        
+        <button 
+          className="text-sm text-white/80 hover:text-white bg-red-500/30 hover:bg-red-500/50 px-2 py-1 rounded-md"
+          onClick={toggleVR}
+        >
+          <i className="fas fa-door-open mr-1"></i>
+          خروج من الواقع الافتراضي
         </button>
       </div>
       
