@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
-import VRMall from "@/components/vr-mall";
+import VRMallSimplified from "@/components/vr-mall-simplified";
 import AIAssistant from "@/components/ai-assistant";
 import { useState, useEffect } from "react";
 
@@ -66,7 +66,7 @@ export default function HomePage() {
       />
       
       {/* VR Mall Experience */}
-      {vrEnabled && products && <VRMall products={products} />}
+      {vrEnabled && products && <VRMallSimplified products={products} />}
       
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (

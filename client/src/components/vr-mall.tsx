@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useVR } from "@/hooks/use-vr";
 import { Product } from "@shared/schema";
 import { useMutation } from "@tanstack/react-query";
