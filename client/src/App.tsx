@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -15,6 +16,27 @@ import { AuthProvider } from "./hooks/use-auth";
 import BottomNav from "./components/layout/bottom-nav";
 import Header from "./components/layout/header";
 import { VRProvider } from "./hooks/use-vr";
+import WelcomeScreen from "./components/welcome-screen";
+
+// Function to check if this is the first visit
+function isFirstVisit() {
+  const visited = localStorage.getItem('visited');
+  if (!visited) {
+    localStorage.setItem('visited', 'true');
+    return true;
+  }
+  return false;
+}
+
+// Function to check if user wants to see the welcome animation again
+function hasResetWelcomeAnimation() {
+  const resetWelcome = sessionStorage.getItem('resetWelcome');
+  if (resetWelcome) {
+    sessionStorage.removeItem('resetWelcome');
+    return true;
+  }
+  return false;
+}
 
 function Router() {
   return (
@@ -32,6 +54,24 @@ function Router() {
 }
 
 function App() {
+  const [showWelcome, setShowWelcome] = useState<boolean>(false);
+  
+  useEffect(() => {
+    // Show welcome screen on first visit or if manually triggered
+    const shouldShowWelcome = isFirstVisit() || hasResetWelcomeAnimation();
+    
+    // Small delay to ensure the app has mounted properly
+    const timer = setTimeout(() => {
+      setShowWelcome(shouldShowWelcome);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
+  };
+  
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
@@ -43,6 +83,9 @@ function App() {
             </main>
             <BottomNav />
             <Toaster />
+            
+            {/* Arabic cultural welcome screen */}
+            {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
           </div>
         </VRProvider>
       </AuthProvider>

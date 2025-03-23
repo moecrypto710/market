@@ -2,13 +2,31 @@ import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AccountPage() {
   const { user, logoutMutation } = useAuth();
   const { vrEnabled, gestureControlEnabled, soundEffectsEnabled, toggleVR, toggleGestureControl, toggleSoundEffects } = useVR();
+  const { toast } = useToast();
   
   const handleLogout = () => {
     logoutMutation.mutate();
+  };
+  
+  const showWelcomeAnimation = () => {
+    // Set session storage key to trigger welcome animation
+    sessionStorage.setItem('resetWelcome', 'true');
+    
+    // Show a toast notification
+    toast({
+      title: "جاري عرض شاشة الترحيب",
+      description: "ستظهر شاشة الترحيب بعد إعادة التحميل",
+    });
+    
+    // Reload the page to show the welcome animation
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
   };
   
   const accountOptions = [
@@ -87,6 +105,24 @@ export default function AccountPage() {
               تفعيل المؤثرات الصوتية أثناء التجربة الافتراضية
             </div>
           </div>
+        </div>
+      </div>
+      
+      {/* App Settings */}
+      <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 mb-6">
+        <h3 className="text-lg font-bold mb-3">إعدادات التطبيق</h3>
+        
+        <div className="space-y-4">
+          <button 
+            onClick={showWelcomeAnimation}
+            className="w-full bg-[#5e35b1]/30 py-3 px-4 rounded-lg flex justify-between items-center hover:bg-[#5e35b1]/50 transition duration-300"
+          >
+            <div className="flex items-center">
+              <i className="fas fa-star ml-3 w-6 text-center"></i>
+              <span>عرض شاشة الترحيب</span>
+            </div>
+            <i className="fas fa-play"></i>
+          </button>
         </div>
       </div>
       
