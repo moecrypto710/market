@@ -77,6 +77,12 @@ export const products = pgTable("products", {
   featured: boolean("featured").default(false),
   threeDModelUrl: text("three_d_model_url"),
   viewCount: integer("view_count").default(0),
+  // Cultural heritage information
+  culturalHeritageTitle: text("cultural_heritage_title"),
+  culturalHeritageStory: text("cultural_heritage_story"),
+  culturalHeritageImageUrl: text("cultural_heritage_image_url"),
+  culturalHeritageRegion: text("cultural_heritage_region"),
+  culturalHeritagePeriod: text("cultural_heritage_period"),
 });
 
 // Rewards and loyalty

@@ -276,7 +276,12 @@ export class MemStorage implements IStorage {
         brandId: 1,
         featured: true,
         threeDModelUrl: "/models/nike-jordan.glb",
-        viewCount: 542
+        viewCount: 542,
+        culturalHeritageTitle: "أحذية الفروسية العربية",
+        culturalHeritageStory: "تمتد تقاليد الأحذية الخاصة بالفروسية في العالم العربي لقرون عديدة، حيث كان الفرسان العرب يستخدمون أحذية مميزة ذات أهمية خاصة في الثقافة العربية. كانت هذه الأحذية تصنع يدويًا من الجلد الطبيعي وتزين بنقوش معقدة تعكس الهوية الثقافية للمنطقة. الحذاء الرياضي الحديث يستوحي هذا التراث من خلال خطوط التصميم الانسيابية والألوان المستوحاة من الصحراء العربية، مع دمج التقنيات الحديثة للراحة والأداء.",
+        culturalHeritageImageUrl: "/images/heritage/arabian-horseback-boots.jpg",
+        culturalHeritageRegion: "شبه الجزيرة العربية",
+        culturalHeritagePeriod: "القرن 18-19"
       },
       {
         name: "تيشيرت أديداس أوريجينال",
@@ -290,7 +295,12 @@ export class MemStorage implements IStorage {
         brandId: 2,
         featured: true,
         threeDModelUrl: "/models/adidas-tshirt.glb",
-        viewCount: 389
+        viewCount: 389,
+        culturalHeritageTitle: "النسيج المصري القديم",
+        culturalHeritageStory: "الملابس القطنية تحمل إرثاً قديماً في مصر، حيث كانت مصر من أوائل الحضارات التي زرعت القطن وعالجته لصنع ملابس ذات جودة فائقة. تشتهر المنسوجات المصرية القديمة بأنماطها المعقدة وألوانها النابضة بالحياة، والتي كانت تستخدم أصباغاً طبيعية مستخرجة من النباتات والمعادن المحلية. هذه التقنيات القديمة في الصباغة والحياكة ألهمت العديد من تصاميم الملابس الحديثة، مع الحفاظ على الراحة والأناقة التي اشتهرت بها المنسوجات المصرية عبر التاريخ.",
+        culturalHeritageImageUrl: "/images/heritage/egyptian-textiles.jpg",
+        culturalHeritageRegion: "مصر القديمة",
+        culturalHeritagePeriod: "3000 ق.م - 30 ق.م"
       },
       {
         name: "بنطلون ليفايز الأصلي",
@@ -304,7 +314,12 @@ export class MemStorage implements IStorage {
         brandId: 3,
         featured: true,
         threeDModelUrl: "/models/levis-jeans.glb",
-        viewCount: 418
+        viewCount: 418,
+        culturalHeritageTitle: "السراويل البدوية التقليدية",
+        culturalHeritageStory: "تتميز الثقافة البدوية في شمال أفريقيا والشرق الأوسط بتصاميم فريدة للملابس تجمع بين العملية والجمال. السراويل البدوية التقليدية كانت تصمم بشكل خاص لتناسب الحياة في الصحراء، حيث كانت فضفاضة للتهوية وتصنع من أقمشة متينة لتحمل ظروف الحياة القاسية. كانت تزين أحياناً بأنماط هندسية معقدة تعكس القبيلة أو المنطقة. الجينز الحديث، رغم مظهره المختلف، يشترك مع السراويل البدوية في فلسفة التصميم القائمة على المتانة والراحة والتعبير عن الهوية الثقافية.",
+        culturalHeritageImageUrl: "/images/heritage/bedouin-pants.jpg",
+        culturalHeritageRegion: "شمال أفريقيا والشرق الأوسط",
+        culturalHeritagePeriod: "القرون 17-20"
       },
       {
         name: "سماعات آبل إيربودز برو",
@@ -318,7 +333,12 @@ export class MemStorage implements IStorage {
         brandId: 4,
         featured: true,
         threeDModelUrl: "/models/apple-airpods.glb",
-        viewCount: 756
+        viewCount: 756,
+        culturalHeritageTitle: "الموسيقى الشرقية والمقامات العربية",
+        culturalHeritageStory: "الموسيقى العربية تتميز بنظام المقامات الفريد الذي تطور عبر قرون من التاريخ الموسيقي. يعتمد هذا النظام على تقسيمات دقيقة للأصوات تختلف عن النظام الغربي، مما يسمح بالتعبير عن مشاعر وأحاسيس فريدة. هذه الدقة في الأصوات تتطلب أدوات استماع عالية الجودة للتمييز بين درجات الصوت المختلفة. سماعات الرأس الحديثة مع تقنيات إلغاء الضوضاء تمكن المستمعين من الغوص في عمق الموسيقى الشرقية وتذوق تفاصيلها الدقيقة التي قد تضيع في بيئة استماع عادية.",
+        culturalHeritageImageUrl: "/images/heritage/arabic-music-maqam.jpg",
+        culturalHeritageRegion: "الشرق الأوسط وشمال أفريقيا",
+        culturalHeritagePeriod: "من العصر العباسي إلى الوقت الحاضر"
       },
       {
         name: "هاتف سامسونج جالكسي S22",
