@@ -14,6 +14,7 @@ import StoreRentalPage from "@/pages/store-rental-page";
 import ServicesPage from "@/pages/services-page";
 import BusinessWorldPage from "@/pages/business-world-page";
 import VirtualCityPage from "@/pages/virtual-city-page";
+import VRAmrikyyTownPage from "@/pages/vr-amrikyy-town-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import { VRProvider } from "./hooks/use-vr";
@@ -55,6 +56,7 @@ function Router() {
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
       <ProtectedRoute path="/virtual-city" component={VirtualCityPage} />
+      <ProtectedRoute path="/vr-amrikyy-town" component={VRAmrikyyTownPage} />
       <Route component={NotFound} />
     </Switch>
   );

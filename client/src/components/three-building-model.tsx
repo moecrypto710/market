@@ -176,7 +176,7 @@ export default function ThreeBuildingModel({
       
       // Create building style elements based on type
       // Define possible building styles with cultural focus
-      type BuildingStyle = 'modern' | 'arabic-boutique' | 'tech' | 'standard';
+      type BuildingStyle = 'arabic-boutique' | 'standard';
       
       // Assign style based on building type - ensuring Arabic architectural styles
       const buildingStyle: BuildingStyle = 
@@ -187,8 +187,8 @@ export default function ThreeBuildingModel({
       // Main building structure with facade variation by type
       let buildingGeometry;
       
-      // Apply different geometry based on building type
-      if (buildingStyle === 'modern') {
+      // Apply geometry based on building style
+      if (buildingStyle === 'arabic-boutique') {
         // Sleek, slightly tapered modern skyscraper for travel agency
         // Create a more complex shape for the modern building
         const points = [];
@@ -226,7 +226,7 @@ export default function ThreeBuildingModel({
         // Arabic style boutique building with decorative elements
         buildingGeometry = new THREE.BoxGeometry(width, height * 0.9, depth);
 
-      } else if (buildingStyle === 'tech') {
+      } else if (false) { // Tech style disabled
         // High-tech geometric building for electronics
         // Create a more complex shape for tech buildings
         buildingGeometry = new THREE.BoxGeometry(width, height, depth);
@@ -245,7 +245,7 @@ export default function ThreeBuildingModel({
       const buildingMesh = new THREE.Mesh(buildingGeometry, buildingMaterial);
       
       // Position the building correctly based on its geometry
-      if (buildingStyle === 'modern') {
+      if (buildingStyle === 'arabic-boutique') {
         buildingMesh.position.y = height / 2;
         buildingMesh.position.z = -depth / 2;
       } else {
@@ -257,7 +257,7 @@ export default function ThreeBuildingModel({
       buildingGroup.add(buildingMesh);
       
       // Add building type-specific details and architectural elements
-      if (buildingStyle === 'modern') {
+      if (false) { // American style building is disabled, keeping code for future reference
         // Modern skyscraper with glass facade and spire
         
         // Glass panels overlay
@@ -978,7 +978,7 @@ export default function ThreeBuildingModel({
       // Enhanced Roof with more detail
       let roofGeometry;
       
-      if (buildingStyle === 'modern') {
+      if (false) { // Modern style disabled
         // Modern building gets a flat roof with details
         roofGeometry = new THREE.BoxGeometry(width, 0.5, depth);
       } else if (buildingStyle === 'arabic-boutique') {
@@ -1151,7 +1151,7 @@ export default function ThreeBuildingModel({
       const doorGeometry = new THREE.PlaneGeometry(doorWidth, doorHeight);
       let doorMaterial;
       
-      if (buildingStyle === 'modern') {
+      if (false) { // Modern style disabled
         // Glass door for modern building
         doorMaterial = new THREE.MeshPhongMaterial({ 
           color: 0x88ccff,
@@ -1160,7 +1160,6 @@ export default function ThreeBuildingModel({
           specular: 0xffffff,
           shininess: 100
         });
-
       } else {
         // Standard door
         doorMaterial = new THREE.MeshPhongMaterial({ 
@@ -1196,7 +1195,7 @@ export default function ThreeBuildingModel({
       // Add some environment details around the building
       
       // Add small decorative elements based on building type
-      if (buildingStyle === 'modern') {
+      if (false) { // Modern style disabled
         // Modern building gets planters
         for (let side = -1; side <= 1; side += 2) {
           const planterGeometry = new THREE.BoxGeometry(1, 0.5, 1);
@@ -1218,7 +1217,7 @@ export default function ThreeBuildingModel({
           buildingGroup.add(plantMesh);
         }
 
-      } else if (buildingStyle === 'tech') {
+      } else if (false) { // Tech style disabled
         // Tech building gets security cameras
         for (let side = -1; side <= 1; side += 2) {
           // Camera mount

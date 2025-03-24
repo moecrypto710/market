@@ -3,7 +3,6 @@ import { Product } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
-import VRTown from "@/components/vr-town";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
 import confetti from 'canvas-confetti';
@@ -27,13 +26,16 @@ export default function HomePage() {
   });
   
   // Set initial AI assistant question based on VR mode
+  // Also handle VR town redirection
   useEffect(() => {
     if (vrEnabled) {
       setAiInitialQuestion("كيف يمكنني استكشاف بلدة الأمريكي الافتراضية؟");
+      // Redirect to the American-style VR town
+      setLocation("/virtual-city");
     } else {
       setAiInitialQuestion(undefined);
     }
-  }, [vrEnabled]);
+  }, [vrEnabled, products, setLocation]);
   
   // Track viewed products for personalized recommendations
   useEffect(() => {
@@ -107,8 +109,8 @@ export default function HomePage() {
         minimized={!vrEnabled} 
       />
       
-      {/* VR Town Experience */}
-      {vrEnabled && products && <VRTown products={products} />}
+      {/* VR Town Experience - Redirect to American-style VR town */}
+      {/* Redirection is now handled in the main useEffect above */}
       
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (
