@@ -113,9 +113,40 @@ export default function HomePage() {
     setAiInitialQuestion(immersiveMode ? undefined : "كيف أستخدم تجربة التفاعلية؟");
     triggerCelebration();
     
-    // Reset position when entering immersive mode
+    // Enhanced immersive mode experience
     if (!immersiveMode) {
+      // Reset position when entering immersive mode
       resetPosition();
+      
+      // Add some sound effects for immersion if the browser supports it
+      try {
+        const audio = new Audio();
+        audio.src = "/sounds/ambience.mp3"; // This would need to be added to public folder
+        audio.volume = 0.2;
+        audio.loop = true;
+        audio.play().catch(e => console.log("Audio autoplay blocked by browser policy"));
+      } catch (e) {
+        console.log("Audio not supported");
+      }
+      
+      // Apply fullscreen for better immersion on supported browsers
+      try {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) {
+          docEl.requestFullscreen().catch(e => console.log("Fullscreen request failed"));
+        }
+      } catch (e) {
+        console.log("Fullscreen not supported");
+      }
+    } else {
+      // Exit fullscreen when leaving immersive mode
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(e => console.log("Exit fullscreen failed"));
+        }
+      } catch (e) {
+        console.log("Exit fullscreen not supported");
+      }
     }
     
     // Scroll to top when toggling mode
@@ -251,18 +282,18 @@ export default function HomePage() {
                 {/* Main Title with Modern Styling */}
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300">
                   بلدة الأمريكي
-                  <span className="inline-block mx-2 px-3 py-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-md text-white">VR</span>
+                  <span className="inline-block mx-2 px-3 py-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-md text-white">3D</span>
                 </h1>
                 
                 <div className="flex justify-center mb-6">
                   <div className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium">
-                    أول مدينة أعمال افتراضية ذكية متكاملة في العالم العربي
+                    أول مدينة أعمال تفاعلية ثلاثية الأبعاد متكاملة في العالم العربي
                   </div>
                 </div>
                 
                 {/* Realistic description with better styling */}
                 <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-10 leading-relaxed font-normal bg-black/20 backdrop-blur-sm p-5 rounded-xl border border-white/10">
-                  تجربة بلدة الأمريكي الافتراضية الذكية الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة ثلاثية الأبعاد تفاعلية
+                  تجربة بلدة الأمريكي التفاعلية ثلاثية الأبعاد الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة غامرة
                 </p>
                 
                 {/* Single prominent immersive button */}
