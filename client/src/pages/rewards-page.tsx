@@ -3,10 +3,25 @@ import { Reward } from "@shared/schema";
 import { Progress } from "@/components/ui/progress";
 import { RewardCard } from "@/components/reward-card";
 import { useAuth } from "@/hooks/use-auth";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import confetti from 'canvas-confetti';
+import { BrainCircuitIcon, RocketIcon, SparklesIcon, Zap, Trophy, Gift, ShoppingCart, UserPlus, Star, Award, TrendingUp, BadgeCheck } from "lucide-react";
 
 export default function RewardsPage() {
   const { user } = useAuth();
+  const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [aiRecommendations, setAiRecommendations] = useState<{
+    title: string;
+    description: string;
+    actionText: string;
+    points: number;
+    icon: any;
+  }[]>([]);
   
   const { data: rewards } = useQuery<Reward[]>({
     queryKey: ['/api/rewards'],
@@ -16,24 +31,79 @@ export default function RewardsPage() {
   const nextRewardLevel = 1000;
   const progressPercentage = Math.min(100, (currentPoints / nextRewardLevel) * 100);
   
+  // Generate AI personalized recommendations based on user points
+  useEffect(() => {
+    // Simulate AI recommendations based on user points and activity
+    const recommendations = [
+      {
+        title: "متجر الإلكترونيات",
+        description: "زيارة متجر الإلكترونيات ستمنحك فرصة كسب 100 نقطة إضافية هذا الأسبوع",
+        actionText: "زيارة المتجر",
+        points: 100,
+        icon: ShoppingCart
+      },
+      {
+        title: "دعوة 3 أصدقاء",
+        description: "احصل على مكافأة خاصة من 500 نقطة عند دعوة 3 أصدقاء جدد",
+        actionText: "دعوة الأصدقاء",
+        points: 500,
+        icon: UserPlus
+      },
+      {
+        title: "تقييمات منتجات الملابس",
+        description: "نقاط مضاعفة عند تقييم منتجات قسم الملابس خلال الأسبوع الحالي",
+        actionText: "تقييم المنتجات",
+        points: 100,
+        icon: Star
+      }
+    ];
+    
+    setAiRecommendations(recommendations);
+  }, [currentPoints]);
+  
+  // Celebration effect when reaching certain milestones
+  useEffect(() => {
+    if (progressPercentage >= 95 && !showCelebration) {
+      setShowCelebration(true);
+      triggerCelebration();
+      
+      const timer = setTimeout(() => {
+        setShowCelebration(false);
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [progressPercentage, showCelebration]);
+  
+  const triggerCelebration = () => {
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  };
+  
   const earningMethods = [
     {
       id: 1,
       title: "عمليات الشراء",
       description: "10 نقاط لكل 100 جنيه",
-      icon: "shopping-cart"
+      icon: "shopping-cart",
+      aiBoost: "زيادة بنسبة 15% هذا الأسبوع"
     },
     {
       id: 2,
       title: "دعوة أصدقاء",
       description: "200 نقطة لكل صديق",
-      icon: "user-plus"
+      icon: "user-plus",
+      aiBoost: "مكافأة خاصة: 500 نقطة لكل 3 أصدقاء"
     },
     {
       id: 3,
       title: "تقييم المنتجات",
       description: "50 نقطة لكل تقييم",
-      icon: "star"
+      icon: "star",
+      aiBoost: "نقاط مضاعفة على منتجات معينة"
     }
   ];
   
