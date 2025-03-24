@@ -393,6 +393,121 @@ export default function ServicesPage() {
       </div>
       
       {/* Success Stories */}
+      {/* Partnership Programs */}
+      <div className="mt-16 py-10 px-6 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-900/30 to-fuchsia-900/30 backdrop-blur-sm relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full filter blur-3xl -mr-20 -mt-20 opacity-30"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full filter blur-3xl -ml-20 -mb-20 opacity-20"></div>
+        </div>
+        
+        <div className="relative z-10">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">برامج الشراكة والعمولة</h2>
+          <p className="text-lg text-white/80 text-center max-w-3xl mx-auto mb-10">
+            انضم إلى شبكة شركائنا وكن جزءًا من أكبر مشروع واقع افتراضي للأعمال في المنطقة
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Partnership Program */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 transform transition-all hover:scale-[1.02] hover:border-white/30">
+              <div className="mb-6">
+                <div className="h-14 w-14 rounded-full bg-gradient-to-r from-fuchsia-500 to-purple-600 flex items-center justify-center mb-4">
+                  <Handshake className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">برنامج الشراكات</h3>
+                <p className="text-white/70 mb-6">
+                  انضم إلى شركائنا وكن جزءًا من أكبر مشروع واقع افتراضي للأعمال في المنطقة
+                </p>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-fuchsia-400" />
+                  <span className="text-white/80">عرض متجرك لآلاف الزوار يوميًا</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-fuchsia-400" />
+                  <span className="text-white/80">دعم فني واستشاري متكامل</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-fuchsia-400" />
+                  <span className="text-white/80">فرص تسويقية حصرية للشركاء</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-fuchsia-400" />
+                  <span className="text-white/80">إحصائيات وتحليلات متقدمة</span>
+                </div>
+              </div>
+              
+              <Button 
+                className="w-full bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700"
+                onClick={() => handleServiceSelect({
+                  id: "partnership-program",
+                  name: "برنامج الشراكات",
+                  price: "يختلف حسب الباقة"
+                })}
+              >
+                قدم طلب شراكة
+              </Button>
+            </div>
+            
+            {/* Affiliate Program */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 transform transition-all hover:scale-[1.02] hover:border-white/30">
+              <div className="mb-6">
+                <div className="h-14 w-14 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 flex items-center justify-center mb-4">
+                  <CircleDollarSign className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">برنامج التسويق بالعمولة</h3>
+                <p className="text-white/70 mb-6">
+                  اربح من خلال تسويق بلدة الأمريكي واحصل على عمولات مجزية لكل اشتراك جديد
+                </p>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-indigo-400" />
+                  <span className="text-white/80">عمولة تصل إلى 20% من اشتراكات العملاء الجدد</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-indigo-400" />
+                  <span className="text-white/80">روابط تسويقية خاصة بك</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-indigo-400" />
+                  <span className="text-white/80">لوحة تحكم لمتابعة الأرباح والعمولات</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="h-5 w-5 text-indigo-400" />
+                  <span className="text-white/80">دفعات شهرية مباشرة إلى حسابك</span>
+                </div>
+              </div>
+              
+              <Button 
+                className="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700"
+                onClick={() => handleServiceSelect({
+                  id: "affiliate-program",
+                  name: "برنامج التسويق بالعمولة",
+                  price: "بدون رسوم اشتراك"
+                })}
+              >
+                اشترك في البرنامج
+              </Button>
+            </div>
+          </div>
+          
+          {/* CTA for Partnership Details */}
+          <div className="text-center mt-8">
+            <Button 
+              variant="outline" 
+              className="border-white/30 text-white hover:bg-white/10"
+              onClick={() => window.open("/partnership-details.pdf", "_blank")}
+            >
+              تحميل دليل الشراكات والعمولات
+              <i className="fas fa-download mr-2 text-xs"></i>
+            </Button>
+          </div>
+        </div>
+      </div>
+      
       <div className="mt-20">
         <h2 className="text-3xl font-bold text-center mb-12">قصص نجاح شركائنا</h2>
         
