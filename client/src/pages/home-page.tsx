@@ -175,112 +175,287 @@ export default function HomePage() {
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (
         <div className="container mx-auto px-4 py-6">
-          {/* User Profile Section - Only shown when logged in */}
+          {/* Smart User Profile Dashboard - Only shown when logged in */}
           {user && (
-            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 border border-white/20">
-              <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                {/* Profile Avatar and Name */}
-                <div className="text-center md:text-right">
-                  <div className="w-24 h-24 bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-full mx-auto md:mx-0 mb-3 flex items-center justify-center shadow-lg">
-                    <i className="fas fa-user text-white text-4xl"></i>
-                  </div>
-                  <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-fuchsia-100">
-                    {user?.fullName || user?.username}
-                  </h2>
-                  <p className="text-white/70">{user?.email}</p>
-                </div>
+            <motion.div 
+              className="bg-gradient-to-br from-black/80 via-purple-950/30 to-indigo-950/30 backdrop-blur-md rounded-2xl p-0 mb-10 overflow-hidden border border-white/10 shadow-2xl relative"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              {/* Background Elements */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Digital grid pattern */}
+                <div className="absolute inset-0 opacity-10"
+                  style={{
+                    backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
+                    backgroundSize: '20px 20px'
+                  }}
+                ></div>
                 
-                {/* User Stats */}
-                <div className="flex-1 flex flex-col">
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-white/80">نقاط الولاء</span>
-                      <span className="text-lg font-bold text-fuchsia-300">{user.points} نقطة</span>
+                {/* Decorative circuit lines */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
+                
+                {/* Animated glow spots */}
+                <div className="absolute top-10 right-20 w-40 h-40 rounded-full bg-purple-600/10 filter blur-3xl animate-pulse-slow opacity-50"></div>
+                <div className="absolute bottom-10 left-10 w-60 h-60 rounded-full bg-indigo-600/10 filter blur-3xl animate-pulse-slow opacity-30" style={{ animationDelay: '1.5s' }}></div>
+              </div>
+              
+              {/* Main Content Area */}
+              <div className="relative z-10">
+                {/* Profile Header - Modern Design */}
+                <div className="bg-gradient-to-r from-purple-900/50 via-fuchsia-900/30 to-indigo-900/50 p-6 flex items-center gap-6 border-b border-white/5">
+                  {/* Avatar with Animated Holo Effect */}
+                  <div className="relative group">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-fuchsia-500 p-1 relative overflow-hidden shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 transition-all duration-300">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-300 holographic-bg"></div>
+                      <div className="w-full h-full rounded-full bg-black/80 flex items-center justify-center overflow-hidden relative">
+                        <i className="fas fa-user text-white text-3xl relative z-10"></i>
+                        
+                        {/* Scanning effect on hover */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          style={{
+                            background: 'linear-gradient(to bottom, transparent, transparent 49.5%, rgba(138, 58, 185, 0.5) 50%, transparent 50.5%)',
+                            backgroundSize: '100% 8px',
+                            animation: 'scanline 2s linear infinite'
+                          }}
+                        ></div>
+                      </div>
                     </div>
-                    <Progress value={progressPercentage} className="h-2 bg-white/10" 
-                      style={{
-                        background: "linear-gradient(to right, rgba(255,255,255,0.05), rgba(255,255,255,0.1))",
-                      }}
-                    />
-                    <div className="flex justify-between mt-1 text-xs text-white/60">
-                      <span>{user.points} نقطة</span>
-                      <span>المستوى التالي: {nextRewardLevel} نقطة</span>
+                    
+                    {/* Status indicator */}
+                    <div className="absolute bottom-0 right-0 w-5 h-5 bg-green-500 rounded-full border-2 border-black"></div>
+                  </div>
+                  
+                  {/* User Info with Modern Typography */}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-fuchsia-100">
+                        {user?.fullName || user?.username}
+                      </h2>
+                      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs px-2 py-0.5 rounded-full shadow-glow-sm">
+                        VIP
+                      </div>
+                    </div>
+                    <p className="text-white/70 text-sm">{user?.email || 'user@example.com'}</p>
+                    
+                    {/* Session info */}
+                    <div className="flex items-center mt-1 text-xs text-white/50">
+                      <i className="fas fa-clock mr-1"></i>
+                      <span>آخر تسجيل دخول: اليوم {new Date().toLocaleTimeString('ar-SA', {hour: '2-digit', minute:'2-digit'})}</span>
                     </div>
                   </div>
                   
-                  {/* VR Controls */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                    <div className="bg-white/10 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="flex items-center text-sm">
-                          <i className="fas fa-vr-cardboard ml-2"></i>
-                          الواقع الافتراضي
-                        </label>
-                        <Switch checked={vrEnabled} onCheckedChange={toggleVR} />
-                      </div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="flex items-center text-sm">
-                          <i className="fas fa-hand-pointer ml-2"></i>
-                          إيماءات التحكم
-                        </label>
-                        <Switch checked={gestureControlEnabled} onCheckedChange={toggleGestureControl} />
-                      </div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="flex items-center text-sm">
-                          <i className="fas fa-volume-up ml-2"></i>
-                          المؤثرات الصوتية
-                        </label>
-                        <Switch checked={soundEffectsEnabled} onCheckedChange={toggleSoundEffects} />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Quick Actions */}
-                  <div className="flex flex-wrap gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
-                      onClick={() => triggerTransition('arabesque', '/rewards')}
+                  {/* Smart Controls on right */}
+                  <div className="ml-auto flex items-center space-x-2">
+                    <button 
+                      onClick={activateVoiceCommand} 
+                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        pulsatingMic 
+                          ? 'bg-pink-600 animate-pulse' 
+                          : 'bg-gray-800 hover:bg-gray-700'
+                      } transition-colors duration-200`}
                     >
-                      <i className="fas fa-medal ml-2"></i>
-                      مكافآتي
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
+                      <i className="fas fa-microphone text-white"></i>
+                    </button>
+                    
+                    <button 
+                      onClick={toggleVR}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        vrEnabled 
+                          ? 'bg-gradient-to-br from-purple-600 to-indigo-600 animate-pulse-slow' 
+                          : 'bg-gray-800 hover:bg-gray-700'
+                      } transition-all duration-200`}
                     >
-                      <i className="fas fa-shopping-bag ml-2"></i>
-                      طلباتي
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
-                    >
-                      <i className="fas fa-heart ml-2"></i>
-                      المفضلة
-                    </Button>
+                      <i className="fas fa-vr-cardboard text-white"></i>
+                    </button>
+                    
                     {logoutMutation && (
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-red-500/30 text-red-300 hover:bg-red-900/20"
+                      <button 
                         onClick={() => logoutMutation.mutate()}
+                        className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-800 hover:bg-red-900/50 transition-colors duration-200"
                       >
-                        <i className="fas fa-sign-out-alt ml-2"></i>
-                        تسجيل الخروج
-                      </Button>
+                        <i className="fas fa-sign-out-alt text-white"></i>
+                      </button>
                     )}
                   </div>
                 </div>
+                
+                {/* Modern Dashboard Layout */}
+                <div className="p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+                  {/* Stats Panel */}
+                  <div className="md:col-span-8 flex flex-col">
+                    {/* Loyalty Points with Animated Progress */}
+                    <div className="mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center mr-2">
+                            <i className="fas fa-star text-white text-xs"></i>
+                          </div>
+                          <span className="font-medium">نقاط الولاء</span>
+                        </div>
+                        <div className="flex items-center bg-white/5 px-3 py-1 rounded-full shadow-inner">
+                          <span className="text-amber-300 font-bold">{user.points}</span>
+                          <span className="text-white/60 text-xs mr-1">نقطة</span>
+                        </div>
+                      </div>
+                      
+                      {/* Futuristic Progress Bar */}
+                      <div className="relative h-2 bg-white/5 rounded-full overflow-hidden backdrop-blur-sm mt-2">
+                        <div 
+                          className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full"
+                          style={{ width: `${progressPercentage}%`, transition: 'width 1s ease-in-out' }}
+                        ></div>
+                        
+                        {/* Animated light effect */}
+                        <div 
+                          className="absolute top-0 bottom-0 left-0 bg-white/80"
+                          style={{ 
+                            width: '5px', 
+                            filter: 'blur(3px)',
+                            transform: `translateX(${progressPercentage}%)`,
+                            transition: 'transform 1s ease-in-out'
+                          }}
+                        ></div>
+                      </div>
+                      
+                      <div className="flex justify-between mt-1 text-xs text-white/60">
+                        <span>{user.points} / {nextRewardLevel}</span>
+                        <span>المستوى التالي: {nextRewardLevel - user.points} نقطة متبقية</span>
+                      </div>
+                    </div>
+                    
+                    {/* Quick Stats Cards */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-3 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 group">
+                        <div className="flex items-center mb-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mr-2 shadow-glow-sm group-hover:shadow-glow transition-all duration-300">
+                            <i className="fas fa-shopping-bag text-white text-xs"></i>
+                          </div>
+                          <span className="text-sm font-medium">طلباتي</span>
+                        </div>
+                        <div className="text-2xl font-bold text-white">3</div>
+                        <div className="text-xs text-white/60 mt-1">آخر طلب منذ 3 أيام</div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-3 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 group">
+                        <div className="flex items-center mb-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center mr-2 shadow-glow-sm group-hover:shadow-glow transition-all duration-300">
+                            <i className="fas fa-heart text-white text-xs"></i>
+                          </div>
+                          <span className="text-sm font-medium">المفضلة</span>
+                        </div>
+                        <div className="text-2xl font-bold text-white">7</div>
+                        <div className="text-xs text-white/60 mt-1">منتجات في قائمتك</div>
+                      </div>
+                      
+                      <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-md p-3 rounded-xl border border-white/5 hover:border-purple-500/30 transition-all duration-300 group">
+                        <div className="flex items-center mb-2">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mr-2 shadow-glow-sm group-hover:shadow-glow transition-all duration-300">
+                            <i className="fas fa-medal text-white text-xs"></i>
+                          </div>
+                          <span className="text-sm font-medium">المكافآت</span>
+                        </div>
+                        <div className="text-2xl font-bold text-white">2</div>
+                        <div className="text-xs text-white/60 mt-1">متاحة للاستبدال</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Control Panel with VR Settings */}
+                  <div className="md:col-span-4 bg-gradient-to-br from-purple-900/20 to-fuchsia-900/10 backdrop-blur-md rounded-xl p-4 border border-purple-500/20">
+                    <h3 className="text-sm font-medium mb-3 flex items-center">
+                      <i className="fas fa-sliders-h mr-2 text-purple-400"></i>
+                      إعدادات التجربة الافتراضية
+                    </h3>
+                    
+                    {/* Modern Settings Switches */}
+                    <div className="space-y-3">
+                      <div className="bg-black/20 rounded-lg p-3 backdrop-blur-sm hover:bg-black/30 transition-colors duration-200">
+                        <div className="flex justify-between items-center">
+                          <label className="flex items-center text-sm">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center mr-2">
+                              <i className="fas fa-vr-cardboard text-indigo-400 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="font-medium">الواقع الافتراضي</div>
+                              <div className="text-white/50 text-xs">عرض البلدة الافتراضية</div>
+                            </div>
+                          </label>
+                          <Switch 
+                            checked={vrEnabled} 
+                            onCheckedChange={toggleVR}
+                            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-indigo-600 data-[state=checked]:to-purple-600"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-black/20 rounded-lg p-3 backdrop-blur-sm hover:bg-black/30 transition-colors duration-200">
+                        <div className="flex justify-between items-center">
+                          <label className="flex items-center text-sm">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center mr-2">
+                              <i className="fas fa-hand-pointer text-blue-400 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="font-medium">إيماءات التحكم</div>
+                              <div className="text-white/50 text-xs">التحكم بالإيماءات</div>
+                            </div>
+                          </label>
+                          <Switch 
+                            checked={gestureControlEnabled} 
+                            onCheckedChange={toggleGestureControl}
+                            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-blue-600 data-[state=checked]:to-cyan-600"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="bg-black/20 rounded-lg p-3 backdrop-blur-sm hover:bg-black/30 transition-colors duration-200">
+                        <div className="flex justify-between items-center">
+                          <label className="flex items-center text-sm">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center mr-2">
+                              <i className="fas fa-volume-up text-amber-400 text-sm"></i>
+                            </div>
+                            <div>
+                              <div className="font-medium">المؤثرات الصوتية</div>
+                              <div className="text-white/50 text-xs">تجربة صوتية محسنة</div>
+                            </div>
+                          </label>
+                          <Switch 
+                            checked={soundEffectsEnabled} 
+                            onCheckedChange={toggleSoundEffects}
+                            className="data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-amber-600 data-[state=checked]:to-orange-600"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Quick Actions */}
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border-purple-500/30 text-white hover:bg-purple-500/30 transition-all duration-300"
+                        onClick={() => triggerTransition('futuristic', '/rewards')}
+                      >
+                        <i className="fas fa-medal mr-2 text-purple-400"></i>
+                        استكشاف المكافآت
+                      </Button>
+                      
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border-blue-500/30 text-white hover:bg-blue-500/30 transition-all duration-300"
+                        onClick={() => triggerTransition('geometric', '/business-world')}
+                      >
+                        <i className="fas fa-building mr-2 text-blue-400"></i>
+                        زيارة البلدة
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           )}
           {/* Hero Section with Arabesque Pattern Background */}
           <motion.div 
