@@ -171,10 +171,10 @@ export default function FlightAttendant({
         >
           <div className="absolute left-[-10px] top-4 w-0 h-0 border-t-[10px] border-t-transparent border-r-[10px] border-r-blue-800 border-b-[10px] border-b-transparent"></div>
           
-          {/* Emirates logo */}
+          {/* Travel agency logo */}
           <div className="mb-3 flex items-center justify-center">
             <div className="text-yellow-400 font-bold text-xs bg-blue-950 px-2 py-1 rounded-sm inline-block">
-              طيران الإمارات
+              السفر العربي
             </div>
           </div>
           

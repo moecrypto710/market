@@ -9,6 +9,8 @@ import GateControl from './gate-control';
 import CarTraffic from './car-traffic';
 import TrafficLight from './traffic-light';
 import TouchControls from './touch-controls';
+import VirtualFittingRoom from './virtual-fitting-room';
+import DynamicPromotions from './dynamic-promotions';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
 
