@@ -207,7 +207,7 @@ export default function HomePage() {
             variant="ghost"
           >
             <i className="fas fa-times mr-2"></i>
-            خروج من البلدة التفاعلية
+            خروج من التجربة التفاعلية
           </Button>
         </div>
       ) : (
@@ -240,7 +240,7 @@ export default function HomePage() {
                 <div className="ml-auto flex gap-2">
                   <Button 
                     onClick={toggleImmersiveMode}
-                    aria-label="دخول بلدة الأمريكي التفاعلية"
+                    aria-label="دخول مدينة أمريكي التفاعلية"
                     className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-4 py-2 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -255,7 +255,7 @@ export default function HomePage() {
                   
                   <Link href="/vr-amrikyy-town">
                     <Button 
-                      aria-label="استكشاف بلدة أمريكي الافتراضية"
+                      aria-label="استكشاف مدينة أمريكي المتكاملة"
                       className="relative bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 text-white px-4 py-2 h-auto shadow-lg shadow-blue-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -264,7 +264,7 @@ export default function HomePage() {
                       
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <i className="fas fa-city text-lg"></i>
-                        <span className="font-bold">بلدة أمريكي</span>
+                        <span className="font-bold">مدينة أمريكي</span>
                       </span>
                     </Button>
                   </Link>
@@ -314,7 +314,7 @@ export default function HomePage() {
               >
                 {/* Main Title with Modern Styling */}
                 <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300">
-                  بلدة الأمريكي
+                  مدينة أمريكي
                   <span className="inline-block mx-2 px-3 py-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-md text-white">3D</span>
                 </h1>
                 
@@ -326,7 +326,7 @@ export default function HomePage() {
                 
                 {/* Realistic description with better styling */}
                 <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-10 leading-relaxed font-normal bg-black/20 backdrop-blur-sm p-5 rounded-xl border border-white/10">
-                  تجربة بلدة الأمريكي التفاعلية ثلاثية الأبعاد الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة غامرة
+                  تجربة مدينة أمريكي التفاعلية ثلاثية الأبعاد الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة غامرة
                 </p>
                 
                 {/* Prominent buttons for both VR modes */}
@@ -389,7 +389,7 @@ export default function HomePage() {
                         <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
                           <i className="fas fa-building text-2xl drop-shadow-lg"></i>
                         </div>
-                        <span className="drop-shadow-md text-shadow-lg">البلدة المتكاملة</span>
+                        <span className="drop-shadow-md text-shadow-lg">المدينة المتكاملة</span>
                       </div>
                       
                       {/* Pulsing accent indicator */}
