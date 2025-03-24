@@ -724,12 +724,16 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   // Helper to get area name in Arabic
   function getAreaName(sectionId: string) {
     switch (sectionId) {
-      case 'entrance': return 'المدخل الرئيسي';
-      case 'electronics': return 'الإلكترونيات';
-      case 'clothing': return 'الأزياء';
-      case 'food': return 'المطاعم';
-      case 'plaza': return 'الساحة المركزية';
-      default: return 'المول';
+      case 'entrance': return 'المدخل الرئيسي 🚪';
+      case 'electronics': return 'الإلكترونيات 💻';
+      case 'clothing': return 'الأزياء 👗';
+      case 'food': return 'المطاعم 🍔';
+      case 'plaza': return 'الساحة المركزية ✨';
+      case 'luxury': return 'المنتجات الفاخرة 💎';
+      case 'sports': return 'الرياضة 🏅';
+      case 'eco': return 'المنتجات الصديقة للبيئة 🌱';
+      case 'entertainment': return 'الترفيه 🎮';
+      default: return 'المول 🏬';
     }
   }
   
@@ -1125,10 +1129,12 @@ export default function VRMallSimplified({ products }: VRMallProps) {
         </Button>
         
         {/* Current location indicator */}
-        <div className="absolute top-16 left-4 bg-black/70 px-3 py-1.5 rounded-full text-sm z-50 border border-white/10">
+        <div className="absolute top-16 left-4 bg-gradient-to-r from-black/80 to-purple-900/50 px-4 py-2 rounded-xl text-sm z-50 border border-purple-500/30 shadow-glow-sm backdrop-blur-sm">
           <div className="flex items-center gap-2">
-            <i className="fas fa-map-marker-alt text-white/60"></i>
-            <span className="font-medium">{getAreaName(currentSection)}</span>
+            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 shadow-glow">
+              <i className="fas fa-map-marker-alt text-xs text-white"></i>
+            </div>
+            <span className="font-medium text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-200">{getAreaName(currentSection)}</span>
           </div>
         </div>
         
