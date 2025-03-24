@@ -176,7 +176,7 @@ export default function ThreeBuildingModel({
       
       // Create building style elements based on type
       // Define possible building styles
-      type BuildingStyle = 'modern' | 'arabic-boutique' | 'boutique' | 'tech' | 'standard';
+      type BuildingStyle = 'modern' | 'arabic-boutique' | 'tech' | 'standard';
       
       // Assign style based on building type
       const buildingStyle: BuildingStyle = 
@@ -225,9 +225,7 @@ export default function ThreeBuildingModel({
       } else if (buildingStyle === 'arabic-boutique') {
         // Arabic style boutique building with decorative elements
         buildingGeometry = new THREE.BoxGeometry(width, height * 0.9, depth);
-      } else if (buildingStyle === 'boutique') {
-        // Elegant boutique building with decorative elements
-        buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+
       } else if (buildingStyle === 'tech') {
         // High-tech geometric building for electronics
         // Create a more complex shape for tech buildings
@@ -1012,10 +1010,7 @@ export default function ThreeBuildingModel({
       
       const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
       
-      if (buildingStyle === 'boutique') {
-        roofMesh.position.y = height;
-        roofMesh.rotation.x = Math.PI / 2;
-      } else {
+      {
         roofMesh.position.y = height + 0.5;
       }
       
@@ -1165,13 +1160,7 @@ export default function ThreeBuildingModel({
           specular: 0xffffff,
           shininess: 100
         });
-      } else if (buildingStyle === 'boutique') {
-        // Fancy wood door for boutique
-        doorMaterial = new THREE.MeshPhongMaterial({ 
-          color: 0x8B4513, // Saddle brown
-          specular: 0x333333,
-          shininess: 30
-        });
+
       } else {
         // Standard door
         doorMaterial = new THREE.MeshPhongMaterial({ 
@@ -1228,40 +1217,7 @@ export default function ThreeBuildingModel({
           plantMesh.castShadow = true;
           buildingGroup.add(plantMesh);
         }
-      } else if (buildingStyle === 'boutique') {
-        // Boutique gets decorative lamps
-        for (let side = -1; side <= 1; side += 2) {
-          // Lamp post
-          const postGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 8);
-          const postMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
-          
-          const postMesh = new THREE.Mesh(postGeometry, postMaterial);
-          postMesh.position.set(side * (width / 2 + 0.5), 1, depth / 2 + 0.5);
-          postMesh.castShadow = true;
-          buildingGroup.add(postMesh);
-          
-          // Lamp shade
-          const shadeGeometry = new THREE.SphereGeometry(0.2, 8, 8, 0, Math.PI * 2, 0, Math.PI / 2);
-          const shadeMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xFFD700, 
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.8
-          });
-          
-          const shadeMesh = new THREE.Mesh(shadeGeometry, shadeMaterial);
-          shadeMesh.position.set(side * (width / 2 + 0.5), 2, depth / 2 + 0.5);
-          shadeMesh.castShadow = true;
-          buildingGroup.add(shadeMesh);
-          
-          // Light source inside lamp
-          const lightGeometry = new THREE.SphereGeometry(0.1, 8, 8);
-          const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFCC });
-          
-          const lightMesh = new THREE.Mesh(lightGeometry, lightMaterial);
-          lightMesh.position.set(side * (width / 2 + 0.5), 2, depth / 2 + 0.5);
-          buildingGroup.add(lightMesh);
-        }
+
       } else if (buildingStyle === 'tech') {
         // Tech building gets security cameras
         for (let side = -1; side <= 1; side += 2) {
