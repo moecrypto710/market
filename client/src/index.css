@@ -785,6 +785,66 @@
   animation: holographic-move 5s linear infinite;
 }
 
+/* Weather and environmental animations */
+@keyframes driftRight {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes fallDown {
+  from {
+    transform: translateY(-10px) rotate(15deg);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(20px) rotate(15deg);
+    opacity: 0.3;
+  }
+}
+
+@keyframes windDrift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(20px, 10px) rotate(10deg);
+  }
+  50% {
+    transform: translate(50px, -5px) rotate(-5deg);
+  }
+  75% {
+    transform: translate(30px, 15px) rotate(15deg);
+  }
+  100% {
+    transform: translate(100px, 5px) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseSun {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(253, 224, 71, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 50px rgba(253, 224, 71, 0.9);
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
+}
+
 /* Avatar dot pulse */
 .avatar::after {
   content: '';

@@ -580,53 +580,111 @@ export default function CityBuilder() {
           </div>
         )}
         
-        {/* Enhanced clouds with animation */}
-        <div className="absolute top-0 left-0 right-0 h-60 overflow-hidden">
-          {/* First cloud layer - closer, faster */}
-          <div className="absolute left-0 right-0 top-10">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div 
-                key={`cloud1-${i}`}
-                className="absolute"
-                style={{
-                  left: `${(i * 20 + Math.random() * 10)}%`,
-                  top: `${Math.random() * 20}%`,
-                  opacity: 0.7,
-                  animation: 'driftRight 30s linear infinite',
-                  animationDelay: `${i * -6}s`,
-                }}
-              >
-                <div className="cloud flex">
-                  <div className="w-16 h-16 bg-white rounded-full"></div>
-                  <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
-                  <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* Weather Effects */}
+        <div className="absolute inset-0">
+          {/* Weather overlay based on current condition */}
+          {weatherCondition !== 'clear' && (
+            <div 
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: weatherCondition === 'cloudy' ? 'rgba(200, 200, 220, 0.3)' :
+                           weatherCondition === 'rainy' ? 'rgba(100, 120, 150, 0.5)' :
+                           weatherCondition === 'sandstorm' ? 'rgba(210, 180, 140, 0.6)' : 'transparent'
+              }}
+            />
+          )}
           
-          {/* Second cloud layer - further, slower */}
-          <div className="absolute left-0 right-0 top-0">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div 
-                key={`cloud2-${i}`}
-                className="absolute"
-                style={{
-                  left: `${(i * 25 + Math.random() * 15)}%`,
-                  top: `${Math.random() * 10}%`,
-                  opacity: 0.5,
-                  transform: 'scale(1.5)',
-                  animation: 'driftRight 45s linear infinite',
-                  animationDelay: `${i * -11}s`,
-                }}
-              >
-                <div className="cloud flex">
-                  <div className="w-16 h-16 bg-white rounded-full"></div>
-                  <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
-                  <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
+          {/* Rain effect */}
+          {weatherCondition === 'rainy' && (
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 60 }).map((_, i) => (
+                <div
+                  key={`rain-${i}`}
+                  className="absolute bg-blue-200"
+                  style={{
+                    width: '1px',
+                    height: `${Math.random() * 20 + 10}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    opacity: 0.6,
+                    transform: 'rotate(15deg)',
+                    animation: `fallDown ${Math.random() * 0.5 + 0.7}s linear infinite`,
+                    animationDelay: `${Math.random() * 1}s`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* Sand particles for sandstorm */}
+          {weatherCondition === 'sandstorm' && (
+            <div className="absolute inset-0 overflow-hidden">
+              {Array.from({ length: 40 }).map((_, i) => (
+                <div
+                  key={`sand-${i}`}
+                  className="absolute rounded-full"
+                  style={{
+                    width: `${Math.random() * 4 + 2}px`,
+                    height: `${Math.random() * 4 + 2}px`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    backgroundColor: `rgba(${210 + Math.random() * 30}, ${180 + Math.random() * 20}, ${140 + Math.random() * 30}, ${0.6 + Math.random() * 0.3})`,
+                    animation: `windDrift ${Math.random() * 3 + 2}s linear infinite`,
+                    animationDelay: `${Math.random() * 2}s`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          
+          {/* Enhanced clouds with animation - more for cloudy weather */}
+          <div className="absolute top-0 left-0 right-0 h-60 overflow-hidden">
+            {/* First cloud layer - closer, faster */}
+            <div className="absolute left-0 right-0 top-10">
+              {Array.from({ length: weatherCondition === 'cloudy' ? 8 : 5 }).map((_, i) => (
+                <div 
+                  key={`cloud1-${i}`}
+                  className="absolute"
+                  style={{
+                    left: `${(i * 20 + Math.random() * 10)}%`,
+                    top: `${Math.random() * 20}%`,
+                    opacity: weatherCondition === 'cloudy' ? 0.9 : 0.7,
+                    animation: 'driftRight 30s linear infinite',
+                    animationDelay: `${i * -6}s`,
+                  }}
+                >
+                  <div className="cloud flex">
+                    <div className="w-16 h-16 bg-white rounded-full"></div>
+                    <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
+                    <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            {/* Second cloud layer - further, slower */}
+            <div className="absolute left-0 right-0 top-0">
+              {Array.from({ length: weatherCondition === 'cloudy' ? 6 : 4 }).map((_, i) => (
+                <div 
+                  key={`cloud2-${i}`}
+                  className="absolute"
+                  style={{
+                    left: `${(i * 25 + Math.random() * 15)}%`,
+                    top: `${Math.random() * 10}%`,
+                    opacity: weatherCondition === 'cloudy' ? 0.8 : 0.5,
+                    transform: 'scale(1.5)',
+                    animation: 'driftRight 45s linear infinite',
+                    animationDelay: `${i * -11}s`,
+                  }}
+                >
+                  <div className="cloud flex">
+                    <div className="w-16 h-16 bg-white rounded-full"></div>
+                    <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
+                    <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         
