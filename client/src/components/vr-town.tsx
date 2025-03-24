@@ -1836,6 +1836,27 @@ export default function VRTown({
               </div>
             </div>
             
+            {/* Travel Screen - Destination Explorer */}
+            {currentSection === 'travel' && (
+              <div className="absolute top-[20px] left-[50%] transform -translate-x-1/2 z-40 w-[80%] max-w-[600px]">
+                <TravelScreen 
+                  className="vr-travel-screen"
+                  destinations={[
+                    { city: "نيويورك", country: "الولايات المتحدة", imageUrl: "https://source.unsplash.com/random/?newyork", price: "$1,200" },
+                    { city: "طوكيو", country: "اليابان", imageUrl: "https://source.unsplash.com/random/?tokyo", price: "$1,500" },
+                    { city: "دبي", country: "الإمارات العربية المتحدة", imageUrl: "https://source.unsplash.com/random/?dubai", price: "$800" },
+                    { city: "باريس", country: "فرنسا", imageUrl: "https://source.unsplash.com/random/?paris", price: "$950" }
+                  ]}
+                  onSelectDestination={(destination) => {
+                    console.log("Selected destination:", destination);
+                    // Here you would handle the destination selection
+                    // For example, navigate to a booking page or show more details
+                  }}
+                  isArabic={true}
+                />
+              </div>
+            )}
+            
             {/* Travel District - Enhanced 3D Airplane Building (Turkish Airlines) */}
             <div className="absolute top-[-20px] left-[-10%] transform -translate-x-1/2 scale-75 rotate-[15deg] z-30">
               <div className="advanced-airplane-building turkish">
