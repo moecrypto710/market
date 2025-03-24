@@ -1430,13 +1430,14 @@ export default function VRTown({
             </div>
             
             {/* Nike Store with Clothing Display */}
-            <div className="absolute top-0 left-[20%] transform -translate-x-1/2">
+            <div className="absolute top-0 left-[20%] transform -translate-x-1/2 z-20">
               <div className="nike-clothing-storefront">
-                <div className="nike-product tshirt"></div>
-                <div className="nike-product shoes"></div>
-                <div className="nike-product pants"></div>
+                <div className="nike-product tshirt" title="T-shirt"></div>
+                <div className="nike-product shoes" title="Shoes"></div>
+                <div className="nike-product pants" title="Pants"></div>
               </div>
               <div className="store-brand-logo nike-style">NIKE</div>
+              <div className="text-xs text-center mt-1 text-white/70">Fashion</div>
             </div>
             
             <div className="absolute top-0 left-[50%] transform -translate-x-1/2">
