@@ -5,8 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
-import RewardsPage from "@/pages/rewards-page";
-import AffiliatePage from "@/pages/affiliate-page";
+import RewardsAffiliatePage from "@/pages/rewards-affiliate-page";
 import PaymentPage from "@/pages/payment-page";
 
 import AuthPage from "@/pages/auth-page";
@@ -47,10 +46,9 @@ function Router() {
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/" component={HomePage} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
-      <ProtectedRoute path="/rewards" component={RewardsPage} />
-      <ProtectedRoute path="/affiliate" component={AffiliatePage} />
+      <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
+      <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/payment" component={PaymentPage} />
-      {/* Account page has been integrated into the home page */}
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
