@@ -371,7 +371,12 @@ export class MemStorage implements IStorage {
         brandId: 4,
         featured: false,
         threeDModelUrl: "/models/apple-watch.glb",
-        viewCount: 503
+        viewCount: 503,
+        culturalHeritageTitle: "فن قياس الوقت في الحضارة الإسلامية",
+        culturalHeritageStory: "ساهم العلماء المسلمون بشكل كبير في تطوير أدوات قياس الوقت. في القرن الثامن، ابتكر المهندس الموصلي الجزري ساعات مائية معقدة وآلية، من أشهرها ساعة الفيل المائية. كما طوّر المسلمون الإسطرلاب لقياس مواقع النجوم وتحديد الوقت، وساعدت الأوقات الدقيقة في تحديد أوقات الصلاة والاحتفالات الدينية. الساعات الذكية الحديثة مثل هذه تعكس امتداداً لإرث العلماء المسلمين في قياس الوقت بدقة، مع إضافة تقنيات متقدمة لقياس النشاط البدني والصحة العامة، وهي قيم كانت محل اهتمام كبير في الطب الإسلامي القديم.",
+        culturalHeritageImageUrl: "/images/heritage/islamic-timekeeping.jpg",
+        culturalHeritageRegion: "بلاد الشام وبغداد",
+        culturalHeritagePeriod: "العصر الذهبي الإسلامي (750-1258)"
       }
     ];
 
