@@ -20,7 +20,8 @@ import {
   Plane, Building, Phone, ShoppingBag, MapPin, ChevronRight, 
   Star, CreditCard, Calendar, Users, BriefcaseBusiness, Handshake, 
   GraduationCap, Video, Lightbulb, Globe, CircleDollarSign, Rocket,
-  LifeBuoy, LucideProps, AreaChart, LineChart, BarChart, PieChart
+  LifeBuoy, LucideProps, AreaChart, LineChart, BarChart, PieChart,
+  Check, DollarSign
 } from "lucide-react";
 import confetti from 'canvas-confetti';
 

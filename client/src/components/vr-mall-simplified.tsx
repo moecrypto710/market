@@ -117,7 +117,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
       ],
       color: "#3b82f6",
       specialFeature: "استكشاف الواقع الافتراضي",
-      specialFeatureDescription: "يتيح لك استكشاف مناطق خاصة في المول باستخدام تقنيات الواقع الافتراضي المتقدمة"
+      specialFeatureDescription: "يتيح لك استكشاف مناطق خاصة في البلدة باستخدام تقنيات الواقع الافتراضي المتقدمة"
     },
     { 
       id: 6, 
@@ -149,7 +149,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
       ],
       color: "#10b981",
       specialFeature: "مرشد الاستدامة",
-      specialFeatureDescription: "يساعدك على تحديد المنتجات الصديقة للبيئة والمستدامة في جميع أقسام المول"
+      specialFeatureDescription: "يساعدك على تحديد المنتجات الصديقة للبيئة والمستدامة في جميع أقسام البلدة"
     },
     { 
       id: 8, 
@@ -262,7 +262,7 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
             
             {/* Subtitle with shimmer effect */}
             <p className="text-white/80 text-lg relative inline-block">
-              اختر شخصية للتسوق في مول أمريكي الافتراضي
+              اختر شخصية للتسوق في بلدة أمريكي الافتراضية
               
               {/* Shine animation */}
               <span className="absolute inset-0 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 animate-scan"
@@ -733,7 +733,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
       case 'sports': return 'الرياضة 🏅';
       case 'eco': return 'المنتجات الصديقة للبيئة 🌱';
       case 'entertainment': return 'الترفيه 🎮';
-      default: return 'المول 🏬';
+      default: return 'البلدة 🏙️';
     }
   }
   
@@ -1268,7 +1268,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20">
             <div className="holographic-container p-4 rounded-lg shadow-glow-sm arabesque-border">
               <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2 font-arabic">
-                مول أمريكي التجاري
+                بلدة أمريكي التجارية
               </h3>
               <div className="text-xs text-center text-white/70 mb-1">اضغط على أي قسم لزيارته</div>
               <div className="h-px w-full bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent my-1"></div>
