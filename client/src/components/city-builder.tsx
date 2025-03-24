@@ -292,9 +292,8 @@ export default function CityBuilder() {
                   <div className="flex-1 bg-[#1a1a2e] rounded-md flex flex-col items-center justify-center">
                     <ThreeProductView 
                       color="#10b981"
-                      rotationSpeed={0.01}
-                      height="100%"
-                      showControls={true}
+                      rotationSpeed={0.02}
+                      height={250}
                     />
                   </div>
                 </div>

@@ -104,7 +104,12 @@ export default function DynamicPromotions({
     ];
     
     // Set promotion based on day of week (like Unity's SwitchPromotion method)
-    setCurrentPromotion(promotions[dayOfWeek]);
+    // Using a hardcoded value for testing (Wednesday) to ensure we see a promotion
+    const testDay = 3; // Wednesday (for testing)
+    setCurrentPromotion(promotions[testDay]);
+    
+    // In production, use the actual day:
+    // setCurrentPromotion(promotions[dayOfWeek]);
   }, []);
   
   // Format expiry date - similar to Unity's GetExpiryDate method
