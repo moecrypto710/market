@@ -547,6 +547,81 @@
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Map specific animations */
+.drop-shadow-glow {
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.6));
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(0deg) translateX(80px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(80px) rotate(-360deg);
+  }
+}
+
+@keyframes counterOrbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes doorOpen {
+  0% {
+    transform: rotateY(0deg);
+  }
+  30% {
+    transform: rotateY(70deg);
+  }
+  70% {
+    transform: rotateY(70deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes dataStream {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-blink {
+  animation: blink 2s ease-in-out infinite;
+}
+
+.shadow-pulse {
+  animation: shadow-pulse 2s infinite;
+}
+
+@keyframes shadow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  }
+}
+
 /* Town Button Border Animations */
 @keyframes border-tl {
   0% {
