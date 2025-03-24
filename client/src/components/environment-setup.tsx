@@ -334,7 +334,7 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
                   rotateZ(${gameObject.rotation.z}deg)
                   scale3d(${gameObject.scale.x}, ${gameObject.scale.y}, ${gameObject.scale.z})`,
       transformStyle: 'preserve-3d' as const,
-      pointerEvents: gameObject.active ? 'auto' : 'none',
+      pointerEvents: gameObject.active ? 'auto' as const : 'none' as const,
       opacity: gameObject.active ? 1 : 0.5,
     };
   };
@@ -354,7 +354,9 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
         <div 
           key={gameObject.id} 
           className="advanced-airplane-building emirates"
-          style={getGameObjectStyle(gameObject)}
+          style={{
+            ...getGameObjectStyle(gameObject)
+          }}
           onClick={handleClick}
         >
           <div className="airplane-3d-container">
@@ -449,14 +451,21 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
           key={gameObject.id} 
           className="store-building"
           style={{
-            ...getGameObjectStyle(gameObject),
+            position: 'absolute',
+            transform: `translate3d(${gameObject.position.x}px, ${gameObject.position.y}px, ${gameObject.position.z}px) 
+                  rotateX(${gameObject.rotation.x}deg) 
+                  rotateY(${gameObject.rotation.y}deg) 
+                  rotateZ(${gameObject.rotation.z}deg)
+                  scale3d(${gameObject.scale.x}, ${gameObject.scale.y}, ${gameObject.scale.z})`,
+            transformStyle: 'preserve-3d' as const,
+            pointerEvents: gameObject.active ? 'auto' as const : 'none' as const,
+            opacity: gameObject.active ? 1 : 0.5,
             background: `linear-gradient(to top, ${storeColor}80, ${storeColor}40)`,
             width: '12rem',
             height: '8rem',
             borderRadius: '0.5rem',
             boxShadow: `0 0 20px ${storeColor}40`,
-            border: `1px solid ${storeColor}60`,
-            position: 'absolute'
+            border: `1px solid ${storeColor}60`
           }}
           onClick={handleClick}
         >
@@ -523,7 +532,15 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
       <div 
         key={gameObject.id} 
         style={{
-          ...getGameObjectStyle(gameObject),
+          position: 'absolute',
+          transform: `translate3d(${gameObject.position.x}px, ${gameObject.position.y}px, ${gameObject.position.z}px) 
+                  rotateX(${gameObject.rotation.x}deg) 
+                  rotateY(${gameObject.rotation.y}deg) 
+                  rotateZ(${gameObject.rotation.z}deg)
+                  scale3d(${gameObject.scale.x}, ${gameObject.scale.y}, ${gameObject.scale.z})`,
+          transformStyle: 'preserve-3d' as const,
+          pointerEvents: gameObject.active ? 'auto' as const : 'none' as const,
+          opacity: gameObject.active ? 1 : 0.5,
           width: '50px',
           height: '50px',
           background: '#ffffff20',
