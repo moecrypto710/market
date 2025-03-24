@@ -543,6 +543,139 @@
   animation: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+.animate-pulse-fast {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Town Button Border Animations */
+@keyframes border-tl {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(0, 100%);
+    opacity: 1;
+  }
+  26%, 50% {
+    transform: translate(0, 100%);
+    opacity: 0;
+  }
+  51% {
+    transform: translate(100%, 100%);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(100%, 100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes border-tr {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(0, 100%);
+    opacity: 1;
+  }
+  26%, 50% {
+    transform: translate(0, 100%);
+    opacity: 0;
+  }
+  51% {
+    transform: translate(-100%, 100%);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(-100%, 100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes border-bl {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(0, -100%);
+    opacity: 1;
+  }
+  26%, 50% {
+    transform: translate(0, -100%);
+    opacity: 0;
+  }
+  51% {
+    transform: translate(100%, -100%);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(100%, -100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes border-br {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(0, -100%);
+    opacity: 1;
+  }
+  26%, 50% {
+    transform: translate(0, -100%);
+    opacity: 0;
+  }
+  51% {
+    transform: translate(-100%, -100%);
+    opacity: 0;
+  }
+  75% {
+    transform: translate(-100%, -100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.animate-border-tl {
+  animation: border-tl 3s ease-in-out infinite;
+  animation-delay: 0ms;
+}
+
+.animate-border-tr {
+  animation: border-tr 3s ease-in-out infinite;
+  animation-delay: 300ms;
+}
+
+.animate-border-bl {
+  animation: border-bl 3s ease-in-out infinite;
+  animation-delay: 600ms;
+}
+
+.animate-border-br {
+  animation: border-br 3s ease-in-out infinite;
+  animation-delay: 900ms;
+}
+
 .animate-scan {
   animation: scanline 6s linear infinite;
 }

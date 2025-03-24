@@ -141,10 +141,17 @@ export default function HomePage() {
                 <div className="ml-auto">
                   <Button 
                     onClick={toggleVR}
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white"
+                    aria-label="دخول بلدة الأمريكي الافتراضية"
+                    className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-5 py-2 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                   >
-                    <i className="fas fa-vr-cardboard mr-2"></i>
-                    دخول بلدة الأمريكي
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                    <span className="absolute -top-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+                    <span className="absolute -bottom-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+                    
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      <i className="fas fa-vr-cardboard text-lg"></i>
+                      <span className="font-bold">دخول بلدة الأمريكي</span>
+                    </span>
                   </Button>
                 </div>
               </div>
@@ -219,13 +226,34 @@ export default function HomePage() {
                       setAiInitialQuestion("كيف أستخدم تجربة الواقع الافتراضي؟");
                       setTimeout(() => window.scrollTo(0, 0), 100);
                     }}
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-10 py-6 h-auto text-xl md:text-2xl w-full sm:w-auto rounded-2xl shadow-xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 relative overflow-hidden group"
+                    aria-label="دخول البلدة الافتراضية الذكية"
+                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-10 py-8 h-auto text-xl md:text-2xl w-full sm:w-auto rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden group border border-white/20"
                   >
-                    <div className="flex items-center justify-center gap-4">
-                      <i className="fas fa-vr-cardboard text-3xl"></i>
-                      <span>دخول البلدة الافتراضية الذكية</span>
-                    </div>
+                    {/* Interior glow effects */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform"></div>
+                    <div className="absolute -top-20 -left-20 w-40 h-40 bg-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-pink-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    {/* Animated border */}
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                      <div className="absolute top-0 left-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-tl"></div>
+                      <div className="absolute top-0 right-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-tr"></div>
+                      <div className="absolute bottom-0 left-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-bl"></div>
+                      <div className="absolute bottom-0 right-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-br"></div>
+                    </div>
+                    
+                    {/* 3D Text and Icon */}
+                    <div className="relative z-10 flex items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-105">
+                      <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
+                        <i className="fas fa-vr-cardboard text-3xl drop-shadow-lg"></i>
+                      </div>
+                      <span className="drop-shadow-md text-shadow-lg">دخول البلدة الافتراضية الذكية</span>
+                    </div>
+                    
+                    {/* Pulsing accent indicator */}
+                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white/40 rounded-full overflow-hidden">
+                      <div className="absolute inset-0 bg-white animate-pulse-fast"></div>
+                    </div>
                   </Button>
                 </motion.div>
                 
