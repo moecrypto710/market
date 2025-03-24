@@ -36,8 +36,8 @@ type MovementReturn = {
 
 const DEFAULT_POSITION = { x: 0, y: 0, z: 0 };
 const DEFAULT_ROTATION = { x: 0, y: 0, z: 0 };
-const DEFAULT_SPEED = 5;
-const DEFAULT_SENSITIVITY = 0.1;
+const DEFAULT_SPEED = 3.5; // تقليل السرعة للحصول على حركة أكثر واقعية
+const DEFAULT_SENSITIVITY = 0.15; // زيادة حساسية الكاميرا
 
 interface MovementOptions {
   initialPosition?: { x: number; y: number; z: number };

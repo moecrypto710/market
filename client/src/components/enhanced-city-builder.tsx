@@ -91,10 +91,10 @@ export default function EnhancedCityBuilder() {
     moveForward, moveBackward, moveLeft, moveRight, 
     rotate, resetPosition, setSpeed, addCollisionObject, removeCollisionObject
   } = useMovement({
-    initialPosition: { x: 0, y: 1.7, z: -15 }, // Eye level height for a more realistic view
+    initialPosition: { x: 0, y: 1.7, z: -12 }, // Eye level height for a more realistic view
     initialRotation: { x: 0, y: 0, z: 0 },
-    speed: 5,
-    sensitivity: 0.3,
+    speed: 3.2, // سرعة معتدلة للحصول على تجربة أكثر واقعية
+    sensitivity: 0.25, // حساسية أفضل للكاميرا
     enableCollisions: true
   });
   
@@ -290,6 +290,91 @@ export default function EnhancedCityBuilder() {
     { id: 'statue2', type: 'decoration', position: { x: 5, y: 0, z: -5 }, scale: 0.7 },
     { id: 'garden1', type: 'decoration', position: { x: -10, y: 0, z: 10 }, scale: 1.2 },
     { id: 'garden2', type: 'decoration', position: { x: 10, y: 0, z: 10 }, scale: 1.2 },
+  ];
+  
+  // شخصيات افتراضية لتحسين تجربة المستخدم وإضافة حياة إلى المدينة
+  const characters = [
+    { 
+      id: 'shopkeeper1', 
+      name: 'تاجر الملابس', 
+      position: { x: 18, y: 0, z: -3 }, 
+      type: 'npc',
+      model: 'shopkeeper',
+      dialogue: ['مرحباً بك في متجرنا!', 'لدينا أحدث صيحات الموضة', 'هل تريد تجربة قطعة ملابس؟'],
+      animation: 'idle'
+    },
+    { 
+      id: 'tourGuide1', 
+      name: 'مرشد سياحي', 
+      position: { x: -18, y: 0, z: -3 }, 
+      type: 'npc',
+      model: 'guide',
+      dialogue: ['مرحباً بك في مدينة أمريكي!', 'هل تحتاج إلى مساعدة؟', 'يمكنني إرشادك إلى أهم المعالم'],
+      animation: 'wave'
+    },
+    { 
+      id: 'techSupport1', 
+      name: 'مساعد تقني', 
+      position: { x: -8, y: 0, z: 18 }, 
+      type: 'npc',
+      model: 'techie',
+      dialogue: ['مرحباً، هل تبحث عن أي منتج تقني؟', 'لدينا أحدث الإصدارات من الأجهزة الذكية'],
+      animation: 'typing'
+    },
+    { 
+      id: 'chef1', 
+      name: 'طاهي', 
+      position: { x: 13, y: 0, z: 13 }, 
+      type: 'npc',
+      model: 'chef',
+      dialogue: ['أهلاً بك في منطقة المطاعم!', 'جرب أطباقنا الشهية', 'نقدم أشهى المأكولات العالمية والمحلية'],
+      animation: 'cooking'
+    },
+    { 
+      id: 'securityGuard1', 
+      name: 'حارس أمن', 
+      position: { x: 8, y: 0, z: -10 }, 
+      type: 'npc',
+      model: 'guard',
+      dialogue: ['مرحباً، كيف يمكنني مساعدتك؟', 'نحن هنا لضمان تجربة آمنة وممتعة'],
+      animation: 'patrol',
+      patrolPath: [
+        { x: 8, y: 0, z: -10 },
+        { x: 12, y: 0, z: -10 },
+        { x: 12, y: 0, z: -5 },
+        { x: 8, y: 0, z: -5 }
+      ]
+    },
+    { 
+      id: 'shopper1', 
+      name: 'متسوق', 
+      position: { x: 5, y: 0, z: 5 }, 
+      type: 'npc',
+      model: 'shopper',
+      dialogue: ['مرحباً!', 'المتاجر هنا رائعة', 'أنا أحب التسوق في مدينة أمريكي'],
+      animation: 'walking',
+      patrolPath: [
+        { x: 5, y: 0, z: 5 },
+        { x: 15, y: 0, z: 5 },
+        { x: 15, y: 0, z: 10 },
+        { x: 5, y: 0, z: 10 }
+      ]
+    },
+    { 
+      id: 'shopper2', 
+      name: 'متسوق', 
+      position: { x: -5, y: 0, z: 5 }, 
+      type: 'npc',
+      model: 'shopper_female',
+      dialogue: ['مرحباً!', 'يمكن العثور على أفضل المنتجات هنا'],
+      animation: 'walking',
+      patrolPath: [
+        { x: -5, y: 0, z: 5 },
+        { x: -15, y: 0, z: 5 },
+        { x: -15, y: 0, z: 10 },
+        { x: -5, y: 0, z: 10 }
+      ]
+    }
   ];
   
   // Setup audio context and sound effects
@@ -534,6 +619,164 @@ export default function EnhancedCityBuilder() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [activeBuilding, isInteriorView]);
+  
+  // Function to render characters (NPCs)
+  const renderCharacters = () => {
+    return characters.map((character) => {
+      // Calculate position relative to player
+      const relX = character.position.x - position.x;
+      const relZ = character.position.z - position.z;
+      
+      // Calculate distance to determine visibility and scale
+      const distance = Math.sqrt(relX * relX + relZ * relZ);
+      
+      // Skip rendering if too far away
+      if (distance > 40) return null;
+      
+      // Apply rotation based on player's view direction
+      const angle = rotation.y * (Math.PI / 180);
+      const rotatedX = relX * Math.cos(angle) - relZ * Math.sin(angle);
+      const rotatedZ = relX * Math.sin(angle) + relZ * Math.cos(angle);
+      
+      // Convert to screen position (percentage)
+      const screenX = 50 + (rotatedX * 2.5);
+      const screenY = 50 + (rotatedZ * 2.5);
+      
+      // Skip if outside field of view
+      if (screenX < -20 || screenX > 120 || screenY < -20 || screenY > 120) return null;
+      
+      // Calculate size and opacity based on distance
+      const size = Math.max(3, 20 - (distance * 0.4));
+      const opacity = Math.min(1, 1 - (distance / 40));
+      
+      // Determine whether character is in front or behind player
+      const inFront = rotatedZ >= 0;
+      if (!inFront) return null; // Skip rendering characters behind player
+      
+      // Calculate z-index based on distance
+      const zIndex = Math.floor(1000 - distance);
+      
+      // Character style
+      const getCharacterStyle = () => {
+        let style: React.CSSProperties = {
+          position: 'absolute',
+          left: `${screenX}%`,
+          top: `${screenY}%`,
+          width: `${size}vw`,
+          height: `${size * 2}vw`, // Characters are taller than wide
+          transform: 'translate(-50%, -100%)',
+          zIndex,
+          opacity,
+          cursor: 'pointer',
+          transition: 'all 0.2s ease-out',
+        };
+        
+        return style;
+      };
+      
+      // Get character avatar based on model type
+      const getCharacterAvatar = () => {
+        switch (character.model) {
+          case 'shopkeeper':
+            return '👨‍💼';
+          case 'guide':
+            return '👨‍✈️';
+          case 'techie':
+            return '👨‍💻';
+          case 'chef':
+            return '👨‍🍳';
+          case 'guard':
+            return '💂‍♂️';
+          case 'shopper':
+            return '🧔';
+          case 'shopper_female':
+            return '👩';
+          default:
+            return '👤';
+        }
+      };
+      
+      // Get animation for this character
+      const getCharacterAnimation = () => {
+        switch (character.animation) {
+          case 'wave':
+            return {
+              rotate: [0, 5, 0, -5, 0],
+              y: [0, -3, 0],
+              transition: { repeat: Infinity, duration: 3, ease: "easeInOut" }
+            };
+          case 'patrol':
+            return {
+              x: [0, 10, 0, -10, 0],
+              transition: { repeat: Infinity, duration: 10, ease: "linear" }
+            };
+          case 'typing':
+            return {
+              y: [0, -1, 0, -1, 0],
+              transition: { repeat: Infinity, duration: 1, ease: "linear" }
+            };
+          case 'cooking':
+            return {
+              rotate: [0, 10, 0, 10, 0],
+              transition: { repeat: Infinity, duration: 2, ease: "easeInOut" }
+            };
+          case 'walking':
+            return {
+              x: [0, 5, 0, -5, 0],
+              transition: { repeat: Infinity, duration: 5, ease: "linear" }
+            };
+          case 'idle':
+          default:
+            return {
+              y: [0, -2, 0],
+              transition: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+            };
+        }
+      };
+      
+      // Handle character click to show dialogue
+      const handleCharacterClick = () => {
+        if (character.dialogue && character.dialogue.length > 0) {
+          const randomDialogue = character.dialogue[Math.floor(Math.random() * character.dialogue.length)];
+          toast({
+            title: character.name,
+            description: randomDialogue,
+            duration: 3000,
+          });
+        }
+      };
+      
+      return (
+        <motion.div
+          key={character.id}
+          style={getCharacterStyle()}
+          animate={getCharacterAnimation()}
+          onClick={handleCharacterClick}
+          whileHover={{ scale: 1.1 }}
+        >
+          <div style={{ 
+            fontSize: `${size * 1.5}vw`, 
+            textAlign: 'center',
+            textShadow: '0 0 5px rgba(0,0,0,0.5)'
+          }}>
+            {getCharacterAvatar()}
+          </div>
+          <div style={{
+            fontSize: `${Math.max(0.8, size * 0.3)}vw`,
+            textAlign: 'center',
+            background: 'rgba(0,0,0,0.5)',
+            color: 'white',
+            padding: '2px 5px',
+            borderRadius: '4px',
+            marginTop: '5px',
+            whiteSpace: 'nowrap'
+          }}>
+            {character.name}
+          </div>
+        </motion.div>
+      );
+    });
+  };
   
   // Get environment visual styles based on time of day and weather
   const getEnvironmentStyles = () => {
