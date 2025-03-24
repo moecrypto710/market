@@ -8,8 +8,9 @@ import { Switch } from "@/components/ui/switch";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VRMallSimplified from "@/components/vr-mall-simplified";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
@@ -18,7 +19,11 @@ import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
+import AiShoppingAssistant from "@/components/ai-shopping-assistant";
+import AIVoiceControls from "@/components/ai-voice-controls";
+import PersonalizedRecommendations from "@/components/personalized-recommendations";
+import { RocketIcon, BrainCircuitIcon, PencilRulerIcon, SparklesIcon, Bot, Search, MicIcon, ShoppingCart, Wallet, Zap, BuildingIcon, Compass, CalendarIcon } from "lucide-react";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -29,6 +34,9 @@ export default function HomePage() {
   const [transitionStyle, setTransitionStyle] = useState<'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque'>('arabesque');
   const [, setLocation] = useLocation();
   const heroRef = useRef<HTMLDivElement>(null);
+  const [activeAiTab, setActiveAiTab] = useState("voice-ai");
+  const [voiceCommandActive, setVoiceCommandActive] = useState(false);
+  const [pulsatingMic, setPulsatingMic] = useState(false);
   
   const { data: products } = useQuery<Product[]>({
     queryKey: ['/api/products'],
@@ -47,6 +55,14 @@ export default function HomePage() {
     { id: 2, name: "ملابس", icon: "tshirt", color: "bg-pink-500", gradientFrom: "from-pink-900/40", gradientTo: "to-pink-700/40", borderColor: "border-pink-500/20" },
     { id: 3, name: "سفر", icon: "plane", color: "bg-cyan-500", gradientFrom: "from-cyan-900/40", gradientTo: "to-cyan-700/40", borderColor: "border-cyan-500/20" },
     { id: 4, name: "إكسسوارات", icon: "gem", color: "bg-lime-500", gradientFrom: "from-lime-900/40", gradientTo: "to-lime-700/40", borderColor: "border-lime-500/20" }
+  ];
+  
+  // AI tools offered
+  const aiTools = [
+    { id: "voice-ai", name: "الذكاء الصوتي", icon: MicIcon, description: "تحدث مع المساعد الذكي للبحث والتسوق", color: "bg-indigo-500" },
+    { id: "shop-ai", name: "مساعد التسوق", icon: ShoppingCart, description: "توصيات مخصصة لتسوق أفضل", color: "bg-pink-500" },
+    { id: "vr-ai", name: "مساعد الواقع الافتراضي", icon: Compass, description: "استكشف بلدة الأمريكي بشكل تفاعلي", color: "bg-teal-500" },
+    { id: "smart-search", name: "بحث ذكي", icon: Search, description: "ابحث عن المنتجات باستخدام وصف طبيعي", color: "bg-amber-500" },
   ];
   
   // Calculate points progress
@@ -74,26 +90,18 @@ export default function HomePage() {
     }
   }, [products]);
   
-  // Parallax effect for hero section
+  // Simulated voice command activation
   useEffect(() => {
-    const handleScroll = () => {
-      if (heroRef.current) {
-        const scrollY = window.scrollY;
-        heroRef.current.style.backgroundPositionY = `${scrollY * 0.5}px`;
-        
-        // Apply opacity based on scroll
-        const opacity = Math.max(0, Math.min(1, 1 - scrollY / 500));
-        const heroElements = heroRef.current.querySelectorAll('.hero-element');
-        heroElements.forEach(el => {
-          (el as HTMLElement).style.opacity = opacity.toString();
-          (el as HTMLElement).style.transform = `translateY(${scrollY * 0.2}px)`;
-        });
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    let timer: NodeJS.Timeout;
+    if (voiceCommandActive) {
+      setPulsatingMic(true);
+      timer = setTimeout(() => {
+        setPulsatingMic(false);
+        setVoiceCommandActive(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [voiceCommandActive]);
   
   // Function to trigger cultural transition
   const triggerTransition = (style: 'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque', destination?: string) => {
@@ -116,6 +124,11 @@ export default function HomePage() {
       origin: { y: 0.6 }
     });
   }
+  
+  // Function to simulate voice command activation
+  const activateVoiceCommand = () => {
+    setVoiceCommandActive(true);
+  };
 
   // Animation variants
   const fadeInUp = {
