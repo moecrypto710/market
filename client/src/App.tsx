@@ -14,6 +14,7 @@ import StoreRentalPage from "@/pages/store-rental-page";
 import ServicesPage from "@/pages/services-page";
 import BusinessWorldPage from "@/pages/business-world-page";
 import VRAmrikyyTownPage from "@/pages/vr-amrikyy-town-page";
+import VirtualCityNew from "@/pages/virtual-city-new";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import { VRProvider } from "./hooks/use-vr";
@@ -46,7 +47,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={VRAmrikyyTownPage} />
+      <ProtectedRoute path="/" component={VirtualCityNew} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />
@@ -54,20 +55,9 @@ function Router() {
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
-      <Route path="/virtual-city">
-        {() => {
-          // إعادة توجيه المسار القديم إلى المسار الجديد
-          window.location.href = "/";
-          return null;
-        }}
-      </Route>
-      <Route path="/vr-amrikyy-town">
-        {() => {
-          // إعادة توجيه المسار القديم إلى المسار الجديد
-          window.location.href = "/";
-          return null;
-        }}
-      </Route>
+      <Route path="/homepage" component={VirtualCityNew} />
+      <Route path="/virtual-city" component={VirtualCityNew} />
+      <Route path="/vr-amrikyy-town" component={VirtualCityNew} />
       <Route component={NotFound} />
     </Switch>
   );

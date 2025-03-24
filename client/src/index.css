@@ -192,6 +192,206 @@
   animation: border-glow 1.5s infinite;
 }
 
+/* City Weather Animation Effects */
+@keyframes falling-rain {
+  from {
+    transform: translateY(-10px);
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0.3;
+  }
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(5px, -5px);
+  }
+  50% {
+    transform: translate(0, -10px);
+  }
+  75% {
+    transform: translate(-5px, -5px);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-7px, -7px);
+  }
+  66% {
+    transform: translate(7px, -14px);
+  }
+}
+
+@keyframes float3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(8px, 5px);
+  }
+  66% {
+    transform: translate(-8px, 10px);
+  }
+}
+
+.animate-float1 {
+  animation: float1 8s ease-in-out infinite;
+}
+
+.animate-float2 {
+  animation: float2 10s ease-in-out infinite;
+}
+
+.animate-float3 {
+  animation: float3 12s ease-in-out infinite;
+}
+
+/* Virtual City CSS */
+.virtual-city-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.virtual-road {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.virtual-floor {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  transform: rotateX(60deg);
+}
+
+.virtual-ceiling {
+  transform: rotateX(-60deg);
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.building-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* VR Experience Controls */
+.vr-button {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.vr-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.vr-button:active {
+  transform: translateY(1px);
+}
+
+.vr-controller {
+  width: 120px;
+  height: 120px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 60px;
+  position: relative;
+}
+
+.vr-joystick {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vr-joystick:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* 3D Building Styles */
+.building-3d {
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.building-face {
+  position: absolute;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.building-top {
+  transform: rotateX(90deg) translateZ(50px);
+}
+
+.building-front {
+  transform: translateZ(50px);
+}
+
+.building-back {
+  transform: rotateY(180deg) translateZ(50px);
+}
+
+.building-left {
+  transform: rotateY(-90deg) translateZ(50px);
+}
+
+.building-right {
+  transform: rotateY(90deg) translateZ(50px);
+}
+
+.glass-building {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Environment Effects */
+.day-time {
+  background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+}
+
+.night-time {
+  background: linear-gradient(to bottom, #0F2027, #203A43);
+  filter: brightness(0.4) contrast(1.2);
+}
+
+.evening-time {
+  background: linear-gradient(to bottom, #FF7E5F, #FEB47B);
+  filter: brightness(0.9) sepia(0.2);
+}
+
+.rainy-weather {
+  filter: brightness(0.7) contrast(1.1);
+  background: linear-gradient(to bottom, #333333, #666666);
+}
+
+.dusty-weather {
+  filter: sepia(0.7) brightness(0.85);
+  background: linear-gradient(to bottom, #d4a76a, #e8c496);
+}
+
 /* VR Town Advanced Animations and Effects */
 
 /* Smart controls tooltip styling */

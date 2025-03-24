@@ -20,7 +20,7 @@ import ThreeBuildingModel from './three-building-model';
 interface Building {
   id: string;
   name: string;
-  type: 'travel' | 'clothing' | 'electronics' | 'food' | 'entertainment' | 'services' | 'other';
+  type: string; // Allow any building type
   position: { x: number; y: number; z: number };
   rotation: number;
   scale: number;
@@ -53,6 +53,9 @@ interface EnvironmentSettings {
  * An immersive virtual city experience with realistic buildings, lighting,
  * sound effects, and interactive elements designed for regular devices
  * (without requiring VR hardware) to simulate a VR-like experience.
+ * 
+ * This component uses modern web technologies to create a 3D-like environment
+ * that works on all devices from mobile to desktop.
  */
 export default function EnhancedCityBuilder() {
   const isMobile = useIsMobile();
@@ -700,7 +703,7 @@ export default function EnhancedCityBuilder() {
           onClick={() => handleBuildingApproach(building.id)}
         >
           <ThreeBuildingModel 
-            type={building.type}
+            type="building"
             color={building.color}
             showControls={false}
             className="w-full h-full"
@@ -1050,6 +1053,7 @@ export default function EnhancedCityBuilder() {
     
     const mapSize = 150;
     const playerDot = 8;
+    const mapScaleFactor = mapSize / 100; // Map scaling factor
     
     return (
       <div className="absolute bottom-4 right-4 z-30 bg-black/50 backdrop-blur-md rounded-lg p-2 border border-white/20">
@@ -1062,9 +1066,8 @@ export default function EnhancedCityBuilder() {
           
           {/* Buildings on minimap */}
           {buildings.map((building) => {
-            const scale = mapSize / 100; // Map scaling factor
-            const buildingX = (building.position.x + 50) * scale; // Centered at 0,0
-            const buildingZ = (building.position.z + 50) * scale;
+            const buildingX = (building.position.x + 50) * mapScaleFactor; // Centered at 0,0
+            const buildingZ = (building.position.z + 50) * mapScaleFactor;
             const buildingSize = 6 * building.scale;
             
             return (
@@ -1088,8 +1091,8 @@ export default function EnhancedCityBuilder() {
           <div
             className="absolute rounded-full bg-blue-500"
             style={{
-              left: `${(position.x + 50) * scale}px`, 
-              top: `${(position.z + 50) * scale}px`,
+              left: `${(position.x + 50) * mapScaleFactor}px`, 
+              top: `${(position.z + 50) * mapScaleFactor}px`,
               width: `${playerDot}px`,
               height: `${playerDot}px`,
               transform: 'translate(-50%, -50%)',
@@ -1307,7 +1310,7 @@ export default function EnhancedCityBuilder() {
       {renderMinimap()}
       
       {/* Custom CSS animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes falling-rain {
           0% {
             transform: translateY(-100vh);

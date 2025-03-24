@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useVR } from '@/hooks/use-vr';
 import { useMovement } from '@/hooks/use-movement';
+import { useToast } from '@/hooks/use-toast';
 import AirplaneBuildingInterior from './airplane-building-interior';
 import EnterBuilding from './enter-building';
 import StoreInteraction from './store-interaction';
@@ -12,996 +13,1521 @@ import TouchControls from './touch-controls';
 import VirtualFittingRoom from './virtual-fitting-room';
 import DynamicPromotions from './dynamic-promotions';
 import ThreeProductView from './three-product-view';
+import ThreeBuildingModel from './three-building-model';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
+/**
+ * Interface for Building definition in virtual city
+ */
 interface Building {
   id: string;
   name: string;
-  type: 'travel' | 'clothing' | 'electronics' | 'other';
+  type: 'travel' | 'clothing' | 'electronics' | 'restaurant' | 'bank' | 'entertainment';
   position: { x: number; y: number; z: number };
   rotation: number;
   scale: number;
   color: string;
   icon: string;
+  description: string;
+  interactionDistance: number;
+  elevated?: boolean;
 }
 
 /**
- * CityBuilder Component
+ * Interface for road definitions
+ */
+interface Road {
+  id: string;
+  start: { x: number; y: number; z: number };
+  end: { x: number; y: number; z: number };
+  width: number;
+  type: 'main' | 'secondary' | 'pedestrian';
+}
+
+/**
+ * Interface for decoration items
+ */
+interface Decoration {
+  id: string;
+  type: 'tree' | 'bench' | 'fountain' | 'lamppost' | 'statue' | 'sign';
+  position: { x: number; y: number; z: number };
+  rotation: number;
+  scale: number;
+}
+
+/**
+ * مكون مدينة أمريكي الافتراضية المتكاملة
  * 
- * React implementation of Unity's CityBuilder.cs
- * Creates a virtual city with different buildings for the user to explore
+ * مدينة ثلاثية الأبعاد تتضمن مباني تفاعلية لوكالات السفر ومتاجر الملابس
+ * ومتاجر الإلكترونيات ومزيد من المرافق الخدمية
  */
 export default function CityBuilder() {
-  const { vrEnabled, gestureControlEnabled } = useVR();
+  const { vrEnabled, gestureControlEnabled, walkSpeed } = useVR();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const cityRef = useRef<HTMLDivElement>(null);
   
-  // Set up movement and collisions, based on Unity PlayerController
-  const movement = useMovement();
-  
-  // Initialize position similar to Unity's transform.position
-  useEffect(() => {
-    // This function should only run once at component mount
-    const initializePosition = () => {
-      // Set starting position 5 units in front of center
-      movement.resetPosition();
-      
-      // Apply speed based on Unity's speed parameter
-      movement.setSpeed(5);
-    };
-    
-    initializePosition();
-    // Empty dependency array means this runs once on mount
-  }, []);
-  
-  // Define building layout based on Unity TownBuilder script
-  // This matches the provided Unity code structure with the same positions
-  const buildings: Building[] = [
-    {
-      id: 'travelAgency',
-      name: 'وكالة السفر العربي', // Arab Travel Agency
-      type: 'travel',
-      position: { x: 0, y: 0, z: 0 }, // matches Vector3(0, 0, 0) in Unity
-      rotation: 0,
-      scale: 1.8, // Increased size to make it more prominent
-      color: '#2563eb', // blue-600
-      icon: 'fa-plane'
-    },
-    {
-      id: 'clothingStore',
-      name: 'متجر الملابس الفاخرة', // Luxury Clothing Store
-      type: 'clothing',
-      position: { x: 12, y: 0, z: 2 }, // moved further right and slightly forward
-      rotation: 15, // rotated slightly
-      scale: 1.2,
-      color: '#f59e0b', // amber-500
-      icon: 'fa-tshirt'
-    },
-    {
-      id: 'electronicsStore',
-      name: 'متجر الإلكترونيات والتقنية', // Electronics & Tech Store
-      type: 'electronics',
-      position: { x: -12, y: 0, z: 2 }, // moved further left and slightly forward
-      rotation: -15, // rotated slightly in opposite direction
-      scale: 1.2,
-      color: '#10b981', // emerald-500
-      icon: 'fa-laptop'
-    }
-  ];
-  
-  // State to track active building and gate
-  const [activeBuilding, setActiveBuilding] = useState<string | null>(null);
-  const [gateOpen, setGateOpen] = useState<boolean>(false);
-  
-  // Add state for dynamic environment features
-  const [timeOfDay, setTimeOfDay] = useState<'dawn' | 'day' | 'dusk' | 'night'>('day');
-  const [weatherCondition, setWeatherCondition] = useState<'clear' | 'cloudy' | 'rainy' | 'sandstorm'>('clear');
+  // Environment settings
+  const [dayTime, setDayTime] = useState<'morning' | 'noon' | 'evening' | 'night'>('noon');
+  const [weather, setWeather] = useState<'clear' | 'cloudy' | 'rain' | 'dusty'>('clear');
   const [trafficDensity, setTrafficDensity] = useState<'low' | 'medium' | 'high'>('medium');
   
-  // Define gate positions based on Unity GateControl concept
-  const gates = [
-    {
-      id: 'mainGate',
-      position: { x: 0, y: 0, z: 5 },
-      name: 'البوابة الرئيسية',
-    },
-    {
-      id: 'mallGate',
-      position: { x: 5, y: 0, z: 5 },
-      name: 'بوابة المجمع التجاري',
-    }
-  ];
-
-  // Register buildings and gates as collision objects
-  useEffect(() => {
-    // We need to create a stable reference to the buildings functions
-    const addBuildingCollisions = () => {
-      // Clear existing collision objects
-      buildings.forEach(building => {
-        movement.addCollisionObject({
-          id: building.id,
-          position: building.position,
-          size: { width: 5, height: 5, depth: 5 },
-          type: 'object',
-        });
-      });
-      
-      // Add gates as trigger zones (not solid objects)
-      gates.forEach(gate => {
-        movement.addCollisionObject({
-          id: gate.id,
-          position: gate.position,
-          size: { width: 3, height: 5, depth: 3 },
-          type: 'trigger',
-          onCollision: () => setGateOpen(true),
-        });
-      });
-      
-      // Add road collision - matches road position in Unity's TownBuilder
-      // Instantiate(road, new Vector3(0, -1, 0), Quaternion.identity);
-      movement.addCollisionObject({
-        id: 'road',
-        position: { x: 0, y: -1, z: 0 }, // matches Vector3(0, -1, 0) in Unity
-        size: { width: 50, height: 0.1, depth: 50 },
-        type: 'object',
-      });
-    };
-    
-    // Add all building collisions
-    addBuildingCollisions();
-    
-    // Cleanup function to remove collisions when unmounted
-    return () => {
-      buildings.forEach(building => {
-        movement.removeCollisionObject(building.id);
-      });
-      gates.forEach(gate => {
-        movement.removeCollisionObject(gate.id);
-      });
-      movement.removeCollisionObject('road');
-    };
-  }, [movement.addCollisionObject, movement.removeCollisionObject]);
+  // City state
+  const [showMap, setShowMap] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(true);
+  const [notificationText, setNotificationText] = useState<string | null>(null);
+  const [selectedBuilding, setSelectedBuilding] = useState<string | null>(null);
+  const [insideBuilding, setInsideBuilding] = useState<string | null>(null);
   
-  const getPositionStyle = (position: { x: number; y: number; z: number }) => {
-    // Convert 3D position to 2D screen coordinates
-    // This is a simplified version of what Unity would do with a camera projection
-    const scale = 15; // Adjust based on viewport size
-    const centerX = 50; // Center of the screen as percentage
-    const centerZ = 50;
-    
-    // Calculate position relative to player
-    const relX = position.x - movement.position.x;
-    const relZ = position.z - movement.position.z;
-    
-    // Apply simple rotation matrix based on player's Y rotation
-    const angle = movement.rotation.y * (Math.PI / 180);
-    const rotatedX = relX * Math.cos(angle) - relZ * Math.sin(angle);
-    const rotatedZ = relX * Math.sin(angle) + relZ * Math.cos(angle);
-    
-    // Convert to screen percentage
-    const screenX = centerX + (rotatedX * scale);
-    const screenZ = centerZ + (rotatedZ * scale);
-    
-    // Calculate distance for size and opacity
-    const distance = Math.sqrt(relX * relX + relZ * relZ);
-    const size = Math.max(20, 100 - (distance * 5)); // Size decreases with distance
-    const opacity = Math.min(1, 2 - (distance / 10)); // Fade out with distance
-    
-    return {
-      left: `${screenX}%`,
-      top: `${screenZ}%`,
-      width: `${size}px`,
-      height: `${size}px`,
-      opacity,
-      zIndex: Math.floor(1000 - distance),
-    };
-  };
-  
-  const getStoreInterior = (buildingType: string) => {
-    switch (buildingType) {
-      case 'travel':
-        return <AirplaneBuildingInterior />;
-      case 'clothing':
-        return (
-          <div className="flex flex-col h-full bg-amber-50 text-black p-4">
-            <div className="text-center mb-5">
-              <h2 className="text-2xl font-bold">متجر الملابس</h2>
-              <p className="text-sm text-gray-600 mb-4">استكشف أحدث الأزياء والموديلات</p>
-              <div className="h-1 w-32 bg-amber-400 mx-auto"></div>
-            </div>
-            
-            <div className="flex-1 flex flex-col md:flex-row gap-4">
-              {/* Left side - virtual fitting room */}
-              <div className="flex-1 h-full">
-                <div className="bg-white rounded-lg shadow-md p-3 h-full flex flex-col">
-                  <h3 className="text-lg font-semibold mb-3 text-amber-700">غرفة تجربة الملابس الافتراضية</h3>
-                  
-                  <div className="flex-1 bg-amber-50 rounded-md flex flex-col items-center justify-center">
-                    <VirtualFittingRoom 
-                      outfits={[
-                        {
-                          id: 1,
-                          name: "قميص كاجوال",
-                          image: "/images/product-templates/adidas-tshirt.svg",
-                          price: 299
-                        },
-                        {
-                          id: 2,
-                          name: "حذاء رياضي",
-                          image: "/images/product-templates/nike-shoes.svg",
-                          price: 799
-                        },
-                        {
-                          id: 3,
-                          name: "بنطلون جينز",
-                          image: "/images/product-templates/levis-jeans.svg",
-                          price: 450
-                        }
-                      ]}
-                      showControls={true}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right side - dynamic promotions and store info */}
-              <div className="w-full md:w-64">
-                <div className="bg-white rounded-lg shadow-md p-3 mb-4">
-                  <h3 className="text-lg font-semibold mb-2 text-amber-700">عروض اليوم</h3>
-                  <DynamicPromotions 
-                    variant="highlight"
-                    animated={true}
-                  />
-                </div>
-                
-                <div className="bg-white rounded-lg shadow-md p-3">
-                  <h3 className="text-lg font-semibold mb-2 text-amber-700">معلومات المتجر</h3>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li className="flex items-center">
-                      <span className="ml-2">⏰</span>
-                      <span>ساعات العمل: 9ص - 10م</span>
-                    </li>
-                    <li className="flex items-center">
-                      <span className="ml-2">📱</span>
-                      <span>الهاتف: 1234-567-8910+</span>
-                    </li>
-                    <li className="flex items-center">
-                      <span className="ml-2">🏬</span>
-                      <span>الطابق الثاني، المدخل الرئيسي</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <Button className="bg-amber-500 hover:bg-amber-600 text-white">تصفح المنتجات</Button>
-            </div>
-          </div>
-        );
-      case 'electronics':
-        return (
-          <div className="flex flex-col h-full bg-emerald-50 text-black p-4">
-            <div className="text-center mb-5">
-              <h2 className="text-2xl font-bold">متجر الإلكترونيات</h2>
-              <p className="text-sm text-gray-600 mb-4">استكشف أحدث المنتجات التقنية والأجهزة الذكية</p>
-              <div className="h-1 w-32 bg-emerald-400 mx-auto"></div>
-            </div>
-            
-            <div className="flex-1 flex flex-col md:flex-row gap-4">
-              {/* Left side - 3D product view */}
-              <div className="flex-1 h-full">
-                <div className="bg-white rounded-lg shadow-md p-3 h-full flex flex-col">
-                  <h3 className="text-lg font-semibold mb-3 text-emerald-700">عرض ثلاثي الأبعاد للمنتج</h3>
-                  
-                  <div className="flex-1 bg-[#1a1a2e] rounded-md flex flex-col items-center justify-center">
-                    <ThreeProductView 
-                      color="#10b981"
-                      rotationSpeed={0.02}
-                      height={250}
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Right side - product info and daily promotions */}
-              <div className="w-full md:w-64">
-                <div className="bg-white rounded-lg shadow-md p-3 mb-4">
-                  <h3 className="text-lg font-semibold mb-2 text-emerald-700">عروض اليوم</h3>
-                  <DynamicPromotions 
-                    variant="default"
-                    animated={true}
-                  />
-                </div>
-                
-                <div className="bg-white rounded-lg shadow-md p-3">
-                  <h3 className="text-lg font-semibold mb-2 text-emerald-700">مواصفات المنتج</h3>
-                  <ul className="text-sm text-gray-600 space-y-2 mr-4 list-disc" style={{ direction: 'rtl' }}>
-                    <li>معالج متطور</li>
-                    <li>ذاكرة 16 جيجابايت</li>
-                    <li>شاشة عالية الوضوح</li>
-                    <li>بطارية طويلة العمر</li>
-                    <li>ضمان لمدة عامين</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-4 text-center">
-              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">إضافة إلى السلة</Button>
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="flex items-center justify-center h-full bg-gray-100 text-black">
-            المتجر غير متاح
-          </div>
-        );
-    }
-  };
-  
-  const renderBuildings = () => {
-    return buildings.map((building) => {
-      const style = getPositionStyle(building.position);
-      
-      // Check if building should be rendered (in front of camera)
-      if (style.opacity <= 0.1) return null;
-      
-      // Special styling for different building types
-      const isTravelAgency = building.id === 'travelAgency';
-      const isClothingStore = building.id === 'clothingStore';
-      const isElectronicsStore = building.id === 'electronicsStore';
-      
-      // 3D building style with rotation
-      const buildingRotation = building.rotation || 0;
-      
-      // Effect color based on building type
-      const glowColor = building.color;
-      const shadowColor = `${glowColor}80`; // semi-transparent glow
-      
-      return (
-        <motion.div
-          key={building.id}
-          className="absolute flex items-center justify-center"
-          style={{
-            ...style,
-            perspective: '1000px',
-            transform: `rotateY(${buildingRotation}deg)`,
-          }}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ 
-            scale: building.scale || 1,
-            opacity: style.opacity,
-            y: isTravelAgency ? [0, -5, 0] : 0,
-          }}
-          transition={
-            isTravelAgency 
-              ? { 
-                  y: { repeat: Infinity, duration: 3, ease: "easeInOut" },
-                  scale: { duration: 0.7, ease: "easeOut" },
-                  opacity: { duration: 0.5 }
-                }
-              : {
-                  scale: { duration: 0.7, ease: "easeOut" },
-                  opacity: { duration: 0.5 }
-                }
-          }
-          whileHover={{ 
-            scale: (building.scale || 1) * 1.05,
-            boxShadow: `0 0 15px ${shadowColor}`,
-          }}
-          whileTap={{ scale: (building.scale || 1) * 0.95 }}
-        >
-          {/* Building wrapper with 3D effect */}
-          <div className="relative group">
-            {/* 3D building body */}
-            <div 
-              className="relative rounded-lg overflow-hidden transition-all duration-300"
-              style={{
-                width: '100%',
-                height: '100%',
-                background: `linear-gradient(135deg, ${building.color}, ${building.color}99)`,
-                boxShadow: `0 5px 15px rgba(0,0,0,0.3), 0 0 8px ${shadowColor}`,
-                border: `2px solid ${building.color}33`,
-                transform: `perspective(500px) rotateX(10deg)`,
-              }}
-            >
-              {/* Building facade with windows */}
-              <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-1 p-1 opacity-60">
-                {[...Array(9)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="bg-white/20 rounded-sm"
-                    style={{
-                      animationDelay: `${i * 0.1}s`,
-                      animation: i % 3 === 1 ? 'pulse 4s infinite' : 'none'
-                    }}
-                  />
-                ))}
-              </div>
-              
-              {/* Building nameplate */}
-              <div 
-                className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center text-xs p-1 backdrop-blur-sm"
-                style={{ direction: 'rtl' }}
-              >
-                {building.name}
-              </div>
-              
-              {/* Store logo/icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <i 
-                  className={`fas ${building.icon} text-white/80 text-4xl`}
-                  style={{
-                    filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.5))',
-                    animation: 'pulse 3s infinite'
-                  }}
-                ></i>
-              </div>
-            </div>
-            
-            {/* Floating indicator/effects */}
-            <motion.div 
-              className={`absolute -top-4 -right-4 text-xl z-10 ${isElectronicsStore ? 'text-emerald-400' : isClothingStore ? 'text-amber-400' : 'text-blue-400'}`}
-              animate={{ 
-                y: [-3, 3, -3],
-                rotate: isElectronicsStore ? [0, 15, 0, -15, 0] : isClothingStore ? [0, -10, 0] : [0, 10, 0]
-              }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: isElectronicsStore ? 5 : 3,
-                ease: "easeInOut" 
-              }}
-            >
-              {isElectronicsStore ? '🖥️' : isClothingStore ? '👕' : '✈️'}
-            </motion.div>
-          </div>
-          
-          {/* Store interaction component */}
-          <StoreInteraction
-            storePosition={building.position}
-            storeName={building.name}
-            interiorComponent={getStoreInterior(building.type)}
-            triggerDistance={3.5} // Increased trigger distance
-            onEnter={() => setActiveBuilding(building.id)}
-            onExit={() => setActiveBuilding(null)}
-            storeColor={building.color}
-            storeIcon={building.icon}
-          />
-          
-          {/* Special indicator for different store types */}
-          <div className="absolute -bottom-8 left-0 right-0 text-center">
-            <motion.div 
-              className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
-                isTravelAgency ? 'bg-yellow-400 text-blue-900' : 
-                isClothingStore ? 'bg-amber-400 text-amber-900' :
-                'bg-emerald-400 text-emerald-900'
-              }`}
-              animate={{ 
-                scale: [1, 1.1, 1],
-                y: isTravelAgency ? [0, -3, 0] : isClothingStore ? [0, -2, 0] : [0, -1, 0]
-              }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: isTravelAgency ? 2 : isClothingStore ? 3 : 4
-              }}
-            >
-              {isTravelAgency ? 'السفر العربي' : 
-               isClothingStore ? 'أزياء فاخرة' : 
-               'إلكترونيات متطورة'}
-            </motion.div>
-          </div>
-        </motion.div>
-      );
-    });
-  };
-  
-  const renderRoad = () => {
-    // Simple road representation
-    return (
-      <div 
-        className="absolute"
-        style={{
-          width: '100%',
-          height: '60%',
-          left: '0',
-          top: '40%',
-          background: 'linear-gradient(0deg, #374151 0%, #1f2937 100%)',
-          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
-          transform: 'rotateX(60deg)',
-          zIndex: 1,
-          borderTop: '2px solid #f59e0b',
-          borderBottom: '2px solid #f59e0b',
-        }}
-      >
-        {/* Road markings */}
-        <div className="absolute left-1/2 top-0 bottom-0 w-[5px] bg-yellow-400 opacity-80" style={{ transform: 'translateX(-50%)' }}></div>
-        
-        {/* Crosswalks */}
-        <div className="absolute left-1/4 top-0 bottom-0 w-4 flex flex-col justify-around">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="h-4 w-full bg-white opacity-70"></div>
-          ))}
-        </div>
-        
-        <div className="absolute right-1/4 top-0 bottom-0 w-4 flex flex-col justify-around">
-          {[...Array(10)].map((_, i) => (
-            <div key={i} className="h-4 w-full bg-white opacity-70"></div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-  
-  // Simplified sky
-  // Enhanced sky with day/night cycle inspired by Unity's DayNightCycle script
-  const renderSky = () => {
-    // Get time of day (could be dynamic in a more complex implementation)
-    // Use the state value for time of day
-    
-    // Sky gradients for different times of day - similar to setting Skybox materials in Unity
-    const skyGradients = {
-      dawn: 'linear-gradient(to bottom, #0c0a3e 0%, #6b2d5c 20%, #f7b733 60%, #f2f2f2 100%)',
-      day: 'linear-gradient(to bottom, #0078ff 0%, #3b82f6 40%, #93c5fd 100%)',
-      dusk: 'linear-gradient(to bottom, #2c3e50 0%, #fd746c 60%, #ff9068 100%)',
-      night: 'linear-gradient(to bottom, #0f0c29 0%, #302b63 50%, #24243e 100%)'
-    };
-    
-    // Stars only visible at night
-    const showStars = timeOfDay === 'night';
-    
-    return (
-      <div 
-        className="absolute inset-0 z-0 overflow-hidden" 
-        style={{
-          background: skyGradients[timeOfDay],
-          transition: 'background 2s ease-in-out',
-        }}
-      >
-        {/* Animated stars */}
-        {showStars && (
-          <div className="absolute inset-0">
-            {Array.from({ length: 100 }).map((_, i) => (
-              <div 
-                key={i}
-                className="absolute bg-white rounded-full"
-                style={{
-                  width: `${Math.random() * 2 + 1}px`,
-                  height: `${Math.random() * 2 + 1}px`,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 60}%`,
-                  opacity: Math.random() * 0.7 + 0.3,
-                  animation: `twinkle ${Math.random() * 5 + 3}s infinite alternate`,
-                  animationDelay: `${Math.random() * 5}s`,
-                }}
-              />
-            ))}
-          </div>
-        )}
-        
-        {/* Weather Effects */}
-        <div className="absolute inset-0">
-          {/* Weather overlay based on current condition */}
-          {weatherCondition !== 'clear' && (
-            <div 
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: weatherCondition === 'cloudy' ? 'rgba(200, 200, 220, 0.3)' :
-                           weatherCondition === 'rainy' ? 'rgba(100, 120, 150, 0.5)' :
-                           weatherCondition === 'sandstorm' ? 'rgba(210, 180, 140, 0.6)' : 'transparent'
-              }}
-            />
-          )}
-          
-          {/* Rain effect */}
-          {weatherCondition === 'rainy' && (
-            <div className="absolute inset-0 overflow-hidden">
-              {Array.from({ length: 60 }).map((_, i) => (
-                <div
-                  key={`rain-${i}`}
-                  className="absolute bg-blue-200"
-                  style={{
-                    width: '1px',
-                    height: `${Math.random() * 20 + 10}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    opacity: 0.6,
-                    transform: 'rotate(15deg)',
-                    animation: `fallDown ${Math.random() * 0.5 + 0.7}s linear infinite`,
-                    animationDelay: `${Math.random() * 1}s`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
-          
-          {/* Sand particles for sandstorm */}
-          {weatherCondition === 'sandstorm' && (
-            <div className="absolute inset-0 overflow-hidden">
-              {Array.from({ length: 40 }).map((_, i) => (
-                <div
-                  key={`sand-${i}`}
-                  className="absolute rounded-full"
-                  style={{
-                    width: `${Math.random() * 4 + 2}px`,
-                    height: `${Math.random() * 4 + 2}px`,
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    backgroundColor: `rgba(${210 + Math.random() * 30}, ${180 + Math.random() * 20}, ${140 + Math.random() * 30}, ${0.6 + Math.random() * 0.3})`,
-                    animation: `windDrift ${Math.random() * 3 + 2}s linear infinite`,
-                    animationDelay: `${Math.random() * 2}s`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
-          
-          {/* Enhanced clouds with animation - more for cloudy weather */}
-          <div className="absolute top-0 left-0 right-0 h-60 overflow-hidden">
-            {/* First cloud layer - closer, faster */}
-            <div className="absolute left-0 right-0 top-10">
-              {Array.from({ length: weatherCondition === 'cloudy' ? 8 : 5 }).map((_, i) => (
-                <div 
-                  key={`cloud1-${i}`}
-                  className="absolute"
-                  style={{
-                    left: `${(i * 20 + Math.random() * 10)}%`,
-                    top: `${Math.random() * 20}%`,
-                    opacity: weatherCondition === 'cloudy' ? 0.9 : 0.7,
-                    animation: 'driftRight 30s linear infinite',
-                    animationDelay: `${i * -6}s`,
-                  }}
-                >
-                  <div className="cloud flex">
-                    <div className="w-16 h-16 bg-white rounded-full"></div>
-                    <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
-                    <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Second cloud layer - further, slower */}
-            <div className="absolute left-0 right-0 top-0">
-              {Array.from({ length: weatherCondition === 'cloudy' ? 6 : 4 }).map((_, i) => (
-                <div 
-                  key={`cloud2-${i}`}
-                  className="absolute"
-                  style={{
-                    left: `${(i * 25 + Math.random() * 15)}%`,
-                    top: `${Math.random() * 10}%`,
-                    opacity: weatherCondition === 'cloudy' ? 0.8 : 0.5,
-                    transform: 'scale(1.5)',
-                    animation: 'driftRight 45s linear infinite',
-                    animationDelay: `${i * -11}s`,
-                  }}
-                >
-                  <div className="cloud flex">
-                    <div className="w-16 h-16 bg-white rounded-full"></div>
-                    <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
-                    <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        
-        {/* Dynamic sun/moon based on time of day */}
-        {timeOfDay === 'day' && (
-          <div 
-            className="absolute w-20 h-20 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-200"
-            style={{ 
-              right: '15%', 
-              top: '5%', 
-              boxShadow: '0 0 40px rgba(253, 224, 71, 0.9)',
-              animation: 'pulseSun 8s ease-in-out infinite alternate'
-            }}
-          >
-            {/* Sun rays */}
-            <div className="absolute inset-0 sun-rays"></div>
-          </div>
-        )}
-        
-        {timeOfDay === 'night' && (
-          <div 
-            className="absolute w-16 h-16 rounded-full bg-gradient-to-b from-slate-100 to-slate-300"
-            style={{ 
-              right: '25%', 
-              top: '15%', 
-              boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)',
-            }}
-          >
-            {/* Moon craters */}
-            <div className="absolute w-3 h-3 rounded-full bg-slate-300 top-3 left-5 opacity-80"></div>
-            <div className="absolute w-2 h-2 rounded-full bg-slate-300 top-6 left-10 opacity-80"></div>
-            <div className="absolute w-4 h-4 rounded-full bg-slate-300 top-9 left-3 opacity-80"></div>
-          </div>
-        )}
-        
-        {/* Dynamic horizon glow (dawn/dusk only) */}
-        {(timeOfDay === 'dawn' || timeOfDay === 'dusk') && (
-          <div 
-            className="absolute bottom-0 left-0 right-0 h-1/3"
-            style={{
-              background: timeOfDay === 'dawn' 
-                ? 'linear-gradient(to top, rgba(255, 140, 50, 0.5) 0%, transparent 100%)'
-                : 'linear-gradient(to top, rgba(255, 80, 80, 0.5) 0%, transparent 100%)',
-              opacity: 0.7,
-            }}
-          />
-        )}
-      </div>
-    );
-  };
-  
-  // Screen message state (based on ScreenInteraction.cs)
-  const [screenMessage, setScreenMessage] = useState<string | null>(null);
-  
-  // Function to render gates based on Unity GateControl
-  const renderGates = () => {
-    return gates.map((gate) => {
-      const style = getPositionStyle(gate.position);
-      
-      // Don't render gates that are too far away
-      if (style.opacity <= 0.1) return null;
-      
-      // Calculate if player is near the gate
-      const distX = movement.position.x - gate.position.x;
-      const distZ = movement.position.z - gate.position.z;
-      const distance = Math.sqrt(distX * distX + distZ * distZ);
-      const isNearGate = distance < 3;
-      
-      // Apply animation when player approaches - similar to Unity's OnTriggerEnter
-      const isOpen = gateOpen || isNearGate;
-      
-      return (
-        <motion.div
-          key={gate.id}
-          className="absolute"
-          style={{
-            ...style,
-            perspective: '1000px',
-          }}
-        >
-          {/* Gate structure */}
-          <div className="relative" style={{ width: '100px', height: '120px' }}>
-            {/* Gate frame */}
-            <div className="absolute inset-0 border-4 border-gray-700 bg-gray-800 rounded-t-lg">
-              {/* Gate doors */}
-              <div className="relative w-full h-full overflow-hidden">
-                {/* Left door */}
-                <motion.div
-                  className="absolute top-0 bottom-0 left-0 w-1/2 bg-gray-600 border-r border-gray-700"
-                  animate={{
-                    x: isOpen ? '-100%' : '0%',
-                  }}
-                  transition={{ duration: 0.6 }}
-                />
-                
-                {/* Right door */}
-                <motion.div
-                  className="absolute top-0 bottom-0 right-0 w-1/2 bg-gray-600 border-l border-gray-700"
-                  animate={{
-                    x: isOpen ? '100%' : '0%',
-                  }}
-                  transition={{ duration: 0.6 }}
-                />
-                
-                {/* Gate sign */}
-                <div 
-                  className="absolute top-0 left-0 right-0 p-1 text-center text-white bg-blue-900 text-xs"
-                  style={{ direction: 'rtl' }}
-                >
-                  {gate.name}
-                </div>
-              </div>
-            </div>
-            
-            {/* Interactive screen - based on ScreenInteraction.cs */}
-            <div 
-              className="absolute bottom-[-40px] left-[15px] w-[70px] h-[30px] bg-black/80 border border-blue-500 rounded flex items-center justify-center cursor-pointer"
-              onClick={() => setScreenMessage(`مرحباً بك في ${gate.name}!`)}
-            >
-              <span className="text-blue-400 text-xs">اضغط هنا</span>
-            </div>
-          </div>
-        </motion.div>
-      );
-    });
-  };
-
-  // Traffic light states
-  const [trafficLightStates, setTrafficLightStates] = useState<Record<string, 'red' | 'yellow' | 'green'>>({
-    'main-intersection': 'red',
-    'east-intersection': 'green'
+  // Set up movement and collisions
+  const movement = useMovement({
+    initialPosition: { x: 0, y: 1.7, z: -40 }, // Start at city entrance
+    initialRotation: { x: 0, y: 0, z: 0 },
+    speed: walkSpeed || 5,
+    enableCollisions: true
   });
   
-  return (
-    <div className="relative w-full h-[calc(100vh-8rem)] overflow-hidden border border-gray-800 rounded-lg bg-black">
-      {/* Background sky */}
-      {renderSky()}
+  // Notifications system
+  const showNotification = (text: string, duration = 3000) => {
+    setNotificationText(text);
+    setTimeout(() => setNotificationText(null), duration);
+  };
+  
+  // Initialize city on mount
+  useEffect(() => {
+    // Reset player position
+    movement.resetPosition();
+    
+    // Welcome notification
+    showNotification('مرحباً بك في مدينة أمريكي الافتراضية المتكاملة');
+    
+    // Setup collision objects
+    buildings.forEach(building => {
+      movement.addCollisionObject({
+        id: building.id,
+        position: building.position,
+        size: { width: 10, height: 15, depth: 10 },
+        type: 'object'
+      });
+    });
+    
+    // Add boundary walls to keep player in city limits
+    const cityBounds = 100;
+    const walls = [
+      // North wall
+      { id: 'north-wall', position: { x: 0, y: 5, z: -cityBounds }, size: { width: cityBounds * 2, height: 10, depth: 1 } },
+      // South wall
+      { id: 'south-wall', position: { x: 0, y: 5, z: cityBounds }, size: { width: cityBounds * 2, height: 10, depth: 1 } },
+      // East wall
+      { id: 'east-wall', position: { x: cityBounds, y: 5, z: 0 }, size: { width: 1, height: 10, depth: cityBounds * 2 } },
+      // West wall
+      { id: 'west-wall', position: { x: -cityBounds, y: 5, z: 0 }, size: { width: 1, height: 10, depth: cityBounds * 2 } },
+    ];
+    
+    walls.forEach(wall => {
+      movement.addCollisionObject({
+        id: wall.id,
+        position: wall.position,
+        size: wall.size,
+        type: 'wall'
+      });
+    });
+    
+    // Add trigger zones for key areas
+    movement.addCollisionObject({
+      id: 'city-center-trigger',
+      position: { x: 0, y: 0, z: 0 },
+      size: { width: 20, height: 5, depth: 20 },
+      type: 'trigger',
+      onCollision: () => showNotification('أنت الآن في وسط المدينة')
+    });
+    
+    // Add initial camera effects
+    const fadeInCity = setTimeout(() => {
+      if (cityRef.current) {
+        cityRef.current.style.opacity = '1';
+      }
+    }, 500);
+    
+    return () => {
+      clearTimeout(fadeInCity);
+    };
+  }, []);
+  
+  // Handle window keyboard events
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Tab key toggles map
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        setShowMap(prev => !prev);
+      }
       
-      {/* Road layer */}
-      {renderRoad()}
+      // M key toggles map (alternative)
+      if (e.key === 'm' || e.key === 'M') {
+        setShowMap(prev => !prev);
+      }
       
-      {/* Buildings */}
-      {renderBuildings()}
-      
-      {/* Gates */}
-      {renderGates()}
-      
-      {/* Traffic lights */}
-      <TrafficLight 
-        position={{ x: -5, y: 0, z: 5 }}
-        initialState="red"
-        cycleTime={10}
-        playerPosition={movement.position}
-        onStateChange={(state) => setTrafficLightStates(prev => ({ ...prev, 'main-intersection': state }))}
-        size={1.2}
-      />
-      
-      <TrafficLight 
-        position={{ x: 5, y: 0, z: -5 }}
-        initialState="green"
-        cycleTime={8}
-        playerPosition={movement.position}
-        onStateChange={(state) => setTrafficLightStates(prev => ({ ...prev, 'east-intersection': state }))}
-      />
-      
-      {/* Cars */}
-      <CarTraffic 
-        carStyle="sedan"
-        direction="left-to-right"
-        speed={5}
-        trafficLightPosition={{ x: -5, y: 0, z: 5 }}
-        trafficLightState={trafficLightStates['main-intersection']}
-        playerPosition={movement.position}
-        laneOffset={2}
-      />
-      
-      <CarTraffic 
-        carStyle="taxi"
-        direction="right-to-left"
-        speed={4}
-        trafficLightPosition={{ x: -5, y: 0, z: 5 }}
-        trafficLightState={trafficLightStates['main-intersection']}
-        playerPosition={movement.position}
-        laneOffset={-2}
-        initialDelay={2000}
-      />
-      
-      <CarTraffic 
-        carStyle="suv"
-        direction="bottom-to-top"
-        speed={3}
-        trafficLightPosition={{ x: 5, y: 0, z: -5 }}
-        trafficLightState={trafficLightStates['east-intersection']}
-        playerPosition={movement.position}
-        laneOffset={10}
-        initialDelay={1000}
-      />
-      
-      <CarTraffic 
-        carStyle="truck"
-        direction="top-to-bottom"
-        speed={2}
-        trafficLightPosition={{ x: 5, y: 0, z: -5 }}
-        trafficLightState={trafficLightStates['east-intersection']}
-        playerPosition={movement.position}
-        laneOffset={-10}
-        initialDelay={3000}
-      />
-      
-      {/* Screen message - based on ScreenInteraction.cs */}
-      {screenMessage && (
-        <motion.div 
-          className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 border-2 border-blue-500 rounded-lg p-4 text-white text-center z-50"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      // Escape key exits building
+      if (e.key === 'Escape' && insideBuilding) {
+        setInsideBuilding(null);
+        setSelectedBuilding(null);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [insideBuilding]);
+  
+  // Define main buildings in the city
+  const buildings: Building[] = [
+    // Travel Agency
+    {
+      id: 'travel-agency',
+      name: 'وكالة السفر العربي',
+      type: 'travel',
+      position: { x: -30, y: 0, z: 20 },
+      rotation: 15,
+      scale: 1.2,
+      color: '#3b82f6', // blue
+      icon: 'plane-departure',
+      description: 'وكالة السفر الرائدة في المدينة، تقدم عروض سفر محلية ودولية وتذاكر طيران وحجوزات فنادق',
+      interactionDistance: 8
+    },
+    
+    // Clothing Store
+    {
+      id: 'clothing-store',
+      name: 'متجر الأزياء الفاخرة',
+      type: 'clothing',
+      position: { x: 20, y: 0, z: 15 },
+      rotation: -10,
+      scale: 1.1,
+      color: '#f59e0b', // amber
+      icon: 'tshirt',
+      description: 'متجر متخصص في الأزياء العالمية والملابس الراقية للرجال والنساء والأطفال',
+      interactionDistance: 8
+    },
+    
+    // Electronics Store
+    {
+      id: 'electronics-store',
+      name: 'متجر الإلكترونيات المتطورة',
+      type: 'electronics',
+      position: { x: 0, y: 0, z: 30 },
+      rotation: 0,
+      scale: 1.3,
+      color: '#10b981', // emerald
+      icon: 'laptop',
+      description: 'متجر شامل للأجهزة الإلكترونية والهواتف الذكية والحواسيب وملحقاتها',
+      interactionDistance: 8
+    },
+    
+    // Restaurant
+    {
+      id: 'restaurant',
+      name: 'مطعم النكهات العالمية',
+      type: 'restaurant',
+      position: { x: -20, y: 0, z: -10 },
+      rotation: 30,
+      scale: 1,
+      color: '#ef4444', // red
+      icon: 'utensils',
+      description: 'مطعم يقدم مأكولات محلية وعالمية متنوعة في أجواء راقية',
+      interactionDistance: 7
+    },
+    
+    // Bank
+    {
+      id: 'bank',
+      name: 'البنك المركزي',
+      type: 'bank',
+      position: { x: 35, y: 0, z: -20 },
+      rotation: -20,
+      scale: 1.4,
+      color: '#6366f1', // indigo
+      icon: 'university',
+      description: 'خدمات مصرفية شاملة وحلول مالية متكاملة',
+      interactionDistance: 8
+    },
+    
+    // Entertainment Center
+    {
+      id: 'entertainment',
+      name: 'مركز الترفيه العائلي',
+      type: 'entertainment',
+      position: { x: -40, y: 0, z: -25 },
+      rotation: 45,
+      scale: 1.5,
+      color: '#8b5cf6', // violet
+      icon: 'film',
+      description: 'مركز ترفيهي متكامل للعائلة يضم سينما وألعاب وكافيهات',
+      interactionDistance: 10,
+      elevated: true
+    }
+  ];
+  
+  // Define roads network
+  const roads: Road[] = [
+    // Main roads
+    { id: 'main-road-1', start: { x: -50, y: 0, z: 0 }, end: { x: 50, y: 0, z: 0 }, width: 10, type: 'main' },
+    { id: 'main-road-2', start: { x: 0, y: 0, z: -50 }, end: { x: 0, y: 0, z: 50 }, width: 10, type: 'main' },
+    
+    // Secondary roads
+    { id: 'sec-road-1', start: { x: -30, y: 0, z: -30 }, end: { x: 30, y: 0, z: -30 }, width: 6, type: 'secondary' },
+    { id: 'sec-road-2', start: { x: -30, y: 0, z: 30 }, end: { x: 30, y: 0, z: 30 }, width: 6, type: 'secondary' },
+    { id: 'sec-road-3', start: { x: -30, y: 0, z: -30 }, end: { x: -30, y: 0, z: 30 }, width: 6, type: 'secondary' },
+    { id: 'sec-road-4', start: { x: 30, y: 0, z: -30 }, end: { x: 30, y: 0, z: 30 }, width: 6, type: 'secondary' },
+    
+    // Pedestrian paths
+    { id: 'path-1', start: { x: -20, y: 0, z: -10 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+    { id: 'path-2', start: { x: 20, y: 0, z: 15 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+    { id: 'path-3', start: { x: -30, y: 0, z: 20 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+    { id: 'path-4', start: { x: 0, y: 0, z: 30 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+    { id: 'path-5', start: { x: 35, y: 0, z: -20 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+    { id: 'path-6', start: { x: -40, y: 0, z: -25 }, end: { x: 0, y: 0, z: 0 }, width: 3, type: 'pedestrian' },
+  ];
+  
+  // Define decorative elements
+  const decorations: Decoration[] = [
+    // Trees
+    { id: 'tree-1', type: 'tree', position: { x: -5, y: 0, z: -5 }, rotation: 0, scale: 1 },
+    { id: 'tree-2', type: 'tree', position: { x: 5, y: 0, z: -5 }, rotation: 0, scale: 0.8 },
+    { id: 'tree-3', type: 'tree', position: { x: -5, y: 0, z: 5 }, rotation: 0, scale: 1.2 },
+    { id: 'tree-4', type: 'tree', position: { x: 5, y: 0, z: 5 }, rotation: 0, scale: 0.9 },
+    
+    // Fountains
+    { id: 'fountain-1', type: 'fountain', position: { x: 0, y: 0, z: 0 }, rotation: 0, scale: 1.5 },
+    
+    // Benches
+    { id: 'bench-1', type: 'bench', position: { x: -8, y: 0, z: -3 }, rotation: 90, scale: 1 },
+    { id: 'bench-2', type: 'bench', position: { x: 8, y: 0, z: -3 }, rotation: -90, scale: 1 },
+    { id: 'bench-3', type: 'bench', position: { x: -8, y: 0, z: 3 }, rotation: 90, scale: 1 },
+    { id: 'bench-4', type: 'bench', position: { x: 8, y: 0, z: 3 }, rotation: -90, scale: 1 },
+    
+    // Lampposts
+    { id: 'lamp-1', type: 'lamppost', position: { x: -15, y: 0, z: -15 }, rotation: 0, scale: 1 },
+    { id: 'lamp-2', type: 'lamppost', position: { x: 15, y: 0, z: -15 }, rotation: 0, scale: 1 },
+    { id: 'lamp-3', type: 'lamppost', position: { x: -15, y: 0, z: 15 }, rotation: 0, scale: 1 },
+    { id: 'lamp-4', type: 'lamppost', position: { x: 15, y: 0, z: 15 }, rotation: 0, scale: 1 },
+    
+    // Signs
+    { id: 'sign-1', type: 'sign', position: { x: 0, y: 0, z: -35 }, rotation: 0, scale: 1.2 },
+    { id: 'sign-2', type: 'sign', position: { x: -25, y: 0, z: 15 }, rotation: 30, scale: 1 },
+    { id: 'sign-3', type: 'sign', position: { x: 25, y: 0, z: 5 }, rotation: -30, scale: 1 },
+  ];
+  
+  // Get environment styles based on time and weather
+  const getEnvironmentStyles = () => {
+    let timeStyle = {};
+    let weatherStyle = {};
+    
+    // Time of day settings
+    switch (dayTime) {
+      case 'morning':
+        timeStyle = {
+          background: 'linear-gradient(to bottom, #87CEEB, #E0F7FA)',
+          filter: 'brightness(1.1) contrast(0.95) hue-rotate(10deg)'
+        };
+        break;
+      case 'noon':
+        timeStyle = {
+          background: 'linear-gradient(to bottom, #56CCF2, #2F80ED)'
+        };
+        break;
+      case 'evening':
+        timeStyle = {
+          background: 'linear-gradient(to bottom, #FF7E5F, #FEB47B)',
+          filter: 'brightness(0.9) sepia(0.2) hue-rotate(-10deg)'
+        };
+        break;
+      case 'night':
+        timeStyle = {
+          background: 'linear-gradient(to bottom, #0F2027, #203A43)',
+          filter: 'brightness(0.4) contrast(1.2) saturate(0.8)'
+        };
+        break;
+    }
+    
+    // Weather effects
+    switch (weather) {
+      case 'cloudy':
+        weatherStyle = {
+          filter: 'brightness(0.9)',
+          background: 'linear-gradient(to bottom, #cccccc, #eeeeee)'
+        };
+        break;
+      case 'rain':
+        weatherStyle = {
+          filter: 'brightness(0.7) contrast(1.1)',
+          background: 'linear-gradient(to bottom, #333333, #666666)'
+        };
+        break;
+      case 'dusty':
+        weatherStyle = {
+          filter: 'sepia(0.7) brightness(0.85) contrast(1.1)',
+          background: 'linear-gradient(to bottom, #d4a76a, #e8c496)'
+        };
+        break;
+    }
+    
+    return { ...timeStyle, ...weatherStyle };
+  };
+  
+  // Building interior components based on type
+  const getBuildingInterior = (buildingId: string) => {
+    const building = buildings.find(b => b.id === buildingId);
+    if (!building) return null;
+    
+    switch (building.type) {
+      case 'travel':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-blue-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-plane-departure mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-blue-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-blue-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-blue-300">رحلات داخلية</h3>
+                <div className="mb-4">
+                  <AirplaneBuildingInterior />
+                </div>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 hover-jelly">
+                  <i className="fas fa-ticket-alt mr-2"></i>
+                  حجز تذكرة
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-blue-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-blue-300">رحلات دولية</h3>
+                <div className="space-y-4 mb-4">
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>دبي</span>
+                    <Badge className="bg-blue-600">900 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>إسطنبول</span>
+                    <Badge className="bg-blue-600">1200 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>الرياض</span>
+                    <Badge className="bg-blue-600">800 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 hover-jelly">
+                  <i className="fas fa-globe-americas mr-2"></i>
+                  استكشاف الوجهات
+                </Button>
+              </div>
+            </div>
+            
+            {/* Special offers section */}
+            <div className="mt-10 bg-gradient-to-r from-blue-900/40 to-purple-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">عروض خاصة</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="hover-shimmer bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-yellow-300">باقة شهر العسل</h4>
+                  <p className="text-sm text-white/80">عروض فاخرة للمتزوجين حديثاً</p>
+                </div>
+                <div className="hover-shimmer bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-yellow-300">رحلات عائلية</h4>
+                  <p className="text-sm text-white/80">خصم 15% للعائلات بخدمات إضافية</p>
+                </div>
+                <div className="hover-shimmer bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-yellow-300">سفر الأعمال</h4>
+                  <p className="text-sm text-white/80">خدمات متميزة لرجال الأعمال</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 'clothing':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-amber-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-tshirt mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-amber-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-amber-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-amber-300">أزياء رجالية</h3>
+                <VirtualFittingRoom 
+                  outfits={[
+                    { id: 1, name: 'بدلة رسمية', image: 'https://placehold.co/400x600?text=بدلة+رسمية', price: 1200 },
+                    { id: 2, name: 'طقم كاجوال', image: 'https://placehold.co/400x600?text=طقم+كاجوال', price: 800 },
+                  ]}
+                  showControls={true}
+                />
+                <Button className="w-full mt-4 bg-amber-600 hover:bg-amber-700 hover-jelly">
+                  <i className="fas fa-camera mr-2"></i>
+                  تجربة الملابس افتراضياً
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-amber-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-amber-300">أزياء نسائية</h3>
+                <VirtualFittingRoom 
+                  outfits={[
+                    { id: 3, name: 'فستان سهرة', image: 'https://placehold.co/400x600?text=فستان+سهرة', price: 1500 },
+                    { id: 4, name: 'تصميم عصري', image: 'https://placehold.co/400x600?text=تصميم+عصري', price: 900 },
+                  ]}
+                  showControls={true}
+                />
+                <Button className="w-full mt-4 bg-amber-600 hover:bg-amber-700 hover-jelly">
+                  <i className="fas fa-shopping-bag mr-2"></i>
+                  تصفح المجموعة
+                </Button>
+              </div>
+            </div>
+            
+            {/* Season collection */}
+            <div className="mt-10 bg-gradient-to-r from-amber-900/40 to-red-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">تشكيلات الموسم</h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="hover-bounce bg-black/20 p-4 rounded-lg text-center">
+                  <div className="mb-2 text-2xl"><i className="fas fa-tshirt"></i></div>
+                  <h4 className="font-bold text-yellow-300">كاجوال</h4>
+                </div>
+                <div className="hover-bounce bg-black/20 p-4 rounded-lg text-center">
+                  <div className="mb-2 text-2xl"><i className="fas fa-user-tie"></i></div>
+                  <h4 className="font-bold text-yellow-300">رسمي</h4>
+                </div>
+                <div className="hover-bounce bg-black/20 p-4 rounded-lg text-center">
+                  <div className="mb-2 text-2xl"><i className="fas fa-shoe-prints"></i></div>
+                  <h4 className="font-bold text-yellow-300">أحذية</h4>
+                </div>
+                <div className="hover-bounce bg-black/20 p-4 rounded-lg text-center">
+                  <div className="mb-2 text-2xl"><i className="fas fa-gem"></i></div>
+                  <h4 className="font-bold text-yellow-300">اكسسوارات</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 'electronics':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-emerald-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-laptop mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-emerald-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-emerald-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-emerald-300">هواتف ذكية</h3>
+                <div className="mb-4 relative h-48 bg-slate-900/50 rounded-lg overflow-hidden">
+                  <ThreeProductView rotationSpeed={0.01} color="#10b981" height="100%" />
+                  <Badge className="absolute top-2 right-2 bg-emerald-600">-15%</Badge>
+                </div>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>آي-فون 13 برو</span>
+                    <Badge className="bg-emerald-600">4500 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>سامسونج جالاكسي</span>
+                    <Badge className="bg-emerald-600">3800 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 hover-jelly">
+                  <i className="fas fa-mobile-alt mr-2"></i>
+                  استكشاف الهواتف
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-emerald-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-emerald-300">أجهزة الكمبيوتر</h3>
+                <div className="mb-4 relative h-48 bg-slate-900/50 rounded-lg overflow-hidden">
+                  <ThreeProductView rotationSpeed={0.005} color="#0ea5e9" height="100%" />
+                  <Badge className="absolute top-2 right-2 bg-emerald-600">جديد</Badge>
+                </div>
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>ماك بوك برو</span>
+                    <Badge className="bg-emerald-600">9500 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>ديل XPS</span>
+                    <Badge className="bg-emerald-600">7800 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 hover-jelly">
+                  <i className="fas fa-laptop mr-2"></i>
+                  تصفح الحواسيب
+                </Button>
+              </div>
+            </div>
+            
+            {/* Tech news */}
+            <div className="mt-10 bg-gradient-to-r from-emerald-900/40 to-cyan-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">أحدث التقنيات</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="hover-shadow-pulse bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-cyan-300">شاشات OLED جديدة</h4>
+                  <p className="text-sm text-white/80">تقنية جديدة بألوان أكثر حيوية</p>
+                </div>
+                <div className="hover-shadow-pulse bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-cyan-300">معالجات آبل M2</h4>
+                  <p className="text-sm text-white/80">أداء أسرع بـ 20% واستهلاك أقل للطاقة</p>
+                </div>
+                <div className="hover-shadow-pulse bg-black/20 p-4 rounded-lg">
+                  <h4 className="font-bold text-cyan-300">سماعات بتقنية فريدة</h4>
+                  <p className="text-sm text-white/80">تكنولوجيا إلغاء الضوضاء المتطورة</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case 'restaurant':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-red-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-utensils mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-red-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-red-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-red-300">المأكولات الشرقية</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>كبسة لحم</span>
+                    <Badge className="bg-red-600">85 ج.م</Badge>
+                  </div>
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>شاورما دجاج</span>
+                    <Badge className="bg-red-600">65 ج.م</Badge>
+                  </div>
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>كشري مصري</span>
+                    <Badge className="bg-red-600">40 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-red-600 hover:bg-red-700 hover-jelly">
+                  <i className="fas fa-clipboard-list mr-2"></i>
+                  قائمة الطعام كاملة
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-red-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-red-300">المأكولات العالمية</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>بيتزا مشكلة</span>
+                    <Badge className="bg-red-600">120 ج.م</Badge>
+                  </div>
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>باستا كاربونارا</span>
+                    <Badge className="bg-red-600">90 ج.م</Badge>
+                  </div>
+                  <div className="flex justify-between p-2 border-b border-white/10">
+                    <span>برجر لحم</span>
+                    <Badge className="bg-red-600">75 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-red-600 hover:bg-red-700 hover-jelly">
+                  <i className="fas fa-concierge-bell mr-2"></i>
+                  طلب الطعام
+                </Button>
+              </div>
+            </div>
+            
+            {/* Chef recommendations */}
+            <div className="mt-10 bg-gradient-to-r from-red-900/40 to-orange-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">توصيات الشيف</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="hover-wiggle bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-yellow-300">ريش ضأن مشوية</h4>
+                  <p className="text-sm text-white/80">مع الأرز البسمتي وصلصة الروزماري</p>
+                </div>
+                <div className="hover-wiggle bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-yellow-300">سمك مشوي</h4>
+                  <p className="text-sm text-white/80">مع صلصة الليمون والأعشاب الطازجة</p>
+                </div>
+                <div className="hover-wiggle bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-yellow-300">تيراميسو</h4>
+                  <p className="text-sm text-white/80">حلو إيطالي كلاسيكي محضر في مطبخنا</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      // Bank interior
+      case 'bank':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-indigo-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-university mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-indigo-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-indigo-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-indigo-300">الخدمات الشخصية</h3>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-credit-card mr-2 text-indigo-400"></i>
+                    <span>فتح حساب جديد</span>
+                  </li>
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-money-bill-wave mr-2 text-indigo-400"></i>
+                    <span>قروض شخصية</span>
+                  </li>
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-piggy-bank mr-2 text-indigo-400"></i>
+                    <span>حسابات التوفير</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 hover-jelly">
+                  <i className="fas fa-user-plus mr-2"></i>
+                  فتح حساب الآن
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-indigo-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-indigo-300">خدمات الشركات</h3>
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-building mr-2 text-indigo-400"></i>
+                    <span>حسابات للشركات</span>
+                  </li>
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-chart-line mr-2 text-indigo-400"></i>
+                    <span>استثمارات تجارية</span>
+                  </li>
+                  <li className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-handshake mr-2 text-indigo-400"></i>
+                    <span>تمويل المشاريع</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-indigo-600 hover:bg-indigo-700 hover-jelly">
+                  <i className="fas fa-briefcase mr-2"></i>
+                  خدمات تجارية
+                </Button>
+              </div>
+            </div>
+            
+            {/* Current exchange rates */}
+            <div className="mt-10 bg-gradient-to-r from-indigo-900/40 to-sky-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">أسعار العملات</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="hover-pulse bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-sky-300">
+                    <i className="fas fa-dollar-sign mr-1"></i> دولار أمريكي
+                  </h4>
+                  <p className="text-lg text-white">30.90 ج.م</p>
+                </div>
+                <div className="hover-pulse bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-sky-300">
+                    <i className="fas fa-euro-sign mr-1"></i> يورو
+                  </h4>
+                  <p className="text-lg text-white">33.75 ج.م</p>
+                </div>
+                <div className="hover-pulse bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-sky-300">
+                    <i className="fas fa-pound-sign mr-1"></i> جنيه إسترليني
+                  </h4>
+                  <p className="text-lg text-white">39.25 ج.م</p>
+                </div>
+                <div className="hover-pulse bg-black/20 p-4 rounded-lg text-center">
+                  <h4 className="font-bold text-sky-300">
+                    <i className="fas fa-yen-sign mr-1"></i> ين ياباني
+                  </h4>
+                  <p className="text-lg text-white">0.21 ج.م</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      // Entertainment center interior
+      case 'entertainment':
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900/90 to-violet-900/90 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4 flex items-center">
+              <i className="fas fa-film mr-3"></i>
+              {building.name}
+            </h2>
+            <p className="mb-6 text-violet-200">{building.description}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-violet-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-violet-300">عروض سينما</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>فيلم الحركة</span>
+                    <Badge className="bg-violet-600">4:30 م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>الكوميديا الجديدة</span>
+                    <Badge className="bg-violet-600">7:00 م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>مغامرات فضائية</span>
+                    <Badge className="bg-violet-600">9:30 م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-violet-600 hover:bg-violet-700 hover-jelly">
+                  <i className="fas fa-ticket-alt mr-2"></i>
+                  حجز تذاكر
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-violet-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-violet-300">ألعاب إلكترونية</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-gamepad mr-2 text-violet-400"></i>
+                    <span>ألعاب الواقع الافتراضي</span>
+                  </div>
+                  <div className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-car mr-2 text-violet-400"></i>
+                    <span>سباق السيارات</span>
+                  </div>
+                  <div className="flex items-center p-2 border-b border-white/10">
+                    <i className="fas fa-bowling-ball mr-2 text-violet-400"></i>
+                    <span>البولينج</span>
+                  </div>
+                </div>
+                <Button className="w-full bg-violet-600 hover:bg-violet-700 hover-jelly">
+                  <i className="fas fa-play mr-2"></i>
+                  استكشاف الألعاب
+                </Button>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-md p-6 rounded-xl border border-violet-500/20 hover-float hover-border-glow">
+                <h3 className="font-bold text-xl mb-4 text-violet-300">كافيه ومطعم</h3>
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>قهوة مميزة</span>
+                    <Badge className="bg-violet-600">25 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>ميلك شيك</span>
+                    <Badge className="bg-violet-600">35 ج.م</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border-b border-white/10">
+                    <span>وجبات خفيفة</span>
+                    <Badge className="bg-violet-600">50 ج.م</Badge>
+                  </div>
+                </div>
+                <Button className="w-full bg-violet-600 hover:bg-violet-700 hover-jelly">
+                  <i className="fas fa-coffee mr-2"></i>
+                  قائمة الكافيه
+                </Button>
+              </div>
+            </div>
+            
+            {/* Special events */}
+            <div className="mt-10 bg-gradient-to-r from-violet-900/40 to-purple-900/40 p-6 rounded-xl backdrop-blur-md border border-white/10">
+              <h3 className="text-xl font-bold mb-4 text-center text-white">فعاليات خاصة</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="hover-shadow-pulse bg-black/20 p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-bold text-fuchsia-300">ليلة الكوميديا</h4>
+                    <Badge className="bg-fuchsia-800">الخميس</Badge>
+                  </div>
+                  <p className="text-sm text-white/80">عروض كوميدية حية مع ألمع نجوم الكوميديا</p>
+                </div>
+                <div className="hover-shadow-pulse bg-black/20 p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-bold text-fuchsia-300">موسيقى حية</h4>
+                    <Badge className="bg-fuchsia-800">الجمعة</Badge>
+                  </div>
+                  <p className="text-sm text-white/80">أمسية موسيقية مع فرقة الجاز المحلية</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+        
+      default:
+        return (
+          <div className="p-8 bg-gradient-to-b from-slate-900 to-gray-900 text-white h-full">
+            <h2 className="text-3xl font-bold mb-4">{building.name}</h2>
+            <p className="mb-4">{building.description}</p>
+            <div className="bg-white/10 p-4 rounded-lg">
+              <p>المحتوى قيد التطوير</p>
+            </div>
+          </div>
+        );
+    }
+  };
+  
+  // Render building in the city
+  const renderBuilding = (building: Building) => {
+    const isSelected = selectedBuilding === building.id;
+    const playerDistance = calcDistance(movement.position, building.position);
+    const isNearby = playerDistance < building.interactionDistance;
+    
+    return (
+      <div
+        key={building.id}
+        className={`absolute transform transition-all duration-300 ${isSelected ? 'z-20' : 'z-10'}`}
+        style={{
+          left: `calc(50% + ${building.position.x * 10}px)`,
+          top: `calc(50% + ${building.position.z * 10}px)`,
+          transform: `translate(-50%, -50%) rotateY(${building.rotation}deg) scale(${building.scale * (isSelected ? 1.05 : 1)})`,
+        }}
+      >
+        {/* Building visualization with 3D model */}
+        <div 
+          className={`relative ${isNearby ? 'hover-shadow-pulse cursor-pointer' : ''} ${isSelected ? 'shadow-2xl' : 'shadow-xl'}`}
+          onClick={() => {
+            if (isNearby) {
+              setSelectedBuilding(building.id);
+              showNotification(`قريب من: ${building.name}`);
+            } else if (playerDistance < building.interactionDistance * 2) {
+              showNotification(`اقترب أكثر من ${building.name} للتفاعل معه`);
+            }
+          }}
         >
-          <p className="text-xl font-bold mb-2">{screenMessage}</p>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => setScreenMessage(null)}
-            className="mt-2"
-          >
-            إغلاق
-          </Button>
-        </motion.div>
-      )}
-      
-      {/* Controls for mobile */}
-      {isMobile && (
-        <div className="absolute bottom-4 left-0 right-0 z-50">
-          <TouchControls 
-            onMove={(direction) => {
-              if (direction === 'forward') movement.moveForward();
-              if (direction === 'backward') movement.moveBackward();
-              if (direction === 'left') movement.moveLeft();
-              if (direction === 'right') movement.moveRight();
-            }}
-            onLook={(deltaX, deltaY) => movement.rotate(deltaX, deltaY)}
-            showControls={true}
+          <ThreeBuildingModel 
+            type={building.type}
+            color={building.color}
+            modelHeight={building.elevated ? 200 : 150} 
+            showControls={false}
+            scale={building.scale}
           />
+          
+          {/* Building label */}
+          <div 
+            className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 bg-black/80 px-3 py-1 rounded-full
+                       text-white text-xs font-bold whitespace-nowrap border transition-all duration-300 ${
+                         isSelected ? 'border-white scale-110' : 'border-white/30'
+                       }`}
+            style={{ borderColor: isNearby ? building.color : 'transparent' }}
+          >
+            <div className="flex items-center space-x-1 rtl:space-x-reverse">
+              <i className={`fas fa-${building.icon} mr-1`} style={{ color: building.color }}></i>
+              <span>{building.name}</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Building interaction */}
+        {isNearby && (
+          <div 
+            className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-[150%] z-30 flex flex-col gap-2 items-center"
+          >
+            <Button
+              size="sm"
+              variant="outline"
+              className="bg-black/50 border-white/10 text-white hover:bg-white/20 hover-pulse"
+              onClick={() => setInsideBuilding(building.id)}
+            >
+              <i className="fas fa-door-open mr-2"></i>
+              دخول
+            </Button>
+          </div>
+        )}
+        
+        {/* Building dialog - shows when selected but not inside */}
+        {isSelected && !insideBuilding && (
+          <div 
+            className="fixed inset-x-0 bottom-0 z-40 p-4 bg-black/80 backdrop-blur-sm border-t border-white/10 max-w-3xl mx-auto rounded-t-xl"
+          >
+            <div className="flex items-start gap-4">
+              <div 
+                className="w-14 h-14 flex items-center justify-center rounded-full" 
+                style={{ backgroundColor: `${building.color}30`, borderColor: building.color }}
+              >
+                <i className={`fas fa-${building.icon} text-2xl`} style={{ color: building.color }}></i>
+              </div>
+              
+              <div className="flex-1">
+                <h3 className="font-bold text-xl text-white mb-1">{building.name}</h3>
+                <p className="text-white/80 text-sm mb-3">{building.description}</p>
+                
+                <div className="flex gap-3">
+                  <Button
+                    className="flex-1 hover-jelly"
+                    style={{ backgroundColor: building.color, borderColor: building.color }}
+                    onClick={() => {
+                      if (isNearby) {
+                        setInsideBuilding(building.id);
+                      } else {
+                        showNotification(`اقترب أكثر من ${building.name} للدخول`);
+                        setSelectedBuilding(null);
+                      }
+                    }}
+                    disabled={!isNearby}
+                  >
+                    <i className="fas fa-door-open mr-2"></i>
+                    {isNearby ? 'دخول المبنى' : 'المبنى بعيد'}
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="hover-jelly"
+                    onClick={() => setSelectedBuilding(null)}
+                  >
+                    <i className="fas fa-times mr-2"></i>
+                    إغلاق
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+  
+  // Calculate distance between two points
+  const calcDistance = (p1: { x: number; y: number; z: number }, p2: { x: number; y: number; z: number }): number => {
+    const dx = p1.x - p2.x;
+    const dy = p1.y - p2.y;
+    const dz = p1.z - p2.z;
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+  };
+  
+  // Render road network
+  const renderRoads = () => {
+    return roads.map(road => {
+      const length = calcDistance(road.start, road.end);
+      const angle = Math.atan2(road.end.z - road.start.z, road.end.x - road.start.x) * (180 / Math.PI);
+      
+      // Determine road style based on type
+      let roadColor = '';
+      let borderStyle = '';
+      
+      switch (road.type) {
+        case 'main':
+          roadColor = 'bg-slate-700';
+          borderStyle = 'border-yellow-500/50';
+          break;
+        case 'secondary':
+          roadColor = 'bg-slate-800';
+          borderStyle = 'border-white/20';
+          break;
+        case 'pedestrian':
+          roadColor = 'bg-slate-900';
+          borderStyle = 'border-white/10';
+          break;
+      }
+      
+      return (
+        <div
+          key={road.id}
+          className={`absolute ${roadColor} border-x ${borderStyle}`}
+          style={{
+            left: `calc(50% + ${road.start.x * 10}px)`,
+            top: `calc(50% + ${road.start.z * 10}px)`,
+            width: `${length * 10}px`,
+            height: `${road.width}px`,
+            transformOrigin: 'left center',
+            transform: `rotate(${angle}deg)`
+          }}
+        ></div>
+      );
+    });
+  };
+  
+  // Render decorative elements
+  const renderDecorations = () => {
+    return decorations.map(decoration => {
+      // Choose decoration appearance based on type
+      let content = null;
+      
+      switch (decoration.type) {
+        case 'tree':
+          content = (
+            <div className="w-10 h-10 flex flex-col items-center justify-center hover-float">
+              <div className="w-6 h-6 rounded-full bg-green-600 shadow-lg"></div>
+              <div className="w-1 h-3 bg-yellow-800"></div>
+            </div>
+          );
+          break;
+        case 'bench':
+          content = (
+            <div 
+              className="w-8 h-3 bg-yellow-800 rounded-sm shadow-md hover-shimmer"
+              style={{ transform: `rotate(${decoration.rotation}deg)` }}
+            ></div>
+          );
+          break;
+        case 'fountain':
+          content = (
+            <div className="relative hover-pulse">
+              <div className="w-12 h-12 rounded-full bg-blue-500/30 flex items-center justify-center border border-blue-500/50">
+                <div className="w-8 h-8 rounded-full bg-blue-500/50 flex items-center justify-center">
+                  <div className="w-4 h-4 rounded-full bg-blue-500/80"></div>
+                </div>
+              </div>
+              <div className="absolute inset-0 animate-pulse-slow rounded-full border border-blue-400/40 scale-110"></div>
+            </div>
+          );
+          break;
+        case 'lamppost':
+          content = (
+            <div className="flex flex-col items-center hover-shimmer">
+              <div className="w-3 h-3 rounded-full bg-yellow-300 shadow-md shadow-yellow-200/50"></div>
+              <div className="w-0.5 h-4 bg-gray-500"></div>
+            </div>
+          );
+          break;
+        case 'sign':
+          content = (
+            <div 
+              className="w-6 h-4 bg-blue-700 rounded-sm shadow-sm flex items-center justify-center text-[8px] text-white hover-wiggle"
+              style={{ transform: `rotate(${decoration.rotation}deg)` }}
+            >
+              <i className="fas fa-info"></i>
+            </div>
+          );
+          break;
+        default:
+          content = <div className="w-2 h-2 bg-white rounded-full"></div>;
+      }
+      
+      return (
+        <div
+          key={decoration.id}
+          className="absolute transform"
+          style={{
+            left: `calc(50% + ${decoration.position.x * 10}px)`,
+            top: `calc(50% + ${decoration.position.z * 10}px)`,
+            transform: `translate(-50%, -50%) scale(${decoration.scale})`,
+            zIndex: 5
+          }}
+        >
+          {content}
+        </div>
+      );
+    });
+  };
+  
+  // Weather particle effects
+  const renderWeatherEffects = () => {
+    if (weather === 'rain') {
+      return Array.from({ length: 100 }).map((_, i) => (
+        <div 
+          key={i}
+          className="absolute w-0.5 bg-blue-200 opacity-70"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            height: `${Math.random() * 20 + 10}px`,
+            animationDuration: `${Math.random() * 1 + 0.5}s`,
+            animation: 'falling-rain linear infinite',
+          }}
+        ></div>
+      ));
+    } else if (weather === 'dusty') {
+      return Array.from({ length: 20 }).map((_, i) => (
+        <div 
+          key={i}
+          className="absolute rounded-full bg-yellow-700/30"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            width: `${Math.random() * 50 + 30}px`,
+            height: `${Math.random() * 50 + 30}px`,
+            filter: 'blur(8px)',
+            opacity: Math.random() * 0.3 + 0.1,
+            animation: `float${Math.floor(Math.random() * 3) + 1} ${Math.random() * 8 + 8}s infinite linear`,
+            animationDelay: `${Math.random() * 5}s`,
+          }}
+        ></div>
+      ));
+    } else if (weather === 'cloudy') {
+      return Array.from({ length: 8 }).map((_, i) => (
+        <div 
+          key={i}
+          className="absolute rounded-full bg-white/20"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 30}%`,
+            width: `${Math.random() * 200 + 100}px`,
+            height: `${Math.random() * 50 + 60}px`,
+            filter: 'blur(20px)',
+            opacity: Math.random() * 0.4 + 0.1,
+            animation: `float${Math.floor(Math.random() * 3) + 1} ${Math.random() * 60 + 30}s infinite linear`,
+            animationDelay: `${Math.random() * 10}s`,
+          }}
+        ></div>
+      ));
+    }
+    
+    return null;
+  };
+  
+  // Main return - the entire city
+  return (
+    <div 
+      ref={cityRef}
+      className="w-full h-full absolute inset-0 transition-opacity duration-500 opacity-0"
+      style={getEnvironmentStyles()}
+    >
+      {/* Sky and ground */}
+      <div className="absolute inset-0 z-0"></div>
+      <div className="absolute bottom-0 w-full h-1/2 bg-gradient-to-t from-gray-900 to-transparent z-0"></div>
+      
+      {/* Weather effects */}
+      <div className="absolute inset-0 pointer-events-none z-5">
+        {renderWeatherEffects()}
+      </div>
+      
+      {/* Main city area */}
+      <div className="absolute inset-0 overflow-hidden" style={{ perspective: '1000px' }}>
+        {/* Road network */}
+        <div className="absolute inset-0 z-5">
+          {renderRoads()}
+        </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute inset-0 z-6">
+          {renderDecorations()}
+        </div>
+        
+        {/* Buildings */}
+        <div className="absolute inset-0 z-10">
+          {buildings.map(building => renderBuilding(building))}
+        </div>
+        
+        {/* Traffic */}
+        {trafficDensity !== 'low' && (
+          <>
+            <CarTraffic 
+              direction="right-to-left" 
+              speed={trafficDensity === 'high' ? 3 : 2} 
+              laneOffset={5}
+              initialDelay={0}
+            />
+            
+            {trafficDensity === 'high' && (
+              <>
+                <CarTraffic 
+                  carStyle="suv" 
+                  direction="left-to-right" 
+                  speed={2.5} 
+                  laneOffset={-5}
+                  initialDelay={1.5}
+                />
+                <CarTraffic 
+                  carStyle="truck" 
+                  direction="bottom-to-top" 
+                  speed={1.8} 
+                  laneOffset={15}
+                  initialDelay={3}
+                />
+              </>
+            )}
+            
+            <TrafficLight 
+              position={{ x: 5, y: 0, z: -15 }}
+              cycleTime={trafficDensity === 'high' ? 5 : 10}
+            />
+          </>
+        )}
+        
+        {/* City entrance gate */}
+        <GateControl
+          playerPosition={movement.position}
+          gatePosition={{ x: 0, y: 0, z: -35 }}
+          gateWidth={30}
+          gateHeight={20}
+          gateColor="#d97706"
+          triggerDistance={10}
+        >
+          <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl font-bold p-6 bg-black/40 backdrop-blur-sm rounded-xl border border-amber-500/30 shadow-lg shadow-amber-500/10">
+            <div className="text-center">
+              <div className="text-amber-400 flex items-center justify-center text-4xl mb-2">
+                <i className="fas fa-city mr-3"></i>
+                <span>مدينة أمريكي</span>
+              </div>
+              <div className="text-lg text-white/90">
+                مرحباً بك في المدينة التفاعلية المتكاملة
+              </div>
+            </div>
+          </div>
+        </GateControl>
+      </div>
+      
+      {/* Building interior view - fullscreen overlay when inside a building */}
+      {insideBuilding && (
+        <div className="fixed inset-0 z-50 bg-black/90">
+          {/* Interior close button */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="absolute top-4 right-4 z-50 bg-black/50 border-white/20 hover:bg-white/10 hover-pulse"
+            onClick={() => {
+              setInsideBuilding(null);
+              setSelectedBuilding(null);
+            }}
+          >
+            <i className="fas fa-sign-out-alt mr-2"></i>
+            خروج
+          </Button>
+          
+          {/* Building interior content */}
+          <div className="absolute inset-0 overflow-auto">
+            {getBuildingInterior(insideBuilding)}
+          </div>
         </div>
       )}
       
-      {/* Status indicator */}
-      <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded-md text-sm backdrop-blur-sm">
-        <div>الموقع: X:{Math.round(movement.position.x)} Z:{Math.round(movement.position.z)}</div>
-        <div>الاتجاه: {Math.round(movement.rotation.y)}°</div>
-        {activeBuilding && <div className="text-green-400">المبنى النشط: {buildings.find(b => b.id === activeBuilding)?.name}</div>}
-      </div>
-
-      {/* Environment controls - allows changing time of day and weather */}
-      <div className="absolute top-4 left-4 bg-black/70 text-white px-4 py-3 rounded-md backdrop-blur-sm">
-        <h3 className="font-bold text-sm mb-2 text-center">إعدادات البيئة</h3>
-        
-        <div className="mb-3">
-          <label className="block text-xs mb-1">الوقت:</label>
-          <div className="flex space-x-1 rtl:space-x-reverse">
-            {(['dawn', 'day', 'dusk', 'night'] as const).map((time) => (
-              <button
-                key={time}
-                className={`px-2 py-1 text-xs rounded ${timeOfDay === time ? 'bg-blue-600' : 'bg-gray-700'}`}
-                onClick={() => setTimeOfDay(time)}
+      {/* User interface overlay (HUD) */}
+      <div className="absolute inset-0 pointer-events-none z-30">
+        {/* Environment controls */}
+        <div className="absolute top-4 right-4 pointer-events-auto w-48 bg-black/70 backdrop-blur-sm rounded-lg p-3 border border-white/10 hover-border-glow">
+          <h3 className="text-white text-sm font-bold mb-2">إعدادات البيئة</h3>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-white text-xs">الوقت</span>
+              <Select 
+                defaultValue={dayTime} 
+                onValueChange={(value) => setDayTime(value as 'morning' | 'noon' | 'evening' | 'night')}
               >
-                {time === 'dawn' ? 'الفجر' : 
-                 time === 'day' ? 'النهار' : 
-                 time === 'dusk' ? 'الغروب' : 'الليل'}
-              </button>
-            ))}
+                <SelectTrigger className="w-28 h-7 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="morning">الصباح</SelectItem>
+                  <SelectItem value="noon">الظهيرة</SelectItem>
+                  <SelectItem value="evening">المساء</SelectItem>
+                  <SelectItem value="night">الليل</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <span className="text-white text-xs">الطقس</span>
+              <Select 
+                defaultValue={weather} 
+                onValueChange={(value) => setWeather(value as 'clear' | 'cloudy' | 'rain' | 'dusty')}
+              >
+                <SelectTrigger className="w-28 h-7 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="clear">صافي</SelectItem>
+                  <SelectItem value="cloudy">غائم</SelectItem>
+                  <SelectItem value="rain">ماطر</SelectItem>
+                  <SelectItem value="dusty">غبار</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <span className="text-white text-xs">حركة المرور</span>
+              <Select 
+                defaultValue={trafficDensity} 
+                onValueChange={(value) => setTrafficDensity(value as 'low' | 'medium' | 'high')}
+              >
+                <SelectTrigger className="w-28 h-7 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">منخفضة</SelectItem>
+                  <SelectItem value="medium">متوسطة</SelectItem>
+                  <SelectItem value="high">مرتفعة</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <span className="text-white text-xs">سرعة المشي</span>
+              <div className="flex items-center gap-1">
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => movement.setSpeed && movement.setSpeed(Math.max(1, 2 - 1))}
+                  className="h-5 w-5 p-0 hover-jelly"
+                >-</Button>
+                <span className="text-white text-xs w-4 text-center">2</span>
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => movement.setSpeed && movement.setSpeed(Math.min(10, 2 + 1))}
+                  className="h-5 w-5 p-0 hover-jelly"
+                >+</Button>
+              </div>
+            </div>
           </div>
         </div>
         
-        <div className="mb-3">
-          <label className="block text-xs mb-1">الطقس:</label>
-          <div className="flex space-x-1 rtl:space-x-reverse">
-            {(['clear', 'cloudy', 'rainy', 'sandstorm'] as const).map((weather) => (
-              <button
-                key={weather}
-                className={`px-2 py-1 text-xs rounded ${weatherCondition === weather ? 'bg-blue-600' : 'bg-gray-700'}`}
-                onClick={() => setWeatherCondition(weather)}
-              >
-                {weather === 'clear' ? 'صافي' : 
-                 weather === 'cloudy' ? 'غائم' : 
-                 weather === 'rainy' ? 'ممطر' : 'عاصفة رملية'}
-              </button>
-            ))}
-          </div>
+        {/* Map toggle button */}
+        <div className="absolute top-4 left-4 pointer-events-auto">
+          <Button
+            variant={showMap ? "default" : "outline"}
+            size="sm"
+            className="hover-pulse"
+            onClick={() => setShowMap(!showMap)}
+          >
+            <i className="fas fa-map-marked-alt mr-2"></i>
+            الخريطة
+          </Button>
         </div>
         
-        <div>
-          <label className="block text-xs mb-1">كثافة المرور:</label>
-          <div className="flex space-x-1 rtl:space-x-reverse">
-            {(['low', 'medium', 'high'] as const).map((density) => (
-              <button
-                key={density}
-                className={`px-2 py-1 text-xs rounded ${trafficDensity === density ? 'bg-blue-600' : 'bg-gray-700'}`}
-                onClick={() => setTrafficDensity(density)}
-              >
-                {density === 'low' ? 'قليل' : 
-                 density === 'medium' ? 'متوسط' : 'كثيف'}
-              </button>
-            ))}
+        {/* Map view when expanded */}
+        {showMap && (
+          <div className="absolute top-16 left-4 w-80 h-80 bg-black/70 rounded-lg border border-white/10 pointer-events-auto p-2 shadow-xl overflow-hidden hover-shadow-pulse">
+            <div className="relative w-full h-full rounded bg-slate-900/90">
+              {/* Player marker */}
+              <div 
+                className="absolute w-3 h-3 bg-white rounded-full shadow-md shadow-white/50 z-30"
+                style={{ 
+                  left: `${((movement.position.x + 50) / 100) * 100}%`, 
+                  top: `${((movement.position.z + 50) / 100) * 100}%`,
+                  transform: 'translate(-50%, -50%)'
+                }}
+              ></div>
+              
+              {/* Buildings on map */}
+              {buildings.map(building => (
+                <div 
+                  key={`map-${building.id}`}
+                  className="absolute w-2 h-2 rounded-full shadow-sm z-20 hover:z-30 hover:scale-150 transition-all duration-300 cursor-pointer"
+                  style={{ 
+                    backgroundColor: building.color,
+                    left: `${((building.position.x + 50) / 100) * 100}%`, 
+                    top: `${((building.position.z + 50) / 100) * 100}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                  onClick={() => {
+                    setSelectedBuilding(building.id);
+                    showNotification(`المبنى المحدد: ${building.name}`);
+                  }}
+                  title={building.name}
+                ></div>
+              ))}
+              
+              {/* Roads on map */}
+              {roads.map(road => {
+                const startX = ((road.start.x + 50) / 100) * 100;
+                const startY = ((road.start.z + 50) / 100) * 100;
+                const endX = ((road.end.x + 50) / 100) * 100;
+                const endY = ((road.end.z + 50) / 100) * 100;
+                
+                const length = Math.sqrt(
+                  Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
+                );
+                const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
+                
+                let roadColor = '';
+                switch(road.type) {
+                  case 'main': roadColor = 'bg-white/50'; break;
+                  case 'secondary': roadColor = 'bg-white/30'; break;
+                  case 'pedestrian': roadColor = 'bg-white/20'; break;
+                }
+                
+                return (
+                  <div
+                    key={`map-${road.id}`}
+                    className={`absolute h-0.5 ${roadColor} z-10`}
+                    style={{
+                      left: `${startX}%`,
+                      top: `${startY}%`,
+                      width: `${length}%`,
+                      transformOrigin: 'left center',
+                      transform: `rotate(${angle}deg)`
+                    }}
+                  ></div>
+                );
+              })}
+              
+              {/* Legend */}
+              <div className="absolute bottom-2 right-2 bg-black/70 rounded p-1 text-white/90 text-xs">
+                <div className="flex items-center gap-1 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-white"></div>
+                  <span>أنت</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span>المباني</span>
+                </div>
+              </div>
+            </div>
           </div>
+        )}
+        
+        {/* Notification area */}
+        {notificationText && (
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-md px-4 py-2 rounded-lg text-white shadow-lg border border-white/10 text-sm hover-shimmer">
+            <div className="flex items-center">
+              <i className="fas fa-info-circle mr-2 text-blue-400"></i>
+              <span>{notificationText}</span>
+            </div>
+          </div>
+        )}
+        
+        {/* Mobile controls */}
+        {isMobile && (
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 pointer-events-auto">
+            <TouchControls 
+              onMove={(direction) => {
+                // Map directions to movement
+                switch(direction) {
+                  case 'forward': movement.moveForward(); break;
+                  case 'backward': movement.moveBackward(); break;
+                  case 'left': movement.moveLeft(); break;
+                  case 'right': movement.moveRight(); break;
+                }
+              }}
+              onLook={movement.rotate}
+              showControls={true}
+            />
+          </div>
+        )}
+        
+        {/* Instructions card */}
+        <div className="absolute bottom-4 right-4 pointer-events-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-black/50 border-white/10 text-white hover:bg-white/10 hover-jelly"
+            onClick={() => showNotification(
+              isMobile 
+                ? 'استخدم أزرار التحكم للتنقل، واضغط على المباني للتفاعل'
+                : 'استخدم الأسهم أو W A S D للتنقل، والماوس للدوران، وانقر على المباني للتفاعل'
+            )}
+          >
+            <i className="fas fa-question-circle mr-2"></i>
+            تعليمات
+          </Button>
+        </div>
+        
+        {/* Reset/teleport button */}
+        <div className="absolute bottom-4 left-4 pointer-events-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-black/50 border-white/10 text-white hover:bg-white/10 hover-jelly"
+            onClick={() => {
+              movement.resetPosition();
+              showNotification('تم العودة إلى نقطة البداية');
+            }}
+          >
+            <i className="fas fa-sync-alt mr-2"></i>
+            إعادة ضبط
+          </Button>
         </div>
       </div>
       
-      {/* Control instructions */}
-      <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1 rounded-md text-sm backdrop-blur-sm">
-        {!isMobile ? (
-          <>
-            <div>استخدم W,A,S,D للتحرك</div>
-            <div>الماوس للنظر حولك</div>
-          </>
-        ) : (
-          <div>استخدم وحدة التحكم الافتراضية للتنقل</div>
-        )}
+      {/* Dynamic promotions panel */}
+      <div className="absolute bottom-20 right-4 z-30 pointer-events-auto">
+        <DynamicPromotions
+          animated={true}
+          variant="highlight"
+        />
       </div>
     </div>
   );

@@ -79,7 +79,7 @@ const buildingData = {
  * instead of loading a GLB/GLTF file directly
  */
 interface ThreeBuildingModelProps {
-  type?: 'travel' | 'clothing' | 'electronics' | 'other';
+  type?: string; // Support all types of buildings
   color?: string;
   width?: number;
   height?: number;
