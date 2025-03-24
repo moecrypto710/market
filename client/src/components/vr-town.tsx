@@ -53,6 +53,13 @@ interface Store {
   icon: string;
   description: string;
   isPopular?: boolean;
+  brandLogo?: string; // URL to brand logo
+  storeImage?: string; // URL to store front image
+  storeType?: 'brand' | 'department' | 'specialty' | 'discount';
+  isInternational?: boolean;
+  openingHours?: string;
+  hasSpecialEvent?: boolean;
+  discount?: number; // percentage discount applied at this store
 }
 
 // Avatar Selection Component
