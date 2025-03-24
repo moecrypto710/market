@@ -1201,28 +1201,87 @@ export default function VRMallSimplified({ products }: VRMallProps) {
         
         {/* 3D Mall Environment with Realistic Layout */}
         <div className="absolute inset-0 perspective-3d overflow-hidden">
-          {/* 3D Mall Structure */}
+          {/* 3D Mall Structure - Ground Floor */}
           <div className="mall-floor"></div>
           <div className="mall-ceiling"></div>
           <div className="mall-wall mall-wall-left"></div>
           <div className="mall-wall mall-wall-right"></div>
           
-          {/* Central Plaza with Fountain */}
-          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="mall-fountain"></div>
-            <div className="text-xs text-center mt-2 text-white/70">نافورة الساحة المركزية</div>
+          {/* Spotlights */}
+          <div className="mall-spotlights">
+            <div className="mall-spotlight"></div>
+            <div className="mall-spotlight"></div>
+            <div className="mall-spotlight"></div>
+            <div className="mall-spotlight"></div>
+            <div className="mall-spotlight"></div>
           </div>
           
-          {/* Mall Directory Sign - Holographic */}
+          {/* Second Floor Structure */}
+          <div className="mall-second-floor">
+            <div className="mall-balcony"></div>
+            <div className="mall-balcony-front"></div>
+            
+            {/* Railings */}
+            <div className="mall-railing">
+              {[...Array(15)].map((_, i) => (
+                <div key={i} className="mall-railing-post"></div>
+              ))}
+            </div>
+            
+            {/* Second Floor Stores with Arabic Design */}
+            <div className="absolute top-0 left-[20%] transform -translate-x-1/2">
+              <div className="islamic-arch"></div>
+              <div className="store-brand-logo nike-style">ﻧﺎﻳﻜﻲ</div>
+            </div>
+            
+            <div className="absolute top-0 left-[50%] transform -translate-x-1/2">
+              <div className="islamic-arch"></div>
+              <div className="store-brand-logo apple-style">آبل</div>
+            </div>
+            
+            <div className="absolute top-0 right-[20%] transform translate-x-1/2">
+              <div className="islamic-arch"></div>
+              <div className="store-brand-logo adidas-style">أديداس</div>
+            </div>
+            
+            {/* Central Dome */}
+            <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2">
+              <div className="mall-dome"></div>
+              <div className="absolute top-[-25px] left-1/2 transform -translate-x-1/2 w-1 h-5 bg-fuchsia-500"></div>
+            </div>
+          </div>
+          
+          {/* Virtual Mall People */}
+          <div className="absolute bottom-20 left-[30%] mall-person mall-person-walking" style={{ animationDelay: '0s' }}></div>
+          <div className="absolute bottom-40 left-[40%] mall-person mall-person-walking" style={{ animationDelay: '-2s' }}></div>
+          <div className="absolute bottom-30 left-[60%] mall-person mall-person-walking" style={{ animationDelay: '-4s' }}></div>
+          <div className="absolute bottom-50 left-[10%] mall-person mall-person-walking" style={{ animationDelay: '-6s' }}></div>
+          
+          {/* Central Plaza with Fountain and Arabic Elements */}
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="mall-fountain"></div>
+            <div className="islamic-pattern absolute inset-0 opacity-10"></div>
+            <div className="text-xs text-center mt-2 text-white/70 font-arabic">نافورة الساحة المركزية</div>
+          </div>
+          
+          {/* Mall Directory Sign - Holographic with Arabic Design */}
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20">
-            <div className="holographic-container p-3 rounded-lg shadow-glow-sm">
-              <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2">
+            <div className="holographic-container p-4 rounded-lg shadow-glow-sm arabesque-border">
+              <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2 font-arabic">
                 مول أمريكي التجاري
               </h3>
               <div className="text-xs text-center text-white/70 mb-1">اضغط على أي قسم لزيارته</div>
               <div className="h-px w-full bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent my-1"></div>
               <div className="text-center text-sm text-fuchsia-300 mt-1">
                 {`أنت الآن في: ${getAreaName(currentSection)}`}
+              </div>
+              
+              {/* Arabic ornamental decoration */}
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-10 h-5 opacity-30">
+                <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0,50 Q50,0 100,50" stroke="#d946ef" fill="none" strokeWidth="2" />
+                  <path d="M20,50 Q50,20 80,50" stroke="#d946ef" fill="none" strokeWidth="2" />
+                </svg>
               </div>
             </div>
           </div>
@@ -1239,7 +1298,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             </div>
           </div>
           
-          {/* Mall Storefront Sections */}
+          {/* Mall Storefront Sections - Now with Branded Stores */}
           <div className="absolute inset-10 grid grid-cols-3 grid-rows-3 gap-4 z-10">
             {/* First Row */}
             <div 

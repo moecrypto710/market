@@ -792,6 +792,218 @@
   transform: translateY(-10px);
 }
 
+/* Multi-floor mall elements */
+.mall-second-floor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  transform: translateY(-80px);
+  perspective: 800px;
+  z-index: 5;
+}
+
+.mall-balcony {
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 40px;
+  background: rgba(20, 10, 30, 0.7);
+  transform: rotateX(70deg);
+  transform-origin: bottom center;
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.mall-balcony::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), 
+    linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.mall-balcony-front {
+  position: absolute;
+  top: 40px;
+  left: 15%;
+  right: 15%;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(30,20,40,0.9), rgba(10,5,15,0.95));
+  border: 1px solid rgba(217, 70, 239, 0.3);
+}
+
+.mall-railing {
+  position: absolute;
+  top: 38px;
+  left: 15%;
+  right: 15%;
+  height: 8px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.mall-railing-post {
+  width: 2px;
+  height: 10px;
+  background: rgba(217, 70, 239, 0.5);
+  position: relative;
+}
+
+.mall-railing-post::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -10px;
+  right: -10px;
+  height: 1px;
+  background: rgba(217, 70, 239, 0.5);
+}
+
+.mall-arch {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  border: 2px solid rgba(217, 70, 239, 0.3);
+  border-bottom: none;
+  border-radius: 30px 30px 0 0;
+}
+
+/* Arabic architectural elements */
+.islamic-arch {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  border: 2px solid rgba(217, 70, 239, 0.3);
+  border-radius: 60px 60px 0 0;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.islamic-arch::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: rgba(217, 70, 239, 0.2);
+  border-radius: 100%;
+}
+
+.islamic-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h80v80H0V0zm20 20v40h40V20H20zm20 35a15 15 0 1 1 0-30 15 15 0 0 1 0 30z' fill='%23d946ef' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+
+.mall-dome {
+  position: absolute;
+  top: 20px;
+  width: 80px;
+  height: 40px;
+  background: rgba(217, 70, 239, 0.15);
+  border-radius: 50% 50% 0 0;
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  overflow: hidden;
+}
+
+.mall-dome::before {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  background: rgba(217, 70, 239, 0.5);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(217, 70, 239, 0.5);
+}
+
+.mall-dome::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0, rgba(217, 70, 239, 0.3), transparent 70%);
+}
+
+/* Mall people */
+.mall-person {
+  position: absolute;
+  width: 6px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50% 50% 0 0;
+}
+
+.mall-person::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+}
+
+.mall-person-walking {
+  animation: walking-animation 8s linear infinite;
+}
+
+@keyframes walking-animation {
+  0% { transform: translateX(0) translateY(0); }
+  20% { transform: translateX(50px) translateY(20px); }
+  40% { transform: translateX(100px) translateY(0); }
+  60% { transform: translateX(150px) translateY(-20px); }
+  80% { transform: translateX(200px) translateY(0); }
+  100% { transform: translateX(250px) translateY(20px); }
+}
+
+/* Store branded elements */
+.store-brand-logo {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+.apple-style {
+  background: linear-gradient(to bottom, rgba(50, 50, 52, 0.9), rgba(35, 35, 37, 0.9));
+}
+
+.nike-style {
+  background: linear-gradient(to bottom, rgba(16, 21, 36, 0.9), rgba(3, 3, 3, 0.9));
+}
+
+.adidas-style {
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.9));
+}
+
+.luxury-style {
+  background: linear-gradient(to bottom, rgba(148, 108, 36, 0.9), rgba(86, 60, 14, 0.9));
+}
+
 .holographic-container::before {
   content: '';
   position: absolute;
