@@ -56,10 +56,12 @@ export default function BusinessWorldPage() {
 
   // Business categories
   const businessCategories = [
-    { id: "all", name: "جميع الأعمال", icon: <Building className="h-5 w-5" /> },
-    { id: "retail", name: "متاجر التجزئة", icon: <ShoppingBag className="h-5 w-5" /> },
-    { id: "travel", name: "وكالات السفر", icon: <Plane className="h-5 w-5" /> },
-    { id: "devices", name: "متاجر الأجهزة", icon: <Phone className="h-5 w-5" /> },
+    { id: "all", name: "جميع الأعمال", icon: <Building className="h-5 w-5" />, vrColor: "#9c27b0" },
+    { id: "retail", name: "متاجر الأزياء", icon: <ShoppingBag className="h-5 w-5" />, vrColor: "#e91e63" },
+    { id: "travel", name: "سفر وفنادق", icon: <Plane className="h-5 w-5" />, vrColor: "#2196f3" },
+    { id: "devices", name: "إلكترونيات", icon: <Phone className="h-5 w-5" />, vrColor: "#5e35b1" },
+    { id: "accessories", name: "إكسسوارات", icon: <Star className="h-5 w-5" />, vrColor: "#ff9800" },
+    { id: "services", name: "خدمات أعمال", icon: <BriefcaseBusiness className="h-5 w-5" />, vrColor: "#4caf50" },
   ];
 
   // Sample business data (in a real app, this would come from an API)
@@ -173,69 +175,324 @@ export default function BusinessWorldPage() {
     }
   ];
 
-  // Business shape component
-  const BusinessShape = ({ type, children }: { type: string, children: React.ReactNode }) => {
+  // Business shape component with enhanced VR-ready designs
+  const BusinessShape = ({ type, children, category }: { type: string, children: React.ReactNode, category?: string }) => {
+    // Get the VR color based on the business category
+    const getCategoryColor = () => {
+      const cat = businessCategories.find(c => c.id === category) || businessCategories[0];
+      return cat.vrColor;
+    };
+    
+    // Custom color based on business category
+    const categoryColor = getCategoryColor();
+    
     switch(type) {
       case "airplane":
         return (
-          <div className="relative">
-            {/* Airplane shape with CSS */}
-            <div className="relative w-full h-48 bg-primary/10 rounded-t-3xl overflow-hidden">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-6 bg-primary/20 rounded-full"></div>
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-24 bg-primary/20 transform -rotate-45 origin-bottom"></div>
-              <div className="absolute top-0 right-1/2 translate-x-1/2 w-10 h-24 bg-primary/20 transform rotate-45 origin-bottom"></div>
-              <div className="absolute bottom-0 left-0 right-0 h-6 bg-primary/30 rounded-t-lg"></div>
-              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blue-400"></div>
-              <Plane className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12 text-primary" />
+          <div className="relative perspective-3d transform transition-all duration-500 hover:scale-[1.03]">
+            {/* 3D Airplane building with enhanced CSS for VR */}
+            <div className="relative w-full h-60 bg-gradient-to-b from-sky-100 to-white rounded-t-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-500">
+              {/* Animated sky background */}
+              <div className="absolute inset-0 bg-gradient-to-b from-blue-500/30 to-blue-100/30">
+                <div className="absolute inset-0 animate-float1 opacity-20" 
+                     style={{ 
+                       backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.7' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                       backgroundSize: '50px 50px'
+                     }}
+                ></div>
+              </div>
+              
+              {/* Main building structure */}
+              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-5/6 h-40 bg-white rounded-t-2xl shadow-lg overflow-hidden">
+                {/* Building facade with windows */}
+                <div className="absolute inset-0 grid grid-cols-6 grid-rows-4 gap-1 p-2">
+                  {Array(24).fill(0).map((_, i) => (
+                    <div key={i} className="bg-blue-100/50 rounded-sm"></div>
+                  ))}
+                </div>
+                
+                {/* Travel agency logo/sign */}
+                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1/2 h-8 bg-blue-500 rounded-md flex items-center justify-center shadow-md">
+                  <span className="text-white font-bold text-xs">وكالة سفر</span>
+                </div>
+                
+                {/* Entrance */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/4 h-14 bg-blue-900/80 rounded-t-lg"></div>
+              </div>
+              
+              {/* Runway/Road leading to building */}
+              <div className="absolute bottom-0 left-0 right-0 h-4 bg-gray-700"></div>
+              
+              {/* Animated planes */}
+              <div className="absolute top-[20%] right-[10%] transform -rotate-12 animate-float2" style={{ animationDuration: '15s' }}>
+                <Plane className="h-6 w-6 text-blue-600" />
+              </div>
+              <div className="absolute top-[30%] left-[15%] transform rotate-12 animate-float3" style={{ animationDuration: '18s', animationDelay: '2s' }}>
+                <Plane className="h-5 w-5 text-blue-500" />
+              </div>
+              
+              {/* VR elements: Glow effect and floating elements */}
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-40 h-2 bg-blue-400/50 blur-md rounded-full animate-pulse-slow"></div>
+              
+              {/* 3D Perspective elements */}
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 w-40 h-40 border-4 border-dashed border-blue-300/40 rounded-full animate-spin-slow" 
+                   style={{ animationDuration: '30s' }}></div>
             </div>
-            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-md">
+            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-lg">
               {children}
             </div>
           </div>
         );
+        
       case "phone":
         return (
-          <div className="relative">
-            {/* Phone shape with CSS */}
-            <div className="relative w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 rounded-t-3xl overflow-hidden border-8 border-gray-800">
-              <div className="absolute top-1 left-1/2 -translate-x-1/2 w-16 h-1 bg-gray-700 rounded-full"></div>
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-6 h-6 rounded-full border-2 border-gray-700 flex items-center justify-center">
-                <div className="w-2 h-2 bg-gray-700 rounded-full"></div>
+          <div className="relative perspective-3d transform transition-all duration-500 hover:scale-[1.03]">
+            {/* 3D Electronics Store with futuristic elements */}
+            <div className="relative w-full h-60 bg-gradient-to-b from-purple-900/90 to-black rounded-t-lg overflow-hidden shadow-xl">
+              {/* Technology grid background */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0 circuit-overlay"></div>
               </div>
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full px-4 py-8 flex items-center justify-center">
-                <Phone className="h-12 w-12 text-white/70" />
+              
+              {/* Main store structure */}
+              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-5/6 h-36 bg-gray-900 rounded-t-lg border border-purple-500/30 overflow-hidden">
+                {/* Digital facade with LED screen effect */}
+                <div className="absolute inset-x-0 top-0 h-6 bg-gradient-to-r from-purple-600/80 via-purple-400/80 to-purple-600/80 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold px-2 py-1">متجر الإلكترونيات</span>
+                </div>
+                
+                {/* Display windows with devices */}
+                <div className="absolute top-8 inset-x-4 bottom-8 grid grid-cols-3 gap-2">
+                  <div className="bg-black border border-purple-500/30 rounded flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <div className="bg-black border border-purple-500/30 rounded flex items-center justify-center">
+                    <div className="w-5 h-8 rounded-sm bg-gray-800 border border-purple-400/50"></div>
+                  </div>
+                  <div className="bg-black border border-purple-500/30 rounded flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-purple-400" />
+                  </div>
+                </div>
+                
+                {/* Store entrance */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-purple-900"></div>
               </div>
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-12 h-1 bg-gray-700 rounded-full"></div>
+              
+              {/* Floating tech elements */}
+              <div className="absolute top-6 right-8 w-10 h-10 digital-glitch">
+                <div className="absolute inset-0 rounded-full border-2 border-purple-500/50 animate-spin-slow" style={{ animationDuration: '20s' }}></div>
+                <div className="absolute inset-2 rounded-full border border-purple-400/30 animate-spin-slow" style={{ animationDuration: '15s', animationDirection: 'reverse' }}></div>
+                <div className="absolute inset-4 bg-purple-500/20 rounded-full animate-pulse-slow"></div>
+              </div>
+              
+              <div className="absolute top-12 left-8 w-8 h-8 digital-glitch">
+                <div className="absolute inset-0 rounded-full border-2 border-purple-500/50 animate-spin-slow" style={{ animationDuration: '25s' }}></div>
+                <div className="absolute inset-2 rounded-full border border-purple-400/30 animate-spin-slow" style={{ animationDuration: '18s', animationDirection: 'reverse' }}></div>
+                <div className="absolute inset-3 bg-purple-500/20 rounded-full animate-pulse-slow"></div>
+              </div>
+              
+              {/* Holographic phone display */}
+              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 animate-float2" style={{ animationDuration: '5s' }}>
+                <div className="relative w-12 h-20 bg-black/80 rounded-xl border border-purple-500/50 overflow-hidden flex items-center justify-center shadow-[0_0_15px_rgba(147,51,234,0.5)]">
+                  <div className="absolute inset-1 opacity-60 bg-gradient-to-b from-purple-500/20 to-transparent"></div>
+                  <div className="h-16 w-10 bg-purple-900/30 rounded-lg"></div>
+                </div>
+              </div>
             </div>
-            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-md">
+            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-lg">
               {children}
             </div>
           </div>
         );
+        
+      case "accessories":
+        return (
+          <div className="relative perspective-3d transform transition-all duration-500 hover:scale-[1.03]">
+            {/* 3D Accessories boutique with elegant design */}
+            <div className="relative w-full h-60 bg-gradient-to-b from-amber-100 to-white rounded-t-xl overflow-hidden shadow-lg">
+              {/* Luxury background pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" 
+                     style={{ 
+                       backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                       backgroundSize: '30px 30px'
+                     }}
+                ></div>
+              </div>
+              
+              {/* Main boutique structure */}
+              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-5/6 h-40 bg-amber-50 rounded-t-lg shadow-md overflow-hidden border border-amber-200">
+                {/* Boutique facade */}
+                <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-r from-amber-600/80 via-amber-500/80 to-amber-600/80 flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">بوتيك الإكسسوارات</span>
+                </div>
+                
+                {/* Display window */}
+                <div className="absolute top-10 left-1/2 -translate-x-1/2 w-3/4 h-20 bg-white/70 backdrop-blur-sm border border-amber-200 rounded">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex items-center space-x-4">
+                      {/* Necklace display */}
+                      <div className="relative h-12 w-6">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-amber-300"></div>
+                        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-px h-8 bg-amber-300"></div>
+                      </div>
+                      
+                      {/* Watch display */}
+                      <div className="relative h-10 w-6">
+                        <div className="absolute inset-0 rounded-full border-2 border-amber-400 flex items-center justify-center">
+                          <div className="h-4 w-4 rounded-full bg-amber-100 border border-amber-300"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Ring display */}
+                      <div className="h-6 w-6 rounded-full border-4 border-amber-300"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Boutique entrance */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-8 bg-amber-800/60 rounded-t"></div>
+              </div>
+              
+              {/* Floating luxury elements */}
+              <div className="absolute top-8 right-10 animate-float2" style={{ animationDuration: '8s' }}>
+                <div className="w-8 h-8 rounded-full border-2 border-amber-400/70 flex items-center justify-center">
+                  <Star className="h-4 w-4 text-amber-400" />
+                </div>
+              </div>
+              
+              <div className="absolute top-16 left-10 animate-float3" style={{ animationDuration: '10s' }}>
+                <div className="w-6 h-6 rounded-full border border-amber-400/70 flex items-center justify-center">
+                  <div className="w-3 h-3 rounded-full bg-amber-400/70"></div>
+                </div>
+              </div>
+              
+              {/* Shimmering effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-scan" style={{ animationDuration: '3s' }}></div>
+            </div>
+            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-lg">
+              {children}
+            </div>
+          </div>
+        );
+        
+      case "services":
+        return (
+          <div className="relative perspective-3d transform transition-all duration-500 hover:scale-[1.03]">
+            {/* 3D Business Services Office */}
+            <div className="relative w-full h-60 bg-gradient-to-b from-green-100 to-white rounded-t-xl overflow-hidden shadow-lg">
+              {/* Business pattern background */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 circuit-overlay" 
+                     style={{ 
+                       backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%234caf50' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                       backgroundSize: '50px 50px'
+                     }}
+                ></div>
+              </div>
+              
+              {/* Modern office building */}
+              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-5/6 h-44 bg-white rounded-t-lg border border-green-200 shadow-lg overflow-hidden">
+                {/* Office facade */}
+                <div className="absolute inset-0 grid grid-cols-8 grid-rows-6 gap-1 p-2">
+                  {Array(48).fill(0).map((_, i) => (
+                    <div key={i} className="bg-green-50 border border-green-100 rounded-sm"></div>
+                  ))}
+                </div>
+                
+                {/* Company logo/sign */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 w-2/5 h-8 bg-green-600 rounded flex items-center justify-center shadow-md">
+                  <span className="text-white text-xs font-semibold">خدمات أعمال</span>
+                </div>
+                
+                {/* Office entrance */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/4 h-10 bg-green-800 rounded-t"></div>
+              </div>
+              
+              {/* Business elements */}
+              <div className="absolute top-6 right-6 animate-float1" style={{ animationDuration: '12s' }}>
+                <BriefcaseBusiness className="h-8 w-8 text-green-600/70" />
+              </div>
+              
+              <div className="absolute top-20 left-8 animate-float2" style={{ animationDuration: '15s' }}>
+                <div className="w-10 h-10 rounded-full border-2 border-green-500/30 flex items-center justify-center">
+                  <Handshake className="h-5 w-5 text-green-600/70" />
+                </div>
+              </div>
+            </div>
+            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-lg">
+              {children}
+            </div>
+          </div>
+        );
+        
       case "store":
       default:
         return (
-          <div className="relative">
-            {/* Store shape with CSS */}
-            <div className="relative w-full h-48 bg-gradient-to-b from-indigo-100 to-white rounded-t-lg overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-10 bg-primary/80 flex items-center justify-center">
-                <span className="text-white text-sm font-semibold">متجر</span>
+          <div className="relative perspective-3d transform transition-all duration-500 hover:scale-[1.03]">
+            {/* 3D Clothing Store with fashion elements */}
+            <div className="relative w-full h-60 bg-gradient-to-b from-pink-50 to-white rounded-t-xl overflow-hidden shadow-lg">
+              {/* Fashion background pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" 
+                     style={{ 
+                       backgroundImage: `url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e91e63' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+                       backgroundSize: '30px 30px'
+                     }}
+                ></div>
               </div>
-              <div className="absolute top-10 left-0 right-0 bottom-0 flex">
-                <div className="w-1/3 h-full border-r border-gray-200 flex items-center justify-center">
-                  <div className="w-8 h-20 bg-primary/20 rounded"></div>
+              
+              {/* Main store building */}
+              <div className="absolute left-1/2 bottom-0 -translate-x-1/2 w-5/6 h-40 bg-white rounded-t-lg shadow-md overflow-hidden border border-pink-200">
+                {/* Store facade */}
+                <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-r from-pink-600/80 via-pink-500/80 to-pink-600/80 flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">متجر الأزياء</span>
                 </div>
-                <div className="w-1/3 h-full border-r border-gray-200 flex items-center justify-center">
-                  <div className="w-8 h-16 bg-primary/30 rounded"></div>
+                
+                {/* Store display windows */}
+                <div className="absolute top-10 inset-x-4 h-20 flex gap-2">
+                  {/* Mannequin displays */}
+                  <div className="flex-1 border border-pink-200 rounded flex items-center justify-center">
+                    <div className="relative">
+                      <div className="w-2 h-8 bg-gray-200"></div>
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gray-200"></div>
+                      <div className="absolute top-8 left-1 w-5 h-2 bg-pink-300 rounded"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 border border-pink-200 rounded flex items-center justify-center">
+                    <div className="relative">
+                      <div className="w-2 h-8 bg-gray-200"></div>
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gray-200"></div>
+                      <div className="absolute top-8 -left-2 w-6 h-4 bg-pink-200 rounded"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex-1 border border-pink-200 rounded flex items-center justify-center">
+                    <div className="relative">
+                      <div className="w-2 h-8 bg-gray-200"></div>
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gray-200"></div>
+                      <div className="absolute top-8 left-1 w-4 h-3 bg-pink-400 rounded"></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-1/3 h-full flex items-center justify-center">
-                  <div className="w-8 h-12 bg-primary/40 rounded"></div>
+                
+                {/* Store entrance */}
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-8 bg-pink-800/60 rounded-t"></div>
+              </div>
+              
+              {/* Floating fashion elements */}
+              <div className="absolute top-6 right-6 animate-float1" style={{ animationDuration: '12s' }}>
+                <ShoppingBag className="h-8 w-8 text-pink-500/70" />
+              </div>
+              
+              <div className="absolute top-20 left-8 animate-float2" style={{ animationDuration: '15s' }}>
+                <div className="w-10 h-10 rounded-full border-2 border-pink-300/50 flex items-center justify-center">
+                  <Star className="h-5 w-5 text-pink-400/70" />
                 </div>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-8 bg-gray-800"></div>
-              <ShoppingBag className="absolute top-20 left-1/2 -translate-x-1/2 h-12 w-12 text-primary" />
             </div>
-            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-md">
+            <div className="p-4 bg-white border border-gray-200 rounded-b-lg shadow-lg">
               {children}
             </div>
           </div>
