@@ -17,6 +17,7 @@ import GazeNavigation from "./gaze-navigation";
 import TravelScreen from "./travel-screen";
 import EnterBuilding from "./enter-building";
 import AirplaneBuildingInterior from "./airplane-building-interior";
+import VRTeleportation from "./vr-teleportation";
 import { 
   Building, Phone, ShoppingBag, Plane, Map,
   Home, User, Settings, PanelTop, Compass, 
