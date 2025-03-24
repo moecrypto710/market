@@ -332,12 +332,12 @@ export default function HomePage() {
                 {/* Prominent buttons for both VR modes */}
                 <motion.div
                   variants={fadeInUp}
-                  className="flex flex-col sm:flex-row justify-center gap-4"
+                  className="flex justify-center"
                 >
-                  <Button 
-                    onClick={toggleImmersiveMode}
-                    aria-label="دخول البلدة التفاعلية الذكية"
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-8 py-6 h-auto text-xl md:text-2xl rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden group border border-white/20"
+                  <Link href="/vr-amrikyy-town">
+                    <Button 
+                      aria-label="دخول مدينة أمريكي"
+                      className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-8 py-6 h-auto text-xl md:text-2xl rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden"n group border border-white/20"
                   >
                     {/* Interior glow effects */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform"></div>
