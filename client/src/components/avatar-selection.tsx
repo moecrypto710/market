@@ -173,6 +173,27 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                   }}
                 ></div>
                 
+                {/* Digital circuit decorative elements */}
+                <div className="absolute top-0 right-0 w-16 h-16 opacity-20 pointer-events-none">
+                  <div className="absolute top-4 right-0 w-full h-[1px] bg-gradient-to-l from-transparent via-fuchsia-400 to-transparent"></div>
+                  <div className="absolute top-0 right-4 h-full w-[1px] bg-gradient-to-b from-transparent via-fuchsia-400 to-transparent"></div>
+                  <div className="absolute top-8 right-4 w-1.5 h-1.5 rounded-full bg-fuchsia-400 opacity-70 animate-pulse-slow"></div>
+                </div>
+                
+                <div className="absolute bottom-0 left-0 w-16 h-16 opacity-20 pointer-events-none">
+                  <div className="absolute bottom-4 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                  <div className="absolute bottom-0 left-4 h-full w-[1px] bg-gradient-to-t from-transparent via-blue-400 to-transparent"></div>
+                  <div className="absolute bottom-8 left-4 w-1.5 h-1.5 rounded-full bg-blue-400 opacity-70 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+                </div>
+                
+                {/* Arabesque corner decoration for cultural fusion */}
+                <div className="absolute top-0 left-0 w-8 h-8 opacity-20 pointer-events-none">
+                  <div className="w-3 h-3 border-t border-l rounded-tl-lg border-white/70"></div>
+                </div>
+                <div className="absolute bottom-0 right-0 w-8 h-8 opacity-20 pointer-events-none">
+                  <div className="w-3 h-3 border-b border-r rounded-br-lg border-white/70"></div>
+                </div>
+                
                 {/* Avatar image with glow effect - smaller */}
                 <div className="relative w-16 h-16 mb-2">
                   {/* Ambient glow */}
@@ -202,36 +223,62 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                   </div>
                 </div>
                 
-                {/* Avatar name - smaller */}
-                <h3 className="text-lg font-bold mb-1 text-white">{avatar.name}</h3>
+                {/* Avatar name - smaller with gradient */}
+                <h3 
+                  className="text-lg font-bold mb-1 text-transparent bg-clip-text text-glow" 
+                  style={{
+                    backgroundImage: `linear-gradient(to right, ${avatar.color || '#d946ef'}, white)`,
+                    WebkitBackgroundClip: 'text'
+                  }}
+                >
+                  {avatar.name}
+                </h3>
                 
-                {/* Compact feature display */}
+                {/* Holographic data chip - small, futuristic */}
+                <div className="relative w-full h-0.5 mb-2">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-scan" 
+                       style={{ animationDuration: '3s' }}>
+                  </div>
+                </div>
+                
+                {/* Compact feature display with improved styling */}
                 <div className="flex flex-col items-center space-y-1.5 mb-1.5">
-                  {/* Special feature chip - smaller */}
+                  {/* Special feature chip - smaller with digital look */}
                   <div 
-                    className="px-2 py-0.5 rounded-full text-xs"
+                    className="px-2 py-0.5 rounded-md text-xs relative overflow-hidden"
                     style={{
-                      backgroundColor: `${avatar.color || '#d946ef'}20`,
+                      backgroundColor: `${avatar.color || '#d946ef'}10`,
                       color: 'white',
-                      fontSize: '0.65rem'
+                      fontSize: '0.65rem',
+                      border: `1px solid ${avatar.color || '#d946ef'}30`
                     }}
                   >
-                    {avatar.specialFeature}
+                    {/* Scan line in button */}
+                    <span className="absolute inset-0 w-full h-0.5 bg-white/10 animate-scan" 
+                          style={{ animationDuration: '2s', top: 'auto', bottom: 0 }}></span>
+                    <span className="relative z-10">{avatar.specialFeature}</span>
                   </div>
                   
-                  {/* Category indicator - smaller */}
-                  <span 
-                    className="px-1.5 py-0.5 rounded-sm text-xs bg-black/30 border border-white/10"
-                    style={{ 
-                      color: avatar.color || '#d946ef',
-                      fontSize: '0.65rem'
-                    }}
-                  >
-                    {avatar.favoriteCategory === 'electronics' ? 'الإلكترونيات 💻' :
-                     avatar.favoriteCategory === 'clothing' ? 'الأزياء 👗' :
-                     avatar.favoriteCategory === 'home' ? 'المنزل 🏠' :
-                     avatar.favoriteCategory === 'sports' ? 'الرياضة 🏅' : 'متنوع ✨'}
-                  </span>
+                  {/* Category indicator - with high-tech styling */}
+                  <div className="flex items-center space-x-1 rtl:space-x-reverse">
+                    <span 
+                      className="w-1.5 h-1.5 rounded-full animate-pulse-slow"
+                      style={{ backgroundColor: avatar.color || '#d946ef' }}
+                    ></span>
+                    <span 
+                      className="px-1.5 py-0.5 rounded-sm text-xs bg-black/40 border border-white/10"
+                      style={{ 
+                        color: avatar.color || '#d946ef',
+                        fontSize: '0.65rem',
+                        textShadow: `0 0 5px ${avatar.color || '#d946ef'}40`
+                      }}
+                    >
+                      {avatar.favoriteCategory === 'electronics' ? 'الإلكترونيات 💻' :
+                       avatar.favoriteCategory === 'clothing' ? 'الأزياء 👗' :
+                       avatar.favoriteCategory === 'home' ? 'المنزل 🏠' :
+                       avatar.favoriteCategory === 'sports' ? 'الرياضة 🏅' : 'متنوع ✨'}
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Select button - smaller */}
