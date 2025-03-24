@@ -863,8 +863,8 @@ export default function ThreeBuildingModel({
         createArabesquePatterns();
         createMinarets(); // Only if minaret is enabled in buildingData
         
-      } else if (buildingStyle === 'boutique') {
-        // Boutique building with decorative elements
+      } else if (buildingStyle === 'arabic-boutique') {
+        // Arabic boutique building with decorative elements
         
         // Decorative awning
         const awningGeometry = new THREE.BoxGeometry(width + 1, 0.2, depth / 2 + 0.5);
@@ -981,8 +981,8 @@ export default function ThreeBuildingModel({
       if (buildingStyle === 'modern') {
         // Modern building gets a flat roof with details
         roofGeometry = new THREE.BoxGeometry(width, 0.5, depth);
-      } else if (buildingStyle === 'boutique') {
-        // Boutique gets a slightly sloped roof
+      } else if (buildingStyle === 'arabic-boutique') {
+        // Arabic boutique gets a slightly sloped roof
         const roofShape = new THREE.Shape();
         roofShape.moveTo(-width / 2 - 0.5, -depth / 2 - 0.5);
         roofShape.lineTo(width / 2 + 0.5, -depth / 2 - 0.5);
