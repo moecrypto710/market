@@ -46,6 +46,10 @@ const SERVICE_ACCOUNTS = [
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [quickLoginLoading, setQuickLoginLoading] = useState(false);
+  const [showAiAssistant, setShowAiAssistant] = useState(false);
+  const [aiAssistantMinimized, setAiAssistantMinimized] = useState(false);
+  const [aiAssistantQuestion, setAiAssistantQuestion] = useState<string | undefined>();
+  const aiHelpButtonRef = useRef<HTMLButtonElement>(null);
 
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -168,6 +172,22 @@ export default function AuthPage() {
     }
   };
 
+  // AI assistant functions
+  const toggleAiAssistant = () => {
+    if (!showAiAssistant) {
+      setShowAiAssistant(true);
+      setAiAssistantMinimized(false);
+    } else {
+      setAiAssistantMinimized(!aiAssistantMinimized);
+    }
+  };
+
+  const handleAiHelp = (question: string) => {
+    setAiAssistantQuestion(question);
+    setShowAiAssistant(true);
+    setAiAssistantMinimized(false);
+  };
+
   // Redirect if already logged in
   if (user) {
     return <Redirect to="/" />;
@@ -177,6 +197,55 @@ export default function AuthPage() {
     <div className="flex flex-col md:flex-row min-h-screen py-0 md:py-10 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 bg-gradient-to-br from-purple-900/80 to-black opacity-90 pointer-events-none"></div>
+      
+      {/* AI Assistant Button */}
+      <button
+        ref={aiHelpButtonRef}
+        onClick={toggleAiAssistant}
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-700 hover:to-purple-700 text-white rounded-full p-4 shadow-lg z-50 w-14 h-14 flex items-center justify-center transition-all duration-300 border-2 border-white/20 animate-pulse-slow"
+        aria-label="فتح المساعد الذكي"
+      >
+        <i className="fas fa-robot text-xl"></i>
+      </button>
+      
+      {/* AI Help Topics */}
+      <div className="fixed top-1/2 right-6 transform -translate-y-1/2 z-40 flex flex-col gap-3 items-end">
+        {!showAiAssistant && (
+          <>
+            <div className="bg-black/80 backdrop-blur-md p-3 rounded-lg border border-purple-500/30 transition-all duration-300 hover:scale-105 cursor-pointer group"
+                onClick={() => handleAiHelp("كيف أقوم بإنشاء حساب جديد؟")}>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-sm">كيف أقوم بإنشاء حساب جديد؟</span>
+                <i className="fas fa-question-circle text-purple-400 group-hover:text-white"></i>
+              </div>
+            </div>
+            
+            <div className="bg-black/80 backdrop-blur-md p-3 rounded-lg border border-purple-500/30 transition-all duration-300 hover:scale-105 cursor-pointer group"
+                onClick={() => handleAiHelp("ما هي مميزات التسوق الافتراضي؟")}>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-sm">ما هي مميزات التسوق الافتراضي؟</span>
+                <i className="fas fa-vr-cardboard text-purple-400 group-hover:text-white"></i>
+              </div>
+            </div>
+            
+            <div className="bg-black/80 backdrop-blur-md p-3 rounded-lg border border-purple-500/30 transition-all duration-300 hover:scale-105 cursor-pointer group"
+                onClick={() => handleAiHelp("كيف يمكنني الاستفادة من برنامج الولاء؟")}>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-sm">كيف أستفيد من برنامج الولاء؟</span>
+                <i className="fas fa-medal text-purple-400 group-hover:text-white"></i>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      
+      {/* AI Assistant Component */}
+      {showAiAssistant && (
+        <AIAssistant 
+          initialQuestion={aiAssistantQuestion} 
+          minimized={aiAssistantMinimized} 
+        />
+      )}
       
       <div className="w-full md:w-1/2 px-4 md:px-10 flex items-center justify-center py-12 md:py-0 z-10 backdrop-blur-sm bg-black/10 md:bg-transparent">
         <div className="w-full max-w-md relative">
