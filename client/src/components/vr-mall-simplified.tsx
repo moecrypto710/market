@@ -102,6 +102,70 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
       color: "#f97316",
       specialFeature: "محاكي الديكور الذكي",
       specialFeatureDescription: "يمكنها إنشاء تصور ثلاثي الأبعاد للمنتجات في منزلك باستخدام الواقع المعزز"
+    },
+    { 
+      id: 5, 
+      name: "عمر",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Omar&backgroundColor=e0f2fe",
+      personality: "محب للتكنولوجيا والواقع الافتراضي",
+      favoriteCategory: "electronics",
+      personalStyle: "مستقبلي",
+      benefits: [
+        "تجارب واقع افتراضي حصرية",
+        "تحليلات متقدمة للمنتجات التقنية",
+        "ميزات تجريبية للتكنولوجيا الحديثة"
+      ],
+      color: "#3b82f6",
+      specialFeature: "استكشاف الواقع الافتراضي",
+      specialFeatureDescription: "يتيح لك استكشاف مناطق خاصة في المول باستخدام تقنيات الواقع الافتراضي المتقدمة"
+    },
+    { 
+      id: 6, 
+      name: "ليلى",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Layla&backgroundColor=feedcb",
+      personality: "خبيرة في المجوهرات والإكسسوارات الفاخرة",
+      favoriteCategory: "luxury",
+      personalStyle: "راقي فاخر",
+      benefits: [
+        "عروض خاصة على المنتجات الفاخرة",
+        "دعوات لفعاليات حصرية",
+        "خدمة استشارية شخصية للهدايا الفاخرة"
+      ],
+      color: "#eab308",
+      specialFeature: "استشاري الهدايا الفاخرة",
+      specialFeatureDescription: "يقدم توصيات مخصصة للهدايا والمنتجات الفاخرة بناءً على مناسبتك وميزانيتك"
+    },
+    { 
+      id: 7, 
+      name: "زياد",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Ziad&backgroundColor=d1fae5",
+      personality: "مهتم بالمنتجات المستدامة والصديقة للبيئة",
+      favoriteCategory: "eco",
+      personalStyle: "مستدام طبيعي",
+      benefits: [
+        "اكتشاف المنتجات الصديقة للبيئة",
+        "تقارير عن الاستدامة للمنتجات",
+        "مكافآت للاختيارات المستدامة"
+      ],
+      color: "#10b981",
+      specialFeature: "مرشد الاستدامة",
+      specialFeatureDescription: "يساعدك على تحديد المنتجات الصديقة للبيئة والمستدامة في جميع أقسام المول"
+    },
+    { 
+      id: 8, 
+      name: "ياسمين",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Yasmin&backgroundColor=ffe4e6",
+      personality: "شغوفة بالموسيقى والترفيه",
+      favoriteCategory: "entertainment",
+      personalStyle: "عصري فني",
+      benefits: [
+        "اكتشاف الإصدارات الحصرية",
+        "تخفيضات على منتجات الترفيه",
+        "وصول مبكر للفعاليات الموسيقية"
+      ],
+      color: "#ec4899",
+      specialFeature: "مستشار الترفيه",
+      specialFeatureDescription: "يقدم توصيات مخصصة للمنتجات الترفيهية والموسيقية المناسبة لذوقك"
     }
   ];
 
