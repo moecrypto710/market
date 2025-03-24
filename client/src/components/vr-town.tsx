@@ -1087,10 +1087,51 @@ export default function VRTown({
     }
   }
   
+  // Handle entering Emirates Airlines building
+  function handleEnterEmiratesBuilding() {
+    setInsideAirlineBuilding(true);
+    
+    toast({
+      title: "دخول مبنى طيران الإمارات",
+      description: "استكشف خدمات الطيران والعروض السياحية داخل المبنى"
+    });
+    
+    // Change ambient lighting for interior
+    setAmbientColor('#1e3a8a');
+    setSectionAmbience({
+      ...sectionAmbience,
+      lightIntensity: 0.7,
+      soundEffect: 'airport_ambience'
+    });
+  }
+  
+  // Handle exiting Emirates Airlines building
+  function handleExitEmiratesBuilding() {
+    setInsideAirlineBuilding(false);
+    
+    toast({
+      title: "خروج من مبنى طيران الإمارات",
+      description: "عودة إلى منطقة السفر الرئيسية"
+    });
+    
+    // Restore travel section lighting
+    setAmbientColor('#2196f3');
+    setSectionAmbience({
+      ...sectionAmbience,
+      lightIntensity: 0.5,
+      soundEffect: undefined
+    });
+  }
+
   // Handle navigation between sections
   function handleSectionNavigation(section: string) {
     // Calculate new position based on section
     let newPosition = { ...avatarPosition };
+    
+    // Reset any building states when navigating between sections
+    setInsideAirlineBuilding(false);
+    setInsideTurkishAirlines(false);
+    setInsideQatarAirways(false);
     
     switch(section) {
       case 'entrance':
