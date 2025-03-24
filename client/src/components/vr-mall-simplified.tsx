@@ -746,8 +746,8 @@ export default function VRMallSimplified({ products }: VRMallProps) {
   const sectionProducts = products.filter(product => {
     if (currentSection === 'electronics') return product.category === 'electronics';
     if (currentSection === 'clothing') return product.category === 'clothing';
-    if (currentSection === 'home') return product.category === 'home';
-    if (currentSection === 'sports') return product.category === 'sports';
+    if (currentSection === 'travel') return product.category === 'travel';
+    if (currentSection === 'accessories') return product.category === 'accessories';
     return true; // Show all in other sections
   }).slice(0, 3);
   
