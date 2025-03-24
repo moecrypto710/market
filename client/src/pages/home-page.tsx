@@ -12,27 +12,19 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
-  const { vrEnabled, toggleVR } = useVR();
+  const isMobile = useIsMobile();
   const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
   const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
   const [showTransition, setShowTransition] = useState(false);
   const [transitionStyle, setTransitionStyle] = useState<'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque'>('arabesque');
   const [, setLocation] = useLocation();
   const heroRef = useRef<HTMLDivElement>(null);
+  const [showTouchControls, setShowTouchControls] = useState(false);
   
   // Get products
   const { data: products } = useQuery<Product[]>({
     queryKey: ['/api/products'],
   });
-  
-  // Set initial AI assistant question based on VR mode
-  useEffect(() => {
-    if (vrEnabled) {
-      setAiInitialQuestion("كيف يمكنني استكشاف بلدة الأمريكي الافتراضية؟");
-    } else {
-      setAiInitialQuestion(undefined);
-    }
-  }, [vrEnabled]);
   
   // Track viewed products for personalized recommendations
   useEffect(() => {
@@ -66,6 +58,22 @@ export default function HomePage() {
       origin: { y: 0.6 }
     });
   }
+
+  // Handle movement direction for touch controls
+  const handleMove = (direction: 'forward' | 'backward' | 'left' | 'right') => {
+    // Implement movement logic here
+    console.log(`Moving ${direction}`);
+  };
+
+  // Handle stop movement
+  const handleStopMove = () => {
+    console.log('Stopped moving');
+  };
+
+  // Handle camera rotation
+  const handleLook = (deltaX: number, deltaY: number) => {
+    console.log(`Looking: deltaX=${deltaX}, deltaY=${deltaY}`);
+  };
 
   // Animation variants
   const fadeInUp = {
