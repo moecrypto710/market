@@ -21,33 +21,32 @@ import {
   Star, CreditCard, Calendar, Users, BriefcaseBusiness, Handshake, 
   GraduationCap, Video, Lightbulb, Globe, CircleDollarSign, Rocket,
   LifeBuoy, LucideProps, AreaChart, LineChart, BarChart, PieChart,
-  Check, DollarSign
+  Check, DollarSign, Store, Sparkles, Layers, BriefcaseIcon, PanelTop,
+  BoxSelect, 
+  LayoutDashboard, 
+  ChevronsRight
 } from "lucide-react";
 import confetti from 'canvas-confetti';
 
-// Virtual Town Component
+// Smart Business World Component
 export default function BusinessWorldPage() {
   const { user } = useAuth() || { user: null };
   const isMobile = useIsMobile();
   const { vrEnabled, toggleVR } = useVR() || { vrEnabled: false, toggleVR: () => {} };
   const { toast } = useToast();
+  
+  // Simplified state management
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [showVirtualTour, setShowVirtualTour] = useState(false);
-  const [currentVRSection, setCurrentVRSection] = useState<string>("main");
-  const [showPartnershipModal, setShowPartnershipModal] = useState(false);
-  const [rotationAngle, setRotationAngle] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const [viewMode, setViewMode] = useState<'map' | '3d' | 'first-person'>('3d');
+  const [activeTab, setActiveTab] = useState("stores");
   const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
-  const [rentProgress, setRentProgress] = useState(0);
-  const [isExploring, setIsExploring] = useState(false);
-  const [flyInAnimation, setFlyInAnimation] = useState(false);
+  const [showBusinessDetails, setShowBusinessDetails] = useState(false);
+  
+  // Animation states
   const [showSpotlight, setShowSpotlight] = useState(false);
-  const [highlighedFeature, setHighlightedFeature] = useState<string | null>(null);
+  const [highlightedSection, setHighlightedSection] = useState<string | null>(null);
   
   // Refs
-  const townRef = useRef<HTMLDivElement>(null);
-  const rotateInterval = useRef<NodeJS.Timeout | null>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
 
   // Fetch products
   const { data: products } = useQuery<Product[]>({
