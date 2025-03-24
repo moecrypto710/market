@@ -169,8 +169,8 @@ export default function HomePage() {
         minimized={!vrEnabled} 
       />
       
-      {/* VR Mall Experience */}
-      {vrEnabled && products && <VRMallSimplified products={products} />}
+      {/* VR Town Experience */}
+      {vrEnabled && products && <VRTown products={products} />}
       
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (
