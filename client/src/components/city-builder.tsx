@@ -56,12 +56,12 @@ export default function CityBuilder() {
   const buildings: Building[] = [
     {
       id: 'travelAgency',
-      name: 'وكالة السفر', // مبنى وكالة السفر
+      name: 'وكالة السفر طيران الإمارات', // Travel Agency Emirates Airlines
       type: 'travel',
       position: { x: 0, y: 0, z: 0 }, // matches Vector3(0, 0, 0) in Unity
       rotation: 0,
-      scale: 1,
-      color: '#3b82f6', // blue-500
+      scale: 1.5, // Increased size to make it more prominent
+      color: '#2563eb', // blue-600
       icon: 'fa-plane'
     },
     {
@@ -225,6 +225,9 @@ export default function CityBuilder() {
       // Check if building should be rendered (in front of camera)
       if (style.opacity <= 0.1) return null;
       
+      // Special styling for travel agency
+      const isTravelAgency = building.id === 'travelAgency';
+      
       return (
         <motion.div
           key={building.id}
@@ -234,10 +237,38 @@ export default function CityBuilder() {
             perspective: '1000px',
           }}
           initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          animate={{ 
+            scale: building.scale || 1,
+            y: isTravelAgency ? [0, -5, 0] : 0 
+          }}
+          transition={
+            isTravelAgency 
+              ? { y: { repeat: Infinity, duration: 3, ease: "easeInOut" } }
+              : {}
+          }
+          whileHover={{ scale: (building.scale || 1) * 1.05 }}
+          whileTap={{ scale: (building.scale || 1) * 0.95 }}
         >
+          {/* Add airplane animation for travel agency */}
+          {isTravelAgency && (
+            <motion.div 
+              className="absolute -top-10 -right-10 text-yellow-400 text-2xl transform rotate-45"
+              animate={{ 
+                x: [-20, 20, -20], 
+                y: [-10, 10, -10],
+                rotate: [30, 35, 30]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 10,
+                ease: "linear" 
+              }}
+              style={{ zIndex: 100 }}
+            >
+              ✈️
+            </motion.div>
+          )}
+          
           <StoreInteraction
             storePosition={building.position}
             storeName={building.name}
@@ -248,6 +279,19 @@ export default function CityBuilder() {
             storeColor={building.color}
             storeIcon={building.icon}
           />
+          
+          {/* Special indicator for travel agency */}
+          {isTravelAgency && (
+            <div className="absolute -bottom-8 left-0 right-0 text-center">
+              <motion.div 
+                className="inline-block bg-yellow-400 text-blue-900 px-2 py-1 rounded-full text-xs font-bold"
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+              >
+                طيران الإمارات
+              </motion.div>
+            </div>
+          )}
         </motion.div>
       );
     });

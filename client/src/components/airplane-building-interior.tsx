@@ -159,6 +159,25 @@ export default function AirplaneBuildingInterior() {
         </TabsContent>
       </Tabs>
       
+      {/* Flight Attendant component based on Unity's FlightAttendant.cs */}
+      <div className="relative">
+        <FlightAttendant 
+          position={{ x: 20, y: 10 }}
+          scale={1.2}
+          customDialogues={[
+            "مرحبًا بكم في طيران الإمارات!",
+            "هل تحتاج إلى مساعدة في اختيار وجهتك؟",
+            "يمكنك الاستمتاع بخدماتنا المميزة على متن الطائرة."
+          ]}
+          onDialogueComplete={() => {
+            toast({
+              title: "شكراً لتحدثك مع مضيفة الطيران",
+              description: "يمكنك التواصل معها في أي وقت للمساعدة."
+            });
+          }}
+        />
+      </div>
+
       <div className="mt-6 flex justify-between items-center text-sm text-blue-300">
         <div>رقم الهاتف: 1234-567-8910+</div>
         <div>ساعات العمل: 9 صباحًا - 9 مساءً</div>

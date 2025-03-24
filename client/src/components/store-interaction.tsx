@@ -169,6 +169,13 @@ export default function StoreInteraction({
               <i className={`fas ${storeIcon}`}></i>
               <span>{storeName}</span>
               <span className="text-xs opacity-70">({Math.floor(getDistance())}م)</span>
+              
+              {/* Special badge for travel agency */}
+              {storeName.includes('طيران الإمارات') && (
+                <span className="ml-2 bg-yellow-500 text-blue-900 text-xs px-2 py-0.5 rounded-full font-bold">
+                  وكالة رسمية
+                </span>
+              )}
             </div>
           </motion.div>
         )}
