@@ -147,19 +147,21 @@ export default function Product360View({
     
     // Use category-based template images from public folder if available
     if (product.category) {
-      switch(product.category) {
-        case 'clothing':
-          return '/images/product-templates/levis-jeans.svg';
-        case 'shoes':
-          return '/images/product-templates/nike-shoes.svg';
-        case 'electronics':
-          return '/images/product-templates/samsung-galaxy.svg';
-        case 'accessories':
-          return '/images/product-templates/apple-airpods.svg';
-        case 'sportswear':
-          return '/images/product-templates/adidas-tshirt.svg';
-        default:
-          return product.imageUrl || '/images/product-templates/nike-shoes.svg';
+      // Use appropriate template based on category
+      const category = product.category?.toLowerCase() || '';
+      
+      if (category.includes('clothing') || category === 'ملابس') {
+        return '/images/product-templates/levis-jeans.svg';
+      } else if (category.includes('shoe') || category === 'أحذية') {
+        return '/images/product-templates/nike-shoes.svg';
+      } else if (category.includes('electronic') || category === 'إلكترونيات') {
+        return '/images/product-templates/samsung-galaxy.svg';
+      } else if (category.includes('accessor') || category === 'إكسسوارات') {
+        return '/images/product-templates/apple-airpods.svg';
+      } else if (category.includes('sport') || category === 'رياضية') {
+        return '/images/product-templates/adidas-tshirt.svg';
+      } else {
+        return product.imageUrl || '/images/product-templates/nike-shoes.svg';
       }
     }
     

@@ -7,6 +7,7 @@ import CulturalTransition from "@/components/cultural-transition";
 import TouchControls from "@/components/touch-controls";
 import StoreInteraction from "@/components/store-interaction";
 import Product360View from "@/components/product-360-view";
+import CityBuilder from "@/components/city-builder";
 import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
@@ -195,87 +196,9 @@ export default function HomePage() {
       
       {/* Immersive Mode */}
       {immersiveMode ? (
-        <div className="fixed inset-0 bg-gradient-to-b from-blue-900/90 to-indigo-900/90 z-40">
-          {/* Touch controls for mobile and optional desktop */}
-          {showTouchControls && (
-            <TouchControls
-              onMove={handleMove}
-              onStopMove={handleStopMove}
-              onLook={handleLook}
-              showControls={true}
-              className="z-50"
-            />
-          )}
-          
-          {/* Virtual stores and buildings */}
-          <div className="absolute inset-0 z-40">
-            {/* Electronics Store */}
-            <StoreInteraction
-              storePosition={{ x: 10, y: 0, z: -10 }}
-              storeName="متجر الإلكترونيات"
-              interiorComponent={
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">متجر الإلكترونيات</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products?.filter(p => p.category === 'electronics').map(product => (
-                      <div key={product.id} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
-                        <Product360View 
-                          product={product}
-                          showControls={true}
-                          autoRotate={true}
-                          className="aspect-square"
-                        />
-                        <div className="p-4">
-                          <h3 className="font-bold text-lg mb-2">{product.name}</h3>
-                          <p className="text-sm opacity-70 mb-2">{product.description}</p>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-lg">{product.price} $</span>
-                            <Button size="sm">إضافة للسلة</Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              }
-              onEnter={() => console.log("Entered Electronics Store")}
-              onExit={() => console.log("Exited Electronics Store")}
-            />
-            
-            {/* Clothing Store */}
-            <StoreInteraction
-              storePosition={{ x: -10, y: 0, z: -15 }}
-              storeName="متجر الملابس"
-              interiorComponent={
-                <div className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">متجر الملابس</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products?.filter(p => p.category === 'clothing').map(product => (
-                      <div key={product.id} className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-800">
-                        <Product360View 
-                          product={product}
-                          showControls={true}
-                          className="aspect-square"
-                        />
-                        <div className="p-4">
-                          <h3 className="font-bold text-lg mb-2">{product.name}</h3>
-                          <p className="text-sm opacity-70 mb-2">{product.description}</p>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-lg">{product.price} $</span>
-                            <Button size="sm">إضافة للسلة</Button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              }
-              onEnter={() => console.log("Entered Clothing Store")}
-              onExit={() => console.log("Exited Clothing Store")}
-            />
-          </div>
+        <div className="fixed inset-0 z-40">
+          {/* CityBuilder component - React implementation of Unity's CityBuilder.cs */}
+          <CityBuilder />
           
           {/* Fixed position exit button */}
           <Button
@@ -286,13 +209,6 @@ export default function HomePage() {
             <i className="fas fa-times mr-2"></i>
             خروج من البلدة التفاعلية
           </Button>
-          
-          {/* Position indicator */}
-          <div className="fixed bottom-4 right-4 text-white bg-black/40 backdrop-blur-sm p-2 rounded-md text-xs z-50">
-            <div>X: {position.x.toFixed(2)}</div>
-            <div>Y: {position.y.toFixed(2)}</div>
-            <div>Z: {position.z.toFixed(2)}</div>
-          </div>
         </div>
       ) : (
         <div className="container mx-auto px-4 py-6">
