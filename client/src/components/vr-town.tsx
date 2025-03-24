@@ -1223,6 +1223,21 @@ export default function VRTown({
         onFinish={handleTransitionFinish} 
       />
       
+      {/* Gaze-based Navigation System */}
+      {vrEnabled && enableGazeNavigation && (
+        <GazeNavigation
+          points={navigationPoints}
+          onNavigate={handleGazeNavigation}
+          currentPosition={avatarPosition}
+          gazeDuration={2000} // 2 seconds to activate
+          enableGaze={true}
+          showLabels={showNavigationLabels}
+          currentPointId={currentNavPoint}
+          onGazeStart={handleGazeStart}
+          onGazeEnd={handleGazeEnd}
+        />
+      )}
+      
       {/* 3D Product View Modal */}
       {selectedProduct && show3DView && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
