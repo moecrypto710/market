@@ -582,4 +582,183 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// PostgreSQL implementation of the storage interface
+export class PgStorage implements IStorage {
+  sessionStore: any;
+
+  constructor() {
+    // Initialize session store with PostgreSQL
+    this.sessionStore = new PgStore({
+      conObject: {
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+      },
+      tableName: 'session',
+      createTableIfMissing: true,
+    });
+  }
+
+  // User operations
+  async getUser(id: number): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+    return result.length ? result[0] : undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+    return result.length ? result[0] : undefined;
+  }
+
+  async createUser(insertUser: InsertUser & { affiliateCode: string }): Promise<User> {
+    const [user] = await db.insert(users).values({
+      ...insertUser,
+      points: 0,
+      membershipTier: "basic",
+      membershipStartDate: new Date(),
+      membershipEndDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+      avatar: null,
+      lastLogin: new Date()
+    }).returning();
+    
+    return user;
+  }
+  
+  async updateUserPoints(userId: number, points: number): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error("المستخدم غير موجود");
+    }
+    
+    const [updatedUser] = await db.update(users)
+      .set({ points })
+      .where(eq(users.id, userId))
+      .returning();
+      
+    return updatedUser;
+  }
+  
+  async redeemReward(userId: number, rewardId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    const [reward] = await db.select().from(rewards).where(eq(rewards.id, rewardId)).limit(1);
+    
+    if (!user) {
+      throw new Error("المستخدم غير موجود");
+    }
+    
+    if (!reward) {
+      throw new Error("المكافأة غير موجودة");
+    }
+    
+    if (user.points < reward.pointsRequired) {
+      throw new Error("نقاط غير كافية");
+    }
+    
+    const updatedPoints = user.points - reward.pointsRequired;
+    return await this.updateUserPoints(userId, updatedPoints);
+  }
+
+  // Product operations
+  async getAllProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+  
+  async getPromotedProducts(): Promise<Product[]> {
+    return await db.select()
+      .from(products)
+      .where(gte(products.commissionRate, 8))
+      .orderBy(desc(products.commissionRate));
+  }
+  
+  async getProduct(id: number): Promise<Product | undefined> {
+    const result = await db.select().from(products).where(eq(products.id, id)).limit(1);
+    return result.length ? result[0] : undefined;
+  }
+
+  // Reward operations
+  async getAllRewards(): Promise<Reward[]> {
+    return await db.select().from(rewards);
+  }
+  
+  async getReward(id: number): Promise<Reward | undefined> {
+    const result = await db.select().from(rewards).where(eq(rewards.id, id)).limit(1);
+    return result.length ? result[0] : undefined;
+  }
+
+  // Affiliate operations
+  async getAffiliateByUserId(userId: number): Promise<Affiliate | undefined> {
+    const result = await db.select()
+      .from(affiliates)
+      .where(eq(affiliates.userId, userId))
+      .limit(1);
+    return result.length ? result[0] : undefined;
+  }
+  
+  async createAffiliate(affiliate: Omit<Affiliate, "id">): Promise<Affiliate> {
+    const [newAffiliate] = await db.insert(affiliates)
+      .values(affiliate)
+      .returning();
+    return newAffiliate;
+  }
+  
+  async updateAffiliateEarnings(affiliateId: number, amount: number): Promise<Affiliate> {
+    const [affiliate] = await db.select()
+      .from(affiliates)
+      .where(eq(affiliates.id, affiliateId))
+      .limit(1);
+      
+    if (!affiliate) {
+      throw new Error("سجل التسويق بالعمولة غير موجود");
+    }
+    
+    const [updatedAffiliate] = await db.update(affiliates)
+      .set({
+        earnings: affiliate.earnings + amount,
+        conversions: affiliate.conversions + 1
+      })
+      .where(eq(affiliates.id, affiliateId))
+      .returning();
+      
+    return updatedAffiliate;
+  }
+
+  // Cart operations - for simplicity, we still use in-memory storage for carts
+  // In a real app, you would create a cart table in the database
+  private carts = new Map<number, CartItem[]>();
+  
+  async getCartItems(userId: number): Promise<(CartItem & Product)[]> {
+    const cartItems = this.carts.get(userId) || [];
+    const productItems: (CartItem & Product)[] = [];
+    
+    for (const item of cartItems) {
+      const product = await this.getProduct(item.productId);
+      if (!product) {
+        throw new Error("المنتج غير موجود");
+      }
+      productItems.push({ ...product, ...item });
+    }
+    
+    return productItems;
+  }
+  
+  async addToCart(userId: number, item: CartItem): Promise<void> {
+    const cartItems = this.carts.get(userId) || [];
+    const existingItemIndex = cartItems.findIndex(i => i.productId === item.productId);
+    
+    if (existingItemIndex !== -1) {
+      // Update quantity if item already exists
+      cartItems[existingItemIndex].quantity += item.quantity;
+    } else {
+      // Add new item
+      cartItems.push(item);
+    }
+    
+    this.carts.set(userId, cartItems);
+  }
+  
+  async clearCart(userId: number): Promise<void> {
+    this.carts.delete(userId);
+  }
+}
+
+// Use the PostgreSQL storage by default
+export const storage = new PgStorage();

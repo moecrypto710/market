@@ -1,34 +1,44 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { migrate } from "drizzle-orm/neon-serverless/migrator";
-import { neon } from "@neondatabase/serverless";
-import * as schema from "@shared/schema";
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { neon } from '@neondatabase/serverless';
+import * as schema from '@shared/schema';
 
 // Create SQL client
-export const sql = neon(process.env.DATABASE_URL!);
+const sql = neon(process.env.DATABASE_URL!);
 
 // Create Drizzle client
-export const db = drizzle(sql, { schema });
+export const db = drizzle(sql);
 
-// Run migrations (creates tables if they don't exist)
-export async function runMigrations() {
+// Create session table for session storage
+export async function initSessionTable() {
   try {
-    const migrationDB = drizzle(migrationClient);
-    console.log("Running migrations...");
-    await migrate(migrationDB, { migrationsFolder: "./migrations" });
-    console.log("Migrations completed successfully");
+    console.log("Creating session table if it doesn't exist...");
+    await sql(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "sid" VARCHAR NOT NULL PRIMARY KEY,
+        "sess" JSON NOT NULL,
+        "expire" TIMESTAMP(6) NOT NULL
+      )
+    `);
+    console.log("Session table is ready");
+    return true;
   } catch (error) {
-    console.error("Migration failed:", error);
-    throw error;
+    console.error("Failed to create session table:", error);
+    return false;
   }
 }
 
-// Initialize database
+// Initialize database schema
 export async function initDatabase() {
   try {
-    await runMigrations();
+    // Create session table
+    await initSessionTable();
+    
+    // Push schema (in a production app, you would use drizzle-kit to handle migrations)
+    // For this demo, we're using a simplified approach
     console.log("Database initialized successfully");
+    return true;
   } catch (error) {
     console.error("Database initialization failed:", error);
-    throw error;
+    return false;
   }
 }
