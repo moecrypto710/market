@@ -108,16 +108,16 @@ export default function AuthPage() {
   }, [showAiAssistant]);
 
   const onLoginSubmit = (data: LoginFormValues) => {
-    const { rememberMe, ...credentials } = data;
-
-    // Store credentials if remember me is checked
-    if (rememberMe) {
-      localStorage.setItem('amrikyy_credentials', JSON.stringify(credentials));
+    // Store credentials locally if remember me is checked
+    if (data.rememberMe) {
+      const { username, password } = data;
+      localStorage.setItem('amrikyy_credentials', JSON.stringify({ username, password }));
     } else {
       localStorage.removeItem('amrikyy_credentials');
     }
 
-    loginMutation.mutate(credentials);
+    // Pass the entire data object including rememberMe flag to the server
+    loginMutation.mutate(data);
   };
 
   const onRegisterSubmit = (data: RegisterFormValues) => {
@@ -138,8 +138,11 @@ export default function AuthPage() {
       // Set a short delay to show the loading state and make the experience feel smoother
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Perform actual login
-      await loginMutation.mutateAsync(account);
+      // Perform actual login with rememberMe set to true for guest accounts
+      await loginMutation.mutateAsync({
+        ...account,
+        rememberMe: true
+      });
       
       toast({
         title: "تم تسجيل الدخول بنجاح",
@@ -174,7 +177,8 @@ export default function AuthPage() {
       // Default guest login since we don't have real social login yet
       await loginMutation.mutateAsync({
         username: "زائر",
-        password: "guest123"
+        password: "guest123",
+        rememberMe: true
       });
       
       toast({

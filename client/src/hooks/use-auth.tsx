@@ -9,11 +9,16 @@ import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 
+// Extended login type to include the rememberMe option
+interface ExtendedLoginData extends LoginUser {
+  rememberMe?: boolean;
+}
+
 type AuthContextType = {
   user: SelectUser | null;
   isLoading: boolean;
   error: Error | null;
-  loginMutation: UseMutationResult<SelectUser, Error, LoginUser>;
+  loginMutation: UseMutationResult<SelectUser, Error, ExtendedLoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<SelectUser, Error, InsertUser>;
 };
@@ -34,13 +39,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: LoginUser) => {
-      const response = await apiRequest("POST", "/api/login", credentials);
+    mutationFn: async (data: ExtendedLoginData) => {
+      // Include rememberMe flag in the request to server
+      const response = await apiRequest("POST", "/api/login", data);
+      
       if (!response.ok) {
         const errorData = await response.json();
         const errorMessage = errorData.message || "فشل تسجيل الدخول"; // Extract error message from response if available
         throw new Error(errorMessage);
       }
+      
       return response.json();
     },
     onSuccess: (user: SelectUser) => {
