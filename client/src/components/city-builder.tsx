@@ -5,6 +5,7 @@ import { useMovement } from '@/hooks/use-movement';
 import AirplaneBuildingInterior from './airplane-building-interior';
 import EnterBuilding from './enter-building';
 import StoreInteraction from './store-interaction';
+import GateControl from './gate-control';
 import TouchControls from './touch-controls';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
@@ -35,11 +36,17 @@ export default function CityBuilder() {
   
   // Initialize position similar to Unity's transform.position
   useEffect(() => {
-    // Set starting position 5 units in front of center
-    movement.resetPosition();
+    // This function should only run once at component mount
+    const initializePosition = () => {
+      // Set starting position 5 units in front of center
+      movement.resetPosition();
+      
+      // Apply speed based on Unity's speed parameter
+      movement.setSpeed(5);
+    };
     
-    // Apply speed based on Unity's speed parameter
-    movement.setSpeed(5);
+    initializePosition();
+    // Empty dependency array means this runs once on mount
   }, []);
   
   // Define building layout based on Unity TownBuilder script
@@ -82,32 +89,39 @@ export default function CityBuilder() {
   
   // Register buildings as collision objects
   useEffect(() => {
-    // Clear existing collision objects
-    buildings.forEach(building => {
+    // We need to create a stable reference to the buildings functions
+    const addBuildingCollisions = () => {
+      // Clear existing collision objects
+      buildings.forEach(building => {
+        movement.addCollisionObject({
+          id: building.id,
+          position: building.position,
+          size: { width: 5, height: 5, depth: 5 },
+          type: 'object',
+        });
+      });
+      
+      // Add road collision - matches road position in Unity's TownBuilder
+      // Instantiate(road, new Vector3(0, -1, 0), Quaternion.identity);
       movement.addCollisionObject({
-        id: building.id,
-        position: building.position,
-        size: { width: 5, height: 5, depth: 5 },
+        id: 'road',
+        position: { x: 0, y: -1, z: 0 }, // matches Vector3(0, -1, 0) in Unity
+        size: { width: 50, height: 0.1, depth: 50 },
         type: 'object',
       });
-    });
+    };
     
-    // Add road collision - matches road position in Unity's TownBuilder
-    // Instantiate(road, new Vector3(0, -1, 0), Quaternion.identity);
-    movement.addCollisionObject({
-      id: 'road',
-      position: { x: 0, y: -1, z: 0 }, // matches Vector3(0, -1, 0) in Unity
-      size: { width: 50, height: 0.1, depth: 50 },
-      type: 'object',
-    });
+    // Add all building collisions
+    addBuildingCollisions();
     
+    // Cleanup function to remove collisions when unmounted
     return () => {
       buildings.forEach(building => {
         movement.removeCollisionObject(building.id);
       });
       movement.removeCollisionObject('road');
     };
-  }, [movement]);
+  }, [movement.addCollisionObject, movement.removeCollisionObject]);
   
   const getPositionStyle = (position: { x: number; y: number; z: number }) => {
     // Convert 3D position to 2D screen coordinates
