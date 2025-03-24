@@ -39,21 +39,51 @@ const DEFAULT_ROTATION = { x: 0, y: 0, z: 0 };
 const DEFAULT_SPEED = 5;
 const DEFAULT_SENSITIVITY = 0.1;
 
+interface MovementOptions {
+  initialPosition?: { x: number; y: number; z: number };
+  initialRotation?: { x: number; y: number; z: number };
+  speed?: number;
+  sensitivity?: number;
+  enableCollisions?: boolean;
+}
+
 /**
  * Hook for handling movement in a 3D space
  * Adapts the Unity PlayerMovement and CameraControl scripts for React
  * Handles both mobile touch and desktop keyboard/mouse controls
+ * 
+ * @param options - Movement configuration options or initial position
+ * @param initialRotation - Optional initial rotation when first parameter is position
  */
 export function useMovement(
-  initialPosition = DEFAULT_POSITION,
+  options?: MovementOptions | { x: number; y: number; z: number },
   initialRotation = DEFAULT_ROTATION
 ): MovementReturn {
+  // Handle both object options and direct position parameter
+  let initialPosition = DEFAULT_POSITION;
+  let speed = DEFAULT_SPEED;
+  let sensitivity = DEFAULT_SENSITIVITY;
+  
+  // Check if options is a position object or options object
+  if (options) {
+    if ('x' in options && 'y' in options && 'z' in options) {
+      // It's a position object
+      initialPosition = options;
+    } else {
+      // It's an options object
+      const opts = options as MovementOptions;
+      initialPosition = opts.initialPosition || DEFAULT_POSITION;
+      initialRotation = opts.initialRotation || DEFAULT_ROTATION;
+      speed = opts.speed || DEFAULT_SPEED;
+      sensitivity = opts.sensitivity || DEFAULT_SENSITIVITY;
+    }
+  }
   const isMobile = useIsMobile();
   const [state, setState] = useState<MovementState>({
     position: initialPosition,
     rotation: initialRotation,
-    speed: DEFAULT_SPEED,
-    sensitivity: DEFAULT_SENSITIVITY,
+    speed: speed,
+    sensitivity: sensitivity,
     collisions: [], // Initialize empty collisions array
   });
   const [isMoving, setIsMoving] = useState(false);

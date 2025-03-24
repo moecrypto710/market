@@ -22,6 +22,9 @@ import { Switch } from '@/components/ui/switch';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
 
+// Constants for movement
+const DEFAULT_SPEED = 5;
+
 /**
  * VR American Town Page
  * 
@@ -41,11 +44,13 @@ export default function VRAmrikyyTownPage() {
   const [weather, setWeather] = useState<'clear' | 'cloudy' | 'rain' | 'sandstorm'>('clear');
   const [trafficDensity, setTrafficDensity] = useState<'low' | 'medium' | 'high'>('medium');
   
-  // Set up movement using our movement hook - with initial position
-  const movement = useMovement(
-    { x: 0, y: 1, z: -10 }, // initial position
-    { x: 0, y: 0, z: 0 }    // initial rotation
-  );
+  // Set up movement using our movement hook with options
+  const movement = useMovement({
+    initialPosition: { x: 0, y: 1, z: -10 },
+    initialRotation: { x: 0, y: 0, z: 0 },
+    speed: walkSpeed || DEFAULT_SPEED,
+    enableCollisions: true
+  });
   
   // Set initial position
   useEffect(() => {
