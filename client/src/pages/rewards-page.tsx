@@ -72,29 +72,52 @@ export default function RewardsPage() {
     setAiRecommendations(recommendations);
   }, [currentPoints]);
   
-  // Render the simplified rewards dynamically - simulating the JavaScript approach
+  // Render the simplified rewards dynamically - simulating the JavaScript approach with accessibility
   useEffect(() => {
     if (rewardsContainerRef.current) {
       // Clearing previous content
       rewardsContainerRef.current.innerHTML = '';
       
-      // Creating and appending new elements (similar to the JS code you provided)
-      simplifiedRewards.forEach(reward => {
+      // Creating and appending new elements with accessibility features
+      simplifiedRewards.forEach((reward, index) => {
         const rewardElement = document.createElement('div');
         rewardElement.className = 'reward';
+        // Add proper ARIA attributes for accessibility
+        rewardElement.setAttribute('role', 'article');
+        rewardElement.setAttribute('aria-labelledby', `reward-title-${index}`);
+        rewardElement.setAttribute('aria-describedby', `reward-desc-${index}`);
+        rewardElement.setAttribute('tabindex', '0');
+        
         rewardElement.innerHTML = `
-            <h2>${reward.title}</h2>
-            <p>${reward.description}</p>
-            <button class="reward-button">استبدال</button>
+            <h2 id="reward-title-${index}">${reward.title}</h2>
+            <p id="reward-desc-${index}">${reward.description}</p>
+            <button class="reward-button" aria-label="استبدال ${reward.title}" tabindex="0">استبدال</button>
         `;
         
-        // Add event listener to the button
-        rewardElement.querySelector('.reward-button')?.addEventListener('click', () => {
-          alert(`تم استبدال ${reward.title} بنجاح!`);
-        });
+        // Add event listener to the button with keyboard support
+        const button = rewardElement.querySelector('.reward-button');
+        if (button) {
+          button.addEventListener('click', () => {
+            alert(`تم استبدال ${reward.title} بنجاح!`);
+          });
+          
+          button.addEventListener('keydown', (e: any) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              alert(`تم استبدال ${reward.title} بنجاح!`);
+            }
+          });
+        }
         
         rewardsContainerRef.current?.appendChild(rewardElement);
       });
+      
+      // Add keyboard navigation instructions for screen readers
+      const srInstructions = document.createElement('div');
+      srInstructions.className = 'sr-only';
+      srInstructions.setAttribute('aria-live', 'polite');
+      srInstructions.textContent = 'استخدم مفاتيح الأسهم للتنقل بين المكافآت، واضغط على زر الإدخال لاستبدال المكافأة';
+      rewardsContainerRef.current.prepend(srInstructions);
     }
   }, []);
   
@@ -146,10 +169,10 @@ export default function RewardsPage() {
   
   return (
     <div className="container mx-auto px-4 py-6">
-      <Tabs defaultValue="advanced" className="mb-6">
-        <TabsList className="mb-4">
-          <TabsTrigger value="advanced">العرض المتقدم</TabsTrigger>
-          <TabsTrigger value="simple">العرض البسيط</TabsTrigger>
+      <Tabs defaultValue="advanced" className="mb-6" aria-label="قوائم عرض المكافآت">
+        <TabsList className="mb-4" aria-label="خيارات عرض المكافآت">
+          <TabsTrigger value="advanced" aria-controls="advanced-tab-content" aria-selected="true">العرض المتقدم</TabsTrigger>
+          <TabsTrigger value="simple" aria-controls="simple-tab-content" aria-selected="false">العرض البسيط</TabsTrigger>
         </TabsList>
         
         {/* Advanced UI Tab */}
