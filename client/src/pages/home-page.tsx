@@ -111,14 +111,11 @@ export default function HomePage() {
       <AIAssistant 
         initialQuestion={aiInitialQuestion} 
         viewedProducts={viewedProducts}
-        minimized={!vrEnabled} 
+        minimized={false} 
       />
       
-      {/* VR Town Experience */}
-      {vrEnabled && products && <VRTown products={products} />}
-      
-      {/* Only show regular content when VR is disabled */}
-      {!vrEnabled && (
+      {/* Main content */}
+      {(
         <div className="container mx-auto px-4 py-6">
           {/* Profile Summary - Only shown when logged in */}
           {user && (
