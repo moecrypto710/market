@@ -1026,8 +1026,14 @@ export default function VRTown({
     return <AvatarSelectionScreen onSelect={handleSelectAvatar} />;
   }
   
-  // Temporarily removed products to create a clean area
-  const sectionProducts: Product[] = [];
+  // Get products for current section
+  const sectionProducts = products.filter(product => {
+    if (currentSection === 'electronics') return product.category === 'electronics';
+    if (currentSection === 'clothing') return product.category === 'clothing';
+    if (currentSection === 'travel') return product.category === 'travel';
+    if (currentSection === 'accessories') return product.category === 'accessories';
+    return true; // Show all in other sections
+  }).slice(0, 3);
   
   return (
     <>
@@ -1381,35 +1387,43 @@ export default function VRTown({
           </div>
         </div>
         
-        {/* Exit VR button */}
-        <Button 
-          variant="destructive"
-          className="absolute top-4 right-4 z-50"
-          onClick={exitVR}
-        >
-          <i className="fas fa-sign-out-alt mr-2"></i>
-          خروج من الواقع الافتراضي
-        </Button>
-        
-        {/* AI Assistant Toggle Button */}
-        <Button
-          variant="outline"
-          className="absolute top-16 right-4 z-50 bg-purple-800 border border-purple-700/50"
-          onClick={() => setShowAiAssistant(!showAiAssistant)}
-        >
-          <i className={`fas fa-${showAiAssistant ? 'eye-slash' : 'robot'} mr-2`}></i>
-          {showAiAssistant ? 'إخفاء المساعد' : 'إظهار المساعد'}
-        </Button>
+        {/* Smart control panel in the top right */}
+        <div className="absolute top-4 right-4 z-50 flex gap-2">
+          {/* Exit VR button */}
+          <button 
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-red-600/90 to-red-800/90 text-white shadow-glow-sm border border-red-500/30 hover:scale-105 transition-all duration-200 tooltip-container"
+            onClick={exitVR}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+            <span className="tooltip-text">خروج</span>
+          </button>
+          
+          {/* AI Assistant Toggle Button */}
+          <button
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              showAiAssistant 
+                ? 'bg-gradient-to-br from-purple-600/90 to-purple-800/90 border border-purple-500/50' 
+                : 'bg-gradient-to-br from-purple-800/40 to-purple-900/40 border border-purple-500/20'
+            } text-white shadow-glow-sm hover:scale-105 transition-all duration-200 tooltip-container`}
+            onClick={() => setShowAiAssistant(!showAiAssistant)}
+          >
+            <i className={`fas fa-${showAiAssistant ? 'brain' : 'robot'}`}></i>
+            <span className="tooltip-text">{showAiAssistant ? 'إخفاء المساعد' : 'إظهار المساعد'}</span>
+          </button>
 
-        {/* Voice Control Toggle Button */}
-        <Button
-          variant="outline"
-          className="absolute top-28 right-4 z-50 bg-purple-800 border border-purple-700/50"
-          onClick={() => setVoiceControlEnabled(!voiceControlEnabled)}
-        >
-          <i className={`fas fa-${voiceControlEnabled ? 'microphone-slash' : 'microphone'} mr-2`}></i>
-          {voiceControlEnabled ? 'تعطيل الصوت' : 'تفعيل الصوت'}
-        </Button>
+          {/* Voice Control Toggle Button */}
+          <button
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              voiceControlEnabled 
+                ? 'bg-gradient-to-br from-blue-600/90 to-blue-800/90 border border-blue-500/50' 
+                : 'bg-gradient-to-br from-blue-800/40 to-blue-900/40 border border-blue-500/20'
+            } text-white shadow-glow-sm hover:scale-105 transition-all duration-200 tooltip-container`}
+            onClick={() => setVoiceControlEnabled(!voiceControlEnabled)}
+          >
+            <i className={`fas fa-${voiceControlEnabled ? 'microphone' : 'microphone-slash'}`}></i>
+            <span className="tooltip-text">{voiceControlEnabled ? 'تعطيل الصوت' : 'تفعيل الصوت'}</span>
+          </button>
+        </div>
         
         {/* Current location indicator */}
         <div className="absolute top-16 left-4 bg-gradient-to-r from-black/80 to-purple-900/50 px-4 py-2 rounded-xl text-sm z-50 border border-purple-500/30 shadow-glow-sm backdrop-blur-sm">
