@@ -8,8 +8,7 @@ export default function BottomNav() {
     { path: "/rewards", label: "المكافآت", icon: "gift" },
     { path: "/business-world", label: "بلدة الأمريكي", icon: "building" },
     { path: "/services", label: "خدمات", icon: "concierge-bell" },
-    { path: "/affiliate", label: "الإحالة", icon: "users" },
-    { path: "/account", label: "حسابي", icon: "user" }
+    { path: "/affiliate", label: "الإحالة", icon: "users" }
   ];
   
   return (
