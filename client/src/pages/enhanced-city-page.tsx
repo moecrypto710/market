@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import EnhancedCityBuilder from '@/components/enhanced-city-builder';
+import MicroInteractions from '@/components/micro-interactions';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/use-auth';
+import { useMovement } from '@/hooks/use-movement';
 
 /**
  * مدينة أمريكي المتكاملة المطورة
@@ -16,6 +18,14 @@ export default function EnhancedCityPage() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(true);
+  const [userPoints, setUserPoints] = useState(0);
+  const [enableMicroInteractions, setEnableMicroInteractions] = useState(true);
+  
+  // استخدام hook الحركة لتتبع موقع اللاعب
+  const { position } = useMovement({
+    initialPosition: { x: 0, y: 1.7, z: 0 },
+    speed: 0.15
+  });
   
   useEffect(() => {
     // حقق من صحة التحميل
