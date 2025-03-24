@@ -582,7 +582,8 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
       {gameObjects.map(gameObject => renderGameObject(gameObject))}
       
       {/* Hidden styles for weather effects */}
-      <style jsx>{`
+      <style>
+        {`
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
@@ -655,7 +656,8 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
           pointer-events: none;
           z-index: 10;
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };

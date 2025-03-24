@@ -13,11 +13,13 @@ import AiShoppingAssistant from "./ai-shopping-assistant";
 import CameraIntegration from "./camera-integration";
 import AIVoiceControls from "./ai-voice-controls";
 import EnvironmentSetup from "./environment-setup";
+import GazeNavigation from "./gaze-navigation";
 import { 
   Building, Phone, ShoppingBag, Plane, Map,
   Home, User, Settings, PanelTop, Compass, 
   MapPin, X, PlusCircle, PlayCircle, StoreIcon,
-  ChevronDown, ChevronRight, ChevronLeft, ArrowRight, ArrowLeft
+  ChevronDown, ChevronRight, ChevronLeft, ArrowRight, ArrowLeft,
+  Eye, EyeOff
 } from "lucide-react";
 
 // Types
@@ -647,6 +649,140 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
 }
 
 // Main VR Mall Component
+// Define navigation points for the VR town
+const navigationPoints = [
+  {
+    id: 'entrance',
+    name: 'المدخل الرئيسي',
+    position: { x: 0, y: 0, z: 0 },
+    lookAt: { x: 0, y: 0, z: -10 },
+    description: 'نقطة بداية الرحلة',
+    icon: 'home',
+    isInteractive: true,
+    connectedPoints: ['electronics-district', 'fashion-district', 'travel-center']
+  },
+  {
+    id: 'electronics-district',
+    name: 'منطقة الإلكترونيات',
+    position: { x: -15, y: 0, z: -12 },
+    lookAt: { x: -20, y: 0, z: -15 },
+    description: 'أحدث المنتجات التقنية',
+    icon: 'laptop',
+    isInteractive: true,
+    connectedPoints: ['entrance', 'apple-store', 'samsung-store', 'gaming-world']
+  },
+  {
+    id: 'apple-store',
+    name: 'متجر أبل',
+    position: { x: -20, y: 0, z: -15 },
+    lookAt: { x: -25, y: 0, z: -15 },
+    description: 'منتجات أبل الرسمية',
+    icon: 'apple',
+    isInteractive: true,
+    connectedPoints: ['electronics-district', 'samsung-store']
+  },
+  {
+    id: 'samsung-store',
+    name: 'سامسونج',
+    position: { x: -15, y: 0, z: -10 },
+    lookAt: { x: -15, y: 0, z: -15 },
+    description: 'هواتف وأجهزة سامسونج',
+    icon: 'smartphone',
+    isInteractive: true,
+    connectedPoints: ['electronics-district', 'apple-store']
+  },
+  {
+    id: 'gaming-world',
+    name: 'عالم الألعاب',
+    position: { x: -25, y: 0, z: -8 },
+    lookAt: { x: -25, y: 0, z: -12 },
+    description: 'ألعاب وأجهزة ألعاب',
+    icon: 'gamepad',
+    isInteractive: true,
+    connectedPoints: ['electronics-district']
+  },
+  {
+    id: 'fashion-district',
+    name: 'منطقة الأزياء',
+    position: { x: 15, y: 0, z: -12 },
+    lookAt: { x: 15, y: 0, z: -15 },
+    description: 'أحدث صيحات الموضة',
+    icon: 'shopping-bag',
+    isInteractive: true,
+    connectedPoints: ['entrance', 'nike-store', 'adidas-store', 'zara-store']
+  },
+  {
+    id: 'nike-store',
+    name: 'نايكي',
+    position: { x: 15, y: 0, z: -15 },
+    lookAt: { x: 15, y: 0, z: -20 },
+    description: 'أحذية وملابس رياضية',
+    icon: 'shoe',
+    isInteractive: true,
+    connectedPoints: ['fashion-district', 'adidas-store']
+  },
+  {
+    id: 'adidas-store',
+    name: 'أديداس',
+    position: { x: 20, y: 0, z: -10 },
+    lookAt: { x: 20, y: 0, z: -15 },
+    description: 'أحذية وملابس رياضية',
+    icon: 'shoe',
+    isInteractive: true,
+    connectedPoints: ['fashion-district', 'nike-store']
+  },
+  {
+    id: 'zara-store',
+    name: 'زارا',
+    position: { x: 12, y: 0, z: -8 },
+    lookAt: { x: 12, y: 0, z: -12 },
+    description: 'أزياء عصرية للرجال والنساء',
+    icon: 'dress',
+    isInteractive: true,
+    connectedPoints: ['fashion-district']
+  },
+  {
+    id: 'travel-center',
+    name: 'مركز السفر',
+    position: { x: 0, y: 0, z: -15 },
+    lookAt: { x: 0, y: 0, z: -20 },
+    description: 'حجوزات سفر وفنادق',
+    icon: 'plane',
+    isInteractive: true,
+    connectedPoints: ['entrance', 'emirates-airlines', 'qatar-airways', 'booking-service']
+  },
+  {
+    id: 'emirates-airlines',
+    name: 'طيران الإمارات',
+    position: { x: 0, y: 0, z: -20 },
+    lookAt: { x: 0, y: 0, z: -25 },
+    description: 'سفر فاخر لوجهات عالمية',
+    icon: 'plane',
+    isInteractive: true,
+    connectedPoints: ['travel-center']
+  },
+  {
+    id: 'qatar-airways',
+    name: 'الخطوط القطرية',
+    position: { x: 5, y: 0, z: -18 },
+    lookAt: { x: 5, y: 0, z: -22 },
+    description: 'شركة طيران حائزة على جوائز',
+    icon: 'plane',
+    isInteractive: true,
+    connectedPoints: ['travel-center']
+  },
+  {
+    id: 'booking-service',
+    name: 'بوكينج دوت كوم',
+    position: { x: -5, y: 0, z: -18 },
+    lookAt: { x: -5, y: 0, z: -22 },
+    description: 'حجوزات فنادق وإقامات',
+    icon: 'hotel',
+    isInteractive: true,
+    connectedPoints: ['travel-center']
+  }
+];
+
 export default function VRTown({ 
   products, 
   initialView = 'firstPerson', 
@@ -656,7 +792,14 @@ export default function VRTown({
   const [selectedAvatar, setSelectedAvatar] = useState<AvatarProps | null>(null);
   const [showTransition, setShowTransition] = useState(false);
   const [transitionStyle, setTransitionStyle] = useState('default');
-  const [avatarPosition, setAvatarPosition] = useState({ x: 50, y: 70 });
+  const [avatarPosition, setAvatarPosition] = useState({ x: 0, y: 0, z: 0 });
+  
+  // Gaze Navigation features
+  const [currentNavPoint, setCurrentNavPoint] = useState<string>('entrance');
+  const [enableGazeNavigation, setEnableGazeNavigation] = useState<boolean>(true);
+  const [showNavigationLabels, setShowNavigationLabels] = useState<boolean>(true);
+  const [gazeProgress, setGazeProgress] = useState<number>(0);
+  const [gazeTarget, setGazeTarget] = useState<string | null>(null);
   
   // Enhanced VR features
   const [rotationAngle, setRotationAngle] = useState(0);
