@@ -1026,14 +1026,8 @@ export default function VRTown({
     return <AvatarSelectionScreen onSelect={handleSelectAvatar} />;
   }
   
-  // Get products for current section
-  const sectionProducts = products.filter(product => {
-    if (currentSection === 'electronics') return product.category === 'electronics';
-    if (currentSection === 'clothing') return product.category === 'clothing';
-    if (currentSection === 'travel') return product.category === 'travel';
-    if (currentSection === 'accessories') return product.category === 'accessories';
-    return true; // Show all in other sections
-  }).slice(0, 3);
+  // Temporarily removed products to create a clean area
+  const sectionProducts: Product[] = [];
   
   return (
     <>
