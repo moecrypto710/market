@@ -18,6 +18,7 @@ import TravelScreen from "./travel-screen";
 import EnterBuilding from "./enter-building";
 import AirplaneBuildingInterior from "./airplane-building-interior";
 import VRTeleportation from "./vr-teleportation";
+import ProductInteraction from "./product-interaction";
 import { 
   Building, Phone, ShoppingBag, Plane, Map,
   Home, User, Settings, PanelTop, Compass, 
@@ -654,6 +655,52 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
 
 // Main VR Mall Component
 // Define navigation points for the VR town
+// Define teleport targets based on store locations
+const teleportTargets = [
+  { 
+    id: 'main_entrance', 
+    name: 'المدخل الرئيسي',
+    position: { x: 0, y: 0, z: 0 },
+    isActive: true,
+    isPermitted: true
+  },
+  { 
+    id: 'electronics_district', 
+    name: 'قسم الإلكترونيات',
+    position: { x: -20, y: 0, z: -10 },
+    isActive: true,
+    isPermitted: true
+  },
+  { 
+    id: 'clothing_district', 
+    name: 'قسم الملابس',
+    position: { x: 20, y: 0, z: -10 },
+    isActive: true,
+    isPermitted: true
+  },
+  { 
+    id: 'travel_district', 
+    name: 'قسم السفر',
+    position: { x: 0, y: 0, z: -20 },
+    isActive: true,
+    isPermitted: true
+  },
+  { 
+    id: 'emirates_entrance', 
+    name: 'طيران الإمارات',
+    position: { x: 0, y: 0, z: -22 },
+    isActive: true,
+    isPermitted: true
+  },
+  { 
+    id: 'turkish_entrance', 
+    name: 'الخطوط التركية',
+    position: { x: -8, y: 0, z: -16 },
+    isActive: true,
+    isPermitted: true
+  }
+];
+
 const navigationPoints = [
   {
     id: 'entrance',
@@ -1847,94 +1894,104 @@ export default function VRTown({
             
             {/* Travel District - Enhanced 3D Airplane Building (Emirates Airlines) */}
             <div className="absolute top-[-30px] right-[-10%] transform translate-x-1/2 scale-75 z-30">
-              <div className="advanced-airplane-building">
-                {/* Modern 3D Airplane Building */}
-                <div className="airplane-3d-container">
-                  {/* Main Fuselage */}
-                  <div className="airplane-fuselage">
-                    <div className="airplane-nose"></div>
-                    <div className="airplane-body">
-                      {/* Airplane Windows - Modern with glow effect */}
-                      {[...Array(8)].map((_, i) => (
-                        <div 
-                          key={i} 
-                          className="airplane-window-enhanced" 
-                          style={{ 
-                            left: `${30 + i * 12}px`, 
-                            top: '15px',
-                            animationDelay: `${i * 0.1}s`
-                          }}
-                        ></div>
-                      ))}
+              <EnterBuilding
+                buildingName="طيران الإمارات"
+                insideComponent={<AirplaneBuildingInterior />}
+                outsideComponent={
+                  <div className="advanced-airplane-building">
+                    {/* Modern 3D Airplane Building */}
+                    <div className="airplane-3d-container">
+                      {/* Main Fuselage */}
+                      <div className="airplane-fuselage">
+                        <div className="airplane-nose"></div>
+                        <div className="airplane-body">
+                          {/* Airplane Windows - Modern with glow effect */}
+                          {[...Array(8)].map((_, i) => (
+                            <div 
+                              key={i} 
+                              className="airplane-window-enhanced" 
+                              style={{ 
+                                left: `${30 + i * 12}px`, 
+                                top: '15px',
+                                animationDelay: `${i * 0.1}s`
+                              }}
+                            ></div>
+                          ))}
+                        </div>
+                        <div className="airplane-tail">
+                          <div className="tail-fin"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Wings with details */}
+                      <div className="airplane-wings">
+                        <div className="wing-left">
+                          <div className="wing-detail"></div>
+                        </div>
+                        <div className="wing-right">
+                          <div className="wing-detail"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Engines with animated turbines */}
+                      <div className="airplane-engines">
+                        <div className="engine-left">
+                          <div className="engine-intake"></div>
+                          <div className="engine-turbine animate-spin-slow"></div>
+                        </div>
+                        <div className="engine-right">
+                          <div className="engine-intake"></div>
+                          <div className="engine-turbine animate-spin-slow"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Entrance with illuminated pathway */}
+                      <div className="airplane-entrance enhanced">
+                        <div className="entrance-door"></div>
+                        <div className="entrance-stairs"></div>
+                        <div className="entrance-lights">
+                          {[...Array(5)].map((_, i) => (
+                            <div key={i} className="entrance-light-dot" style={{ animationDelay: `${i * 0.2}s` }}></div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Runway with animated lights */}
+                      <div className="airplane-runway enhanced">
+                        <div className="runway-surface"></div>
+                        <div className="runway-lights">
+                          {[...Array(8)].map((_, i) => (
+                            <div key={i} className="runway-light" style={{ left: `${i * 12}%`, animationDelay: `${i * 0.15}s` }}></div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div className="airplane-tail">
-                      <div className="tail-fin"></div>
+                    
+                    {/* Emirates Logo - Enhanced with glow */}
+                    <div className="absolute top-[-20px] left-[50%] transform -translate-x-1/2 text-white font-bold airline-logo">
+                      <span className="text-glow airline-text">EMIRATES</span>
+                      <div className="logo-underline"></div>
+                    </div>
+                    
+                    {/* Interactive elements */}
+                    <div className="interactive-elements">
+                      <div className="glow-marker" style={{ top: '40%', left: '20%' }}></div>
+                      <div className="glow-marker" style={{ top: '30%', right: '25%' }}></div>
+                      <div className="glow-marker pulse" style={{ bottom: '20%', left: '50%' }}></div>
+                    </div>
+                    
+                    {/* Additional holographic flight info display */}
+                    <div className="flight-info-display">
+                      <div className="flight-display-header">سفر وسياحة</div>
+                      <div className="flight-display-text">Travel Excellence</div>
                     </div>
                   </div>
-                  
-                  {/* Wings with details */}
-                  <div className="airplane-wings">
-                    <div className="wing-left">
-                      <div className="wing-detail"></div>
-                    </div>
-                    <div className="wing-right">
-                      <div className="wing-detail"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Engines with animated turbines */}
-                  <div className="airplane-engines">
-                    <div className="engine-left">
-                      <div className="engine-intake"></div>
-                      <div className="engine-turbine animate-spin-slow"></div>
-                    </div>
-                    <div className="engine-right">
-                      <div className="engine-intake"></div>
-                      <div className="engine-turbine animate-spin-slow"></div>
-                    </div>
-                  </div>
-                  
-                  {/* Entrance with illuminated pathway */}
-                  <div className="airplane-entrance enhanced">
-                    <div className="entrance-door"></div>
-                    <div className="entrance-stairs"></div>
-                    <div className="entrance-lights">
-                      {[...Array(5)].map((_, i) => (
-                        <div key={i} className="entrance-light-dot" style={{ animationDelay: `${i * 0.2}s` }}></div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Runway with animated lights */}
-                  <div className="airplane-runway enhanced">
-                    <div className="runway-surface"></div>
-                    <div className="runway-lights">
-                      {[...Array(8)].map((_, i) => (
-                        <div key={i} className="runway-light" style={{ left: `${i * 12}%`, animationDelay: `${i * 0.15}s` }}></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Emirates Logo - Enhanced with glow */}
-                <div className="absolute top-[-20px] left-[50%] transform -translate-x-1/2 text-white font-bold airline-logo">
-                  <span className="text-glow airline-text">EMIRATES</span>
-                  <div className="logo-underline"></div>
-                </div>
-                
-                {/* Interactive elements */}
-                <div className="interactive-elements">
-                  <div className="glow-marker" style={{ top: '40%', left: '20%' }}></div>
-                  <div className="glow-marker" style={{ top: '30%', right: '25%' }}></div>
-                  <div className="glow-marker pulse" style={{ bottom: '20%', left: '50%' }}></div>
-                </div>
-              </div>
-              
-              {/* Additional holographic flight info display */}
-              <div className="flight-info-display">
-                <div className="flight-display-header">سفر وسياحة</div>
-                <div className="flight-display-text">Travel Excellence</div>
-              </div>
+                }
+                onEnter={handleEnterEmiratesBuilding}
+                onExit={handleExitEmiratesBuilding}
+                initiallyInside={insideAirlineBuilding}
+                transitionDuration={800}
+              />
             </div>
             
             {/* Travel Screen - Destination Explorer */}
