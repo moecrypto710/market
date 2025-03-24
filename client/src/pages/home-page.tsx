@@ -4,6 +4,7 @@ import ProductCard from "@/components/product-card";
 import CategoryCard from "@/components/category-card";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/use-auth";
+import { Switch } from "@/components/ui/switch";
 import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,8 +21,8 @@ import { motion } from "framer-motion";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 export default function HomePage() {
-  const { user } = useAuth();
-  const { vrEnabled, toggleVR } = useVR();
+  const { user, logoutMutation } = useAuth();
+  const { vrEnabled, gestureControlEnabled, soundEffectsEnabled, toggleVR, toggleGestureControl, toggleSoundEffects } = useVR();
   const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
   const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
   const [showTransition, setShowTransition] = useState(false);
@@ -161,6 +162,113 @@ export default function HomePage() {
       {/* Only show regular content when VR is disabled */}
       {!vrEnabled && (
         <div className="container mx-auto px-4 py-6">
+          {/* User Profile Section - Only shown when logged in */}
+          {user && (
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 border border-white/20">
+              <div className="flex flex-col md:flex-row gap-6 items-center md:items-start">
+                {/* Profile Avatar and Name */}
+                <div className="text-center md:text-right">
+                  <div className="w-24 h-24 bg-gradient-to-br from-purple-600 to-fuchsia-500 rounded-full mx-auto md:mx-0 mb-3 flex items-center justify-center shadow-lg">
+                    <i className="fas fa-user text-white text-4xl"></i>
+                  </div>
+                  <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-fuchsia-100">
+                    {user?.fullName || user?.username}
+                  </h2>
+                  <p className="text-white/70">{user?.email}</p>
+                </div>
+                
+                {/* User Stats */}
+                <div className="flex-1 flex flex-col">
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white/80">نقاط الولاء</span>
+                      <span className="text-lg font-bold text-fuchsia-300">{user.points} نقطة</span>
+                    </div>
+                    <Progress value={progressPercentage} className="h-2 bg-white/10" 
+                      style={{
+                        background: "linear-gradient(to right, rgba(255,255,255,0.05), rgba(255,255,255,0.1))",
+                      }}
+                    />
+                    <div className="flex justify-between mt-1 text-xs text-white/60">
+                      <span>{user.points} نقطة</span>
+                      <span>المستوى التالي: {nextRewardLevel} نقطة</span>
+                    </div>
+                  </div>
+                  
+                  {/* VR Controls */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="flex items-center text-sm">
+                          <i className="fas fa-vr-cardboard ml-2"></i>
+                          الواقع الافتراضي
+                        </label>
+                        <Switch checked={vrEnabled} onCheckedChange={toggleVR} />
+                      </div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="flex items-center text-sm">
+                          <i className="fas fa-hand-pointer ml-2"></i>
+                          إيماءات التحكم
+                        </label>
+                        <Switch checked={gestureControlEnabled} onCheckedChange={toggleGestureControl} />
+                      </div>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="flex items-center text-sm">
+                          <i className="fas fa-volume-up ml-2"></i>
+                          المؤثرات الصوتية
+                        </label>
+                        <Switch checked={soundEffectsEnabled} onCheckedChange={toggleSoundEffects} />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Quick Actions */}
+                  <div className="flex flex-wrap gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
+                      onClick={() => triggerTransition('arabesque', '/rewards')}
+                    >
+                      <i className="fas fa-medal ml-2"></i>
+                      مكافآتي
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
+                    >
+                      <i className="fas fa-shopping-bag ml-2"></i>
+                      طلباتي
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-purple-500/30 text-purple-300 hover:bg-purple-900/20"
+                    >
+                      <i className="fas fa-heart ml-2"></i>
+                      المفضلة
+                    </Button>
+                    {logoutMutation && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="border-red-500/30 text-red-300 hover:bg-red-900/20"
+                        onClick={() => logoutMutation.mutate()}
+                      >
+                        <i className="fas fa-sign-out-alt ml-2"></i>
+                        تسجيل الخروج
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Hero Section with Arabesque Pattern Background */}
           <motion.div 
             ref={heroRef}
