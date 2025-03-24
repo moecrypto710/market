@@ -7,6 +7,7 @@ import TouchControls from '@/components/touch-controls';
 import CarTraffic from '@/components/car-traffic';
 import TrafficLight from '@/components/traffic-light';
 import GateControl from '@/components/gate-control';
+import CityMap from '@/components/city-map';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMovement } from '@/hooks/use-movement';
 import { Button } from '@/components/ui/button';
@@ -33,14 +34,21 @@ export default function VirtualCityPage() {
   const [showControls, setShowControls] = useState(isMobile);
   const [showInstructions, setShowInstructions] = useState(false);
   const [activePOI, setActivePOI] = useState<string | null>(null);
+  const [expandedMap, setExpandedMap] = useState(false);
   
   // Set up movement using our movement hook
   const movement = useMovement({
-    initialPosition: { x: 0, y: 1, z: -10 },
     collisionsEnabled: true,
     returnToInitialOnCollision: true,
     speedFactor: walkSpeed
   });
+  
+  // Set initial position
+  useEffect(() => {
+    movement.resetPosition();
+    // Set the initial position
+    movement.position = { x: 0, y: 1, z: -10 };
+  }, []);
   
   // Effects for fullscreen mode
   useEffect(() => {
@@ -94,41 +102,86 @@ export default function VirtualCityPage() {
     { id: 'mall', name: 'المجمع التجاري', icon: 'shopping-cart', color: 'pink' },
   ];
   
+  // Define city buildings and POIs for the map
+  const cityBuildings = [
+    { id: 'travelAgency', name: 'وكالة السفر العربي', type: 'travel', position: { x: 0, y: 0, z: 0 }, color: '#2563eb' },
+    { id: 'clothingStore', name: 'متجر الملابس الفاخرة', type: 'clothing', position: { x: -15, y: 0, z: 10 }, color: '#f59e0b' },
+    { id: 'electronicsStore', name: 'متجر الإلكترونيات والتقنية', type: 'electronics', position: { x: 15, y: 0, z: 10 }, color: '#10b981' },
+  ];
+  
+  const cityPOIs = [
+    { id: 'main-gate', name: 'البوابة الرئيسية', position: { x: 0, y: 0, z: -20 }, type: 'entrance', icon: 'archway' },
+    { id: 'mall', name: 'المجمع التجاري', position: { x: 0, y: 0, z: 25 }, type: 'shopping', icon: 'shopping-cart' },
+    { id: 'square', name: 'الساحة المركزية', position: { x: 0, y: 0, z: 5 }, type: 'landmark', icon: 'monument' },
+  ];
+  
+  // Handle navigation via map
+  const handleMapLocationSelect = (locationId: string, position: { x: number; y: number; z: number }) => {
+    // Set the current active POI
+    setActivePOI(locationId);
+    
+    // In a real implementation, this would move the player to that position
+    // For demonstration, we'll just log it
+    console.log(`Navigating to ${locationId} at position:`, position);
+    
+    // In a full implementation, we would animate the player moving to this position
+    if (fullscreenMode) {
+      // Update the player position (this would need to be enhanced for smooth movement)
+      movement.position = { ...position, y: 1 }; // Keep y at eye level
+    }
+  };
+  
   return (
     <div className={`relative ${fullscreenMode ? 'h-screen w-screen overflow-hidden fixed inset-0 z-50 bg-slate-900' : ''}`}>
       {/* Floating controls in fullscreen mode */}
       {fullscreenMode && (
-        <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
-            onClick={() => setFullscreenMode(false)}
-          >
-            <i className="fas fa-times mr-2"></i>
-            خروج
-          </Button>
+        <>
+          {/* Top-right controls */}
+          <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
+              onClick={() => setFullscreenMode(false)}
+            >
+              <i className="fas fa-times mr-2"></i>
+              خروج
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
+              onClick={() => setShowControls(!showControls)}
+            >
+              <i className={`fas fa-${showControls ? 'eye-slash' : 'eye'} mr-2`}></i>
+              {showControls ? 'إخفاء التحكم' : 'إظهار التحكم'}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
+              onClick={() => setShowInstructions(!showInstructions)}
+            >
+              <i className="fas fa-question-circle mr-2"></i>
+              تعليمات
+            </Button>
+          </div>
           
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
-            onClick={() => setShowControls(!showControls)}
-          >
-            <i className={`fas fa-${showControls ? 'eye-slash' : 'eye'} mr-2`}></i>
-            {showControls ? 'إخفاء التحكم' : 'إظهار التحكم'}
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="bg-black/30 backdrop-blur-md border-white/20 hover:bg-black/50"
-            onClick={() => setShowInstructions(!showInstructions)}
-          >
-            <i className="fas fa-question-circle mr-2"></i>
-            تعليمات
-          </Button>
-        </div>
+          {/* Bottom-right interactive map */}
+          <div className="fixed bottom-4 right-4 z-40">
+            <CityMap
+              playerPosition={movement.position}
+              buildings={cityBuildings}
+              pointsOfInterest={cityPOIs}
+              onLocationSelect={handleMapLocationSelect}
+              isExpanded={expandedMap}
+              onToggleExpand={() => setExpandedMap(!expandedMap)}
+              showLabels={expandedMap}
+            />
+          </div>
+        </>
       )}
       
       {/* Popup instruction modal */}
@@ -237,6 +290,97 @@ export default function VirtualCityPage() {
                   <i className={`fas fa-toggle-${vrEnabled ? 'on' : 'off'} mr-2`}></i>
                   {vrEnabled ? 'تعطيل' : 'تفعيل'} وضع الواقع الافتراضي
                 </Button>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* City Map Overview */}
+          <motion.div 
+            className="mb-8"
+            initial="hidden"
+            animate="visible"
+            variants={slideUp}
+          >
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mr-4 shadow-lg">
+                <i className="fas fa-map text-white text-xl"></i>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold">خريطة المدينة</h2>
+                <p className="text-slate-500">استكشف معالم وأماكن المدينة الافتراضية</p>
+              </div>
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-6 items-start">
+              <div className="w-full md:w-1/2 bg-slate-900 rounded-xl p-4 border border-blue-500/20 overflow-hidden">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center">
+                  <i className="fas fa-map-marker-alt text-blue-400 mr-2"></i>
+                  خريطة تفاعلية
+                </h3>
+                <div className="mx-auto flex justify-center">
+                  <CityMap
+                    playerPosition={{ x: 0, y: 1, z: -10 }}
+                    buildings={cityBuildings}
+                    pointsOfInterest={cityPOIs}
+                    onLocationSelect={handleMapLocationSelect}
+                    isExpanded={true}
+                    showLabels={true}
+                  />
+                </div>
+              </div>
+              
+              <div className="w-full md:w-1/2 bg-slate-50 rounded-xl p-6 border border-blue-100">
+                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                  <i className="fas fa-info-circle text-blue-600 mr-2"></i>
+                  دليل المدينة
+                </h3>
+                
+                <div className="space-y-4">
+                  <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50">
+                    <h4 className="font-bold text-slate-800 mb-1 flex items-center">
+                      <div className="w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2">
+                        <i className="fas fa-building text-blue-700 text-xs"></i>
+                      </div>
+                      المباني الرئيسية
+                    </h4>
+                    <ul className="text-sm text-slate-600 space-y-1">
+                      {cityBuildings.map(building => (
+                        <li key={building.id} className="flex items-center">
+                          <div 
+                            className="w-3 h-3 rounded-sm mr-2" 
+                            style={{ backgroundColor: building.color }}
+                          ></div>
+                          {building.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-white p-3 rounded-lg shadow-sm border border-blue-50">
+                    <h4 className="font-bold text-slate-800 mb-1 flex items-center">
+                      <div className="w-5 h-5 bg-amber-100 rounded-full flex items-center justify-center mr-2">
+                        <i className="fas fa-star text-amber-700 text-xs"></i>
+                      </div>
+                      نقاط الاهتمام
+                    </h4>
+                    <ul className="text-sm text-slate-600 space-y-1">
+                      {cityPOIs.map(poi => (
+                        <li key={poi.id} className="flex items-center">
+                          <div className="mr-2 text-amber-500 text-xs">
+                            <i className={`fas fa-${poi.icon}`}></i>
+                          </div>
+                          {poi.name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <p className="text-xs text-slate-500">
+                      انقر على أي موقع في الخريطة للحصول على معلومات أكثر عنه. في وضع ملء الشاشة، يمكنك استخدام الخريطة للانتقال بسرعة إلى المواقع المختلفة.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>
