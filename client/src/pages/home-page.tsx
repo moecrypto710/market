@@ -457,7 +457,7 @@ export default function HomePage() {
               </div>
             </motion.div>
           )}
-          {/* Smart Hero Section */}
+          {/* Smart Hero Section - VR Town Focus */}
           <motion.div 
             ref={heroRef}
             className="relative mb-12 overflow-hidden rounded-2xl"
@@ -558,8 +558,6 @@ export default function HomePage() {
               </motion.div>
             </div>
           </motion.div>
-          
-          {/* Featured Ad Banner - Carousel with Arabic Cultural Elements */}
           <motion.div 
             className="mb-12"
             initial={{ opacity: 0, y: 30 }}
