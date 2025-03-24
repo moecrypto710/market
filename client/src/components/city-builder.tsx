@@ -6,6 +6,9 @@ import AirplaneBuildingInterior from './airplane-building-interior';
 import EnterBuilding from './enter-building';
 import StoreInteraction from './store-interaction';
 import GateControl from './gate-control';
+import CarTraffic from './car-traffic';
+import TrafficLight from './traffic-light';
+import EarnMoney from './earn-money';
 import TouchControls from './touch-controls';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
@@ -382,6 +385,27 @@ export default function CityBuilder() {
     });
   };
 
+  // Traffic light states
+  const [trafficLightStates, setTrafficLightStates] = useState<Record<string, 'red' | 'yellow' | 'green'>>({
+    'main-intersection': 'red',
+    'east-intersection': 'green'
+  });
+  
+  // Money system based on EarnMoney.cs
+  const [playerMoney, setPlayerMoney] = useState<number>(0);
+  
+  // Define workstations based on Unity's EarnMoney.cs
+  const workstations = [
+    { x: -15, y: 0, z: 5, value: 10, name: 'محطة العمل 1' },
+    { x: 15, y: 0, z: -5, value: 20, name: 'محطة العمل 2' },
+    { x: 0, y: 0, z: -15, value: 30, name: 'محطة العمل 3' }
+  ];
+  
+  // Handle earning money similar to Unity's EarnMoney.cs
+  const handleMoneyEarned = (amount: number) => {
+    setPlayerMoney(prev => prev + amount);
+  };
+  
   return (
     <div className="relative w-full h-[calc(100vh-8rem)] overflow-hidden border border-gray-800 rounded-lg bg-black">
       {/* Background sky */}
@@ -395,6 +419,77 @@ export default function CityBuilder() {
       
       {/* Gates */}
       {renderGates()}
+      
+      {/* Traffic lights */}
+      <TrafficLight 
+        position={{ x: -5, y: 0, z: 5 }}
+        initialState="red"
+        cycleTime={10}
+        playerPosition={movement.position}
+        onStateChange={(state) => setTrafficLightStates(prev => ({ ...prev, 'main-intersection': state }))}
+        size={1.2}
+      />
+      
+      <TrafficLight 
+        position={{ x: 5, y: 0, z: -5 }}
+        initialState="green"
+        cycleTime={8}
+        playerPosition={movement.position}
+        onStateChange={(state) => setTrafficLightStates(prev => ({ ...prev, 'east-intersection': state }))}
+      />
+      
+      {/* Cars */}
+      <CarTraffic 
+        carStyle="sedan"
+        direction="left-to-right"
+        speed={5}
+        trafficLightPosition={{ x: -5, y: 0, z: 5 }}
+        trafficLightState={trafficLightStates['main-intersection']}
+        playerPosition={movement.position}
+        laneOffset={2}
+      />
+      
+      <CarTraffic 
+        carStyle="taxi"
+        direction="right-to-left"
+        speed={4}
+        trafficLightPosition={{ x: -5, y: 0, z: 5 }}
+        trafficLightState={trafficLightStates['main-intersection']}
+        playerPosition={movement.position}
+        laneOffset={-2}
+        initialDelay={2000}
+      />
+      
+      <CarTraffic 
+        carStyle="suv"
+        direction="bottom-to-top"
+        speed={3}
+        trafficLightPosition={{ x: 5, y: 0, z: -5 }}
+        trafficLightState={trafficLightStates['east-intersection']}
+        playerPosition={movement.position}
+        laneOffset={10}
+        initialDelay={1000}
+      />
+      
+      <CarTraffic 
+        carStyle="truck"
+        direction="top-to-bottom"
+        speed={2}
+        trafficLightPosition={{ x: 5, y: 0, z: -5 }}
+        trafficLightState={trafficLightStates['east-intersection']}
+        playerPosition={movement.position}
+        laneOffset={-10}
+        initialDelay={3000}
+      />
+      
+      {/* Workstations based on EarnMoney.cs */}
+      <EarnMoney 
+        playerPosition={movement.position}
+        workstationPositions={workstations}
+        onMoneyEarned={handleMoneyEarned}
+        playerMoney={playerMoney}
+        cooldownPeriod={30}
+      />
       
       {/* Screen message - based on ScreenInteraction.cs */}
       {screenMessage && (
