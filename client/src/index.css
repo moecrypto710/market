@@ -416,6 +416,33 @@
   }
 }
 
+@keyframes mall-section-hover {
+  0% {
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.3);
+    transform: translateZ(0);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(217, 70, 239, 0.5);
+    transform: translateZ(10px);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.3);
+    transform: translateZ(0);
+  }
+}
+
+@keyframes float-rotate {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
 /* Animation Classes */
 .animate-float1 {
   animation: float1 8s ease-in-out infinite;
