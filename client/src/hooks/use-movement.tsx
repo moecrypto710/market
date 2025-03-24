@@ -140,6 +140,56 @@ export function useMovement(
     };
   }, [isMobile, state.sensitivity]);
 
+  // Collision detection function - defined first so it can be used in updateMovement
+  const isColliding = useCallback((newPosition: { x: number; y: number; z: number }): boolean => {
+    // Calculate the player's bounding box (assuming a 1x2x1 box centered on position)
+    const playerSize = { width: 1, height: 2, depth: 1 };
+    const playerMin = {
+      x: newPosition.x - playerSize.width / 2,
+      y: newPosition.y,
+      z: newPosition.z - playerSize.depth / 2
+    };
+    const playerMax = {
+      x: newPosition.x + playerSize.width / 2,
+      y: newPosition.y + playerSize.height,
+      z: newPosition.z + playerSize.depth / 2
+    };
+    
+    // Check collision with each object
+    for (const obj of state.collisions) {
+      // Calculate object's bounding box
+      const objMin = {
+        x: obj.position.x - obj.size.width / 2,
+        y: obj.position.y,
+        z: obj.position.z - obj.size.depth / 2
+      };
+      const objMax = {
+        x: obj.position.x + obj.size.width / 2,
+        y: obj.position.y + obj.size.height,
+        z: obj.position.z + obj.size.depth / 2
+      };
+      
+      // Check for AABB collision
+      if (
+        playerMin.x <= objMax.x && playerMax.x >= objMin.x &&
+        playerMin.y <= objMax.y && playerMax.y >= objMin.y &&
+        playerMin.z <= objMax.z && playerMax.z >= objMin.z
+      ) {
+        // Handle trigger objects
+        if (obj.type === 'trigger' && obj.onCollision) {
+          obj.onCollision();
+        }
+        
+        // Only block movement for walls and solid objects
+        if (obj.type !== 'trigger') {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }, [state.collisions]);
+
   // Function to update movement based on keys pressed with collision detection
   const updateMovement = useCallback(() => {
     const keys = keysPressed.current;
@@ -286,55 +336,7 @@ export function useMovement(
     }));
   }, []);
 
-  // Collision detection function
-  const isColliding = useCallback((newPosition: { x: number; y: number; z: number }): boolean => {
-    // Calculate the player's bounding box (assuming a 1x2x1 box centered on position)
-    const playerSize = { width: 1, height: 2, depth: 1 };
-    const playerMin = {
-      x: newPosition.x - playerSize.width / 2,
-      y: newPosition.y,
-      z: newPosition.z - playerSize.depth / 2
-    };
-    const playerMax = {
-      x: newPosition.x + playerSize.width / 2,
-      y: newPosition.y + playerSize.height,
-      z: newPosition.z + playerSize.depth / 2
-    };
-    
-    // Check collision with each object
-    for (const obj of state.collisions) {
-      // Calculate object's bounding box
-      const objMin = {
-        x: obj.position.x - obj.size.width / 2,
-        y: obj.position.y,
-        z: obj.position.z - obj.size.depth / 2
-      };
-      const objMax = {
-        x: obj.position.x + obj.size.width / 2,
-        y: obj.position.y + obj.size.height,
-        z: obj.position.z + obj.size.depth / 2
-      };
-      
-      // Check for AABB collision
-      if (
-        playerMin.x <= objMax.x && playerMax.x >= objMin.x &&
-        playerMin.y <= objMax.y && playerMax.y >= objMin.y &&
-        playerMin.z <= objMax.z && playerMax.z >= objMin.z
-      ) {
-        // Handle trigger objects
-        if (obj.type === 'trigger' && obj.onCollision) {
-          obj.onCollision();
-        }
-        
-        // Only block movement for walls and solid objects
-        if (obj.type !== 'trigger') {
-          return true;
-        }
-      }
-    }
-    
-    return false;
-  }, [state.collisions]);
+
   
   // Add collision object function
   const addCollisionObject = useCallback((object: CollisionObject) => {
