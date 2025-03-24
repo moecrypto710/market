@@ -15,6 +15,8 @@ import AIVoiceControls from "./ai-voice-controls";
 import EnvironmentSetup from "./environment-setup";
 import GazeNavigation from "./gaze-navigation";
 import TravelScreen from "./travel-screen";
+import EnterBuilding from "./enter-building";
+import AirplaneBuildingInterior from "./airplane-building-interior";
 import { 
   Building, Phone, ShoppingBag, Plane, Map,
   Home, User, Settings, PanelTop, Compass, 

@@ -69,51 +69,59 @@ export default function EnterBuilding({
 
   // Add fade transition similar to Unity's SetActive
   const fadeVariants = {
-    visible: { opacity: 1, display: 'block' },
-    hidden: { opacity: 0, transitionEnd: { display: 'none' } }
+    visible: { opacity: 1, scale: 1 },
+    hidden: { opacity: 0, scale: 0.95 }
   };
 
   return (
     <div className="building-container relative">
-      {/* Inside View (equivalent to insideView GameObject) */}
-      <div
-        style={{
-          display: isInside ? 'block' : 'none',
-          transition: `opacity ${transitionDuration}ms ease-in-out`,
-          opacity: isInside ? 1 : 0,
-        }}
-      >
-        {insideComponent}
-        
-        {/* Exit button */}
-        <Button
-          className="absolute bottom-4 right-4 bg-red-600 hover:bg-red-700"
-          onClick={exit}
-        >
-          <i className="fas fa-door-open mr-2"></i>
-          خروج
-        </Button>
-      </div>
+      <AnimatePresence>
+        {/* Inside View (equivalent to insideView GameObject in Unity) */}
+        {isInside && (
+          <motion.div
+            className="w-full h-full"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={fadeVariants}
+            transition={{ duration: transitionDuration / 1000 }}
+          >
+            {insideComponent}
+            
+            {/* Exit button */}
+            <Button
+              className="absolute bottom-4 right-4 bg-red-600 hover:bg-red-700 text-white"
+              onClick={exit}
+            >
+              <i className="fas fa-door-open mr-2"></i>
+              خروج
+            </Button>
+          </motion.div>
+        )}
 
-      {/* Outside View (equivalent to outsideView GameObject) */}
-      <div
-        style={{
-          display: isInside ? 'none' : 'block',
-          transition: `opacity ${transitionDuration}ms ease-in-out`,
-          opacity: isInside ? 0 : 1,
-        }}
-      >
-        {outsideComponent}
-        
-        {/* Enter button */}
-        <Button
-          className="absolute bottom-4 right-4 bg-green-600 hover:bg-green-700"
-          onClick={enter}
-        >
-          <i className="fas fa-door-closed mr-2"></i>
-          دخول {buildingName}
-        </Button>
-      </div>
+        {/* Outside View (equivalent to outsideView GameObject in Unity) */}
+        {!isInside && (
+          <motion.div
+            className="w-full h-full"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={fadeVariants}
+            transition={{ duration: transitionDuration / 1000 }}
+          >
+            {outsideComponent}
+            
+            {/* Enter button */}
+            <Button
+              className="absolute bottom-4 right-4 bg-green-600 hover:bg-green-700 text-white"
+              onClick={enter}
+            >
+              <i className="fas fa-door-closed mr-2"></i>
+              دخول {buildingName}
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
