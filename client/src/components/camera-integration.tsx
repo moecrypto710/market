@@ -31,13 +31,94 @@ export default function CameraIntegration({
   onCapture,
   onClose,
   mode = 'product-try-on',
-  productImageUrl
+  productImageUrl,
+  enableFilters = true,
+  enableAREffects = true
 }: CameraIntegrationProps) {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'user' | 'environment'>('user');
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedEffect, setSelectedEffect] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showEffects, setShowEffects] = useState(false);
+  const [isARActive, setIsARActive] = useState(false);
+  const [virtualPosition, setVirtualPosition] = useState({ x: 0, y: 0, scale: 1, rotation: 0 });
+  
+  // Available filters for camera
+  const filters: Filter[] = [
+    { 
+      id: 'normal', 
+      name: 'طبيعي', 
+      type: 'color', 
+      preview: 'https://api.dicebear.com/7.x/shapes/svg?seed=normal',
+      style: { filter: 'none' }
+    },
+    { 
+      id: 'warm', 
+      name: 'دافئ', 
+      type: 'color', 
+      preview: 'https://api.dicebear.com/7.x/shapes/svg?seed=warm',
+      style: { filter: 'sepia(0.5) saturate(1.5) hue-rotate(-20deg)' }
+    },
+    { 
+      id: 'cool', 
+      name: 'بارد', 
+      type: 'color', 
+      preview: 'https://api.dicebear.com/7.x/shapes/svg?seed=cool',
+      style: { filter: 'saturate(1.2) hue-rotate(20deg) brightness(1.1)' }
+    },
+    { 
+      id: 'neon', 
+      name: 'نيون', 
+      type: 'color', 
+      preview: 'https://api.dicebear.com/7.x/shapes/svg?seed=neon',
+      style: { filter: 'brightness(1.1) contrast(1.2) saturate(1.8) hue-rotate(10deg)' }
+    },
+    { 
+      id: 'futuristic', 
+      name: 'مستقبلي', 
+      type: 'color', 
+      preview: 'https://api.dicebear.com/7.x/shapes/svg?seed=futuristic',
+      style: { filter: 'brightness(1.2) contrast(1.1) saturate(1.2) hue-rotate(180deg)' }
+    }
+  ];
+  
+  // Available AR effects
+  const arEffects: AREffect[] = [
+    { 
+      id: 'none', 
+      name: 'بدون', 
+      icon: 'circle', 
+      description: 'عرض عادي بدون تأثيرات'
+    },
+    { 
+      id: 'hologram', 
+      name: 'هولوجرام', 
+      icon: 'vr-cardboard',
+      description: 'تأثير الهولوجرام الثلاثي الأبعاد'
+    },
+    { 
+      id: 'virtual-try', 
+      name: 'تجربة افتراضية', 
+      icon: 'tshirt',
+      description: 'تجربة المنتج بشكل افتراضي'
+    },
+    { 
+      id: 'measure', 
+      name: 'قياس', 
+      icon: 'ruler',
+      description: 'قياس المنتج في مساحتك الحقيقية'
+    },
+    { 
+      id: 'scan', 
+      name: 'مسح', 
+      icon: 'qrcode',
+      description: 'مسح المنتج للحصول على معلومات إضافية'
+    }
+  ];
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
