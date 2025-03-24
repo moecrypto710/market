@@ -1,13 +1,20 @@
 import { useLocation, Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function BottomNav() {
   const [location] = useLocation();
+  const { user } = useAuth();
   
+  // تعديل قائمة العناصر لتتضمن زر تسجيل الدخول/الخروج
   const navItems = [
     { path: "/", label: "الرئيسية", icon: "home" },
     { path: "/vr-amrikyy-town", label: "مدينة أمريكي", icon: "city" },
     { path: "/rewards", label: "المكافآت والعمولة", icon: "award" },
     { path: "/services", label: "خدمات", icon: "concierge-bell" },
+    // إضافة عنصر تسجيل الدخول أو الملف الشخصي حسب حالة تسجيل الدخول
+    user 
+      ? { path: "/profile", label: "ملفي", icon: "user-circle" }
+      : { path: "/auth", label: "تسجيل الدخول", icon: "sign-in-alt" },
   ];
   
   return (

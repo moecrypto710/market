@@ -1,4 +1,10 @@
-import { users, products, rewards, affiliates, virtualStores, virtualEvents, type User, type InsertUser, type Product, type Reward, type Affiliate, type CartItem, type VirtualStore, type VirtualEvent } from "@shared/schema";
+import { 
+  users, products, rewards, affiliates, virtualStores, virtualEvents, 
+  airlines, airports, flights, flightBookings,
+  type User, type InsertUser, type Product, type Reward, type Affiliate, 
+  type CartItem, type VirtualStore, type VirtualEvent,
+  type Airline, type Airport, type Flight, type FlightBooking, type FlightSearch
+} from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { db } from "./db";
@@ -39,6 +45,34 @@ export interface IStorage {
   addToCart(userId: number, item: CartItem): Promise<void>;
   clearCart(userId: number): Promise<void>;
   
+  // Airline operations
+  getAllAirlines(): Promise<Airline[]>;
+  getFeaturedAirlines(): Promise<Airline[]>;
+  getAirline(id: number): Promise<Airline | undefined>;
+  getAirlineByCode(code: string): Promise<Airline | undefined>;
+  
+  // Airport operations
+  getAllAirports(): Promise<Airport[]>;
+  getPopularAirports(): Promise<Airport[]>;
+  getAirport(id: number): Promise<Airport | undefined>;
+  getAirportByCode(code: string): Promise<Airport | undefined>;
+  
+  // Flight operations
+  getAllFlights(): Promise<Flight[]>;
+  getFlightsByAirline(airlineId: number): Promise<Flight[]>;
+  getFlight(id: number): Promise<Flight | undefined>;
+  searchFlights(searchParams: FlightSearch): Promise<Flight[]>;
+  getFlightsByRoute(departureAirportId: number, arrivalAirportId: number): Promise<Flight[]>;
+  
+  // Flight Booking operations
+  createFlightBooking(booking: Omit<FlightBooking, "id" | "bookingDate">): Promise<FlightBooking>;
+  getUserFlightBookings(userId: number): Promise<FlightBooking[]>;
+  getFlightBooking(id: number): Promise<FlightBooking | undefined>;
+  updateFlightBookingStatus(bookingId: number, status: string): Promise<FlightBooking>;
+  
+  // Booking.com integration
+  getBookingPartnerUrl(flightId: number): Promise<string | undefined>;
+  
   // Session store
   // Using any here to fix type compatibility issues with memory-store
   sessionStore: any;
@@ -50,8 +84,21 @@ export class MemStorage implements IStorage {
   private rewards: Map<number, Reward>;
   private affiliates: Map<number, Affiliate>;
   private carts: Map<number, CartItem[]>;
+  private airlines: Map<number, Airline>;
+  private airports: Map<number, Airport>;
+  private flights: Map<number, Flight>;
+  private flightBookings: Map<number, FlightBooking>;
   sessionStore: any;
-  currentId: { users: number; products: number; rewards: number; affiliates: number };
+  currentId: { 
+    users: number; 
+    products: number; 
+    rewards: number; 
+    affiliates: number; 
+    airlines: number;
+    airports: number;
+    flights: number;
+    flightBookings: number;
+  };
 
   constructor() {
     this.users = new Map();
@@ -59,7 +106,21 @@ export class MemStorage implements IStorage {
     this.rewards = new Map();
     this.affiliates = new Map();
     this.carts = new Map();
-    this.currentId = { users: 1, products: 1, rewards: 1, affiliates: 1 };
+    this.airlines = new Map();
+    this.airports = new Map();
+    this.flights = new Map();
+    this.flightBookings = new Map();
+    
+    this.currentId = { 
+      users: 1, 
+      products: 1, 
+      rewards: 1, 
+      affiliates: 1,
+      airlines: 1,
+      airports: 1,
+      flights: 1,
+      flightBookings: 1
+    };
     
     // Initialize session store
     this.sessionStore = new MemoryStore({
@@ -222,9 +283,182 @@ export class MemStorage implements IStorage {
   async clearCart(userId: number): Promise<void> {
     this.carts.delete(userId);
   }
+  
+  // Airline operations
+  async getAllAirlines(): Promise<Airline[]> {
+    return Array.from(this.airlines.values());
+  }
+  
+  async getFeaturedAirlines(): Promise<Airline[]> {
+    return Array.from(this.airlines.values())
+      .filter(airline => airline.featured);
+  }
+  
+  async getAirline(id: number): Promise<Airline | undefined> {
+    return this.airlines.get(id);
+  }
+  
+  async getAirlineByCode(code: string): Promise<Airline | undefined> {
+    return Array.from(this.airlines.values())
+      .find(airline => airline.code === code);
+  }
+  
+  // Airport operations
+  async getAllAirports(): Promise<Airport[]> {
+    return Array.from(this.airports.values());
+  }
+  
+  async getPopularAirports(): Promise<Airport[]> {
+    return Array.from(this.airports.values())
+      .filter(airport => airport.popular)
+      .sort((a, b) => b.passengerTraffic - a.passengerTraffic);
+  }
+  
+  async getAirport(id: number): Promise<Airport | undefined> {
+    return this.airports.get(id);
+  }
+  
+  async getAirportByCode(code: string): Promise<Airport | undefined> {
+    return Array.from(this.airports.values())
+      .find(airport => airport.code === code);
+  }
+  
+  // Flight operations
+  async getAllFlights(): Promise<Flight[]> {
+    return Array.from(this.flights.values());
+  }
+  
+  async getFlightsByAirline(airlineId: number): Promise<Flight[]> {
+    return Array.from(this.flights.values())
+      .filter(flight => flight.airlineId === airlineId);
+  }
+  
+  async getFlight(id: number): Promise<Flight | undefined> {
+    return this.flights.get(id);
+  }
+  
+  async searchFlights(searchParams: FlightSearch): Promise<Flight[]> {
+    return Array.from(this.flights.values())
+      .filter(flight => {
+        // Match departure and arrival airports
+        if (searchParams.departureAirportId && flight.departureAirportId !== searchParams.departureAirportId) {
+          return false;
+        }
+        
+        if (searchParams.arrivalAirportId && flight.arrivalAirportId !== searchParams.arrivalAirportId) {
+          return false;
+        }
+        
+        // Match airline if specified
+        if (searchParams.airlineId && flight.airlineId !== searchParams.airlineId) {
+          return false;
+        }
+        
+        // Match departure date if specified
+        if (searchParams.departureDate) {
+          const requestedDate = new Date(searchParams.departureDate);
+          const flightDate = new Date(flight.departureTime);
+          
+          if (requestedDate.getFullYear() !== flightDate.getFullYear() ||
+              requestedDate.getMonth() !== flightDate.getMonth() ||
+              requestedDate.getDate() !== flightDate.getDate()) {
+            return false;
+          }
+        }
+        
+        // Match flight class if specified
+        if (searchParams.flightClass && flight.availableClasses.indexOf(searchParams.flightClass as any) === -1) {
+          return false;
+        }
+        
+        // Match passengers
+        if (searchParams.passengers && flight.availableSeats < searchParams.passengers) {
+          return false;
+        }
+        
+        return true;
+      });
+  }
+  
+  async getFlightsByRoute(departureAirportId: number, arrivalAirportId: number): Promise<Flight[]> {
+    return Array.from(this.flights.values())
+      .filter(flight => 
+        flight.departureAirportId === departureAirportId && 
+        flight.arrivalAirportId === arrivalAirportId
+      );
+  }
+  
+  // Flight Booking operations
+  async createFlightBooking(booking: Omit<FlightBooking, "id" | "bookingDate">): Promise<FlightBooking> {
+    const id = this.currentId.flightBookings++;
+    const newBooking: FlightBooking = {
+      ...booking,
+      id,
+      bookingDate: new Date()
+    };
+    
+    // Update available seats on the flight
+    const flight = await this.getFlight(booking.flightId);
+    if (flight) {
+      flight.availableSeats -= booking.passengerCount;
+      this.flights.set(flight.id, flight);
+    }
+    
+    this.flightBookings.set(id, newBooking);
+    return newBooking;
+  }
+  
+  async getUserFlightBookings(userId: number): Promise<FlightBooking[]> {
+    return Array.from(this.flightBookings.values())
+      .filter(booking => booking.userId === userId);
+  }
+  
+  async getFlightBooking(id: number): Promise<FlightBooking | undefined> {
+    return this.flightBookings.get(id);
+  }
+  
+  async updateFlightBookingStatus(bookingId: number, status: string): Promise<FlightBooking> {
+    const booking = this.flightBookings.get(bookingId);
+    if (!booking) {
+      throw new Error("الحجز غير موجود");
+    }
+    
+    const updatedBooking = { ...booking, status };
+    this.flightBookings.set(bookingId, updatedBooking);
+    return updatedBooking;
+  }
+  
+  // Booking.com integration
+  async getBookingPartnerUrl(flightId: number): Promise<string | undefined> {
+    const flight = await this.getFlight(flightId);
+    if (!flight) {
+      return undefined;
+    }
+    
+    const departureAirport = await this.getAirport(flight.departureAirportId);
+    const arrivalAirport = await this.getAirport(flight.arrivalAirportId);
+    
+    if (!departureAirport || !arrivalAirport) {
+      return undefined;
+    }
+    
+    // Generate a URL for Booking.com integration
+    // In a real implementation, this would use the Booking.com API
+    // For this demo, we'll just return a sample URL
+    const departureDate = new Date(flight.departureTime).toISOString().split('T')[0];
+    const returnDate = new Date(flight.arrivalTime).toISOString().split('T')[0];
+    
+    return `https://www.booking.com/flights/from-${departureAirport.code}/to-${arrivalAirport.code}.html?departing=${departureDate}&returning=${returnDate}&adults=1`;
+  }
 
   // Initialize sample data
   private initSampleData() {
+    // Initialize collections for airline data
+    this.airlines = new Map();
+    this.airports = new Map();
+    this.flights = new Map();
+    this.flightBookings = new Map();
+    
     // Create test users with simplified password hashes
     const users: User[] = [
       {

@@ -393,22 +393,22 @@ export default function EnhancedCityBuilder() {
           npcStyle = { backgroundColor: npc.color, borderRadius: '50% 50% 0 0' };
       }
       
-      // Choose animation based on movementPattern
-      let animationStyle = {};
+      // اختر الأنيميشن بناءً على نمط الحركة
+      let animationClass = '';
       
       if (npc.animated) {
         switch (npc.movementPattern) {
           case 'wander':
-            animationStyle = { animation: 'floating-dust 10s infinite ease-in-out' };
+            animationClass = 'animate-floating-dust';
             break;
           case 'patrol':
-            animationStyle = { animation: 'pulse-slow 5s infinite ease-in-out' };
+            animationClass = 'animate-pulse-slow';
             break;
           case 'stationary':
-            animationStyle = { animation: 'pulse-gentle 2s infinite alternate' };
+            animationClass = 'animate-pulse-gentle';
             break;
           default:
-            animationStyle = {};
+            animationClass = '';
         }
       }
       
@@ -432,15 +432,14 @@ export default function EnhancedCityBuilder() {
       return (
         <motion.div
           key={npc.id}
-          className="absolute cursor-pointer"
+          className={`absolute cursor-pointer ${animationClass}`}
           style={{
             left: `${screenX}%`,
             bottom: `${20 + 10 * scale}%`,
             transform: `scale(${scale}) rotate(${npc.rotation}deg)`,
             transformOrigin: 'center bottom',
             zIndex: Math.floor(1000 - distance),
-            ...npcStyle,
-            ...animationStyle
+            ...npcStyle
           }}
           whileHover={{ scale: scale * 1.1 }}
           onClick={handleNPCClick}

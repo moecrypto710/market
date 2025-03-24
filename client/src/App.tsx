@@ -9,6 +9,7 @@ import RewardsAffiliatePage from "@/pages/rewards-affiliate-page";
 import PaymentPage from "@/pages/payment-page";
 
 import AuthPage from "@/pages/auth-page";
+import ProfilePage from "@/pages/profile-page";
 import ProductDetailPage from "@/pages/product-detail-page";
 import StoreRentalPage from "@/pages/store-rental-page";
 import ServicesPage from "@/pages/services-page";
@@ -48,6 +49,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
+      <ProtectedRoute path="/profile" component={ProfilePage} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />

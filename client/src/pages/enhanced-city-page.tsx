@@ -122,6 +122,36 @@ export default function EnhancedCityPage() {
     );
   }
   
+  // معالجة التفاعلات
+  const handleMicroInteraction = (type: string, details: any) => {
+    console.log(`Interaction: ${type}`, details);
+    
+    // زيادة نقاط المستخدم عند التفاعل
+    if (details.collectible) {
+      setUserPoints(prev => prev + 10);
+      toast({
+        title: `+10 نقاط`,
+        description: "تم إضافة نقاط لاكتشافك مكان جديد!",
+        variant: "default",
+      });
+    }
+  };
+  
+  // معالجة فتح الإنجازات
+  const handleAchievementUnlocked = (achievement: any) => {
+    console.log(`Achievement unlocked: ${achievement.title}`);
+    
+    // زيادة نقاط المستخدم عند فتح إنجاز
+    setUserPoints(prev => prev + achievement.points);
+    
+    // رسالة تهنئة
+    toast({
+      title: `إنجاز جديد! ${achievement.title}`,
+      description: `${achievement.description} (+${achievement.points} نقطة)`,
+      variant: "default",
+    });
+  };
+  
   return (
     <div className="h-screen w-full overflow-hidden relative">
       <Helmet>
@@ -131,6 +161,27 @@ export default function EnhancedCityPage() {
       
       {/* مكوّن المدينة المحسن */}
       <EnhancedCityBuilder />
+      
+      {/* نظام التفاعلات المبهجة */}
+      {!showIntro && enableMicroInteractions && (
+        <MicroInteractions 
+          playerPosition={position}
+          enableEffects={true}
+          effectDensity="medium"
+          effectStyle="colorful"
+          onInteraction={handleMicroInteraction}
+          onAchievementUnlocked={handleAchievementUnlocked}
+        />
+      )}
+      
+      {/* عرض النقاط المكتسبة */}
+      {userPoints > 0 && (
+        <div className="fixed top-4 right-4 z-50 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full border border-white/20 flex items-center gap-2">
+          <div className="bg-yellow-500 h-2 w-2 rounded-full"></div>
+          <span className="font-bold">{userPoints}</span>
+          <span className="text-xs opacity-80">نقطة</span>
+        </div>
+      )}
       
       {/* زر العودة للصفحة الرئيسية */}
       <div className="fixed top-4 left-4 z-50">
