@@ -1429,9 +1429,13 @@ export default function VRTown({
               ))}
             </div>
             
-            {/* Second Floor Stores with Modern International Design */}
+            {/* Nike Store with Clothing Display */}
             <div className="absolute top-0 left-[20%] transform -translate-x-1/2">
-              <div className="modern-storefront"></div>
+              <div className="nike-clothing-storefront">
+                <div className="nike-product tshirt"></div>
+                <div className="nike-product shoes"></div>
+                <div className="nike-product pants"></div>
+              </div>
               <div className="store-brand-logo nike-style">NIKE</div>
             </div>
             
