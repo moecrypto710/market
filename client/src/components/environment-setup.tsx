@@ -32,6 +32,19 @@ interface EnvironmentSetupProps {
   weatherEffect?: 'none' | 'rain' | 'snow' | 'fog' | 'sandstorm';
   timeOfDay?: 'morning' | 'noon' | 'evening' | 'night';
   onGameObjectClick?: (gameObject: GameObject) => void;
+  // Unity-inspired properties
+  airplaneBuilding?: {
+    prefab: string;
+    scale?: { x: number; y: number; z: number };
+    rotation?: { x: number; y: number; z: number };
+  };
+  spawnPoints?: Array<{
+    id: string;
+    name: string;
+    position: { x: number; y: number; z: number };
+    rotation?: { x: number; y: number; z: number };
+    scale?: { x: number; y: number; z: number };
+  }>;
 }
 
 const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
@@ -321,7 +334,7 @@ const EnvironmentSetup: React.FC<EnvironmentSetupProps> = ({
                   rotateZ(${gameObject.rotation.z}deg)
                   scale3d(${gameObject.scale.x}, ${gameObject.scale.y}, ${gameObject.scale.z})`,
       transformStyle: 'preserve-3d' as const,
-      pointerEvents: gameObject.active ? 'auto' : 'none' as const,
+      pointerEvents: gameObject.active ? 'auto' : 'none',
       opacity: gameObject.active ? 1 : 0.5,
     };
   };
