@@ -118,8 +118,27 @@ export function setupAuth(app: Express) {
     });
   });
 
-  app.post("/api/login", passport.authenticate("local"), (req, res) => {
-    res.status(200).json(req.user);
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err: Error | null, user: Express.User | false, info: { message: string } | undefined) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return res.status(401).json({ message: "اسم المستخدم أو كلمة المرور غير صحيحة" });
+      }
+      req.login(user, (loginErr: Error | null) => {
+        if (loginErr) {
+          return next(loginErr);
+        }
+        
+        // Update last login timestamp
+        storage.updateUserLastLogin(user.id).catch((updateErr: Error) => 
+          console.error("Failed to update last login:", updateErr)
+        );
+        
+        return res.status(200).json(user);
+      });
+    })(req, res, next);
   });
 
   app.post("/api/logout", (req, res, next) => {

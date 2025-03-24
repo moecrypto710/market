@@ -17,6 +17,7 @@ export interface IStorage {
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser & { affiliateCode: string }): Promise<User>;
   updateUserPoints(userId: number, points: number): Promise<User>;
+  updateUserLastLogin(userId: number): Promise<User>;
   redeemReward(userId: number, rewardId: number): Promise<User>;
   
   // Product operations
@@ -103,6 +104,17 @@ export class MemStorage implements IStorage {
     }
     
     const updatedUser = { ...user, points };
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+  
+  async updateUserLastLogin(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error("المستخدم غير موجود");
+    }
+    
+    const updatedUser = { ...user, lastLogin: new Date() };
     this.users.set(userId, updatedUser);
     return updatedUser;
   }
@@ -633,6 +645,20 @@ export class PgStorage implements IStorage {
     
     const [updatedUser] = await db.update(users)
       .set({ points })
+      .where(eq(users.id, userId))
+      .returning();
+      
+    return updatedUser;
+  }
+  
+  async updateUserLastLogin(userId: number): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error("المستخدم غير موجود");
+    }
+    
+    const [updatedUser] = await db.update(users)
+      .set({ lastLogin: new Date() })
       .where(eq(users.id, userId))
       .returning();
       
