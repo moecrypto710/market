@@ -1473,17 +1473,111 @@ export default function ThreeBuildingModel({
       
       // Use the enhanced palm tree function created above
       palmPositions.forEach(pos => {
+        // Get a random palm height and lean
         const palmHeight = 4 + Math.random() * 2; // Vary palm heights for natural look
-        // Use our enhanced palm tree function with random lean
-        const palm = createPalmTree(pos.x, pos.z, palmHeight, Math.random() * 2 - 1);
+        const palmLean = Math.random() * 2 - 1;
+        
+        // Create a palm tree at this position
+        const palm = new THREE.Group();
+        
+        // Create the trunk
+        const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, palmHeight, 8);
+        const trunkMaterial = new THREE.MeshPhongMaterial({
+          color: 0x8B4513, // Brown color
+          shininess: 5
+        });
+        
+        const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+        trunk.position.y = palmHeight / 2;
+        
+        // Apply lean if specified
+        if (palmLean !== 0) {
+          trunk.rotation.x = Math.random() * 0.05 * palmLean;
+          trunk.rotation.z = Math.random() * 0.2 * palmLean;
+        }
+        
+        palm.add(trunk);
+        
+        // Add palm leaves
+        const leafCount = 7;
+        const leafGeometry = new THREE.BoxGeometry(0.1, 1.5, 0.5);
+        leafGeometry.translate(0, 0.75, 0);
+        
+        const leafMaterial = new THREE.MeshPhongMaterial({
+          color: 0x2E8B57, // Green color for leaves
+          shininess: 10
+        });
+        
+        for (let i = 0; i < leafCount; i++) {
+          const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+          leaf.position.y = palmHeight - 0.2;
+          leaf.rotation.y = (i / leafCount) * Math.PI * 2;
+          leaf.rotation.x = -Math.PI / 6; // Tilt leaves down a bit
+          leaf.castShadow = true;
+          palm.add(leaf);
+        }
+        
+        // Position the palm tree
+        palm.position.set(pos.x, 0, pos.z);
         scene.add(palm);
       });
       
       // Add a fountain in front of travel buildings
       if (type === 'travel') {
-        // Use the enhanced fountain function with a larger radius
-        const fountain = createFountain(0, depth * 2, 2.5);
-        scene.add(fountain);
+        // Create a fountain directly instead of calling the function
+        const fountainGroup = new THREE.Group();
+        const radius = 2.5;
+        
+        // Fountain base (circular)
+        const baseGeometry = new THREE.CylinderGeometry(radius, radius * 1.1, 0.5, 32);
+        const baseMaterial = new THREE.MeshPhongMaterial({
+          color: 0xEEEEEE, // Light stone color
+          shininess: 30
+        });
+        
+        const base = new THREE.Mesh(baseGeometry, baseMaterial);
+        base.position.y = 0.25;
+        fountainGroup.add(base);
+        
+        // Water basin
+        const basinGeometry = new THREE.CylinderGeometry(radius * 0.9, radius * 0.9, 0.4, 32);
+        const basinMaterial = new THREE.MeshPhongMaterial({
+          color: 0x3A7BD5, // Blue water
+          transparent: true,
+          opacity: 0.7,
+          shininess: 100
+        });
+        
+        const basin = new THREE.Mesh(basinGeometry, basinMaterial);
+        basin.position.y = 0.45;
+        fountainGroup.add(basin);
+        
+        // Center pedestal
+        const pedestalGeometry = new THREE.CylinderGeometry(radius * 0.2, radius * 0.3, 1.2, 16);
+        const pedestalMaterial = new THREE.MeshPhongMaterial({
+          color: 0xDDDDDD, // Light stone
+          shininess: 40
+        });
+        
+        const pedestal = new THREE.Mesh(pedestalGeometry, pedestalMaterial);
+        pedestal.position.y = 0.6 + 0.5;
+        fountainGroup.add(pedestal);
+        
+        // Top ornament
+        const ornamentGeometry = new THREE.SphereGeometry(radius * 0.15, 16, 16);
+        const ornamentMaterial = new THREE.MeshPhongMaterial({
+          color: 0xD4AF37, // Gold
+          shininess: 100,
+          specular: 0x777777
+        });
+        
+        const ornament = new THREE.Mesh(ornamentGeometry, ornamentMaterial);
+        ornament.position.y = 1.5;
+        fountainGroup.add(ornament);
+        
+        // Position the fountain
+        fountainGroup.position.set(0, 0, depth * 2);
+        scene.add(fountainGroup);
       }
     }
     

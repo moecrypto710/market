@@ -93,6 +93,11 @@ export default function CityBuilder() {
   const [activeBuilding, setActiveBuilding] = useState<string | null>(null);
   const [gateOpen, setGateOpen] = useState<boolean>(false);
   
+  // Add state for dynamic environment features
+  const [timeOfDay, setTimeOfDay] = useState<'dawn' | 'day' | 'dusk' | 'night'>('day');
+  const [weatherCondition, setWeatherCondition] = useState<'clear' | 'cloudy' | 'rainy' | 'sandstorm'>('clear');
+  const [trafficDensity, setTrafficDensity] = useState<'low' | 'medium' | 'high'>('medium');
+  
   // Define gate positions based on Unity GateControl concept
   const gates = [
     {
@@ -533,7 +538,7 @@ export default function CityBuilder() {
   // Enhanced sky with day/night cycle inspired by Unity's DayNightCycle script
   const renderSky = () => {
     // Get time of day (could be dynamic in a more complex implementation)
-    const timeOfDay = 'day'; // Can be 'dawn', 'day', 'dusk', 'night'
+    // Use the state value for time of day
     
     // Sky gradients for different times of day - similar to setting Skybox materials in Unity
     const skyGradients = {
@@ -872,6 +877,61 @@ export default function CityBuilder() {
         <div>الموقع: X:{Math.round(movement.position.x)} Z:{Math.round(movement.position.z)}</div>
         <div>الاتجاه: {Math.round(movement.rotation.y)}°</div>
         {activeBuilding && <div className="text-green-400">المبنى النشط: {buildings.find(b => b.id === activeBuilding)?.name}</div>}
+      </div>
+
+      {/* Environment controls - allows changing time of day and weather */}
+      <div className="absolute top-4 left-4 bg-black/70 text-white px-4 py-3 rounded-md backdrop-blur-sm">
+        <h3 className="font-bold text-sm mb-2 text-center">إعدادات البيئة</h3>
+        
+        <div className="mb-3">
+          <label className="block text-xs mb-1">الوقت:</label>
+          <div className="flex space-x-1 rtl:space-x-reverse">
+            {(['dawn', 'day', 'dusk', 'night'] as const).map((time) => (
+              <button
+                key={time}
+                className={`px-2 py-1 text-xs rounded ${timeOfDay === time ? 'bg-blue-600' : 'bg-gray-700'}`}
+                onClick={() => setTimeOfDay(time)}
+              >
+                {time === 'dawn' ? 'الفجر' : 
+                 time === 'day' ? 'النهار' : 
+                 time === 'dusk' ? 'الغروب' : 'الليل'}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div className="mb-3">
+          <label className="block text-xs mb-1">الطقس:</label>
+          <div className="flex space-x-1 rtl:space-x-reverse">
+            {(['clear', 'cloudy', 'rainy', 'sandstorm'] as const).map((weather) => (
+              <button
+                key={weather}
+                className={`px-2 py-1 text-xs rounded ${weatherCondition === weather ? 'bg-blue-600' : 'bg-gray-700'}`}
+                onClick={() => setWeatherCondition(weather)}
+              >
+                {weather === 'clear' ? 'صافي' : 
+                 weather === 'cloudy' ? 'غائم' : 
+                 weather === 'rainy' ? 'ممطر' : 'عاصفة رملية'}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-xs mb-1">كثافة المرور:</label>
+          <div className="flex space-x-1 rtl:space-x-reverse">
+            {(['low', 'medium', 'high'] as const).map((density) => (
+              <button
+                key={density}
+                className={`px-2 py-1 text-xs rounded ${trafficDensity === density ? 'bg-blue-600' : 'bg-gray-700'}`}
+                onClick={() => setTrafficDensity(density)}
+              >
+                {density === 'low' ? 'قليل' : 
+                 density === 'medium' ? 'متوسط' : 'كثيف'}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
       
       {/* Control instructions */}
