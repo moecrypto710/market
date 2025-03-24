@@ -1199,10 +1199,49 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           </div>
         </div>
         
-        {/* Mall sections - enhanced futuristic representation */}
-        <div className="absolute inset-10 flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-6 h-full">
-            {/* Electronics Section */}
+        {/* 3D Mall Environment with Realistic Layout */}
+        <div className="absolute inset-0 perspective-3d overflow-hidden">
+          {/* 3D Mall Structure */}
+          <div className="mall-floor"></div>
+          <div className="mall-ceiling"></div>
+          <div className="mall-wall mall-wall-left"></div>
+          <div className="mall-wall mall-wall-right"></div>
+          
+          {/* Central Plaza with Fountain */}
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
+            <div className="mall-fountain"></div>
+            <div className="text-xs text-center mt-2 text-white/70">نافورة الساحة المركزية</div>
+          </div>
+          
+          {/* Mall Directory Sign - Holographic */}
+          <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20">
+            <div className="holographic-container p-3 rounded-lg shadow-glow-sm">
+              <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2">
+                مول أمريكي التجاري
+              </h3>
+              <div className="text-xs text-center text-white/70 mb-1">اضغط على أي قسم لزيارته</div>
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent my-1"></div>
+              <div className="text-center text-sm text-fuchsia-300 mt-1">
+                {`أنت الآن في: ${getAreaName(currentSection)}`}
+              </div>
+            </div>
+          </div>
+          
+          {/* Navigation Escalators */}
+          <div className="absolute bottom-40 left-[20%] mall-escalator">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[10px] text-white/70 transform -rotate-60">↑</span>
+            </div>
+          </div>
+          <div className="absolute bottom-40 right-[20%] mall-escalator">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[10px] text-white/70 transform -rotate-60">↓</span>
+            </div>
+          </div>
+          
+          {/* Mall Storefront Sections */}
+          <div className="absolute inset-10 grid grid-cols-3 grid-rows-3 gap-4 z-10">
+            {/* First Row */}
             <div 
               className={`rounded-xl flex items-center justify-center cursor-pointer transition-all duration-500 group perspective-3d relative overflow-hidden backdrop-blur-sm ${
                 currentSection === 'electronics' 
@@ -1441,17 +1480,18 @@ export default function VRMallSimplified({ products }: VRMallProps) {
                   <h3 className="font-bold text-sm text-white group-hover:text-glow transition-all duration-300">{product.name}</h3>
                   
                   {/* Product description */}
-                  <p className="text-white/60 text-xs mb-2 line-clamp-1 mt-1">{product.description}</p>
+                  <p className="text-white/70 text-xs mt-1 line-clamp-2 group-hover:text-white/90 transition-all duration-300">{product.description.substring(0, 60)}...</p>
                   
-                  {/* Price and view button */}
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-300">{product.price} ج.م</span>
-                    
-                    {/* 3D View indicator */}
-                    <div className="text-xs flex items-center gap-1">
-                      <span className="text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors">3D</span>
-                      <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse-slow"></div>
-                    </div>
+                  {/* Price with highlight */}
+                  <div className="mt-2 flex justify-between items-center">
+                    <span className="text-fuchsia-400 font-bold">{product.price.toLocaleString('ar-SA')} ر.س</span>
+                    <span className="text-xs text-white/50 group-hover:text-white/70">اضغط للعرض</span>
+                  </div>
+                  
+                  {/* 3D View indicator */}
+                  <div className="absolute right-3 top-3 text-xs flex items-center gap-1">
+                    <span className="text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors">3D</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-fuchsia-400 animate-pulse-slow"></div>
                   </div>
                 </div>
               </div>
@@ -1475,7 +1515,7 @@ export default function VRMallSimplified({ products }: VRMallProps) {
             setShow3DView(true); // Return to product view
           }}
           mode={cameraMode}
-          productImageUrl={selectedProduct.imageUrl}
+          productImageUrl={selectedProduct?.imageUrl || ''}
         />
       )}
       
@@ -1486,7 +1526,10 @@ export default function VRMallSimplified({ products }: VRMallProps) {
           products={products}
           onProductSelect={handleShowProduct}
           onNavigate={handleSectionNavigation}
-          avatar={selectedAvatar}
+          avatar={selectedAvatar ? {
+            name: selectedAvatar.name,
+            favoriteCategory: selectedAvatar.favoriteCategory
+          } : undefined}
           minimized={true} // Changed to true to make it smaller
         />
       )}
