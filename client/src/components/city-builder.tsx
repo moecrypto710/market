@@ -8,7 +8,6 @@ import StoreInteraction from './store-interaction';
 import GateControl from './gate-control';
 import CarTraffic from './car-traffic';
 import TrafficLight from './traffic-light';
-import EarnMoney from './earn-money';
 import TouchControls from './touch-controls';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
@@ -391,21 +390,6 @@ export default function CityBuilder() {
     'east-intersection': 'green'
   });
   
-  // Money system based on EarnMoney.cs
-  const [playerMoney, setPlayerMoney] = useState<number>(0);
-  
-  // Define workstations based on Unity's EarnMoney.cs
-  const workstations = [
-    { x: -15, y: 0, z: 5, value: 10, name: 'محطة العمل 1' },
-    { x: 15, y: 0, z: -5, value: 20, name: 'محطة العمل 2' },
-    { x: 0, y: 0, z: -15, value: 30, name: 'محطة العمل 3' }
-  ];
-  
-  // Handle earning money similar to Unity's EarnMoney.cs
-  const handleMoneyEarned = (amount: number) => {
-    setPlayerMoney(prev => prev + amount);
-  };
-  
   return (
     <div className="relative w-full h-[calc(100vh-8rem)] overflow-hidden border border-gray-800 rounded-lg bg-black">
       {/* Background sky */}
@@ -480,15 +464,6 @@ export default function CityBuilder() {
         playerPosition={movement.position}
         laneOffset={-10}
         initialDelay={3000}
-      />
-      
-      {/* Workstations based on EarnMoney.cs */}
-      <EarnMoney 
-        playerPosition={movement.position}
-        workstationPositions={workstations}
-        onMoneyEarned={handleMoneyEarned}
-        playerMoney={playerMoney}
-        cooldownPeriod={30}
       />
       
       {/* Screen message - based on ScreenInteraction.cs */}
