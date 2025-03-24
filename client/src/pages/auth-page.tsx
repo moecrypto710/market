@@ -193,28 +193,16 @@ export default function AuthPage() {
             
             <p className="text-white/70 text-lg mb-5">مدينة الأعمال الافتراضية المتكاملة</p>
             
-            <div className="flex justify-center mt-4 mb-4 flex-wrap gap-2">
-              <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-sm hover:from-purple-600/40 hover:to-pink-600/40 hover:border-purple-500/60 transition-all duration-300">
-                <i className="fas fa-vr-cardboard mr-2 text-purple-400"></i>
-                <span className="text-white/90">تسوق بتقنية الواقع الافتراضي</span>
+            {/* Simple feature badges */}
+            <div className="flex justify-center mt-4 mb-10 flex-wrap gap-3">
+              <div className="inline-block px-3 py-1 bg-purple-600 rounded-md text-white text-sm">
+                <i className="fas fa-vr-cardboard mr-2"></i>
+                <span>تسوق بتقنية الواقع الافتراضي</span>
               </div>
               
-              <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/30 text-sm hover:from-amber-600/40 hover:to-orange-600/40 hover:border-amber-500/60 transition-all duration-300">
-                <i className="fas fa-medal mr-2 text-amber-400"></i>
-                <span className="text-white/90">برنامج الولاء التفاعلي</span>
-              </div>
-            </div>
-            
-            {/* AR badge animation */}
-            <div className="relative mt-5 mb-6 flex justify-center">
-              <div className="relative inline-block group">
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-orange-500/30 rounded-full filter blur-xl group-hover:from-amber-500/50 group-hover:to-orange-500/50 transition-all duration-500"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-orange-500/30 rounded-full blur-lg opacity-0 group-hover:opacity-100 animate-ping-slow"></div>
-                <div className="relative inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-sm border border-white/10 rounded-full shadow-xl group-hover:shadow-amber-500/20 transition-all duration-300">
-                  <i className="fas fa-cube text-amber-400 group-hover:text-amber-300 transition-colors"></i>
-                  <span className="text-white font-medium">احصل على مكافآت AR حصرية</span>
-                  <div className="absolute -inset-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer rounded-full" style={{backgroundSize: '200% 100%'}}></div>
-                </div>
+              <div className="inline-block px-3 py-1 bg-amber-500 rounded-md text-white text-sm">
+                <i className="fas fa-medal mr-2"></i>
+                <span>برنامج الولاء التفاعلي</span>
               </div>
             </div>
           </div>

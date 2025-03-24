@@ -16,10 +16,10 @@ export default function Header() {
 
       <div className="relative z-10">
         <h1 className="text-2xl font-bold">
-          مول أمريكي
+          بلدة الأمريكي
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">VR</span>
         </h1>
-        <p className="text-sm text-white/70">تجربة تسوق افتراضية مميزة</p>
+        <p className="text-sm text-white/70">مدينة الأعمال الافتراضية المتكاملة</p>
       </div>
       
       <div 
