@@ -55,10 +55,11 @@ function Router() {
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
-      <Route path="/homepage" component={VirtualCityNew} />
+      <Route path="/homepage" component={HomePage} />
       <Route path="/virtual-city" component={VirtualCityNew} />
       <Route path="/vr-amrikyy-town" component={VirtualCityNew} />
-      <ProtectedRoute path="/" component={EnhancedCityPage} />
+      <ProtectedRoute path="/city" component={EnhancedCityPage} />
+      <Route path="/" component={HomePage} />
       <Route component={NotFound} />
     </Switch>
   );
