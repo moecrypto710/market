@@ -44,8 +44,8 @@ export default function HomePage() {
   const categories = [
     { id: 1, name: "إلكترونيات", icon: "laptop", color: "bg-blue-500", gradientFrom: "from-blue-900/40", gradientTo: "to-blue-700/40", borderColor: "border-blue-500/20" },
     { id: 2, name: "ملابس", icon: "tshirt", color: "bg-pink-500", gradientFrom: "from-pink-900/40", gradientTo: "to-pink-700/40", borderColor: "border-pink-500/20" },
-    { id: 3, name: "منزل", icon: "home", color: "bg-cyan-500", gradientFrom: "from-cyan-900/40", gradientTo: "to-cyan-700/40", borderColor: "border-cyan-500/20" },
-    { id: 4, name: "رياضة", icon: "dumbbell", color: "bg-lime-500", gradientFrom: "from-lime-900/40", gradientTo: "to-lime-700/40", borderColor: "border-lime-500/20" }
+    { id: 3, name: "سفر", icon: "plane", color: "bg-cyan-500", gradientFrom: "from-cyan-900/40", gradientTo: "to-cyan-700/40", borderColor: "border-cyan-500/20" },
+    { id: 4, name: "إكسسوارات", icon: "gem", color: "bg-lime-500", gradientFrom: "from-lime-900/40", gradientTo: "to-lime-700/40", borderColor: "border-lime-500/20" }
   ];
   
   // Calculate points progress
@@ -56,7 +56,7 @@ export default function HomePage() {
   // Set initial AI assistant question based on VR mode
   useEffect(() => {
     if (vrEnabled) {
-      setAiInitialQuestion("كيف يمكنني استخدام مول الواقع الافتراضي؟");
+      setAiInitialQuestion("كيف يمكنني استكشاف بلدة الأمريكي الافتراضية؟");
     } else {
       setAiInitialQuestion(undefined);
     }

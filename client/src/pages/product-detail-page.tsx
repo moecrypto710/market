@@ -334,7 +334,7 @@ export default function ProductDetailPage() {
               }}
             />
             
-            {validProduct.category === 'clothing' || validProduct.category === 'sports' && (
+            {(validProduct.category === 'clothing' || validProduct.category === 'travel') && (
               <Button 
                 className="text-white shadow-lg transition-all duration-300"
                 style={{

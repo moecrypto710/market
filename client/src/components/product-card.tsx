@@ -203,7 +203,7 @@ function ProductCard({
         </div>
         
         <div className="flex flex-col gap-2">
-          {(product.category === 'clothing' || product.category === 'sports') && vrEnabled && (
+          {(product.category === 'clothing' || product.category === 'travel') && vrEnabled && (
             <Button 
               className="w-full bg-blue-600 text-white hover:bg-blue-700 font-bold"
               onClick={() => {
