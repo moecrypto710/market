@@ -138,8 +138,8 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
           </div>
         </div>
         
-        {/* Avatar grid - simplified and more futuristic */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mx-auto max-w-5xl">
+        {/* Avatar grid - smaller, more condensed and futuristic */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mx-auto max-w-6xl">
           {avatars.map(avatar => (
             <div 
               key={avatar.id}
@@ -157,8 +157,8 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
               onMouseEnter={() => setHoveredAvatar(avatar.id)}
               onMouseLeave={() => setHoveredAvatar(null)}
             >
-              {/* Card container */}
-              <div className="relative overflow-hidden futuristic-panel h-72 flex flex-col items-center p-5">
+              {/* Card container - smaller height */}
+              <div className="relative overflow-hidden futuristic-panel h-56 flex flex-col items-center p-3">
                 {/* Holographic background shimmer */}
                 <div className="absolute inset-0 opacity-20 holographic-bg rounded-xl overflow-hidden"></div>
                 
@@ -173,20 +173,20 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                   }}
                 ></div>
                 
-                {/* Avatar image with glow effect */}
-                <div className="relative w-24 h-24 mb-4">
+                {/* Avatar image with glow effect - smaller */}
+                <div className="relative w-16 h-16 mb-2">
                   {/* Ambient glow */}
                   <div 
-                    className="absolute -inset-4 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-500"
+                    className="absolute -inset-3 rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-500"
                     style={{
                       background: `radial-gradient(circle, ${avatar.color || '#d946ef'}70 0%, transparent 70%)`,
-                      filter: 'blur(10px)',
+                      filter: 'blur(8px)',
                     }}
                   ></div>
                   
                   {/* Holographic ring */}
                   <div 
-                    className="absolute inset-0 rounded-full border-2 border-white/20 group-hover:animate-spin-slow"
+                    className="absolute inset-0 rounded-full border border-white/20 group-hover:animate-spin-slow"
                     style={{ transform: 'scale(1.15)' }}
                   ></div>
                   
@@ -195,33 +195,37 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                     className="w-full h-full rounded-full overflow-hidden border-2"
                     style={{
                       borderColor: avatar.color || '#d946ef',
-                      boxShadow: `0 0 15px ${avatar.color || '#d946ef'}50`
+                      boxShadow: `0 0 10px ${avatar.color || '#d946ef'}50`
                     }}
                   >
                     <img src={avatar.image} alt={avatar.name} className="w-full h-full object-cover" />
                   </div>
                 </div>
                 
-                {/* Avatar details - simplified */}
-                <h3 className="text-2xl font-bold mb-2 text-white">{avatar.name}</h3>
+                {/* Avatar name - smaller */}
+                <h3 className="text-lg font-bold mb-1 text-white">{avatar.name}</h3>
                 
-                {/* Special feature chip */}
-                <div 
-                  className="px-3 py-1 rounded-full text-xs mb-3"
-                  style={{
-                    backgroundColor: `${avatar.color || '#d946ef'}20`,
-                    borderColor: `${avatar.color || '#d946ef'}40`,
-                    color: 'white'
-                  }}
-                >
-                  {avatar.specialFeature}
-                </div>
-                
-                {/* Category indicator */}
-                <div className="mb-auto">
+                {/* Compact feature display */}
+                <div className="flex flex-col items-center space-y-1.5 mb-1.5">
+                  {/* Special feature chip - smaller */}
+                  <div 
+                    className="px-2 py-0.5 rounded-full text-xs"
+                    style={{
+                      backgroundColor: `${avatar.color || '#d946ef'}20`,
+                      color: 'white',
+                      fontSize: '0.65rem'
+                    }}
+                  >
+                    {avatar.specialFeature}
+                  </div>
+                  
+                  {/* Category indicator - smaller */}
                   <span 
-                    className="px-2 py-0.5 rounded-md text-xs bg-black/30 border border-white/10"
-                    style={{ color: avatar.color || '#d946ef' }}
+                    className="px-1.5 py-0.5 rounded-sm text-xs bg-black/30 border border-white/10"
+                    style={{ 
+                      color: avatar.color || '#d946ef',
+                      fontSize: '0.65rem'
+                    }}
                   >
                     {avatar.favoriteCategory === 'electronics' ? 'الإلكترونيات 💻' :
                      avatar.favoriteCategory === 'clothing' ? 'الأزياء 👗' :
@@ -230,12 +234,12 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                   </span>
                 </div>
                 
-                {/* Select button - modern and cleaner */}
+                {/* Select button - smaller */}
                 <button 
-                  className="mt-4 w-full py-2 rounded-lg font-bold text-sm transition-all duration-300 relative overflow-hidden group-hover:shadow-lg"
+                  className="mt-auto w-full py-1.5 rounded-lg font-bold text-xs transition-all duration-300 relative overflow-hidden group-hover:shadow-lg"
                   style={{
                     background: `linear-gradient(45deg, ${avatar.color || '#d946ef'}, ${avatar.color === '#5e35b1' ? '#3f51b5' : '#0ea5e9'})`,
-                    boxShadow: `0 4px 15px -3px ${avatar.color || '#d946ef'}40`
+                    boxShadow: `0 3px 10px -3px ${avatar.color || '#d946ef'}40`
                   }}
                 >
                   {/* Button shine effect */}
