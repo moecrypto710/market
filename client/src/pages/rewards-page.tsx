@@ -297,7 +297,7 @@ export default function RewardsPage() {
         <TabsContent value="simple">
           <div className="rewards-simple-container">
             {/* CSS Styles for the simplified view */}
-            <style jsx>{`
+            <style dangerouslySetInnerHTML={{ __html: `
               .rewards-simple-container {
                 font-family: Arial, sans-serif;
                 margin: 0;
@@ -338,6 +338,12 @@ export default function RewardsPage() {
                 box-shadow: 0 5px 15px rgba(0,0,0,0.1);
               }
               
+              .reward:focus {
+                outline: 2px solid #4CAF50;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                transform: translateY(-5px);
+              }
+              
               .reward h2 {
                 font-size: 1.5rem;
                 color: #333;
@@ -364,7 +370,26 @@ export default function RewardsPage() {
               .reward-button:hover {
                 background-color: #388E3C;
               }
-            `}</style>
+              
+              .reward-button:focus {
+                background-color: #388E3C;
+                outline: 2px solid #1B5E20;
+                outline-offset: 2px;
+              }
+              
+              /* Accessibility class for screen-reader only content */
+              .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border-width: 0;
+              }
+            `}} />
             
             <header className="rewards-header">
               <h1>برنامج المكافآت</h1>
