@@ -29,8 +29,24 @@ export default function BusinessWorldPage() {
   const { user } = useAuth() || { user: null };
   const isMobile = useIsMobile();
   const { vrEnabled, toggleVR } = useVR() || { vrEnabled: false, toggleVR: () => {} };
+  const { toast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [showVirtualTour, setShowVirtualTour] = useState(false);
+  const [currentVRSection, setCurrentVRSection] = useState<string>("main");
+  const [showPartnershipModal, setShowPartnershipModal] = useState(false);
+  const [rotationAngle, setRotationAngle] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [viewMode, setViewMode] = useState<'map' | '3d' | 'first-person'>('3d');
+  const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
+  const [rentProgress, setRentProgress] = useState(0);
+  const [isExploring, setIsExploring] = useState(false);
+  const [flyInAnimation, setFlyInAnimation] = useState(false);
+  const [showSpotlight, setShowSpotlight] = useState(false);
+  const [highlighedFeature, setHighlightedFeature] = useState<string | null>(null);
+  
+  // Refs
+  const townRef = useRef<HTMLDivElement>(null);
+  const rotateInterval = useRef<NodeJS.Timeout | null>(null);
 
   // Fetch products
   const { data: products } = useQuery<Product[]>({
