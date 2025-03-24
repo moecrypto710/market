@@ -1,6 +1,11 @@
-const fs = require('fs');
-const path = require('path');
-const postgres = require('postgres');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import postgres from 'postgres';
+
+// Get the directory name in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function initializeDatabase() {
   console.log('Initializing database...');
