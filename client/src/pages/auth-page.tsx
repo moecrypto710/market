@@ -9,8 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Redirect } from "wouter";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "@/hooks/use-toast";
+import AIAssistant from "@/components/ai-assistant";
 
 // Extend the schemas with additional validation
 const registerSchema = insertUserSchema.extend({
