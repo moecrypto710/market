@@ -175,44 +175,18 @@ export default function AuthPage() {
   return (
     <div className="flex flex-col md:flex-row min-h-screen py-0 md:py-10 relative overflow-hidden">
       {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 opacity-30 pointer-events-none">
-        <div className="absolute top-[10%] left-[5%] w-96 h-96 rounded-full bg-gradient-to-r from-purple-700 to-indigo-700 filter blur-[120px] animate-float-slow transform rotate-3"></div>
-        <div className="absolute bottom-[15%] right-[10%] w-72 h-72 rounded-full bg-gradient-to-r from-fuchsia-700 to-pink-700 filter blur-[100px] animate-float-slow animation-delay-1000 transform -rotate-6"></div>
-        <div className="absolute top-[40%] right-[25%] w-48 h-48 rounded-full bg-gradient-to-r from-violet-700 to-indigo-700 filter blur-[80px] animate-float-slow animation-delay-2000 transform rotate-12"></div>
-        
-        {/* Digital circuit pattern overlay */}
-        <div className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-            backgroundSize: '80px 80px'
-          }}
-        ></div>
-        
-        {/* Futuristic scanning line */}
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            background: 'linear-gradient(to bottom, transparent, transparent 50%, rgba(170, 0, 255, 0.2) 50%, transparent 50.5%)',
-            backgroundSize: '100% 120px',
-            animation: 'scanline 6s linear infinite'
-          }}
-        ></div>
-      </div>
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 bg-gradient-to-br from-purple-900/80 to-black opacity-90 pointer-events-none"></div>
       
       <div className="w-full md:w-1/2 px-4 md:px-10 flex items-center justify-center py-12 md:py-0 z-10 backdrop-blur-sm bg-black/10 md:bg-transparent">
         <div className="w-full max-w-md relative">
           {/* Logo and branding section */}
           <div className="text-center mb-10 relative">
-            {/* Decorative orb */}
-            <div className="absolute -top-32 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-purple-600/20 to-fuchsia-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
-            
-            {/* Logo animation */}
+            {/* Logo - Simplified */}
             <div className="relative mb-6 inline-block">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg opacity-75 blur group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse-slow"></div>
-              <div className="relative bg-black/60 backdrop-blur-lg px-6 py-4 rounded-lg border border-white/10">
+              <div className="relative bg-black/60 px-6 py-4 rounded-lg border border-purple-500/30">
                 <h1 className="text-4xl font-bold relative">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">بلدة الأمريكي</span>
-                  <span className="inline-block mx-2 px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-md text-white">VR</span>
+                  <span className="text-white">بلدة الأمريكي</span>
+                  <span className="inline-block mx-2 px-2 py-1 bg-purple-600 rounded-md text-white">VR</span>
                 </h1>
               </div>
             </div>
