@@ -223,42 +223,42 @@ export default function AuthPage() {
       <button
         ref={aiHelpButtonRef}
         onClick={toggleAiAssistant}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] hover:from-[#00d6ae] hover:to-[#d600aa] text-black rounded-full p-4 shadow-lg z-50 w-14 h-14 flex items-center justify-center transition-all duration-300 border-2 border-white/30 animate-pulse-slow"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] hover:from-[#00d6ae] hover:to-[#d600aa] text-black rounded-full p-3 shadow-lg z-50 w-11 h-11 flex items-center justify-center transition-all duration-300 border-2 border-white/30 animate-pulse-slow"
         aria-label="فتح المساعد الذكي"
       >
-        <i className="fas fa-robot text-xl"></i>
+        <i className="fas fa-robot text-sm"></i>
       </button>
       
       {/* AI Help Topics */}
-      <div className="fixed top-1/2 right-8 transform -translate-y-1/2 z-40 flex flex-col gap-3 items-end">
+      <div className="fixed top-1/2 right-8 transform -translate-y-1/2 z-40 flex flex-col gap-2 items-end">
         {!showAiAssistant && (
           <>
-            <div className="bg-black/90 backdrop-blur-md p-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
+            <div className="bg-black/90 backdrop-blur-md py-2 px-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
                 onClick={() => handleAiHelp("كيف أقوم بإنشاء حساب جديد؟")}>
-              <div className="flex items-center gap-3 text-white">
-                <span className="text-sm font-medium">كيف أقوم بإنشاء حساب جديد؟</span>
-                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-7 h-7 rounded-full flex items-center justify-center text-black flex-shrink-0">
-                  <i className="fas fa-question text-sm"></i>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-xs font-medium">كيف أقوم بإنشاء حساب جديد؟</span>
+                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-5 h-5 rounded-full flex items-center justify-center text-black flex-shrink-0">
+                  <i className="fas fa-question text-xs"></i>
                 </div>
               </div>
             </div>
             
-            <div className="bg-black/90 backdrop-blur-md p-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
+            <div className="bg-black/90 backdrop-blur-md py-2 px-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
                 onClick={() => handleAiHelp("ما هي مميزات التسوق الافتراضي؟")}>
-              <div className="flex items-center gap-3 text-white">
-                <span className="text-sm font-medium">ما هي مميزات التسوق الافتراضي؟</span>
-                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-7 h-7 rounded-full flex items-center justify-center text-black flex-shrink-0">
-                  <i className="fas fa-vr-cardboard text-sm"></i>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-xs font-medium">ما هي مميزات التسوق الافتراضي؟</span>
+                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-5 h-5 rounded-full flex items-center justify-center text-black flex-shrink-0">
+                  <i className="fas fa-vr-cardboard text-xs"></i>
                 </div>
               </div>
             </div>
             
-            <div className="bg-black/90 backdrop-blur-md p-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
+            <div className="bg-black/90 backdrop-blur-md py-2 px-3 rounded-lg border border-[#00ffcd]/30 transition-all duration-300 hover:scale-105 cursor-pointer group shadow-lg shadow-[#00ffcd]/10"
                 onClick={() => handleAiHelp("كيف يمكنني الاستفادة من برنامج الولاء؟")}>
-              <div className="flex items-center gap-3 text-white">
-                <span className="text-sm font-medium">كيف أستفيد من برنامج الولاء؟</span>
-                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-7 h-7 rounded-full flex items-center justify-center text-black flex-shrink-0">
-                  <i className="fas fa-medal text-sm"></i>
+              <div className="flex items-center gap-2 text-white">
+                <span className="text-xs font-medium">كيف أستفيد من برنامج الولاء؟</span>
+                <div className="bg-gradient-to-r from-[#00ffcd] to-[#00d6ae] w-5 h-5 rounded-full flex items-center justify-center text-black flex-shrink-0">
+                  <i className="fas fa-medal text-xs"></i>
                 </div>
               </div>
             </div>
