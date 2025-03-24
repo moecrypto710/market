@@ -1,7 +1,15 @@
-This directory is for sound effects used in the immersive experience.
+# مؤثرات صوتية لمدينة أمريكي
 
-Recommended sounds to add:
-- ambience.mp3: Background ambient sound for the virtual town
-- store-enter.mp3: Sound when entering a store
-- store-exit.mp3: Sound when exiting a store
-- product-rotate.mp3: Subtle sound when rotating a product in 360-degree view
+هذا المجلد يحتوي على المؤثرات الصوتية المستخدمة في تجربة مدينة أمريكي الافتراضية.
+
+## ملفات الصوت المطلوبة:
+
+1. `city-ambience.mp3` - صوت محيط المدينة (أصوات حركة، ضجيج، أصوات المارة)
+2. `market-ambience.mp3` - أصوات السوق التقليدي (أصوات تجار، باعة، حركة)
+3. `footsteps.mp3` - صوت خطوات عند التحرك
+4. `door-open.mp3` - صوت فتح باب المبنى
+5. `notification.mp3` - صوت التنبيهات
+
+المجلد صمم للتناسب مع مكون EnhancedCityBuilder، ويمكن إضافة المزيد من الأصوات مستقبلاً.
+
+ملاحظة: هذه الملفات يمكن إنشاؤها أو تنزيلها من مواقع الموسيقى والصوت المجانية الاستخدام.

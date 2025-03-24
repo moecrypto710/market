@@ -116,7 +116,7 @@ function ProductCard({
   return (
     <Card 
       ref={cardRef}
-      className="overflow-hidden h-full flex flex-col bg-black text-white group relative border border-pink-500/30 shadow-md"
+      className="overflow-hidden h-full flex flex-col bg-black text-white group relative border border-pink-500/30 shadow-md hover-shadow-pulse"
       style={{
         transform: vrEnabled ? `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)` : 'none',
         transition: 'transform 0.1s ease-out'
@@ -221,7 +221,7 @@ function ProductCard({
           )}
         
           <Button 
-            className="w-full bg-pink-600 text-white hover:bg-pink-700 font-bold"
+            className="w-full bg-pink-600 text-white hover:bg-pink-700 font-bold hover-jelly"
             onClick={() => addToCartMutation.mutate()}
             disabled={addToCartMutation.isPending}
           >

@@ -19,6 +19,179 @@
   animation-delay: 2000ms;
 }
 
+/* Playful Hover Animations for Interactive Elements */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(147, 51, 234, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+  }
+}
+
+@keyframes bounce-light {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rotate-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes jelly {
+  0%, 100% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.95, 1.05);
+  }
+  50% {
+    transform: scale(1.05, 0.95);
+  }
+  75% {
+    transform: scale(0.95, 1.05);
+  }
+}
+
+@keyframes shadow-pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba(147, 51, 234, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 15px rgba(147, 51, 234, 0);
+  }
+}
+
+@keyframes border-glow {
+  0%, 100% {
+    border-color: rgba(147, 51, 234, 0.3);
+  }
+  50% {
+    border-color: rgba(147, 51, 234, 0.8);
+  }
+}
+
+/* Interactive Animation Classes */
+.hover-float {
+  transition: transform 0.3s ease;
+}
+.hover-float:hover {
+  animation: float 2s ease-in-out infinite;
+}
+
+.hover-pulse {
+  transition: all 0.3s ease;
+}
+.hover-pulse:hover {
+  animation: pulse-glow 1.5s infinite;
+}
+
+.hover-bounce {
+  transition: transform 0.2s ease;
+}
+.hover-bounce:hover {
+  animation: bounce-light 0.5s ease infinite;
+}
+
+.hover-rotate {
+  transition: transform 0.5s ease;
+}
+.hover-rotate:hover {
+  animation: rotate-slow 8s linear infinite;
+}
+
+.hover-wiggle {
+  transition: transform 0.2s ease;
+}
+.hover-wiggle:hover {
+  animation: wiggle 0.5s ease infinite;
+}
+
+.hover-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.hover-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.hover-shimmer:hover::after {
+  opacity: 1;
+  animation: shimmer 1.5s infinite;
+}
+
+.hover-jelly {
+  transition: transform 0.3s ease;
+}
+.hover-jelly:hover {
+  animation: jelly 0.6s ease;
+}
+
+.hover-shadow-pulse {
+  transition: box-shadow 0.3s ease;
+}
+.hover-shadow-pulse:hover {
+  animation: shadow-pulse 1.5s infinite;
+}
+
+.hover-border-glow {
+  border: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+.hover-border-glow:hover {
+  animation: border-glow 1.5s infinite;
+}
+
 /* VR Town Advanced Animations and Effects */
 
 /* Smart controls tooltip styling */
