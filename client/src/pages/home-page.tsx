@@ -214,12 +214,18 @@ export default function HomePage() {
                 variants={fadeInUp}
               >
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-fuchsia-200">
-                  مول أمريكي
+                  بلدة الأمريكي
                   <span className="inline-block mx-2 px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-md text-white">VR</span>
                 </h1>
                 
+                <div className="flex justify-center mb-4">
+                  <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium">
+                    أول مدينة أعمال افتراضية متكاملة في العالم العربي
+                  </div>
+                </div>
+                
                 <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-6 leading-relaxed font-light">
-                  تسوق أحدث منتجات الماركات العالمية بتجربة واقع افتراضي حصرية تمزج بين التكنولوجيا والثقافة العربية
+                  اكتشف بلدة الأمريكي، المدينة الافتراضية المتكاملة للأعمال حيث تجتمع متاجر الهواتف والأجهزة الإلكترونية، وكالات السفر والطيران، الفنادق، متاجر الملابس والإكسسوارات في عالم افتراضي ثلاثي الأبعاد بتصميم عربي أصيل
                 </p>
                 
                 {/* Hero buttons */}
@@ -256,7 +262,7 @@ export default function HomePage() {
                 
                 {/* Stats counter */}
                 <motion.div 
-                  className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12 text-center hero-element"
+                  className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 text-center hero-element"
                   variants={fadeInUp}
                 >
                   <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
@@ -266,6 +272,10 @@ export default function HomePage() {
                   <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
                     <div className="text-3xl font-bold text-fuchsia-300 mb-1">+50</div>
                     <div className="text-white/70 text-sm">ماركة عالمية</div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
+                    <div className="text-3xl font-bold text-fuchsia-300 mb-1">+60</div>
+                    <div className="text-white/70 text-sm">متجر افتراضي</div>
                   </div>
                   <div className="hidden md:block bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
                     <div className="text-3xl font-bold text-fuchsia-300 mb-1">+10K</div>
@@ -311,11 +321,11 @@ export default function HomePage() {
                       
                       <div className="md:max-w-[50%]">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight text-white">
-                          اشترك الآن في خدمة VIP واحصل على خصم 30%
+                          احجز محلك التجاري في بلدة الأمريكي واحصل على خصم 30%
                         </h2>
                         
                         <p className="text-white/80 mb-6 md:text-lg">
-                          عضوية VIP تمنحك وصولاً حصرياً للمناطق الخاصة في المول الافتراضي وتخفيضات إضافية على المنتجات الفاخرة
+                          عروض حصرية لأصحاب الأعمال والمستثمرين للانضمام إلى أول مدينة أعمال افتراضية متكاملة في العالم العربي
                         </p>
                         
                         <Button className="bg-white text-purple-900 hover:bg-white/90 font-bold px-8 py-3 h-auto text-lg rounded-full">
@@ -346,11 +356,11 @@ export default function HomePage() {
                       
                       <div className="md:max-w-[50%]">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight text-white">
-                          تجربة الواقع الافتراضي الحصرية للعطور الفاخرة
+                          تجربة الواقع الافتراضي الحصرية للمتاجر والأعمال
                         </h2>
                         
                         <p className="text-white/80 mb-6 md:text-lg">
-                          استمتع بتجربة فريدة لاختيار العطور باستخدام تقنية الواقع الافتراضي مع إمكانية استشعار الروائح
+                          افتح متجرًا للأزياء، وكالة سفر، محل أجهزة الكترونية، فندقًا أو أي نوع من الأعمال في بلدة الأمريكي وابدأ تجارتك الرقمية
                         </p>
                         
                         <Button className="bg-gradient-to-r from-yellow-400 to-amber-500 text-indigo-900 hover:from-yellow-500 hover:to-amber-600 font-bold px-8 py-3 h-auto text-lg rounded-full">
@@ -381,11 +391,11 @@ export default function HomePage() {
                       
                       <div className="md:max-w-[80%]">
                         <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight text-white">
-                          مساحات محدودة للإيجار في المول الافتراضي
+                          مساحات محدودة للإيجار في بلدة الأمريكي
                         </h2>
                         
                         <p className="text-white/80 mb-6 md:text-lg">
-                          احجز متجرك الخاص في مول أمريكي الافتراضي واعرض منتجاتك لآلاف المتسوقين يومياً
+                          احجز محلك التجاري الخاص في بلدة الأمريكي واعرض خدماتك ومنتجاتك في أكبر مدينة أعمال افتراضية في المنطقة
                         </p>
                         
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
