@@ -40,10 +40,14 @@ export default function BusinessWorldPage() {
   const [activeTab, setActiveTab] = useState("stores");
   const [selectedBusinessId, setSelectedBusinessId] = useState<number | null>(null);
   const [showBusinessDetails, setShowBusinessDetails] = useState(false);
+  const [showVirtualTour, setShowVirtualTour] = useState(false);
+  const [showPartnershipModal, setShowPartnershipModal] = useState(false);
   
   // Animation states
   const [showSpotlight, setShowSpotlight] = useState(false);
   const [highlightedSection, setHighlightedSection] = useState<string | null>(null);
+  const [animateFeatures, setAnimateFeatures] = useState(false);
+  const [hoverBusinessId, setHoverBusinessId] = useState<number | null>(null);
   
   // Refs
   const pageRef = useRef<HTMLDivElement>(null);
