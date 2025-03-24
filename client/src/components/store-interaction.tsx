@@ -191,20 +191,39 @@ export default function StoreInteraction({
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.3, type: "spring" }}
           >
-            <Button 
-              className="text-white font-bold px-6 py-3 rounded-xl shadow-lg border border-white/30 overflow-hidden group"
-              style={{ background: storeGradient }}
-              onClick={enterStore}
-            >
-              {/* Button interior glowing effects */}
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
-              
-              <span className="relative z-10 flex items-center gap-2">
-                <i className={`fas ${storeIcon} ml-2`}></i>
-                دخول {storeName}
-                <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(E)</span>
-              </span>
-            </Button>
+            {storeName.includes('طيران الإمارات') ? (
+              // Special Emirates Airlines Button
+              <Button 
+                className="text-white font-bold px-6 py-3 rounded-xl shadow-lg border border-yellow-400/50 overflow-hidden group"
+                style={{ background: 'linear-gradient(to right, #003366, #0066cc)' }}
+                onClick={enterStore}
+              >
+                {/* Button interior glowing effects */}
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-yellow-400/20 to-yellow-400/0 -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
+                
+                <span className="relative z-10 flex items-center gap-2">
+                  <i className="fas fa-plane-departure ml-2"></i>
+                  <span className="font-arabic">دخول وكالة طيران الإمارات</span>
+                  <span className="ml-2 bg-yellow-500/20 px-2 py-0.5 rounded text-xs text-yellow-300">(E)</span>
+                </span>
+              </Button>
+            ) : (
+              // Regular store button
+              <Button 
+                className="text-white font-bold px-6 py-3 rounded-xl shadow-lg border border-white/30 overflow-hidden group"
+                style={{ background: storeGradient }}
+                onClick={enterStore}
+              >
+                {/* Button interior glowing effects */}
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
+                
+                <span className="relative z-10 flex items-center gap-2">
+                  <i className={`fas ${storeIcon} ml-2`}></i>
+                  دخول {storeName}
+                  <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(E)</span>
+                </span>
+              </Button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -220,28 +239,58 @@ export default function StoreInteraction({
             transition={{ duration: 0.3 }}
           >
             {/* Store header with name and exit button */}
-            <motion.div 
-              className="text-white p-3 flex justify-between items-center shadow-md"
-              style={{ background: storeGradient }}
-              initial={{ y: -50 }}
-              animate={{ y: 0 }}
-              transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
-            >
-              <div className="flex items-center gap-2">
-                <i className={`fas ${storeIcon} text-lg`}></i>
-                <h2 className="font-bold text-xl">{storeName}</h2>
-              </div>
-              
-              <Button 
-                variant="ghost" 
-                className="hover:bg-black/20 text-white"
-                onClick={exitStore}
+            {storeName.includes('طيران الإمارات') ? (
+              // Emirates Airlines Special Header
+              <motion.div 
+                className="text-white p-3 flex justify-between items-center shadow-md"
+                style={{ background: 'linear-gradient(to right, #003366, #0066cc)' }}
+                initial={{ y: -50 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
               >
-                <i className="fas fa-sign-out-alt ml-2"></i>
-                خروج
-                <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(ESC)</span>
-              </Button>
-            </motion.div>
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-plane text-lg text-yellow-400"></i>
+                  <h2 className="font-bold text-xl">وكالة طيران الإمارات</h2>
+                  <div className="ml-2 px-2 py-0.5 bg-yellow-500 text-blue-900 text-xs rounded-full font-bold">
+                    وكالة رسمية
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  className="hover:bg-white/10 text-white border-yellow-400/50 hover:border-yellow-400"
+                  onClick={exitStore}
+                >
+                  <i className="fas fa-sign-out-alt ml-2"></i>
+                  مغادرة الوكالة
+                  <span className="ml-2 bg-blue-900/40 px-2 py-0.5 rounded text-xs text-yellow-300">(ESC)</span>
+                </Button>
+              </motion.div>
+            ) : (
+              // Regular Store Header
+              <motion.div 
+                className="text-white p-3 flex justify-between items-center shadow-md"
+                style={{ background: storeGradient }}
+                initial={{ y: -50 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
+              >
+                <div className="flex items-center gap-2">
+                  <i className={`fas ${storeIcon} text-lg`}></i>
+                  <h2 className="font-bold text-xl">{storeName}</h2>
+                </div>
+                
+                <Button 
+                  variant="ghost" 
+                  className="hover:bg-black/20 text-white"
+                  onClick={exitStore}
+                >
+                  <i className="fas fa-sign-out-alt ml-2"></i>
+                  خروج
+                  <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(ESC)</span>
+                </Button>
+              </motion.div>
+            )}
             
             {/* Store interior content */}
             <motion.div 
