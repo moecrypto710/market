@@ -306,6 +306,82 @@ export default function CityBuilder() {
     </div>
   );
   
+  // Screen message state (based on ScreenInteraction.cs)
+  const [screenMessage, setScreenMessage] = useState<string | null>(null);
+  
+  // Function to render gates based on Unity GateControl
+  const renderGates = () => {
+    return gates.map((gate) => {
+      const style = getPositionStyle(gate.position);
+      
+      // Don't render gates that are too far away
+      if (style.opacity <= 0.1) return null;
+      
+      // Calculate if player is near the gate
+      const distX = movement.position.x - gate.position.x;
+      const distZ = movement.position.z - gate.position.z;
+      const distance = Math.sqrt(distX * distX + distZ * distZ);
+      const isNearGate = distance < 3;
+      
+      // Apply animation when player approaches - similar to Unity's OnTriggerEnter
+      const isOpen = gateOpen || isNearGate;
+      
+      return (
+        <motion.div
+          key={gate.id}
+          className="absolute"
+          style={{
+            ...style,
+            perspective: '1000px',
+          }}
+        >
+          {/* Gate structure */}
+          <div className="relative" style={{ width: '100px', height: '120px' }}>
+            {/* Gate frame */}
+            <div className="absolute inset-0 border-4 border-gray-700 bg-gray-800 rounded-t-lg">
+              {/* Gate doors */}
+              <div className="relative w-full h-full overflow-hidden">
+                {/* Left door */}
+                <motion.div
+                  className="absolute top-0 bottom-0 left-0 w-1/2 bg-gray-600 border-r border-gray-700"
+                  animate={{
+                    x: isOpen ? '-100%' : '0%',
+                  }}
+                  transition={{ duration: 0.6 }}
+                />
+                
+                {/* Right door */}
+                <motion.div
+                  className="absolute top-0 bottom-0 right-0 w-1/2 bg-gray-600 border-l border-gray-700"
+                  animate={{
+                    x: isOpen ? '100%' : '0%',
+                  }}
+                  transition={{ duration: 0.6 }}
+                />
+                
+                {/* Gate sign */}
+                <div 
+                  className="absolute top-0 left-0 right-0 p-1 text-center text-white bg-blue-900 text-xs"
+                  style={{ direction: 'rtl' }}
+                >
+                  {gate.name}
+                </div>
+              </div>
+            </div>
+            
+            {/* Interactive screen - based on ScreenInteraction.cs */}
+            <div 
+              className="absolute bottom-[-40px] left-[15px] w-[70px] h-[30px] bg-black/80 border border-blue-500 rounded flex items-center justify-center cursor-pointer"
+              onClick={() => setScreenMessage(`مرحباً بك في ${gate.name}!`)}
+            >
+              <span className="text-blue-400 text-xs">اضغط هنا</span>
+            </div>
+          </div>
+        </motion.div>
+      );
+    });
+  };
+
   return (
     <div className="relative w-full h-[calc(100vh-8rem)] overflow-hidden border border-gray-800 rounded-lg bg-black">
       {/* Background sky */}
@@ -316,6 +392,29 @@ export default function CityBuilder() {
       
       {/* Buildings */}
       {renderBuildings()}
+      
+      {/* Gates */}
+      {renderGates()}
+      
+      {/* Screen message - based on ScreenInteraction.cs */}
+      {screenMessage && (
+        <motion.div 
+          className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/80 border-2 border-blue-500 rounded-lg p-4 text-white text-center z-50"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        >
+          <p className="text-xl font-bold mb-2">{screenMessage}</p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setScreenMessage(null)}
+            className="mt-2"
+          >
+            إغلاق
+          </Button>
+        </motion.div>
+      )}
       
       {/* Controls for mobile */}
       {isMobile && (
