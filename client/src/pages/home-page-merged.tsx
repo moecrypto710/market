@@ -300,7 +300,7 @@ export default function HomePage() {
   const cityBuildings = [
     // American-style buildings
     { id: 'downtown-skyscraper', name: 'ناطحة سحاب وسط المدينة', type: 'modern', position: { x: -25, y: 0, z: -15 }, color: '#2563eb' },
-    { id: 'shopping-mall', name: 'مدينة أمريكي مول', type: 'modern', position: { x: -30, y: 0, z: 5 }, color: '#10b981' },
+    { id: 'shopping-mall', name: 'مدينة أمريكي', type: 'modern', position: { x: -30, y: 0, z: 5 }, color: '#10b981' },
     { id: 'apartment-building', name: 'مبنى سكني عصري', type: 'modern', position: { x: -20, y: 0, z: 15 }, color: '#f59e0b' },
     
     // Arabic-style buildings
