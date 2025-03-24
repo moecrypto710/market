@@ -291,12 +291,15 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
             <div
               key={avatar.id}
               className={`
-                relative bg-black border-2 border-${hoveredAvatar === avatar.id ? avatar.color : 'purple-800/30'} 
-                p-8 rounded-xl cursor-pointer transition-all duration-500 
-                hover:border-${avatar.color} w-[280px] h-[420px] transform perspective-[1200px] 
+                relative bg-black border-2 p-8 rounded-xl cursor-pointer transition-all duration-500 
+                w-[280px] h-[420px] transform perspective-[1200px] 
                 backdrop-blur-sm overflow-hidden futuristic-border
-                ${hoveredAvatar === avatar.id ? 'scale-105 shadow-lg shadow-' + avatar.color + '/40' : ''}
+                ${hoveredAvatar === avatar.id ? 'scale-105' : ''}
               `}
+              style={{
+                borderColor: hoveredAvatar === avatar.id ? avatar.color : 'rgba(107, 33, 168, 0.3)',
+                boxShadow: hoveredAvatar === avatar.id ? `0 10px 30px -10px ${avatar.color}40` : 'none'
+              }}
               style={{
                 background: `radial-gradient(circle at ${hoveredAvatar === avatar.id ? '30%' : '50%'} ${hoveredAvatar === avatar.id ? '30%' : '50%'}, 
                 rgba(${avatar.color === '#5e35b1' ? '94, 53, 177' : '217, 70, 239'}, 0.3) 0%, 

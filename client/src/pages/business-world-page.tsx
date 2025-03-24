@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@shared/schema";
@@ -7,10 +7,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useVR } from "@/hooks/use-vr";
-import { Plane, Building, Phone, ShoppingBag, MapPin, ChevronRight, Star, CreditCard } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import PartnershipOffers from "@/components/partnership-offers";
+import { 
+  Plane, Building, Phone, ShoppingBag, MapPin, ChevronRight, 
+  Star, CreditCard, Calendar, Users, BriefcaseBusiness, Handshake, 
+  GraduationCap, Video, Lightbulb, Globe, CircleDollarSign, Rocket,
+  LifeBuoy, LucideProps, AreaChart, LineChart, BarChart, PieChart
+} from "lucide-react";
+import confetti from 'canvas-confetti';
 
 // Virtual Town Component
 export default function BusinessWorldPage() {
