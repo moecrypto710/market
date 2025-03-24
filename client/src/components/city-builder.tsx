@@ -30,12 +30,17 @@ export default function CityBuilder() {
   const { vrEnabled, gestureControlEnabled } = useVR();
   const isMobile = useIsMobile();
   
-  // Set up movement and collisions
-  const movement = useMovement({
-    initialPosition: { x: 0, y: 1.7, z: 5 }, // Start 5 units in front of center
-    initialRotation: { x: 0, y: 0, z: 0 },
-    collisionObjects: [],
-  });
+  // Set up movement and collisions, based on Unity PlayerController
+  const movement = useMovement();
+  
+  // Initialize position similar to Unity's transform.position
+  useEffect(() => {
+    // Set starting position 5 units in front of center
+    movement.resetPosition();
+    
+    // Apply speed based on Unity's speed parameter
+    movement.setSpeed(5);
+  }, []);
   
   // Define building layout based on Unity CityBuilder script
   const buildings: Building[] = [
