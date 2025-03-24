@@ -18,7 +18,7 @@ const serviceCategories = [
   {
     id: "product-promotion",
     name: "خدمات ترويج المنتجات",
-    description: "خدمات متخصصة لإبراز منتجاتك وزيادة مبيعاتك في المول الافتراضي"
+    description: "خدمات متخصصة لإبراز منتجاتك وزيادة مبيعاتك في بلدة الأمريكي الافتراضية"
   },
   {
     id: "vr-experience",
@@ -47,13 +47,13 @@ const productPromotionServices = [
   {
     id: "featured-products",
     name: "المنتجات المميزة",
-    description: "عرض منتجاتك في مواقع بارزة عبر المول الافتراضي",
+    description: "عرض منتجاتك في مواقع بارزة عبر بلدة الأمريكي الافتراضية",
     price: 500,
     duration: "شهريًا",
     colorClass: "from-orange-500/80 to-amber-500/80",
     icon: Star,
     features: [
-      "عرض في الصفحة الرئيسية للمول",
+      "عرض في الصفحة الرئيسية لبلدة الأمريكي",
       "ظهور في قسم المنتجات المميزة",
       "ميزات تفاعلية متقدمة",
       "تحليلات أداء مفصلة"
@@ -84,7 +84,7 @@ const productPromotionServices = [
     icon: Gift,
     features: [
       "تصميم حملة متكاملة",
-      "ظهور في جميع أقسام المول",
+      "ظهور في جميع أقسام بلدة الأمريكي",
       "إشعارات مخصصة للمستخدمين",
       "تقارير أداء مفصلة"
     ]
@@ -404,7 +404,7 @@ export default function ServicesPage() {
             <div className="mt-6">
               <h3 className="text-xl font-bold mb-3">سامسونج</h3>
               <p className="text-white/70 mb-4">
-                "حققنا زيادة بنسبة 40% في مبيعات سلسلة Galaxy الجديدة من خلال إطلاقها في المول الافتراضي. تجربة مذهلة!"
+                "حققنا زيادة بنسبة 40% في مبيعات سلسلة Galaxy الجديدة من خلال إطلاقها في بلدة الأمريكي الافتراضية. تجربة مذهلة!"
               </p>
               <div className="text-sm text-white/50">مدير التسويق الرقمي</div>
             </div>
