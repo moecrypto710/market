@@ -15,6 +15,7 @@ import ServicesPage from "@/pages/services-page";
 import BusinessWorldPage from "@/pages/business-world-page";
 import VRAmrikyyTownPage from "@/pages/vr-amrikyy-town-page";
 import VirtualCityNew from "@/pages/virtual-city-new";
+import EnhancedCityPage from "@/pages/enhanced-city-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import { VRProvider } from "./hooks/use-vr";
@@ -47,7 +48,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={VirtualCityNew} />
+      <ProtectedRoute path="/" component={EnhancedCityPage} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />
