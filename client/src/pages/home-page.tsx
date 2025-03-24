@@ -208,7 +208,7 @@ export default function HomePage() {
             </motion.div>
           )}
           
-          {/* Smart Hero Section - VR Town Focus */}
+          {/* Smart Hero Section - Interactive Town Focus */}
           <motion.div 
             ref={heroRef}
             className="relative mb-12 overflow-hidden rounded-2xl"
