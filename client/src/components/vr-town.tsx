@@ -825,6 +825,11 @@ export default function VRTown({
   const [lastMousePosition, setLastMousePosition] = useState({ x: 0, y: 0 });
   const [virtualHand, setVirtualHand] = useState({ x: 0, y: 0, visible: false });
   const [showRoomScale, setShowRoomScale] = useState(false);
+  
+  // Building entrance states (equivalent to EnterBuilding.cs in Unity)
+  const [insideAirlineBuilding, setInsideAirlineBuilding] = useState(false);
+  const [insideTurkishAirlines, setInsideTurkishAirlines] = useState(false);
+  const [insideQatarAirways, setInsideQatarAirways] = useState(false);
   const [sectionAmbience, setSectionAmbience] = useState<{
     soundEffect?: string;
     particleEffect?: 'sparkles' | 'dust' | 'holograms' | 'none';
