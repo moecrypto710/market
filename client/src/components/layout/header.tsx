@@ -16,7 +16,7 @@ export default function Header() {
       <div className="relative z-10">
         <h1 className="text-2xl font-bold">
           مدينة أمريكي
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">مول</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1"></span>
         </h1>
         <p className="text-sm text-white/70">مدينة التسوق الافتراضية المتكاملة</p>
       </div>

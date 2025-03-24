@@ -28,7 +28,7 @@ import CameraIntegration from '@/components/camera-integration';
 import CulturalTransition from '@/components/cultural-transition';
 
 // Constants
-import { Product } from '@/shared/schema';
+import { Product } from '../../../shared/schema';
 
 // Constants
 const DEFAULT_SPEED = 5;
@@ -659,7 +659,7 @@ export default function HomePage() {
                   <Button 
                     onClick={toggleImmersiveMode}
                     aria-label="دخول مدينة أمريكي المتكاملة"
-                    className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-6 py-3 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group text-lg font-bold"
+                    className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-8 py-4 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-110 overflow-hidden group text-xl font-bold rounded-2xl"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
                     <span className="absolute -top-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
