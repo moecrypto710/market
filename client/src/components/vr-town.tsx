@@ -793,6 +793,7 @@ export default function VRTown({
   const [showTransition, setShowTransition] = useState(false);
   const [transitionStyle, setTransitionStyle] = useState('default');
   const [avatarPosition, setAvatarPosition] = useState({ x: 0, y: 0, z: 0 });
+  const [cameraRotation, setCameraRotation] = useState({ x: 0, y: 0, z: 0 });
   
   // Gaze Navigation features
   const [currentNavPoint, setCurrentNavPoint] = useState<string>('entrance');
@@ -876,6 +877,74 @@ export default function VRTown({
   function exitVR() {
     toggleVR();
     setSelectedAvatar(null);
+  }
+  
+  // Handle gaze navigation to new point
+  function handleGazeNavigation(pointId: string, position: { x: number; y: number; z: number }) {
+    // Find the navigation point
+    const navPoint = navigationPoints.find(point => point.id === pointId);
+    if (!navPoint) return;
+    
+    // Show transition effect
+    setTransitionStyle('cultural');
+    setShowTransition(true);
+    
+    // Update current position and section
+    setAvatarPosition(position);
+    setCurrentNavPoint(pointId);
+    
+    // Set camera to look at the target
+    if (navPoint.lookAt) {
+      setCameraRotation({ 
+        x: navPoint.lookAt.x - position.x,
+        y: navPoint.lookAt.y - position.y,
+        z: navPoint.lookAt.z - position.z
+      });
+    }
+    
+    // Check if we need to update the section
+    let newSection = currentSection;
+    if (pointId.includes('electronics')) {
+      newSection = 'electronics';
+      setAmbientColor('#5e35b1'); // Purple for electronics
+    } else if (pointId.includes('fashion') || pointId.includes('zara') || pointId.includes('nike') || pointId.includes('adidas')) {
+      newSection = 'clothing';
+      setAmbientColor('#e91e63'); // Pink for fashion
+    } else if (pointId.includes('travel') || pointId.includes('emirates') || pointId.includes('airways') || pointId.includes('booking')) {
+      newSection = 'travel';
+      setAmbientColor('#2196f3'); // Blue for travel
+    } else if (pointId === 'entrance') {
+      newSection = 'entrance';
+      setAmbientColor('#9c27b0'); // Default purple
+    }
+    
+    if (newSection !== currentSection) {
+      setCurrentSection(newSection);
+      
+      toast({
+        title: `أهلاً بك في ${navPoint.name}`,
+        description: navPoint.description,
+      });
+    }
+  }
+  
+  // Handle gaze start (when user starts looking at a point)
+  function handleGazeStart(pointId: string) {
+    setGazeTarget(pointId);
+    setGazeProgress(0);
+  }
+  
+  // Handle gaze end (when user looks away or completes looking)
+  function handleGazeEnd(pointId: string, completed: boolean) {
+    setGazeTarget(null);
+    
+    if (completed) {
+      // Find navigation point
+      const navPoint = navigationPoints.find(point => point.id === pointId);
+      if (navPoint) {
+        handleGazeNavigation(pointId, navPoint.position);
+      }
+    }
   }
   
   // Handle showing product in 3D view
@@ -969,19 +1038,22 @@ export default function VRTown({
     
     switch(section) {
       case 'entrance':
-        newPosition = { x: 50, y: 15 };
+        newPosition = { x: 0, y: 0, z: 0 };
         break;
       case 'electronics':
-        newPosition = { x: 30, y: 40 };
+        newPosition = { x: -15, y: 0, z: -12 };
         break;
       case 'clothing':
-        newPosition = { x: 70, y: 40 };
+        newPosition = { x: 15, y: 0, z: -12 };
         break;
       case 'food':
-        newPosition = { x: 50, y: 80 };
+        newPosition = { x: 0, y: 0, z: 10 };
         break;
       case 'plaza':
-        newPosition = { x: 50, y: 50 };
+        newPosition = { x: 0, y: 0, z: -5 };
+        break;
+      case 'travel':
+        newPosition = { x: 0, y: 0, z: -15 };
         break;
     }
     
@@ -993,52 +1065,112 @@ export default function VRTown({
     if (!selectedAvatar || !vrEnabled) return;
     
     const handleKeyDown = (e: KeyboardEvent) => {
-      const STEP = 5;
+      const STEP = 1; // Smaller step size for 3D movement
       
       switch (e.key) {
         case "ArrowUp":
-          setAvatarPosition(prev => ({ ...prev, y: Math.max(10, prev.y - STEP) }));
+          setAvatarPosition(prev => ({ ...prev, z: prev.z - STEP }));
           break;
         case "ArrowDown":
-          setAvatarPosition(prev => ({ ...prev, y: Math.min(90, prev.y + STEP) }));
+          setAvatarPosition(prev => ({ ...prev, z: prev.z + STEP }));
           break;
         case "ArrowLeft":
-          setAvatarPosition(prev => ({ ...prev, x: Math.max(10, prev.x - STEP) }));
+          setAvatarPosition(prev => ({ ...prev, x: prev.x - STEP }));
           break;
         case "ArrowRight":
-          setAvatarPosition(prev => ({ ...prev, x: Math.min(90, prev.x + STEP) }));
+          setAvatarPosition(prev => ({ ...prev, x: prev.x + STEP }));
+          break;
+        case "PageUp":
+          setAvatarPosition(prev => ({ ...prev, y: prev.y + STEP }));
+          break;
+        case "PageDown":
+          setAvatarPosition(prev => ({ ...prev, y: Math.max(0, prev.y - STEP) }));
+          break;
+        case "g":
+          setEnableGazeNavigation(prev => !prev);
+          toast({
+            title: enableGazeNavigation ? "تم تعطيل التنقل بالنظر" : "تم تفعيل التنقل بالنظر",
+            description: enableGazeNavigation ? 
+              "استخدم مفاتيح الأسهم للتنقل" : 
+              "انظر إلى نقاط التنقل للانتقال إليها"
+          });
+          break;
+        case "l":
+          setShowNavigationLabels(prev => !prev);
           break;
       }
     };
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedAvatar, vrEnabled]);
+  }, [selectedAvatar, vrEnabled, enableGazeNavigation]);
   
   // Update section based on position
   useEffect(() => {
     if (!selectedAvatar || !vrEnabled) return;
     
-    // Very simplified section detection
-    const { x, y } = avatarPosition;
+    // 3D section detection
+    const { x, y, z } = avatarPosition;
     
     let newSection = 'default';
     
-    if (y < 20) {
-      newSection = 'entrance';
-      setAmbientColor('#9c27b0');
-    } else if (x < 40 && y < 60) {
-      newSection = 'electronics';
-      setAmbientColor('#5e35b1');
-    } else if (x > 60 && y < 60) {
-      newSection = 'clothing';
-      setAmbientColor('#e91e63');
-    } else if (y > 70) {
-      newSection = 'food';
-      setAmbientColor('#ff9800');
+    // Check if we're near any navigation point
+    const closestNavPoint = navigationPoints.find(point => {
+      const dx = Math.abs(point.position.x - x);
+      const dy = Math.abs(point.position.y - y);
+      const dz = Math.abs(point.position.z - z);
+      // If within 3 units of a nav point, we're in that area
+      return dx < 3 && dy < 3 && dz < 3;
+    });
+    
+    if (closestNavPoint) {
+      if (closestNavPoint.id === 'entrance') {
+        newSection = 'entrance';
+        setAmbientColor('#9c27b0');
+      } else if (closestNavPoint.id.includes('electronics') || closestNavPoint.id.includes('apple') || closestNavPoint.id.includes('samsung') || closestNavPoint.id.includes('gaming')) {
+        newSection = 'electronics';
+        setAmbientColor('#5e35b1');
+      } else if (closestNavPoint.id.includes('fashion') || closestNavPoint.id.includes('nike') || closestNavPoint.id.includes('adidas') || closestNavPoint.id.includes('zara')) {
+        newSection = 'clothing';
+        setAmbientColor('#e91e63');
+      } else if (closestNavPoint.id.includes('food') || closestNavPoint.id.includes('starbucks') || closestNavPoint.id.includes('mcdonalds')) {
+        newSection = 'food';
+        setAmbientColor('#ff9800');
+      } else if (closestNavPoint.id.includes('travel') || closestNavPoint.id.includes('emirates') || closestNavPoint.id.includes('airways') || closestNavPoint.id.includes('booking')) {
+        newSection = 'travel';
+        setAmbientColor('#2196f3');
+      } else {
+        newSection = 'plaza';
+        setAmbientColor('#673ab7');
+      }
+      
+      // Update current nav point
+      if (currentNavPoint !== closestNavPoint.id) {
+        setCurrentNavPoint(closestNavPoint.id);
+      }
     } else {
-      newSection = 'plaza';
-      setAmbientColor('#673ab7');
+      // Fallback to quadrant-based detection
+      if (z > 5) {
+        newSection = 'food';
+        setAmbientColor('#ff9800');
+      } else if (z < -10) {
+        if (x < -10) {
+          newSection = 'electronics';
+          setAmbientColor('#5e35b1');
+        } else if (x > 10) {
+          newSection = 'clothing';
+          setAmbientColor('#e91e63');
+        } else {
+          newSection = 'travel';
+          setAmbientColor('#2196f3');
+        }
+      } else if (z > -5 && z < 5 && x > -5 && x < 5) {
+        newSection = 'entrance';
+        setAmbientColor('#9c27b0');
+      } else {
+        newSection = 'plaza';
+        setAmbientColor('#673ab7');
+      }
     }
     
     if (newSection !== currentSection) {
@@ -1051,7 +1183,7 @@ export default function VRTown({
         description: "استكشف المنتجات والميزات المتاحة في هذه المنطقة",
       });
     }
-  }, [avatarPosition, selectedAvatar, vrEnabled, currentSection]);
+  }, [avatarPosition, selectedAvatar, vrEnabled, currentSection, currentNavPoint]);
   
   // Helper to get area name in global format
   function getAreaName(sectionId: string) {
