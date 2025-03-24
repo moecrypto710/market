@@ -119,14 +119,14 @@ export default function EnhancedCityBuilder() {
   // Initialize city with buildings
   useEffect(() => {
     const initializeCity = () => {
-      // Create building instances
+      // Create building instances - محاذاة المباني في وسط المدينة
       const cityBuildings: Building[] = [
         {
           id: "travel_agency",
           name: "وكالة السفر",
           type: "travel",
-          position: { x: -20, y: 0, z: -30 },
-          rotation: 0,
+          position: { x: -10, y: 0, z: -10 },
+          rotation: 45,
           scale: 1.5,
           color: "#64b5f6",
           icon: "✈️",
@@ -139,8 +139,8 @@ export default function EnhancedCityBuilder() {
           id: "clothing_store",
           name: "متجر الأزياء",
           type: "clothing",
-          position: { x: 20, y: 0, z: -25 },
-          rotation: 180,
+          position: { x: 10, y: 0, z: -10 },
+          rotation: 135,
           scale: 1.3,
           color: "#ec407a",
           icon: "👕",
@@ -153,8 +153,8 @@ export default function EnhancedCityBuilder() {
           id: "electronics_store",
           name: "متجر الإلكترونيات",
           type: "electronics",
-          position: { x: -15, y: 0, z: 25 },
-          rotation: 90,
+          position: { x: -10, y: 0, z: 10 },
+          rotation: 315,
           scale: 1.4,
           color: "#4dd0e1",
           icon: "📱",
@@ -167,8 +167,8 @@ export default function EnhancedCityBuilder() {
           id: "restaurant",
           name: "مطعم",
           type: "restaurant",
-          position: { x: 15, y: 0, z: 20 },
-          rotation: 270,
+          position: { x: 10, y: 0, z: 10 },
+          rotation: 225,
           scale: 1.2,
           color: "#ffb74d",
           icon: "🍽️",
@@ -181,7 +181,7 @@ export default function EnhancedCityBuilder() {
           id: "bank",
           name: "البنك",
           type: "bank",
-          position: { x: 0, y: 0, z: -20 },
+          position: { x: 0, y: 0, z: -15 },
           rotation: 0,
           scale: 1.3,
           color: "#81c784",
@@ -194,8 +194,8 @@ export default function EnhancedCityBuilder() {
           id: "mosque",
           name: "المسجد",
           type: "religious",
-          position: { x: -25, y: 0, z: 0 },
-          rotation: 0,
+          position: { x: -15, y: 0, z: 0 },
+          rotation: 90,
           scale: 1.5,
           color: "#b39ddb",
           icon: "🕌",
@@ -208,8 +208,8 @@ export default function EnhancedCityBuilder() {
           id: "coffee_shop",
           name: "مقهى",
           type: "cafe",
-          position: { x: 25, y: 0, z: 5 },
-          rotation: 180,
+          position: { x: 15, y: 0, z: 0 },
+          rotation: 270,
           scale: 1.1,
           color: "#a1887f",
           icon: "☕",
@@ -222,8 +222,8 @@ export default function EnhancedCityBuilder() {
           id: "book_store",
           name: "مكتبة",
           type: "books",
-          position: { x: 10, y: 0, z: -15 },
-          rotation: 45,
+          position: { x: 0, y: 0, z: 15 },
+          rotation: 180,
           scale: 1.2,
           color: "#9575cd",
           icon: "📚",
@@ -231,18 +231,32 @@ export default function EnhancedCityBuilder() {
           style: "traditional",
           animated: false,
           hasInterior: true
+        },
+        {
+          id: "airline_building",
+          name: "مبنى شركات الطيران",
+          type: "airline",
+          position: { x: 0, y: 0, z: 0 },
+          rotation: 0,
+          scale: 1.6,
+          color: "#4fc3f7",
+          icon: "🛫",
+          description: "مبنى شركات الطيران - احجز رحلتك القادمة",
+          style: "futuristic",
+          animated: true,
+          hasInterior: true
         }
       ];
       
       setBuildings(cityBuildings);
       
-      // Create NPCs
+      // Create NPCs - تحديث مواقع الشخصيات لتكون في وسط المدينة
       const cityNPCs: NPC[] = [
         {
           id: "npc1",
           type: "civilian",
           name: "مواطن",
-          position: { x: 5, y: 0, z: 5 },
+          position: { x: 3, y: 0, z: 3 },
           rotation: 0,
           speed: 0.5,
           color: "#3498db",
@@ -255,7 +269,7 @@ export default function EnhancedCityBuilder() {
           id: "npc2",
           type: "shopkeeper",
           name: "بائع",
-          position: { x: -5, y: 0, z: 8 },
+          position: { x: -3, y: 0, z: 3 },
           rotation: 180,
           speed: 0.2,
           color: "#e74c3c",
@@ -268,7 +282,7 @@ export default function EnhancedCityBuilder() {
           id: "npc3",
           type: "guard",
           name: "حارس",
-          position: { x: 10, y: 0, z: -3 },
+          position: { x: 3, y: 0, z: -3 },
           rotation: 90,
           speed: 0.3,
           color: "#2c3e50",
@@ -281,7 +295,7 @@ export default function EnhancedCityBuilder() {
           id: "npc4",
           type: "chef",
           name: "طباخ",
-          position: { x: 15, y: 0, z: 18 },
+          position: { x: -3, y: 0, z: -3 },
           rotation: 270,
           speed: 0.2,
           color: "#f39c12",
@@ -294,7 +308,7 @@ export default function EnhancedCityBuilder() {
           id: "npc5",
           type: "tourist",
           name: "سائح",
-          position: { x: -18, y: 0, z: -28 },
+          position: { x: 0, y: 0, z: 6 },
           rotation: 0,
           speed: 0.4,
           color: "#9b59b6",
@@ -302,6 +316,32 @@ export default function EnhancedCityBuilder() {
           animated: true,
           movementPattern: "wander",
           modelType: "male_tourist"
+        },
+        {
+          id: "npc6",
+          type: "airline_staff",
+          name: "موظفة طيران",
+          position: { x: 0, y: 0, z: -5 },
+          rotation: 180,
+          speed: 0.3,
+          color: "#1abc9c",
+          dialog: ["مرحباً بك في مبنى شركات الطيران", "هل ترغب في حجز رحلة؟", "لدينا عروض مميزة اليوم على رحلات الخطوط السعودية"],
+          animated: true,
+          movementPattern: "stationary",
+          modelType: "female_business"
+        },
+        {
+          id: "npc7",
+          type: "vip",
+          name: "زائر مميز",
+          position: { x: 5, y: 0, z: 0 },
+          rotation: 270,
+          speed: 0.4,
+          color: "#f1c40f",
+          dialog: ["تجربة التسوق هنا رائعة", "أنصح بزيارة متجر الإلكترونيات", "الخدمة ممتازة في هذه المدينة"],
+          animated: true,
+          movementPattern: "wander",
+          modelType: "male_vip"
         }
       ];
       

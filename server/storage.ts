@@ -826,6 +826,227 @@ export class MemStorage implements IStorage {
       const id = this.currentId.rewards++;
       this.rewards.set(id, { ...reward, id });
     });
+    
+    // Sample airline companies
+    const airlineData: Omit<Airline, "id">[] = [
+      {
+        name: "الخطوط الجوية السعودية",
+        code: "SV",
+        description: "الناقل الوطني للمملكة العربية السعودية، تأسست عام 1945 وتخدم أكثر من 100 وجهة حول العالم",
+        logoUrl: "/images/product-templates/saudi-airlines-logo.svg",
+        bannerUrl: "/images/airlines/saudi-airlines-banner.jpg",
+        headquartersLocation: "جدة، المملكة العربية السعودية",
+        foundedYear: 1945,
+        websiteUrl: "https://www.saudia.com",
+        bookingPartnerUrl: "https://www.booking.com/airline/sv.html",
+        featured: true,
+        membershipBenefits: "برنامج الفرسان لكسب الأميال - خصم 10% على الرحلات الدولية - أولوية الصعود إلى الطائرة",
+        rewardPoints: 500,
+        storeId: 1,
+        active: true
+      },
+      {
+        name: "طيران الإمارات",
+        code: "EK",
+        description: "شركة طيران دولية مقرها دبي، الإمارات العربية المتحدة، تربط بين مختلف أنحاء العالم عبر مركزها في مطار دبي الدولي",
+        logoUrl: "/images/product-templates/emirates-logo.svg",
+        bannerUrl: "/images/airlines/emirates-banner.jpg",
+        headquartersLocation: "دبي، الإمارات العربية المتحدة",
+        foundedYear: 1985,
+        websiteUrl: "https://www.emirates.com",
+        bookingPartnerUrl: "https://www.booking.com/airline/ek.html",
+        featured: true,
+        membershipBenefits: "برنامج سكاي واردز لكسب الأميال - خدمة شوفير مجانية للدرجة الأولى ودرجة رجال الأعمال - صالات VIP",
+        rewardPoints: 600,
+        storeId: 2,
+        active: true
+      },
+      {
+        name: "مصر للطيران",
+        code: "MS",
+        description: "شركة الطيران الوطنية المصرية، تأسست عام 1932 وتعد من أقدم شركات الطيران في أفريقيا والشرق الأوسط",
+        logoUrl: "/images/product-templates/egyptair-logo.svg",
+        bannerUrl: "/images/airlines/egyptair-banner.jpg",
+        headquartersLocation: "القاهرة، مصر",
+        foundedYear: 1932,
+        websiteUrl: "https://www.egyptair.com",
+        bookingPartnerUrl: "https://www.booking.com/airline/ms.html",
+        featured: true,
+        membershipBenefits: "برنامج مصر للطيران بلس - وزن أمتعة إضافي - خدمات سريعة في المطار",
+        rewardPoints: 450,
+        storeId: 3,
+        active: true
+      }
+    ];
+    
+    // Add airlines to storage
+    airlineData.forEach(airline => {
+      const id = this.currentId.airlines++;
+      this.airlines.set(id, { ...airline, id });
+    });
+    
+    // Sample airport data
+    const airportData: Omit<Airport, "id">[] = [
+      {
+        name: "مطار الملك عبد العزيز الدولي",
+        code: "JED",
+        city: "جدة",
+        country: "المملكة العربية السعودية",
+        description: "أحد أكبر المطارات في المملكة العربية السعودية والبوابة الرئيسية للحجاج",
+        imageUrl: "/images/airports/jeddah-airport.jpg",
+        latitude: "21.6790",
+        longitude: "39.1562",
+        timezone: "Arabia Standard Time",
+        popular: true
+      },
+      {
+        name: "مطار دبي الدولي",
+        code: "DXB",
+        city: "دبي",
+        country: "الإمارات العربية المتحدة",
+        description: "أحد أكثر المطارات ازدحاماً في العالم ومركز رئيسي للسفر الدولي",
+        imageUrl: "/images/airports/dubai-airport.jpg",
+        latitude: "25.2532",
+        longitude: "55.3657",
+        timezone: "Gulf Standard Time",
+        popular: true
+      },
+      {
+        name: "مطار القاهرة الدولي",
+        code: "CAI",
+        city: "القاهرة",
+        country: "مصر",
+        description: "أكبر مطار في مصر والبوابة الرئيسية للسياحة المصرية",
+        imageUrl: "/images/airports/cairo-airport.jpg",
+        latitude: "30.1219",
+        longitude: "31.4053",
+        timezone: "Eastern European Time",
+        popular: true
+      },
+      {
+        name: "مطار الدوحة الدولي حمد",
+        code: "DOH",
+        city: "الدوحة",
+        country: "قطر",
+        description: "مطار دولي حديث يخدم العاصمة القطرية ومركز لشركة الخطوط الجوية القطرية",
+        imageUrl: "/images/airports/doha-airport.jpg",
+        latitude: "25.2609",
+        longitude: "51.6138",
+        timezone: "Arabia Standard Time",
+        popular: true
+      }
+    ];
+    
+    // Add airports to storage
+    airportData.forEach(airport => {
+      const id = this.currentId.airports++;
+      this.airports.set(id, { ...airport, id });
+    });
+    
+    // Sample flight data
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const nextWeek = new Date(now);
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    
+    const flightData: Omit<Flight, "id">[] = [
+      {
+        flightNumber: "SV1021",
+        airlineId: 1, // السعودية
+        departureAirportId: 1, // جدة
+        arrivalAirportId: 3, // القاهرة
+        departureTime: new Date(tomorrow.setHours(7, 30, 0, 0)),
+        arrivalTime: new Date(tomorrow.setHours(9, 45, 0, 0)),
+        status: "scheduled",
+        aircraft: "Boeing 777-300ER",
+        economyPrice: 2500,
+        businessPrice: 7500,
+        firstClassPrice: 15000,
+        availableEconomySeats: 120,
+        availableBusinessSeats: 24,
+        availableFirstClassSeats: 8,
+        totalSeats: 152,
+        imageUrl: "/images/flights/saudi-airlines-flight.jpg",
+        stopover: false,
+        featured: true,
+        miles: 950,
+        bookingPartnerUrl: "https://www.booking.com/flights/carrier/sv.html"
+      },
+      {
+        flightNumber: "EK703",
+        airlineId: 2, // الإمارات
+        departureAirportId: 2, // دبي
+        arrivalAirportId: 3, // القاهرة
+        departureTime: new Date(tomorrow.setHours(14, 15, 0, 0)),
+        arrivalTime: new Date(tomorrow.setHours(16, 30, 0, 0)),
+        status: "scheduled",
+        aircraft: "Airbus A380-800",
+        economyPrice: 3200,
+        businessPrice: 9800,
+        firstClassPrice: 19500,
+        availableEconomySeats: 350,
+        availableBusinessSeats: 76,
+        availableFirstClassSeats: 14,
+        totalSeats: 440,
+        imageUrl: "/images/flights/emirates-flight.jpg",
+        stopover: false,
+        featured: true,
+        miles: 1100,
+        bookingPartnerUrl: "https://www.booking.com/flights/carrier/ek.html"
+      },
+      {
+        flightNumber: "MS704",
+        airlineId: 3, // مصر للطيران
+        departureAirportId: 3, // القاهرة
+        arrivalAirportId: 4, // الدوحة
+        departureTime: new Date(tomorrow.setHours(10, 0, 0, 0)),
+        arrivalTime: new Date(tomorrow.setHours(13, 30, 0, 0)),
+        status: "scheduled",
+        aircraft: "Boeing 787-9 Dreamliner",
+        economyPrice: 2200,
+        businessPrice: 6500,
+        firstClassPrice: null,
+        availableEconomySeats: 220,
+        availableBusinessSeats: 28,
+        availableFirstClassSeats: null,
+        totalSeats: 248,
+        imageUrl: "/images/flights/egyptair-flight.jpg",
+        stopover: false,
+        featured: true,
+        miles: 850,
+        bookingPartnerUrl: "https://www.booking.com/flights/carrier/ms.html"
+      },
+      {
+        flightNumber: "SV1200",
+        airlineId: 1, // السعودية
+        departureAirportId: 1, // جدة
+        arrivalAirportId: 2, // دبي
+        departureTime: new Date(nextWeek.setHours(9, 0, 0, 0)),
+        arrivalTime: new Date(nextWeek.setHours(11, 45, 0, 0)),
+        status: "scheduled",
+        aircraft: "Airbus A320neo",
+        economyPrice: 1800,
+        businessPrice: 5200,
+        firstClassPrice: null,
+        availableEconomySeats: 140,
+        availableBusinessSeats: 20,
+        availableFirstClassSeats: null,
+        totalSeats: 160,
+        imageUrl: "/images/flights/saudi-airlines-flight.jpg",
+        stopover: false,
+        featured: false,
+        miles: 750,
+        bookingPartnerUrl: "https://www.booking.com/flights/carrier/sv.html"
+      }
+    ];
+    
+    // Add flights to storage
+    flightData.forEach(flight => {
+      const id = this.currentId.flights++;
+      this.flights.set(id, { ...flight, id });
+    });
   }
 }
 
