@@ -46,6 +46,19 @@ const buildingData = {
     hasRoofStructure: true,
     // Building style
     style: 'modern', // 'modern', 'classical', 'arabic'
+    // Arabic architectural details
+    arabicStyle: {
+      // Has dome
+      hasDome: true,
+      // Has arched windows
+      hasArchedWindows: true,
+      // Has decorative patterns
+      hasGeometricPatterns: true,
+      // Has minaret
+      hasMinaret: false,
+      // Has mashrabiya (wooden lattice screens)
+      hasMashrabiya: true,
+    },
   },
   
   // Building type metadata
@@ -161,7 +174,7 @@ export default function ThreeBuildingModel({
       
       // Create building style elements based on type
       const buildingStyle = type === 'travel' ? 'modern' : 
-                            type === 'clothing' ? 'boutique' : 
+                            type === 'clothing' ? 'arabic-boutique' : 
                             type === 'electronics' ? 'tech' : 'standard';
       
       // Main building structure with facade variation by type
@@ -202,6 +215,9 @@ export default function ThreeBuildingModel({
         
         // Rotate to correct orientation
         buildingGeometry.rotateX(Math.PI / 2);
+      } else if (buildingStyle === 'arabic-boutique') {
+        // Arabic style boutique building with decorative elements
+        buildingGeometry = new THREE.BoxGeometry(width, height * 0.9, depth);
       } else if (buildingStyle === 'boutique') {
         // Elegant boutique building with decorative elements
         buildingGeometry = new THREE.BoxGeometry(width, height, depth);
@@ -740,15 +756,142 @@ export default function ThreeBuildingModel({
       return buildingGroup;
     };
     
+    // Helper function to create palm trees
+    const createPalmTree = (x: number, z: number, height: number) => {
+      const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, height, 8);
+      const trunkMaterial = new THREE.MeshPhongMaterial({
+        color: 0x8B4513, // Brown color for trunk
+        shininess: 5
+      });
+      
+      const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+      trunk.position.set(x, height/2 - 0.5, z);
+      trunk.castShadow = true;
+      
+      // Create palm leaves
+      const leavesGroup = new THREE.Group();
+      const leafCount = 7;
+      const leafGeometry = new THREE.BoxGeometry(0.1, 1.5, 0.5);
+      leafGeometry.translate(0, 0.75, 0);
+      
+      const leafMaterial = new THREE.MeshPhongMaterial({
+        color: 0x2E8B57, // Green color for leaves
+        shininess: 10
+      });
+      
+      for (let i = 0; i < leafCount; i++) {
+        const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+        leaf.position.y = height - 0.2;
+        leaf.rotation.y = (i / leafCount) * Math.PI * 2;
+        leaf.rotation.x = -Math.PI / 6; // Tilt leaves down a bit
+        leaf.castShadow = true;
+        leavesGroup.add(leaf);
+      }
+      
+      const treeGroup = new THREE.Group();
+      treeGroup.add(trunk);
+      treeGroup.add(leavesGroup);
+      
+      return treeGroup;
+    };
+    
+    // Helper function to create an Arabic-inspired fountain
+    const createArabicFountain = (x: number, z: number) => {
+      const fountainGroup = new THREE.Group();
+      
+      // Base of the fountain
+      const baseGeometry = new THREE.CylinderGeometry(2, 2.2, 0.5, 16);
+      const baseMaterial = new THREE.MeshPhongMaterial({
+        color: new THREE.Color(buildingData.facades.dome),
+        shininess: 30
+      });
+      
+      const base = new THREE.Mesh(baseGeometry, baseMaterial);
+      base.position.y = -0.25;
+      base.castShadow = true;
+      fountainGroup.add(base);
+      
+      // Middle tier
+      const middleGeometry = new THREE.CylinderGeometry(1.2, 1.5, 0.6, 16);
+      const middle = new THREE.Mesh(middleGeometry, baseMaterial);
+      middle.position.y = 0.3;
+      middle.castShadow = true;
+      fountainGroup.add(middle);
+      
+      // Top tier
+      const topGeometry = new THREE.CylinderGeometry(0.6, 0.8, 0.4, 16);
+      const top = new THREE.Mesh(topGeometry, baseMaterial);
+      top.position.y = 0.8;
+      top.castShadow = true;
+      fountainGroup.add(top);
+      
+      // Water surface (simple blue circle)
+      const waterGeometry = new THREE.CircleGeometry(1.9, 32);
+      const waterMaterial = new THREE.MeshPhongMaterial({
+        color: 0x40a9ff,
+        shininess: 100,
+        transparent: true,
+        opacity: 0.7
+      });
+      
+      const water = new THREE.Mesh(waterGeometry, waterMaterial);
+      water.rotation.x = -Math.PI / 2;
+      water.position.y = 0.01;
+      fountainGroup.add(water);
+      
+      // Position the fountain
+      fountainGroup.position.set(x, 0, z);
+      
+      return fountainGroup;
+    };
+    
+    // Helper function to add decorative mosaic patterns
+    const createMosaicPattern = (size: number) => {
+      // In a real implementation, we would create a proper texture with mosaic patterns
+      // For this simplified version, we'll just return a color
+      return new THREE.Color(buildingData.facades.mosaic);
+    };
+    
     // Create and add building
     const building = createBuilding();
+    scene.add(building);
     
-    // Ground plane
-    const groundGeometry = new THREE.PlaneGeometry(50, 50);
+    // Add Arabic architectural elements based on building type
+    if (type === 'travel' || type === 'clothing') {
+      // Add palm trees around the building
+      const palmPositions = [
+        { x: width + 2, z: depth + 2 },
+        { x: -width - 2, z: depth + 2 },
+        { x: width + 2, z: -depth - 2 },
+        { x: -width - 2, z: -depth - 2 }
+      ];
+      
+      palmPositions.forEach(pos => {
+        const palmHeight = 4 + Math.random() * 2; // Vary palm heights for natural look
+        const palm = createPalmTree(pos.x, pos.z, palmHeight);
+        scene.add(palm);
+      });
+      
+      // Add a fountain in front of travel buildings
+      if (type === 'travel') {
+        const fountain = createArabicFountain(0, depth * 2);
+        scene.add(fountain);
+      }
+    }
+    
+    // Enhanced ground plane with decorative patterns
+    const groundSize = 50;
+    const groundGeometry = new THREE.PlaneGeometry(groundSize, groundSize, 10, 10);
+    
+    // Create a more interesting ground material
     const groundMaterial = new THREE.MeshPhongMaterial({
-      color: 0x333333,
-      side: THREE.DoubleSide
+      color: type === 'travel' ? 0x1e3a8a : 
+             type === 'clothing' ? 0x7f6d5f :
+             type === 'electronics' ? 0x1a472a : 0x333333,
+      side: THREE.DoubleSide,
+      shininess: 10
     });
+    
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = Math.PI / 2;
     ground.position.y = -0.5;
