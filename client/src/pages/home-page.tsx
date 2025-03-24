@@ -187,11 +187,11 @@ export default function HomePage() {
         onFinish={() => setShowTransition(false)} 
       />
       
-      {/* AI Assistant - always available */}
+      {/* AI Assistant - always available but minimized by default */}
       <AIAssistant 
         initialQuestion={aiInitialQuestion} 
         viewedProducts={viewedProducts}
-        minimized={false} 
+        minimized={true} 
       />
       
       {/* Immersive Mode */}

@@ -48,18 +48,9 @@ export default function StoreInteraction({
     );
   };
   
-  // Check distance to store
+  // Register store collision object only once on mount
   useEffect(() => {
-    const distance = getDistance();
-    
-    // Update isNearStore state based on distance
-    const isNear = distance <= triggerDistance;
-    setIsNearStore(isNear);
-    
-    // Show store preview when getting close but not close enough to enter
-    setShowStorePreview(distance <= triggerDistance * 1.5 && !isNear);
-    
-    // Add store as a collision/trigger object
+    // Add store as a collision/trigger object - following Unity's pattern of registering colliders on scene load
     addCollisionObject({
       id: storeId.current,
       position: storePosition,
@@ -76,16 +67,29 @@ export default function StoreInteraction({
     return () => {
       removeCollisionObject(storeId.current);
     };
-  }, [
-    position, 
-    storePosition, 
-    triggerDistance, 
-    addCollisionObject, 
-    removeCollisionObject, 
-    storeSize.width, 
-    storeSize.height, 
-    storeSize.depth
-  ]);
+  }, []);  // Empty dependency array to run only once on mount
+  
+  // Track distance to store without re-registering colliders - similar to Unity's Update() function
+  useEffect(() => {
+    const checkDistance = () => {
+      const distance = getDistance();
+      
+      // Update isNearStore state based on distance
+      const isNear = distance <= triggerDistance;
+      setIsNearStore(isNear);
+      
+      // Show store preview when getting close but not close enough to enter
+      setShowStorePreview(distance <= triggerDistance * 1.5 && !isNear);
+    };
+    
+    // Check immediately
+    checkDistance();
+    
+    // Set up interval to check periodically (Unity's Update method equivalent)
+    const intervalId = setInterval(checkDistance, 500);
+    
+    return () => clearInterval(intervalId);
+  }, [position, storePosition, triggerDistance]);
   
   // Handle keyboard input (E key for enter)
   useEffect(() => {

@@ -42,13 +42,14 @@ export default function CityBuilder() {
     movement.setSpeed(5);
   }, []);
   
-  // Define building layout based on Unity CityBuilder script
+  // Define building layout based on Unity TownBuilder script
+  // This matches the provided Unity code structure with the same positions
   const buildings: Building[] = [
     {
       id: 'travelAgency',
-      name: 'وكالة السفر',
+      name: 'وكالة السفر', // مبنى وكالة السفر
       type: 'travel',
-      position: { x: 0, y: 0, z: 0 },
+      position: { x: 0, y: 0, z: 0 }, // matches Vector3(0, 0, 0) in Unity
       rotation: 0,
       scale: 1,
       color: '#3b82f6', // blue-500
@@ -56,9 +57,9 @@ export default function CityBuilder() {
     },
     {
       id: 'clothingStore',
-      name: 'متجر الملابس',
+      name: 'متجر الملابس', // متجر الملابس
       type: 'clothing',
-      position: { x: 10, y: 0, z: 0 },
+      position: { x: 10, y: 0, z: 0 }, // matches Vector3(10, 0, 0) in Unity
       rotation: 0,
       scale: 1,
       color: '#f59e0b', // amber-500
@@ -66,9 +67,9 @@ export default function CityBuilder() {
     },
     {
       id: 'electronicsStore',
-      name: 'متجر الإلكترونيات',
+      name: 'متجر الإلكترونيات', // متجر الإلكترونيات
       type: 'electronics',
-      position: { x: -10, y: 0, z: 0 },
+      position: { x: -10, y: 0, z: 0 }, // matches Vector3(-10, 0, 0) in Unity
       rotation: 0,
       scale: 1,
       color: '#10b981', // emerald-500
@@ -91,10 +92,11 @@ export default function CityBuilder() {
       });
     });
     
-    // Add road collision
+    // Add road collision - matches road position in Unity's TownBuilder
+    // Instantiate(road, new Vector3(0, -1, 0), Quaternion.identity);
     movement.addCollisionObject({
       id: 'road',
-      position: { x: 0, y: -1, z: 0 },
+      position: { x: 0, y: -1, z: 0 }, // matches Vector3(0, -1, 0) in Unity
       size: { width: 50, height: 0.1, depth: 50 },
       type: 'object',
     });
