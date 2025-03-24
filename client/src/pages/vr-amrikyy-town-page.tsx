@@ -26,10 +26,11 @@ import { motion } from 'framer-motion';
 const DEFAULT_SPEED = 5;
 
 /**
- * VR American Town Page
+ * مدينة أمريكي - الصفحة الموحدة
  * 
- * A combined experience that merges the American-style virtual town and interactive city
- * to provide a complete, immersive shopping experience.
+ * تجربة متكاملة تجمع بين بلدة أمريكي التفاعلية بتصميم أمريكي
+ * وميزات المدينة الافتراضية السابقة في صفحة واحدة
+ * لتوفير تجربة تسوق غامرة ومتكاملة.
  */
 export default function VRAmrikyyTownPage() {
   const { user } = useAuth();
@@ -291,7 +292,7 @@ export default function VRAmrikyyTownPage() {
             triggerDistance={5}
           >
             <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl font-bold p-4 bg-black/40 rounded-xl">
-              مرحباً بك في البلدة الأمريكية
+              مرحباً بك في مدينة أمريكي المتكاملة
             </div>
           </GateControl>
           
@@ -528,9 +529,9 @@ export default function VRAmrikyyTownPage() {
             animate="visible"
             variants={fadeIn}
           >
-            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">بلدة أمريكي الافتراضية</h1>
+            <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">مدينة أمريكي المتكاملة</h1>
             <p className="mt-2 text-slate-500 max-w-3xl mx-auto">
-              استمتع بتجربة تسوق فريدة في بلدة أمريكية افتراضية ثلاثية الأبعاد مع تقنيات الواقع الافتراضي المتطورة
+              استمتع بتجربة تسوق فريدة في مدينة أمريكي المتكاملة ثلاثية الأبعاد مع تقنيات الواقع الافتراضي والمباني التفاعلية
             </p>
           </motion.div>
           
@@ -544,7 +545,7 @@ export default function VRAmrikyyTownPage() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="text-center md:text-right">
                 <h2 className="text-2xl font-bold text-white mb-2">تجربة واقع افتراضي متكاملة</h2>
-                <p className="text-slate-300 max-w-xl">استكشف البلدة الأمريكية بشكل كامل في وضع ملء الشاشة للحصول على تجربة غامرة تُحاكي وكأنك متواجد في المكان</p>
+                <p className="text-slate-300 max-w-xl">استكشف مدينة أمريكي المتكاملة بشكل كامل في وضع ملء الشاشة للحصول على تجربة غامرة تُحاكي وكأنك متواجد في المكان</p>
               </div>
               
               <div className="flex flex-wrap gap-3 justify-center">
@@ -581,8 +582,8 @@ export default function VRAmrikyyTownPage() {
                 <i className="fas fa-map text-white text-xl"></i>
               </div>
               <div>
-                <h2 className="text-2xl font-bold">خريطة البلدة الأمريكية</h2>
-                <p className="text-slate-500">استكشف معالم وأماكن البلدة الأمريكية الافتراضية</p>
+                <h2 className="text-2xl font-bold">خريطة مدينة أمريكي</h2>
+                <p className="text-slate-500">استكشف معالم وأماكن مدينة أمريكي المتكاملة</p>
               </div>
             </div>
             
@@ -607,7 +608,7 @@ export default function VRAmrikyyTownPage() {
               <div className="w-full md:w-1/2 bg-slate-50 rounded-xl p-6 border border-blue-100">
                 <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center">
                   <i className="fas fa-info-circle text-blue-600 mr-2"></i>
-                  دليل البلدة
+                  دليل المدينة
                 </h3>
                 
                 <div className="space-y-4">
@@ -667,7 +668,7 @@ export default function VRAmrikyyTownPage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold">مميزات التجربة</h2>
-                <p className="text-slate-500">اكتشف الميزات المذهلة في بلدتنا الأمريكية الافتراضية</p>
+                <p className="text-slate-500">اكتشف الميزات المذهلة في مدينة أمريكي المتكاملة</p>
               </div>
             </div>
             
@@ -735,7 +736,7 @@ export default function VRAmrikyyTownPage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold">نماذج المباني</h2>
-                <p className="text-slate-500">مباني البلدة بتصاميم مميزة تجمع بين الطرازين الأمريكي والعربي</p>
+                <p className="text-slate-500">مباني مدينة أمريكي بتصاميم مميزة تجمع بين الطرازين الأمريكي والعربي</p>
               </div>
             </div>
             
