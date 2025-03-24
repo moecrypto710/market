@@ -140,7 +140,7 @@ export function useMovement(
     };
   }, [isMobile, state.sensitivity]);
 
-  // Function to update movement based on keys pressed
+  // Function to update movement based on keys pressed with collision detection
   const updateMovement = useCallback(() => {
     const keys = keysPressed.current;
     let movementVector = { x: 0, y: 0, z: 0 };
@@ -174,20 +174,26 @@ export function useMovement(
       const rotatedX = movementVector.x * Math.cos(angle) - movementVector.z * Math.sin(angle);
       const rotatedZ = movementVector.x * Math.sin(angle) + movementVector.z * Math.cos(angle);
 
-      setState((prevState) => ({
-        ...prevState,
-        position: {
-          x: prevState.position.x + rotatedX * prevState.speed * 0.016, // Assuming 60fps (1/60 ≈ 0.016)
-          y: prevState.position.y,
-          z: prevState.position.z + rotatedZ * prevState.speed * 0.016,
-        },
-      }));
+      // Calculate new position
+      const newPosition = {
+        x: state.position.x + rotatedX * state.speed * 0.016,
+        y: state.position.y,
+        z: state.position.z + rotatedZ * state.speed * 0.016,
+      };
+
+      // Check for collisions before updating position
+      if (!isColliding(newPosition)) {
+        setState((prevState) => ({
+          ...prevState,
+          position: newPosition,
+        }));
+      }
     } else {
       setIsMoving(false);
     }
 
     animationFrameId.current = requestAnimationFrame(updateMovement);
-  }, [state.rotation.y, state.speed]);
+  }, [state.rotation.y, state.speed, state.position, isColliding]);
 
   // Movement functions
   const moveForward = useCallback(() => {

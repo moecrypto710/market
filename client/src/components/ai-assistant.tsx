@@ -4,7 +4,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
-import { useVR } from "@/hooks/use-vr";
 import { Product } from "@shared/schema";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,7 +34,9 @@ export default function AIAssistant({
   minimized = false,
 }: AIAssistantProps) {
   const { user } = useAuth();
-  const { vrEnabled, toggleVR, isVRSupported } = useVR();
+  // Use local state for immersive mode instead of VR
+  const [immersiveEnabled, setImmersiveEnabled] = useState(false);
+  const isImmersiveSupported = true; // All devices support our immersive mode
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -175,7 +176,7 @@ export default function AIAssistant({
         responseContent = responses.partnershipInfo;
       }
       else if (question.includes("واقع افتراضي") || question.includes("VR") || question.includes("ثلاثي الأبعاد")) {
-        responseContent = isVRSupported ? responses.vrExperience : "للأسف، يبدو أن جهازك لا يدعم تقنية الواقع الافتراضي بشكل كامل. نحن نعمل على توفير تجربة بديلة. هل ترغب في مشاهدة عرض تفاعلي بالصور 360 درجة بدلاً من ذلك؟";
+        responseContent = isImmersiveSupported ? responses.vrExperience : "للأسف، يبدو أن هناك مشكلة في تشغيل الوضع الغامر. نحن نعمل على إصلاح المشكلة. هل ترغب في مشاهدة عرض تفاعلي بالصور 360 درجة بدلاً من ذلك؟";
       }
       else if (question.includes("مقاس") || question.includes("قياس") || question.includes("حجم")) {
         responseContent = responses.sizeRecommendation;
@@ -266,13 +267,13 @@ export default function AIAssistant({
     }
   };
 
-  // Quick action for enabling VR mode
-  const handleEnableVR = () => {
-    if (!vrEnabled) {
-      toggleVR();
+  // Quick action for enabling immersive mode
+  const handleEnableImmersiveMode = () => {
+    if (!immersiveEnabled) {
+      setImmersiveEnabled(true);
       const systemMessage: Message = {
         role: "system",
-        content: "جاري تفعيل وضع الواقع الافتراضي... ستنتقل إلى تجربة التسوق الافتراضية خلال لحظات.",
+        content: "جاري تفعيل الوضع الغامر للتسوق... ستنتقل إلى تجربة التسوق التفاعلية خلال لحظات.",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, systemMessage]);
@@ -454,14 +455,14 @@ export default function AIAssistant({
                   <i className="fas fa-magic ml-1"></i> توصيات
                 </Button>
                 
-                {isVRSupported && !vrEnabled && (
+                {isImmersiveSupported && !immersiveEnabled && (
                   <Button 
                     variant="default" 
                     size="sm"
                     className="text-xs h-7 bg-[#7c4dff]"
-                    onClick={handleEnableVR}
+                    onClick={handleEnableImmersiveMode}
                   >
-                    <i className="fas fa-play ml-1"></i> بدء تجربة VR
+                    <i className="fas fa-play ml-1"></i> بدء الوضع الغامر
                   </Button>
                 )}
               </div>
