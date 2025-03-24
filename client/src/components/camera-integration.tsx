@@ -2,11 +2,29 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
+interface Filter {
+  id: string;
+  name: string;
+  type: 'color' | 'effect' | 'overlay';
+  preview: string;
+  style?: React.CSSProperties;
+  className?: string;
+}
+
+interface AREffect {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+}
+
 interface CameraIntegrationProps {
   onCapture: (imageSrc: string) => void;
   onClose: () => void;
   mode?: 'product-try-on' | 'avatar-creation' | 'ar-measure';
   productImageUrl?: string;
+  enableFilters?: boolean;
+  enableAREffects?: boolean;
 }
 
 export default function CameraIntegration({
