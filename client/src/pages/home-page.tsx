@@ -474,7 +474,7 @@ export default function HomePage() {
             </div>
           </motion.div>
           
-          {/* Rewards Banner with Enhanced UI */}
+          {/* Gamified Rewards Banner with AR Features */}
           {user && (
             <motion.div 
               className="mb-12"
@@ -488,10 +488,17 @@ export default function HomePage() {
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-fuchsia-600/20 rounded-full filter blur-3xl"></div>
                 
                 <div className="relative z-10">
+                  {/* Header with Level Badge */}
                   <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center gap-3">
-                      <i className="fas fa-gift text-fuchsia-400 text-2xl"></i>
-                      <h2 className="font-bold text-xl">نقاط المكافآت</h2>
+                      <div className="relative">
+                        <i className="fas fa-medal text-yellow-400 text-2xl relative z-10"></i>
+                        <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400/30 to-amber-500/30 rounded-full animate-pulse-slow"></div>
+                      </div>
+                      <div>
+                        <h2 className="font-bold text-xl">برنامج الولاء التفاعلي</h2>
+                        <div className="text-xs text-fuchsia-300">المستوى: رحالة أمريكي {Math.floor(currentPoints / 200) + 1}</div>
+                      </div>
                     </div>
                     <div className="flex items-center">
                       <span className="font-bold text-xl text-white">{currentPoints}</span>
@@ -499,17 +506,81 @@ export default function HomePage() {
                     </div>
                   </div>
                   
-                  <Progress value={progressPercentage} className="h-3 bg-fuchsia-900/30" />
+                  {/* Interactive Progress Bar */}
+                  <div className="relative">
+                    <Progress value={progressPercentage} className="h-3 bg-fuchsia-900/30" />
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                      <div className="w-full h-full opacity-50 animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent" 
+                          style={{backgroundSize: '200% 100%'}}></div>
+                    </div>
+                    {/* Achievement Markers on Progress Bar */}
+                    {[25, 50, 75].map(marker => (
+                      <div 
+                        key={marker} 
+                        className={`absolute top-0 bottom-0 w-1.5 bg-white/30 rounded-full
+                                  ${progressPercentage >= marker ? 'bg-white' : 'bg-white/30'}`}
+                        style={{left: `${marker}%`}}
+                      >
+                        <div className={`absolute -top-8 -translate-x-1/2 
+                                      ${progressPercentage >= marker ? 'text-yellow-300' : 'text-white/50'}`}>
+                          <i className="fas fa-star text-sm"></i>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                   
-                  <div className="flex justify-between text-sm mt-3 text-white/70">
+                  {/* Rewards Information */}
+                  <div className="flex justify-between text-sm mt-4 text-white/70">
                     <span>{currentPoints} / {nextRewardLevel}</span>
                     <span className="flex items-center">
                       <i className="fas fa-ticket-alt text-fuchsia-400 mr-1"></i>
-                      المكافأة التالية: خصم 500 جنيه على منتجات نايكي
+                      المكافأة التالية: 
+                      <span className="relative group mr-2">
+                        <span className="text-yellow-300 underline decoration-dotted cursor-help">شارة AR حصرية</span>
+                        <div className="absolute -top-24 right-0 w-48 p-2 bg-black/90 backdrop-blur-md rounded border border-fuchsia-500/30 
+                                      invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300 text-white text-xs z-50">
+                          شارة AR تفاعلية يمكنك استخدامها في متجرك الافتراضي وعرضها للزوار
+                          <div className="absolute w-2 h-2 bg-black/90 border-l border-b border-fuchsia-500/30 bottom-[-5px] right-4 transform rotate-45"></div>
+                        </div>
+                      </span>
                     </span>
                   </div>
                   
-                  <div className="mt-4 flex justify-end">
+                  {/* Current Streak */}
+                  <div className="mt-3 bg-gradient-to-r from-fuchsia-900/50 to-purple-900/50 p-2 rounded-lg flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <i className="fas fa-fire text-orange-400"></i>
+                      <span className="text-sm text-white/80">التتابع اليومي: <span className="text-white font-semibold">3 أيام</span></span>
+                    </div>
+                    <div className="text-xs px-2 py-1 bg-fuchsia-800/50 rounded-full text-white/80">
+                      +5 نقاط إضافية على كل عملية
+                    </div>
+                  </div>
+                  
+                  {/* Latest Achievement */}
+                  <div className="mt-3 bg-gradient-to-r from-indigo-900/40 to-purple-900/40 rounded-lg p-2 flex items-center gap-3">
+                    <div className="min-w-10 h-10 rounded-full bg-gradient-to-br from-indigo-600 to-fuchsia-600 flex items-center justify-center">
+                      <i className="fas fa-store text-white"></i>
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs text-indigo-300">الإنجاز الأخير</div>
+                      <div className="text-sm text-white font-medium">زائر متميز لبلدة الأمريكي</div>
+                    </div>
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-xs bg-white/5 hover:bg-white/10 text-white/70">
+                      <i className="fas fa-vr-cardboard mr-1.5"></i>
+                      عرض AR
+                    </Button>
+                  </div>
+                  
+                  <div className="mt-4 flex justify-between">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-fuchsia-300 hover:text-fuchsia-200 hover:bg-fuchsia-900/20"
+                    >
+                      <i className="fas fa-map mr-2"></i>
+                      خريطة التقدم
+                    </Button>
                     <Button
                       variant="ghost"
                       className="text-fuchsia-300 hover:text-fuchsia-200 hover:bg-fuchsia-900/20"
