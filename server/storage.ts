@@ -4,6 +4,7 @@ import createMemoryStore from "memorystore";
 import { db } from "./db";
 import { eq, gte, desc } from "drizzle-orm";
 import pgSessionStore from "connect-pg-simple";
+import postgres from "postgres";
 
 // Create memory store for session
 const MemoryStore = createMemoryStore(session);
