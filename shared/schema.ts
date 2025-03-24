@@ -95,6 +95,19 @@ export const rewards = pgTable("rewards", {
   tier: membershipTierEnum("tier").default("basic"),
   imageUrl: text("image_url"),
   expiryDate: timestamp("expiry_date"),
+  // AR reward features
+  arModelUrl: text("ar_model_url"),
+  arEnabled: boolean("ar_enabled").default(false),
+  arDescription: text("ar_description"),
+  arThumbnailUrl: text("ar_thumbnail_url"),
+  // Gamification features
+  badgeId: text("badge_id"),
+  badgeIcon: text("badge_icon"),
+  badgeTitle: text("badge_title"),
+  achievementType: text("achievement_type"), // "visit", "purchase", "social", "learning"
+  rarity: text("rarity"), // "common", "uncommon", "rare", "legendary", "mythic"
+  unlockCriteria: text("unlock_criteria"),
+  streakRequired: integer("streak_required").default(0),
 });
 
 // Affiliate marketing

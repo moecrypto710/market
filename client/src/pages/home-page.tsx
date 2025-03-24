@@ -636,11 +636,11 @@ export default function HomePage() {
               
               <div className="relative z-10">
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white leading-tight max-w-3xl mx-auto">
-                  استمتع بتجربة تسوق فريدة في مول أمريكي الافتراضي
+                  استمتع بتجربة الأعمال الفريدة في بلدة الأمريكي الافتراضية
                 </h2>
                 
                 <p className="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
-                  ابدأ تجربة التسوق الافتراضية الآن واكتشف عالمًا جديدًا من منتجات الماركات العالمية
+                  ابدأ تجربة الأعمال الافتراضية الآن وافتح متجرك أو فندقك أو وكالة السفر الخاصة بك في أول مدينة أعمال عربية افتراضية
                 </p>
                 
                 <Button 

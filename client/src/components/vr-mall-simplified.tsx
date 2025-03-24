@@ -298,14 +298,11 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
               `}
               style={{
                 borderColor: hoveredAvatar === avatar.id ? avatar.color : 'rgba(107, 33, 168, 0.3)',
-                boxShadow: hoveredAvatar === avatar.id ? `0 10px 30px -10px ${avatar.color}40` : 'none'
-              }}
-              style={{
+                boxShadow: hoveredAvatar === avatar.id ? `0 10px 30px -10px ${avatar.color}40` : 'none',
                 background: `radial-gradient(circle at ${hoveredAvatar === avatar.id ? '30%' : '50%'} ${hoveredAvatar === avatar.id ? '30%' : '50%'}, 
                 rgba(${avatar.color === '#5e35b1' ? '94, 53, 177' : '217, 70, 239'}, 0.3) 0%, 
                 rgba(0, 0, 0, 0.9) 70%)`,
                 transform: hoveredAvatar === avatar.id ? 'rotateY(-8deg)' : 'rotateY(0deg)',
-                boxShadow: hoveredAvatar === avatar.id ? `0 10px 40px -5px ${avatar.color}50` : 'none',
                 transition: 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
               }}
               onClick={() => handleSelect(avatar)}
