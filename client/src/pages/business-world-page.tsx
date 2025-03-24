@@ -513,11 +513,15 @@ export default function BusinessWorldPage() {
         <div className="relative z-10 p-8 md:p-12">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3 text-right">
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 text-right text-transparent bg-clip-text bg-gradient-to-r from-white to-primary-200">
                 بلدة الأمريكي
               </h1>
+              <div className="flex items-center justify-end gap-2 mb-1">
+                <div className="text-md font-bold px-2 py-0.5 rounded bg-white/20 text-white">AMRIKYY TOWN</div>
+                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">VR</div>
+              </div>
               <p className="text-lg md:text-xl opacity-90 mb-6 text-right">
-                عالم افتراضي متكامل للأعمال بتصميم عربي أصيل وتقنيات حديثة
+                عالم افتراضي متكامل للأعمال بتصميم عربي أصيل وتقنيات واقع افتراضي حديثة
               </p>
               <div className="flex flex-wrap gap-3 justify-end">
                 <Button 
@@ -535,6 +539,15 @@ export default function BusinessWorldPage() {
                 >
                   <span className="ml-2">احجز مكانك الآن</span>
                   <ChevronRight className="h-5 w-5" />
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="backdrop-blur-sm bg-white/5 hover:bg-white/10 border border-white/30 text-white"
+                  onClick={() => setShowPartnershipModal(true)}
+                >
+                  <span className="ml-2">برنامج الشراكات</span>
+                  <Handshake className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -654,6 +667,78 @@ export default function BusinessWorldPage() {
         </div>
       </div>
 
+      {/* Partnership and Affiliate Program Section */}
+      <div className="mb-12 relative overflow-hidden rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 p-8">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-10 -mt-10"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-primary/5 rounded-full -ml-10 -mb-10"></div>
+        
+        <div className="relative z-10">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="md:w-1/2">
+              <div className="text-right">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">برنامج الشراكات</h2>
+                <p className="text-gray-600 mb-4">انضم إلى شركائنا وكن جزءًا من أكبر مشروع واقع افتراضي للأعمال في المنطقة</p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">عرض متجرك لآلاف الزوار يوميًا</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">دعم فني واستشاري متكامل</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">فرص تسويقية حصرية للشركاء</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">إحصائيات وتحليلات متقدمة</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                </div>
+                
+                <Button className="bg-gradient-to-r from-primary to-primary-600">
+                  <span className="ml-2">قدم طلب شراكة</span>
+                  <Handshake className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            
+            <div className="md:w-1/2 border-t pt-6 md:pt-0 md:border-t-0 md:border-r md:pr-8">
+              <div className="text-right">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">برنامج التسويق بالعمولة</h2>
+                <p className="text-gray-600 mb-4">اربح من خلال تسويق بلدة الأمريكي واحصل على عمولات مجزية لكل اشتراك جديد</p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">عمولة تصل إلى 20% من اشتراكات العملاء الجدد</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">روابط تسويقية خاصة بك</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">لوحة تحكم لمتابعة الأرباح والعمولات</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                  <div className="flex items-center justify-end text-sm">
+                    <span className="text-gray-700">دفعات شهرية مباشرة إلى حسابك</span>
+                    <Check className="h-5 w-5 text-primary ml-2" />
+                  </div>
+                </div>
+                
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                  <span className="ml-2">انضم كمسوق بالعمولة</span>
+                  <DollarSign className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Pricing Section */}
       <div className="mb-10">
         <div className="text-center mb-6">
