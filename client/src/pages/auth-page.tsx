@@ -24,10 +24,22 @@ const registerSchema = insertUserSchema.extend({
 type LoginFormValues = z.infer<typeof loginUserSchema> & { rememberMe: boolean };
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-// Sample guest account for quick login
+// Sample account types for quick login
 const GUEST_ACCOUNTS = [
-  { username: "زائر", password: "guest123", icon: "fas fa-user-alt", color: "bg-amber-500" },
-  { username: "متسوق", password: "shop123", icon: "fas fa-shopping-bag", color: "bg-purple-500" },
+  { username: "زائر", password: "guest123", icon: "fas fa-user-alt", color: "bg-amber-500", type: "customer" },
+  { username: "متسوق", password: "shop123", icon: "fas fa-shopping-bag", color: "bg-purple-500", type: "customer" },
+];
+
+// Partnership and business accounts
+const BUSINESS_ACCOUNTS = [
+  { username: "متجر", password: "store123", icon: "fas fa-store", color: "bg-emerald-500", type: "business" },
+  { username: "شريك", password: "partner123", icon: "fas fa-handshake", color: "bg-blue-500", type: "partner" },
+];
+
+// Service provider accounts
+const SERVICE_ACCOUNTS = [
+  { username: "فندق", password: "hotel123", icon: "fas fa-hotel", color: "bg-indigo-500", type: "service" },
+  { username: "سفر", password: "travel123", icon: "fas fa-plane", color: "bg-teal-500", type: "service" },
 ];
 
 export default function AuthPage() {
@@ -233,17 +245,28 @@ export default function AuthPage() {
             </div>
           </div>
 
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid grid-cols-2 mb-6">
-              <TabsTrigger value="login">تسجيل الدخول</TabsTrigger>
-              <TabsTrigger value="register">حساب جديد</TabsTrigger>
+          <Tabs defaultValue="customer" className="w-full">
+            <TabsList className="grid grid-cols-3 mb-6">
+              <TabsTrigger value="customer" className="flex items-center gap-1.5">
+                <i className="fas fa-user text-xs"></i>
+                <span>عميل</span>
+              </TabsTrigger>
+              <TabsTrigger value="business" className="flex items-center gap-1.5">
+                <i className="fas fa-store text-xs"></i>
+                <span>أعمال</span>
+              </TabsTrigger>
+              <TabsTrigger value="register" className="flex items-center gap-1.5">
+                <i className="fas fa-user-plus text-xs"></i>
+                <span>تسجيل</span>
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="login">
-              <div className="bg-black border border-white/30 rounded-lg p-6">
-                {/* Quick Login Options */}
+            {/* CUSTOMER LOGIN TAB */}
+            <TabsContent value="customer">
+              <div className="bg-gradient-to-br from-black/95 via-black/90 to-purple-950/20 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-xl">
+                {/* Quick Login Options - For Customers */}
                 <div className="mb-6">
-                  <div className="bg-black p-4 rounded-lg mb-6 border border-white/30">
+                  <div className="bg-black/40 backdrop-blur-sm p-5 rounded-lg mb-6 border border-white/10">
                     <h3 className="text-center text-lg font-bold mb-2 text-white">دخول سريع</h3>
                     <p className="text-center text-white/70 text-sm mb-4">جرب تطبيقنا فوراً بدون تسجيل حساب جديد</p>
                     <div className="grid gap-3">
@@ -251,12 +274,13 @@ export default function AuthPage() {
                         <Button 
                           key={account.username}
                           variant="outline" 
-                          className="border-white/20 hover:bg-white hover:text-black group h-14 relative overflow-hidden"
+                          className="border-white/10 bg-gradient-to-r from-purple-900/40 to-purple-800/20 hover:from-white hover:to-white hover:text-black group h-14 relative overflow-hidden"
                           onClick={() => handleQuickLogin(account)}
                           disabled={quickLoginLoading || loginMutation.isPending}
                         >
-                          <div className="relative flex items-center justify-center w-full">
-                            <i className={`${account.icon} mr-2 text-xl`}></i>
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                          <div className="relative flex items-center justify-center w-full gap-3">
+                            <i className={`${account.icon} text-xl`}></i>
                             <span className="text-lg">تسوق كـ {account.username}</span>
                           </div>
                         </Button>
@@ -267,31 +291,38 @@ export default function AuthPage() {
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <Button 
                       variant="outline" 
-                      className="border-white/20 hover:bg-white hover:text-black"
+                      className="border-white/10 bg-gradient-to-r from-blue-900/30 to-blue-800/10 hover:from-white hover:to-white hover:text-black relative overflow-hidden group"
                       onClick={() => handleLoginWithSocial('facebook')}
                       disabled={quickLoginLoading || loginMutation.isPending}
                     >
-                      <i className="fab fa-facebook mr-2"></i>
-                      فيسبوك
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                      <div className="relative flex items-center justify-center w-full gap-2">
+                        <i className="fab fa-facebook"></i>
+                        <span>فيسبوك</span>
+                      </div>
                     </Button>
                     <Button 
                       variant="outline" 
-                      className="border-white/20 hover:bg-white hover:text-black"
+                      className="border-white/10 bg-gradient-to-r from-red-900/30 to-red-800/10 hover:from-white hover:to-white hover:text-black relative overflow-hidden group"
                       onClick={() => handleLoginWithSocial('google')}
                       disabled={quickLoginLoading || loginMutation.isPending}
                     >
-                      <i className="fab fa-google mr-2"></i>
-                      جوجل
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                      <div className="relative flex items-center justify-center w-full gap-2">
+                        <i className="fab fa-google"></i>
+                        <span>جوجل</span>
+                      </div>
                     </Button>
                   </div>
 
                   <div className="relative flex items-center gap-4 py-5">
-                    <div className="border-t border-white/20 flex-grow"></div>
+                    <div className="border-t border-white/10 flex-grow"></div>
                     <div className="text-white/50 text-sm">أو</div>
-                    <div className="border-t border-white/20 flex-grow"></div>
+                    <div className="border-t border-white/10 flex-grow"></div>
                   </div>
                 </div>
 
+                {/* Standard Login Form */}
                 <Form {...loginForm}>
                   <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                     <FormField
@@ -299,13 +330,18 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>اسم المستخدم</FormLabel>
+                          <FormLabel className="text-white/80">اسم المستخدم</FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="ادخل اسم المستخدم" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
+                            <div className="relative">
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                <i className="fas fa-user text-sm"></i>
+                              </div>
+                              <Input 
+                                placeholder="ادخل اسم المستخدم" 
+                                className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-purple-400/50" 
+                                {...field} 
+                              />
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -317,14 +353,150 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>كلمة المرور</FormLabel>
+                          <FormLabel className="text-white/80">كلمة المرور</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="password" 
-                              placeholder="ادخل كلمة المرور" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
+                            <div className="relative">
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                <i className="fas fa-lock text-sm"></i>
+                              </div>
+                              <Input 
+                                type="password" 
+                                placeholder="ادخل كلمة المرور" 
+                                className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-purple-400/50" 
+                                {...field} 
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="flex justify-between items-center">
+                      <FormField
+                        control={loginForm.control}
+                        name="rememberMe"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rtl:space-x-reverse">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="data-[state=checked]:bg-purple-500 data-[state=checked]:border-purple-500"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="text-white/70 text-sm font-normal">تذكرني</FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <a href="#" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                        نسيت كلمة المرور؟
+                      </a>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-700 hover:to-fuchsia-700 text-white font-bold rounded-lg h-12 mt-2"
+                      disabled={loginMutation.isPending}
+                    >
+                      {loginMutation.isPending ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+                          <span>جاري تسجيل الدخول...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2">
+                          <i className="fas fa-sign-in-alt"></i>
+                          <span>تسجيل الدخول</span>
+                        </div>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              </div>
+            </TabsContent>
+            
+            {/* BUSINESS LOGIN TAB */}
+            <TabsContent value="business">
+              <div className="bg-gradient-to-br from-black/95 via-black/90 to-emerald-950/20 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-xl">
+                {/* Business, Partnership & Services Login */}
+                <div className="mb-6">
+                  {/* Business Accounts */}
+                  <div className="bg-black/40 backdrop-blur-sm p-5 rounded-lg mb-6 border border-white/10">
+                    <h3 className="text-center text-lg font-bold mb-2 text-white">
+                      <i className="fas fa-building mr-2 text-emerald-400"></i>
+                      دخول شركات وأعمال
+                    </h3>
+                    <p className="text-center text-white/70 text-sm mb-4">ادخل كشريك أعمال أو مزود خدمات في بلدة الأمريكي</p>
+                    
+                    <div className="grid gap-3 mb-5">
+                      {BUSINESS_ACCOUNTS.map((account) => (
+                        <Button 
+                          key={account.username}
+                          variant="outline" 
+                          className="border-white/10 bg-gradient-to-r from-emerald-900/40 to-emerald-800/20 hover:from-white hover:to-white hover:text-black group h-14 relative overflow-hidden"
+                          onClick={() => handleQuickLogin(account)}
+                          disabled={quickLoginLoading || loginMutation.isPending}
+                        >
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                          <div className="relative flex items-center justify-center w-full gap-3">
+                            <i className={`${account.icon} text-xl`}></i>
+                            <span className="text-lg">دخول كـ {account.username}</span>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                    
+                    <h4 className="text-white font-medium text-center mb-2 mt-6">خدمات بلدة الأمريكي</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      {SERVICE_ACCOUNTS.map((account) => (
+                        <Button 
+                          key={account.username}
+                          variant="outline" 
+                          className="border-white/10 bg-gradient-to-r from-indigo-900/40 to-indigo-800/20 hover:from-white hover:to-white hover:text-black group h-12 relative overflow-hidden"
+                          onClick={() => handleQuickLogin(account)}
+                          disabled={quickLoginLoading || loginMutation.isPending}
+                        >
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                          <div className="relative flex items-center justify-center w-full gap-2">
+                            <i className={`${account.icon} text-lg`}></i>
+                            <span>{account.username}</span>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="relative flex items-center gap-4 py-5">
+                    <div className="border-t border-white/10 flex-grow"></div>
+                    <div className="text-white/50 text-sm">أو</div>
+                    <div className="border-t border-white/10 flex-grow"></div>
+                  </div>
+                </div>
+
+                {/* Business Login Form */}
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                    <FormField
+                      control={loginForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-white/80">اسم الشركة / المستخدم</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                <i className="fas fa-building text-sm"></i>
+                              </div>
+                              <Input 
+                                placeholder="ادخل اسم الشركة أو المستخدم" 
+                                className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-emerald-400/50" 
+                                {...field} 
+                              />
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -333,29 +505,76 @@ export default function AuthPage() {
 
                     <FormField
                       control={loginForm.control}
-                      name="rememberMe"
+                      name="password"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rtl:space-x-reverse">
+                        <FormItem>
+                          <FormLabel className="text-white/80">كلمة المرور</FormLabel>
                           <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
+                            <div className="relative">
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                <i className="fas fa-lock text-sm"></i>
+                              </div>
+                              <Input 
+                                type="password" 
+                                placeholder="ادخل كلمة المرور" 
+                                className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-emerald-400/50" 
+                                {...field} 
+                              />
+                            </div>
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>تذكرني</FormLabel>
-                          </div>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
 
+                    <div className="flex justify-between items-center">
+                      <FormField
+                        control={loginForm.control}
+                        name="rememberMe"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-x-reverse space-y-0 rtl:space-x-reverse">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                className="data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel className="text-white/70 text-sm font-normal">تذكرني</FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <a href="#" className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors">
+                        نسيت كلمة المرور؟
+                      </a>
+                    </div>
+
                     <Button 
                       type="submit" 
-                      className="w-full bg-white text-black hover:bg-white/80"
+                      className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold rounded-lg h-12 mt-2"
                       disabled={loginMutation.isPending}
                     >
-                      {loginMutation.isPending ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+                      {loginMutation.isPending ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+                          <span>جاري تسجيل الدخول...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2">
+                          <i className="fas fa-sign-in-alt"></i>
+                          <span>تسجيل الدخول كشريك</span>
+                        </div>
+                      )}
                     </Button>
+                    
+                    <div className="text-center mt-4">
+                      <a href="#" className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors">
+                        طلب شراكة جديدة في بلدة الأمريكي
+                      </a>
+                    </div>
                   </form>
                 </Form>
               </div>
