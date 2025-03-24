@@ -1445,75 +1445,187 @@ export default function VRTown({
               <div className="store-brand-logo adidas-style">ADIDAS</div>
             </div>
             
-            {/* Travel District - Airplane Building (Emirates Airlines) */}
+            {/* Travel District - Enhanced 3D Airplane Building (Emirates Airlines) */}
             <div className="absolute top-[-30px] right-[-10%] transform translate-x-1/2 scale-75">
-              <div className="airplane-building">
-                <div className="airplane-body"></div>
-                <div className="airplane-wing-left"></div>
-                <div className="airplane-wing-right"></div>
-                <div className="airplane-tail"></div>
-                <div className="airplane-entrance"></div>
-                <div className="airplane-runway"></div>
-                
-                {/* Airplane Windows */}
-                {[...Array(8)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="airplane-window" 
-                    style={{ 
-                      left: `${40 + i * 15}px`, 
-                      top: '45px',
-                      transform: 'rotateX(60deg)'
-                    }}
-                  ></div>
-                ))}
-                
-                {/* Airplane Lights */}
-                <div className="airplane-lights">
-                  <div className="airplane-light" style={{ left: '10px', bottom: '5px' }}></div>
-                  <div className="airplane-light" style={{ right: '10px', bottom: '5px' }}></div>
+              <div className="advanced-airplane-building">
+                {/* Modern 3D Airplane Building */}
+                <div className="airplane-3d-container">
+                  {/* Main Fuselage */}
+                  <div className="airplane-fuselage">
+                    <div className="airplane-nose"></div>
+                    <div className="airplane-body">
+                      {/* Airplane Windows - Modern with glow effect */}
+                      {[...Array(8)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="airplane-window-enhanced" 
+                          style={{ 
+                            left: `${30 + i * 12}px`, 
+                            top: '15px',
+                            animationDelay: `${i * 0.1}s`
+                          }}
+                        ></div>
+                      ))}
+                    </div>
+                    <div className="airplane-tail">
+                      <div className="tail-fin"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Wings with details */}
+                  <div className="airplane-wings">
+                    <div className="wing-left">
+                      <div className="wing-detail"></div>
+                    </div>
+                    <div className="wing-right">
+                      <div className="wing-detail"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Engines with animated turbines */}
+                  <div className="airplane-engines">
+                    <div className="engine-left">
+                      <div className="engine-intake"></div>
+                      <div className="engine-turbine animate-spin-slow"></div>
+                    </div>
+                    <div className="engine-right">
+                      <div className="engine-intake"></div>
+                      <div className="engine-turbine animate-spin-slow"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Entrance with illuminated pathway */}
+                  <div className="airplane-entrance enhanced">
+                    <div className="entrance-door"></div>
+                    <div className="entrance-stairs"></div>
+                    <div className="entrance-lights">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="entrance-light-dot" style={{ animationDelay: `${i * 0.2}s` }}></div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Runway with animated lights */}
+                  <div className="airplane-runway enhanced">
+                    <div className="runway-surface"></div>
+                    <div className="runway-lights">
+                      {[...Array(8)].map((_, i) => (
+                        <div key={i} className="runway-light" style={{ left: `${i * 12}%`, animationDelay: `${i * 0.15}s` }}></div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 
-                {/* Emirates Logo */}
-                <div className="absolute top-[-10px] left-[50%] transform -translate-x-1/2 text-white text-xs font-bold" style={{ textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>
-                  EMIRATES
+                {/* Emirates Logo - Enhanced with glow */}
+                <div className="absolute top-[-20px] left-[50%] transform -translate-x-1/2 text-white font-bold airline-logo">
+                  <span className="text-glow airline-text">EMIRATES</span>
+                  <div className="logo-underline"></div>
                 </div>
+                
+                {/* Interactive elements */}
+                <div className="interactive-elements">
+                  <div className="glow-marker" style={{ top: '40%', left: '20%' }}></div>
+                  <div className="glow-marker" style={{ top: '30%', right: '25%' }}></div>
+                  <div className="glow-marker pulse" style={{ bottom: '20%', left: '50%' }}></div>
+                </div>
+              </div>
+              
+              {/* Additional holographic flight info display */}
+              <div className="flight-info-display">
+                <div className="flight-display-header">سفر وسياحة</div>
+                <div className="flight-display-text">Travel Excellence</div>
               </div>
             </div>
             
-            {/* Travel District - Airplane Building (Turkish Airlines) */}
+            {/* Travel District - Enhanced 3D Airplane Building (Turkish Airlines) */}
             <div className="absolute top-[-20px] left-[-10%] transform -translate-x-1/2 scale-75 rotate-[15deg]">
-              <div className="airplane-building">
-                <div className="airplane-body" style={{ background: 'linear-gradient(to right, rgba(227, 28, 33, 0.8), rgba(227, 28, 33, 0.5))' }}></div>
-                <div className="airplane-wing-left" style={{ background: 'rgba(227, 28, 33, 0.6)' }}></div>
-                <div className="airplane-wing-right" style={{ background: 'rgba(227, 28, 33, 0.6)' }}></div>
-                <div className="airplane-tail" style={{ background: 'rgba(227, 28, 33, 0.7)' }}></div>
-                <div className="airplane-entrance"></div>
-                <div className="airplane-runway"></div>
-                
-                {/* Airplane Windows */}
-                {[...Array(8)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="airplane-window" 
-                    style={{ 
-                      left: `${40 + i * 15}px`, 
-                      top: '45px',
-                      transform: 'rotateX(60deg)'
-                    }}
-                  ></div>
-                ))}
-                
-                {/* Airplane Lights */}
-                <div className="airplane-lights">
-                  <div className="airplane-light" style={{ left: '10px', bottom: '5px' }}></div>
-                  <div className="airplane-light" style={{ right: '10px', bottom: '5px' }}></div>
+              <div className="advanced-airplane-building turkish">
+                {/* Modern 3D Airplane Building with Turkish Airlines colors */}
+                <div className="airplane-3d-container">
+                  {/* Main Fuselage with Turkish colors */}
+                  <div className="airplane-fuselage turkish">
+                    <div className="airplane-nose"></div>
+                    <div className="airplane-body">
+                      {/* Airplane Windows - Modern with glow effect */}
+                      {[...Array(8)].map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="airplane-window-enhanced" 
+                          style={{ 
+                            left: `${30 + i * 12}px`, 
+                            top: '15px',
+                            animationDelay: `${i * 0.1}s`
+                          }}
+                        ></div>
+                      ))}
+                    </div>
+                    <div className="airplane-tail">
+                      <div className="tail-fin turkish"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Wings with details */}
+                  <div className="airplane-wings">
+                    <div className="wing-left turkish">
+                      <div className="wing-detail"></div>
+                    </div>
+                    <div className="wing-right turkish">
+                      <div className="wing-detail"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Engines with animated turbines */}
+                  <div className="airplane-engines">
+                    <div className="engine-left">
+                      <div className="engine-intake"></div>
+                      <div className="engine-turbine animate-spin-slow"></div>
+                    </div>
+                    <div className="engine-right">
+                      <div className="engine-intake"></div>
+                      <div className="engine-turbine animate-spin-slow"></div>
+                    </div>
+                  </div>
+                  
+                  {/* Entrance with illuminated pathway */}
+                  <div className="airplane-entrance enhanced">
+                    <div className="entrance-door turkish"></div>
+                    <div className="entrance-stairs"></div>
+                    <div className="entrance-lights">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="entrance-light-dot turkish" style={{ animationDelay: `${i * 0.2}s` }}></div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Runway with animated lights */}
+                  <div className="airplane-runway enhanced">
+                    <div className="runway-surface"></div>
+                    <div className="runway-lights">
+                      {[...Array(8)].map((_, i) => (
+                        <div key={i} className="runway-light" style={{ left: `${i * 12}%`, animationDelay: `${i * 0.15}s` }}></div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 
-                {/* Turkish Airlines Logo */}
-                <div className="absolute top-[-10px] left-[50%] transform -translate-x-1/2 text-white text-xs font-bold" style={{ textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>
-                  TURKISH
+                {/* Turkish Airlines Logo - Enhanced with glow */}
+                <div className="absolute top-[-20px] left-[50%] transform -translate-x-1/2 text-white font-bold airline-logo">
+                  <span className="text-glow airline-text turkish">TURKISH</span>
+                  <div className="logo-underline turkish"></div>
                 </div>
+                
+                {/* Interactive elements */}
+                <div className="interactive-elements">
+                  <div className="glow-marker turkish" style={{ top: '40%', left: '20%' }}></div>
+                  <div className="glow-marker turkish" style={{ top: '30%', right: '25%' }}></div>
+                  <div className="glow-marker pulse turkish" style={{ bottom: '20%', left: '50%' }}></div>
+                </div>
+              </div>
+              
+              {/* Additional holographic flight info display */}
+              <div className="flight-info-display turkish">
+                <div className="flight-display-header">رحلات عالمية</div>
+                <div className="flight-display-text">Global Journeys</div>
               </div>
             </div>
             
