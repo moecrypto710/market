@@ -48,7 +48,6 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={EnhancedCityPage} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />
@@ -59,6 +58,7 @@ function Router() {
       <Route path="/homepage" component={VirtualCityNew} />
       <Route path="/virtual-city" component={VirtualCityNew} />
       <Route path="/vr-amrikyy-town" component={VirtualCityNew} />
+      <ProtectedRoute path="/" component={EnhancedCityPage} />
       <Route component={NotFound} />
     </Switch>
   );
