@@ -1,15 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useMovement } from "@/hooks/use-movement";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface StoreInteractionProps {
   storePosition: { x: number; y: number; z: number };
   storeName: string;
   interiorComponent: React.ReactNode;
   triggerDistance?: number;
+  storeSize?: { width: number; height: number; depth: number };
   onEnter?: () => void;
   onExit?: () => void;
+  storeColor?: string;
+  storeIcon?: string;
 }
 
 /**
@@ -23,45 +27,70 @@ export default function StoreInteraction({
   storeName,
   interiorComponent,
   triggerDistance = 5,
+  storeSize = { width: 10, height: 5, depth: 10 },
   onEnter,
-  onExit
+  onExit,
+  storeColor = "#7c4dff",
+  storeIcon = "fa-store"
 }: StoreInteractionProps) {
   const [isNearStore, setIsNearStore] = useState(false);
   const [isInStore, setIsInStore] = useState(false);
+  const [showStorePreview, setShowStorePreview] = useState(false);
   const { position, addCollisionObject, removeCollisionObject } = useMovement();
+  const storeId = useRef(`store-${storeName.replace(/\s+/g, '-').toLowerCase()}`);
   
-  // Check distance to store
-  useEffect(() => {
-    // Calculate distance between player and store
-    const distance = Math.sqrt(
+  // Calculate distance between player and store
+  const getDistance = () => {
+    return Math.sqrt(
       Math.pow(position.x - storePosition.x, 2) +
       Math.pow(position.y - storePosition.y, 2) +
       Math.pow(position.z - storePosition.z, 2)
     );
+  };
+  
+  // Check distance to store
+  useEffect(() => {
+    const distance = getDistance();
     
     // Update isNearStore state based on distance
-    setIsNearStore(distance <= triggerDistance);
+    const isNear = distance <= triggerDistance;
+    setIsNearStore(isNear);
+    
+    // Show store preview when getting close but not close enough to enter
+    setShowStorePreview(distance <= triggerDistance * 1.5 && !isNear);
     
     // Add store as a collision/trigger object
-    const storeId = `store-${storeName.replace(/\s+/g, '-').toLowerCase()}`;
     addCollisionObject({
-      id: storeId,
+      id: storeId.current,
       position: storePosition,
-      size: { width: triggerDistance * 2, height: 3, depth: triggerDistance * 2 },
+      size: { 
+        width: storeSize.width || triggerDistance * 2, 
+        height: storeSize.height || 3, 
+        depth: storeSize.depth || triggerDistance * 2 
+      },
       type: 'trigger',
       onCollision: () => setIsNearStore(true)
     });
     
     // Cleanup function to remove collision object
     return () => {
-      removeCollisionObject(storeId);
+      removeCollisionObject(storeId.current);
     };
-  }, [position, storePosition, triggerDistance, storeName, addCollisionObject, removeCollisionObject]);
+  }, [
+    position, 
+    storePosition, 
+    triggerDistance, 
+    addCollisionObject, 
+    removeCollisionObject, 
+    storeSize.width, 
+    storeSize.height, 
+    storeSize.depth
+  ]);
   
   // Handle keyboard input (E key for enter)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isNearStore && e.key.toLowerCase() === 'e') {
+      if (isNearStore && !isInStore && e.key.toLowerCase() === 'e') {
         enterStore();
       } else if (isInStore && e.key.toLowerCase() === 'escape') {
         exitStore();
@@ -77,52 +106,144 @@ export default function StoreInteraction({
   const enterStore = () => {
     setIsInStore(true);
     setIsNearStore(false);
+    setShowStorePreview(false);
     if (onEnter) onEnter();
   };
   
   const exitStore = () => {
     setIsInStore(false);
     setIsNearStore(true);
+    
+    // Check distance after exiting to update states correctly
+    setTimeout(() => {
+      const distance = getDistance();
+      setIsNearStore(distance <= triggerDistance);
+      setShowStorePreview(distance <= triggerDistance * 1.5 && distance > triggerDistance);
+    }, 100);
+    
     if (onExit) onExit();
   };
   
+  // Convert hex color to rgba
+  const hexToRgba = (hex: string, alpha = 1) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  };
+  
+  // Generate gradient based on store color
+  const generateGradient = (baseColor: string) => {
+    // If it's already a gradient, return as is
+    if (baseColor.includes('gradient')) return baseColor;
+    
+    // Extract hex if it's in the form #123456
+    const hexColor = baseColor.startsWith('#') ? baseColor : '#7c4dff';
+    
+    // Create a lighter version for gradient
+    const lightColor = hexToRgba(hexColor, 0.7);
+    const darkColor = hexColor;
+    
+    return `linear-gradient(to right, ${darkColor}, ${lightColor})`;
+  };
+  
+  const storeGradient = generateGradient(storeColor);
+  
   return (
     <>
-      {/* Enter button that appears when near the store */}
-      {isNearStore && !isInStore && (
-        <div className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40">
-          <Button 
-            className="bg-gradient-to-r from-[#00ffcd] to-[#7c4dff] text-black font-bold px-6 py-3 rounded-xl shadow-lg border-2 border-white/30"
-            onClick={enterStore}
+      {/* Store preview that appears when approaching but not close enough */}
+      <AnimatePresence>
+        {showStorePreview && !isInStore && (
+          <motion.div 
+            className="fixed top-6 left-1/2 transform -translate-x-1/2 z-40 px-4 py-2 rounded-lg bg-black/40 backdrop-blur-md text-white text-sm border border-white/10 shadow-lg"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
           >
-            <i className="fas fa-door-open ml-2"></i>
-            دخول {storeName}
-            <span className="ml-2 opacity-70 text-xs">(E)</span>
-          </Button>
-        </div>
-      )}
+            <div className="flex items-center gap-2">
+              <i className={`fas ${storeIcon}`}></i>
+              <span>{storeName}</span>
+              <span className="text-xs opacity-70">({Math.floor(getDistance())}م)</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Enter button that appears when near the store */}
+      <AnimatePresence>
+        {isNearStore && !isInStore && (
+          <motion.div 
+            className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-40"
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.3, type: "spring" }}
+          >
+            <Button 
+              className="text-white font-bold px-6 py-3 rounded-xl shadow-lg border border-white/30 overflow-hidden group"
+              style={{ background: storeGradient }}
+              onClick={enterStore}
+            >
+              {/* Button interior glowing effects */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"></div>
+              
+              <span className="relative z-10 flex items-center gap-2">
+                <i className={`fas ${storeIcon} ml-2`}></i>
+                دخول {storeName}
+                <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(E)</span>
+              </span>
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Store interior */}
-      {isInStore && (
-        <div className="fixed inset-0 z-50 flex flex-col">
-          <div className="bg-gradient-to-r from-[#00ffcd] to-[#7c4dff] text-black p-3 flex justify-between items-center shadow-md">
-            <h2 className="font-bold text-xl">{storeName}</h2>
-            <Button 
-              variant="ghost" 
-              className="hover:bg-white/20"
-              onClick={exitStore}
+      <AnimatePresence>
+        {isInStore && (
+          <motion.div 
+            className="fixed inset-0 z-50 flex flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Store header with name and exit button */}
+            <motion.div 
+              className="text-white p-3 flex justify-between items-center shadow-md"
+              style={{ background: storeGradient }}
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
             >
-              <i className="fas fa-sign-out-alt ml-2"></i>
-              خروج
-              <span className="ml-2 opacity-70 text-xs">(ESC)</span>
-            </Button>
-          </div>
-          
-          <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-auto">
-            {interiorComponent}
-          </div>
-        </div>
-      )}
+              <div className="flex items-center gap-2">
+                <i className={`fas ${storeIcon} text-lg`}></i>
+                <h2 className="font-bold text-xl">{storeName}</h2>
+              </div>
+              
+              <Button 
+                variant="ghost" 
+                className="hover:bg-black/20 text-white"
+                onClick={exitStore}
+              >
+                <i className="fas fa-sign-out-alt ml-2"></i>
+                خروج
+                <span className="ml-2 bg-black/20 px-2 py-0.5 rounded text-xs">(ESC)</span>
+              </Button>
+            </motion.div>
+            
+            {/* Store interior content */}
+            <motion.div 
+              className="flex-1 bg-gray-950 text-white overflow-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {interiorComponent}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
