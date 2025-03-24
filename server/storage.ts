@@ -1,9 +1,13 @@
-import { users, products, rewards, affiliates, type User, type InsertUser, type Product, type Reward, type Affiliate, type CartItem } from "@shared/schema";
+import { users, products, rewards, affiliates, virtualStores, virtualEvents, type User, type InsertUser, type Product, type Reward, type Affiliate, type CartItem, type VirtualStore, type VirtualEvent } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import { db } from "./db";
+import { eq, gte, desc } from "drizzle-orm";
+import pgSessionStore from "connect-pg-simple";
 
 // Create memory store for session
 const MemoryStore = createMemoryStore(session);
+const PgStore = pgSessionStore(session);
 
 // Storage interface
 export interface IStorage {
