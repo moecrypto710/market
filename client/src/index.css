@@ -532,6 +532,185 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
+/* 3D Mall specific styles */
+.mall-floor {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), 
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transform: rotateX(60deg);
+  transform-origin: center bottom;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+}
+
+.mall-ceiling {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), 
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: rotateX(-60deg);
+  transform-origin: center top;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  opacity: 0.3;
+}
+
+.mall-wall {
+  position: absolute;
+  background: linear-gradient(to bottom, rgba(30,20,40,0.7), rgba(10,5,15,0.9));
+  height: 150px;
+}
+
+.mall-wall-left {
+  transform: rotateY(90deg);
+  transform-origin: left center;
+  left: 0;
+  top: 50px;
+  width: 200px;
+}
+
+.mall-wall-right {
+  transform: rotateY(-90deg);
+  transform-origin: right center;
+  right: 0;
+  top: 50px;
+  width: 200px;
+}
+
+.mall-store-front {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(20,10,30,0.8);
+  border: 1px solid rgba(217, 70, 239, 0.3);
+  transition: all 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.mall-store-front:hover {
+  transform: translateZ(10px);
+  box-shadow: 0 0 20px rgba(217, 70, 239, 0.5);
+}
+
+.mall-store-window {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 50%;
+  background: rgba(217, 70, 239, 0.1);
+  border: 1px solid rgba(217, 70, 239, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.mall-store-display {
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  width: 80%;
+  height: 25%;
+  background: rgba(0, 0, 0, 0.5);
+  border-top: 1px solid rgba(217, 70, 239, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mall-store-sign {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(217, 70, 239, 0.2);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  color: white;
+  white-space: nowrap;
+  text-shadow: 0 0 5px rgba(217, 70, 239, 0.5);
+}
+
+.mall-escalator {
+  position: absolute;
+  width: 60px;
+  height: 120px;
+  background: rgba(50, 50, 60, 0.8);
+  border: 1px solid rgba(217, 70, 239, 0.2);
+  transform: perspective(800px) rotateX(60deg);
+  overflow: hidden;
+}
+
+.mall-escalator::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(217, 70, 239, 0.2) 5px, rgba(217, 70, 239, 0.2) 10px);
+  animation: escalator-move 10s linear infinite;
+}
+
+@keyframes escalator-move {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(120px); }
+}
+
+.mall-fountain {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(64, 210, 255, 0.3) 0%, rgba(64, 210, 255, 0.1) 70%, transparent 100%);
+  box-shadow: 0 0 15px rgba(64, 210, 255, 0.5);
+  overflow: hidden;
+}
+
+.mall-fountain::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  filter: blur(2px);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.mall-fountain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 30%, rgba(64, 210, 255, 0.1) 70%);
+  animation: fountain-ripple 3s linear infinite;
+}
+
+@keyframes fountain-ripple {
+  0% { transform: scale(0.3); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.animate-mall-section {
+  animation: mall-section-hover 3s ease-in-out infinite;
+}
+
+.mall-hover-rise {
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mall-hover-rise:hover {
+  transform: translateY(-10px);
+}
+
 .holographic-container::before {
   content: '';
   position: absolute;
