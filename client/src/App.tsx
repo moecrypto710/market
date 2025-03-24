@@ -17,7 +17,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import BottomNav from "./components/layout/bottom-nav";
 import Header from "./components/layout/header";
-import { VRProvider } from "./hooks/use-vr";
+
 import WelcomeScreen from "./components/welcome-screen";
 
 // Function to check if this is the first visit
@@ -79,19 +79,17 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <VRProvider>
-          <div className="min-h-screen font-[Tajawal] bg-black text-white">
-            <Header />
-            <main className="pb-20">
-              <Router />
-            </main>
-            <BottomNav />
-            <Toaster />
-            
-            {/* Arabic cultural welcome screen */}
-            {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
-          </div>
-        </VRProvider>
+        <div className="min-h-screen font-[Tajawal] bg-black text-white">
+          <Header />
+          <main className="pb-20">
+            <Router />
+          </main>
+          <BottomNav />
+          <Toaster />
+          
+          {/* Arabic cultural welcome screen */}
+          {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
+        </div>
       </AuthProvider>
     </QueryClientProvider>
   );
