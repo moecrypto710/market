@@ -158,8 +158,8 @@ export default function BusinessWorldPage() {
   // Features of Amrikyy Town
   const features = [
     {
-      title: "تصميم عربي أصيل",
-      description: "مستوحى من العمارة العربية التقليدية مع لمسات عصرية",
+      title: "تصميم عالمي متطور",
+      description: "مستوحى من العمارة الحديثة مع لمسات مستقبلية",
       icon: <Star className="h-6 w-6 text-primary" />
     },
     {
@@ -506,54 +506,128 @@ export default function BusinessWorldPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 to-purple-600 text-white mb-8">
+      {/* Hero Section - Enhanced with modern VR styling */}
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 via-purple-600 to-indigo-700 text-white mb-8 shadow-2xl">
+        {/* Futuristic background pattern */}
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555529771-7888783a18d3?q=80&w=2000')] opacity-10 bg-cover bg-center"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-purple-700/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-purple-700/80 via-indigo-600/80"></div>
         
-        {/* Arabic pattern overlay */}
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NiIgaGVpZ2h0PSIxMDAiPgo8cmVjdCB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBmaWxsPSJub25lIj48L3JlY3Q+CjxwYXRoIGQ9Ik0yOCAwTDAgMTAwTDU2IDEwMEwyOCAwWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMikiIHN0cm9rZS13aWR0aD0iMiI+PC9wYXRoPgo8L3N2Zz4=')] opacity-20 bg-repeat"></div>
+        {/* Digital circuit overlay */}
+        <div className="absolute inset-0 circuit-overlay"></div>
         
-        <div className="relative z-10 p-8 md:p-12">
+        {/* Geometric pattern overlay */}
+        <div className="absolute inset-0 circuit-overlay opacity-15"></div>
+        
+        {/* Animated line highlights */}
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-70 animate-pulse-slow"></div>
+        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-70 animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        
+        {/* Corner accents */}
+        <div className="absolute top-0 left-0 w-12 h-12">
+          <div className="absolute top-0 left-0 w-[2px] h-8 bg-primary-400/80 animate-border-tl"></div>
+          <div className="absolute top-0 left-0 w-8 h-[2px] bg-primary-400/80 animate-border-tl"></div>
+        </div>
+        <div className="absolute top-0 right-0 w-12 h-12">
+          <div className="absolute top-0 right-0 w-[2px] h-8 bg-primary-400/80 animate-border-tr"></div>
+          <div className="absolute top-0 right-0 w-8 h-[2px] bg-primary-400/80 animate-border-tr"></div>
+        </div>
+        <div className="absolute bottom-0 left-0 w-12 h-12">
+          <div className="absolute bottom-0 left-0 w-[2px] h-8 bg-primary-400/80 animate-border-bl"></div>
+          <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-primary-400/80 animate-border-bl"></div>
+        </div>
+        <div className="absolute bottom-0 right-0 w-12 h-12">
+          <div className="absolute bottom-0 right-0 w-[2px] h-8 bg-primary-400/80 animate-border-br"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-[2px] bg-primary-400/80 animate-border-br"></div>
+        </div>
+        
+        <div className="relative z-10 p-8 md:p-12 glass-effect rounded-xl m-[3px]">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-2/3 mb-6 md:mb-0 md:pr-8">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight mb-3 text-right text-transparent bg-clip-text bg-gradient-to-r from-white to-primary-200">
-                بلدة الأمريكي
-              </h1>
-              <div className="flex items-center justify-end gap-2 mb-1">
-                <div className="text-md font-bold px-2 py-0.5 rounded bg-white/20 text-white">AMRIKYY TOWN</div>
-                <div className="h-6 w-6 rounded-full bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold">VR</div>
+              <div className="flex items-center justify-end gap-2 mb-2">
+                <motion.div 
+                  className="text-sm font-bold px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/10"
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  تقنية الواقع الافتراضي
+                </motion.div>
+                <motion.div 
+                  className="h-7 w-7 rounded-full bg-gradient-to-r from-primary-400 to-primary-600 flex items-center justify-center text-white text-xs font-bold shadow-glow"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.4 }}
+                >
+                  VR
+                </motion.div>
               </div>
-              <p className="text-lg md:text-xl opacity-90 mb-6 text-right">
-                عالم افتراضي متكامل للأعمال بتصميم عربي أصيل وتقنيات واقع افتراضي حديثة
-              </p>
-              <div className="flex flex-wrap gap-3 justify-end">
+              
+              <motion.h1 
+                className="text-3xl md:text-6xl font-bold tracking-tight mb-3 text-right text-transparent bg-clip-text bg-gradient-to-r from-white via-primary-200 to-white neon-text"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                بلدة الأمريكي
+              </motion.h1>
+              
+              <motion.div 
+                className="flex items-center justify-end gap-2 mb-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <div className="text-md font-bold px-3 py-1 rounded-full bg-gradient-to-r from-primary/40 to-purple-600/40 backdrop-blur-md text-white border border-white/10 shadow-glow-sm">
+                  AMRIKYY TOWN
+                </div>
+              </motion.div>
+              
+              <motion.p 
+                className="text-lg md:text-xl opacity-90 mb-6 text-right leading-relaxed"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+              >
+                عالم افتراضي متكامل للأعمال بتصميم عالمي متطور وتقنيات واقع افتراضي حديثة
+                <span className="block mt-2 text-primary-200">تجربة تسوق مبتكرة مع أكثر من 40 متجر دولي</span>
+              </motion.p>
+              <motion.div 
+                className="flex flex-wrap gap-4 justify-end"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, staggerChildren: 0.2 }}
+              >
                 <Button 
                   size="lg" 
                   variant="secondary" 
-                  className="backdrop-blur-sm bg-white/10 hover:bg-white/20"
+                  className="relative backdrop-blur-sm bg-white/10 hover:bg-white/20 shadow-xl border border-white/20 overflow-hidden group"
                   onClick={startVirtualTour}
                 >
-                  <span className="ml-2">جولة افتراضية</span> 
-                  <Building className="h-5 w-5" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary-400/0 via-primary-400/30 to-primary-400/0 -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000"></span>
+                  <span className="relative ml-2 z-10 text-glow">جولة افتراضية</span> 
+                  <Building className="relative h-5 w-5 z-10 group-hover:text-primary-200 transition-colors" />
                 </Button>
+                
                 <Button 
                   size="lg" 
-                  className="backdrop-blur-sm bg-white/20 hover:bg-white/30 border border-white/40"
+                  className="relative backdrop-blur-sm bg-gradient-to-r from-primary/30 to-indigo-600/30 hover:from-primary/40 hover:to-indigo-600/40 border border-white/20 shadow-xl overflow-hidden group"
                 >
-                  <span className="ml-2">احجز مكانك الآن</span>
-                  <ChevronRight className="h-5 w-5" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000"></span>
+                  <span className="relative ml-2 z-10 text-glow">احجز مكانك الآن</span>
+                  <ChevronRight className="relative h-5 w-5 z-10" />
                 </Button>
+                
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="backdrop-blur-sm bg-white/5 hover:bg-white/10 border border-white/30 text-white"
+                  className="relative backdrop-blur-sm bg-white/5 hover:bg-white/10 border border-white/30 text-white shadow-xl overflow-hidden group"
                   onClick={() => setShowPartnershipModal(true)}
                 >
-                  <span className="ml-2">برنامج الشراكات</span>
-                  <Handshake className="h-5 w-5" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary/0 via-primary/20 to-primary/0 -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000"></span>
+                  <span className="relative ml-2 z-10">برنامج الشراكات</span>
+                  <Handshake className="relative h-5 w-5 z-10 group-hover:text-primary-200 transition-colors" />
                 </Button>
-              </div>
+              </motion.div>
             </div>
             <div className="md:w-1/3 flex justify-center">
               <div className="relative h-60 w-60">
