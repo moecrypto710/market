@@ -276,7 +276,10 @@ export default function AvatarSelection({ avatars, onSelectAvatar }: AvatarSelec
                       {avatar.favoriteCategory === 'electronics' ? 'الإلكترونيات 💻' :
                        avatar.favoriteCategory === 'clothing' ? 'الأزياء 👗' :
                        avatar.favoriteCategory === 'home' ? 'المنزل 🏠' :
-                       avatar.favoriteCategory === 'sports' ? 'الرياضة 🏅' : 'متنوع ✨'}
+                       avatar.favoriteCategory === 'sports' ? 'الرياضة 🏅' :
+                       avatar.favoriteCategory === 'luxury' ? 'الفاخرة 💎' :
+                       avatar.favoriteCategory === 'eco' ? 'صديقة للبيئة 🌱' :
+                       avatar.favoriteCategory === 'entertainment' ? 'الترفيه 🎮' : 'متنوع ✨'}
                     </span>
                   </div>
                 </div>
