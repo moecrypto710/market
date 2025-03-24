@@ -47,5 +47,5 @@ const buildingData = {
   }
 };
 
-// Export for use in Three.js
+// Export for use in Three.js - using ES module export
 export default buildingData;

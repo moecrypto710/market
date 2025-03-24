@@ -13,6 +13,7 @@ import ProductDetailPage from "@/pages/product-detail-page";
 import StoreRentalPage from "@/pages/store-rental-page";
 import ServicesPage from "@/pages/services-page";
 import BusinessWorldPage from "@/pages/business-world-page";
+import VirtualCityPage from "@/pages/virtual-city-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import { VRProvider } from "./hooks/use-vr";
@@ -53,6 +54,7 @@ function Router() {
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
+      <ProtectedRoute path="/virtual-city" component={VirtualCityPage} />
       <Route component={NotFound} />
     </Switch>
   );

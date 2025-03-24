@@ -1,9 +1,54 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// Using direct THREE.js geometry instead of GLTF loader
+// import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 // Import the building data
-import buildingData from '../../public/models/building-data';
+// Using the path relative to the public directory for Vite
+const buildingData = {
+  // Building dimensions
+  width: 10,
+  height: 15,
+  depth: 10,
+  
+  // Building colors
+  facades: {
+    // Main building color
+    main: '#2a4b8d', 
+    // Windows color
+    windows: '#a3c6ff',
+    // Roof color
+    roof: '#1a365d',
+    // Door color
+    door: '#4a6da7',
+    // Ground floor color
+    ground: '#3b5998',
+  },
+  
+  // Building features
+  features: {
+    // Number of floors
+    floors: 5,
+    // Windows per floor per side
+    windowsPerFloor: 3,
+    // Window dimensions
+    windowWidth: 1.5,
+    windowHeight: 2,
+    // Has balconies
+    hasBalconies: true,
+    // Has a roof structure
+    hasRoofStructure: true,
+    // Building style
+    style: 'modern', // 'modern', 'classical', 'arabic'
+  },
+  
+  // Building type metadata
+  metadata: {
+    type: 'commercial',
+    name: 'المبنى التجاري',
+    description: 'مبنى تجاري حديث متعدد الطوابق',
+  }
+};
 
 /**
  * ThreeBuildingModel Component

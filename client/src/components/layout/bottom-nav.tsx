@@ -5,6 +5,7 @@ export default function BottomNav() {
   
   const navItems = [
     { path: "/", label: "الرئيسية", icon: "home" },
+    { path: "/virtual-city", label: "المدينة الافتراضية", icon: "city" },
     { path: "/business-world", label: "بلدة الأمريكي", icon: "building" },
     { path: "/rewards", label: "المكافآت والعمولة", icon: "award" },
     { path: "/services", label: "خدمات", icon: "concierge-bell" },
