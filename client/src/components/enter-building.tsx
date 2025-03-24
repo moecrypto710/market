@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
 interface EnterBuildingProps {
   buildingName: string;
@@ -26,99 +24,120 @@ export default function EnterBuilding({
   initiallyInside = false,
   onEnter,
   onExit,
-  transitionDuration = 500,
+  transitionDuration = 800, // in ms
 }: EnterBuildingProps) {
   const [isInside, setIsInside] = useState(initiallyInside);
-  const { toast } = useToast();
+  const [transitioning, setTransitioning] = useState(false);
 
-  // Function to enter the building (equivalent to Unity's Enter())
-  const enter = () => {
-    setIsInside(true);
-    if (onEnter) onEnter();
-    
-    toast({
-      title: `أنت الآن داخل ${buildingName}`,
-      description: "اضغط على زر الخروج للعودة للخارج",
-    });
-  };
-
-  // Function to exit the building (equivalent to Unity's Exit())
-  const exit = () => {
-    setIsInside(false);
-    if (onExit) onExit();
-    
-    toast({
-      title: `تم الخروج من ${buildingName}`,
-      description: "أنت الآن في الخارج",
-    });
-  };
-
-  // Keyboard controls for entering/exiting
+  // Handle keyboard shortcuts for entering/exiting
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'e' || e.key === 'Enter') {
-        if (!isInside) enter();
-      } else if (e.key === 'Escape' || e.key === 'q') {
-        if (isInside) exit();
+        // Enter the building on 'e' or 'Enter' key
+        if (!isInside && !transitioning) {
+          enter();
+        }
+      } else if (e.key === 'Escape' || e.key === 'Backspace') {
+        // Exit the building on 'Escape' or 'Backspace' key
+        if (isInside && !transitioning) {
+          exit();
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isInside]);
+  }, [isInside, transitioning]);
 
-  // Add fade transition similar to Unity's SetActive
-  const fadeVariants = {
-    visible: { opacity: 1, scale: 1 },
-    hidden: { opacity: 0, scale: 0.95 }
+  // Enter building function
+  const enter = () => {
+    if (isInside || transitioning) return;
+    
+    setTransitioning(true);
+    setTimeout(() => {
+      setIsInside(true);
+      setTransitioning(false);
+      if (onEnter) onEnter();
+    }, transitionDuration);
+  };
+
+  // Exit building function
+  const exit = () => {
+    if (!isInside || transitioning) return;
+    
+    setTransitioning(true);
+    setTimeout(() => {
+      setIsInside(false);
+      setTransitioning(false);
+      if (onExit) onExit();
+    }, transitionDuration);
   };
 
   return (
-    <div className="building-container relative">
+    <div className="relative w-full h-full">
+      {/* Transition overlay */}
       <AnimatePresence>
-        {/* Inside View (equivalent to insideView GameObject in Unity) */}
+        {transitioning && (
+          <motion.div
+            className="absolute inset-0 bg-black z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: transitionDuration / 1000 / 2 }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Inside view */}
+      <AnimatePresence>
         {isInside && (
           <motion.div
-            className="w-full h-full"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={fadeVariants}
-            transition={{ duration: transitionDuration / 1000 }}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            {insideComponent}
-            
-            {/* Exit button */}
-            <Button
-              className="absolute bottom-4 right-4 bg-red-600 hover:bg-red-700 text-white"
-              onClick={exit}
-            >
-              <i className="fas fa-door-open mr-2"></i>
-              خروج
-            </Button>
+            <div className="relative w-full h-full">
+              {insideComponent}
+              
+              {/* Exit button */}
+              <button
+                onClick={exit}
+                className="absolute bottom-6 right-6 px-4 py-2 bg-gray-800/80 hover:bg-gray-700/80 text-white backdrop-blur-sm rounded-lg flex items-center space-x-2 border border-white/10 z-20"
+                disabled={transitioning}
+              >
+                <i className="fas fa-sign-out-alt"></i>
+                <span>الخروج من {buildingName}</span>
+              </button>
+            </div>
           </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* Outside View (equivalent to outsideView GameObject in Unity) */}
+      {/* Outside view */}
+      <AnimatePresence>
         {!isInside && (
           <motion.div
-            className="w-full h-full"
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={fadeVariants}
-            transition={{ duration: transitionDuration / 1000 }}
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            {outsideComponent}
-            
-            {/* Enter button */}
-            <Button
-              className="absolute bottom-4 right-4 bg-green-600 hover:bg-green-700 text-white"
-              onClick={enter}
-            >
-              <i className="fas fa-door-closed mr-2"></i>
-              دخول {buildingName}
-            </Button>
+            <div className="relative w-full h-full">
+              {outsideComponent}
+              
+              {/* Enter button */}
+              <button
+                onClick={enter}
+                className="absolute bottom-6 right-6 px-4 py-2 bg-indigo-800/80 hover:bg-indigo-700/80 text-white backdrop-blur-sm rounded-lg flex items-center space-x-2 border border-white/10 z-20"
+                disabled={transitioning}
+              >
+                <i className="fas fa-door-open"></i>
+                <span>الدخول إلى {buildingName}</span>
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
