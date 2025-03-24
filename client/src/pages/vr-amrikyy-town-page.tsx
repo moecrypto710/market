@@ -10,6 +10,9 @@ import GateControl from '@/components/gate-control';
 import CityMap from '@/components/city-map';
 import StoreInteraction from '@/components/store-interaction';
 import ThreeBuildingModel from '@/components/three-building-model';
+import VirtualFittingRoom from '@/components/virtual-fitting-room';
+import ThreeProductView from '@/components/three-product-view';
+import CameraIntegration from '@/components/camera-integration';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMovement } from '@/hooks/use-movement';
 import { Button } from '@/components/ui/button';
@@ -21,6 +24,7 @@ import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Link } from 'wouter';
 import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 // Constants for movement
 const DEFAULT_SPEED = 5;
@@ -36,6 +40,7 @@ export default function VRAmrikyyTownPage() {
   const { user } = useAuth();
   const { vrEnabled, toggleVR, walkSpeed, setWalkSpeed, toggleGestureControl } = useVR();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [fullscreenMode, setFullscreenMode] = useState(false);
   const [showControls, setShowControls] = useState(isMobile);
   const [showInstructions, setShowInstructions] = useState(false);
@@ -44,6 +49,8 @@ export default function VRAmrikyyTownPage() {
   const [dayTime, setDayTime] = useState<'morning' | 'noon' | 'evening' | 'night'>('noon');
   const [weather, setWeather] = useState<'clear' | 'cloudy' | 'rain' | 'sandstorm'>('clear');
   const [trafficDensity, setTrafficDensity] = useState<'low' | 'medium' | 'high'>('medium');
+  const [showCamera, setShowCamera] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
   
   // Set up movement using our movement hook with options
   const movement = useMovement({
@@ -329,6 +336,250 @@ export default function VRAmrikyyTownPage() {
               <div className="p-8 bg-gradient-to-b from-slate-900 to-blue-900 text-white h-full">
                 <h2 className="text-3xl font-bold mb-4">مرحباً بك في وكالة السفر</h2>
                 <p className="mb-4">استكشف عروض السفر الحصرية</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                  <div className="bg-white/10 p-4 rounded-lg">
+                    <h3 className="text-xl font-bold mb-2 text-blue-300">أفضل الوجهات</h3>
+                    <ul className="space-y-2">
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-400"><i className="fas fa-star"></i></span>
+                        <span>دبي - الإمارات العربية المتحدة</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-400"><i className="fas fa-star"></i></span>
+                        <span>مكة المكرمة - المملكة العربية السعودية</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-400"><i className="fas fa-star"></i></span>
+                        <span>شرم الشيخ - مصر</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="text-yellow-400"><i className="fas fa-star"></i></span>
+                        <span>اسطنبول - تركيا</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="bg-white/10 p-4 rounded-lg">
+                    <h3 className="text-xl font-bold mb-2 text-blue-300">العروض الخاصة</h3>
+                    <div className="space-y-4">
+                      <div className="bg-gradient-to-r from-blue-900 to-blue-700 p-3 rounded-lg">
+                        <div className="font-bold">عرض الشتاء</div>
+                        <div className="text-sm text-blue-200">خصم 20% على جميع الرحلات</div>
+                      </div>
+                      <div className="bg-gradient-to-r from-purple-900 to-purple-700 p-3 rounded-lg">
+                        <div className="font-bold">باقة العائلة</div>
+                        <div className="text-sm text-purple-200">الطفل الثالث مجانًا</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+          
+          {/* متجر الملابس الفاخرة */}
+          <StoreInteraction
+            storePosition={{ x: 15, y: 0, z: 10 }}
+            storeName="متجر الملابس الفاخرة"
+            triggerDistance={10}
+            storeColor="#f59e0b"
+            storeIcon="tshirt"
+            interiorComponent={
+              <div className="p-6 bg-gradient-to-b from-amber-900 to-amber-700 text-white h-full overflow-auto">
+                <h2 className="text-3xl font-bold mb-2">متجر الملابس الفاخرة</h2>
+                <p className="mb-6 text-amber-200">استكشف أحدث صيحات الموضة وتشكيلات الأزياء العصرية</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* غرفة القياس الإفتراضية */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 md:col-span-2">
+                    <h3 className="text-xl font-bold mb-4 text-amber-300 flex items-center">
+                      <i className="fas fa-camera mr-2"></i>
+                      غرفة القياس الإفتراضية
+                    </h3>
+                    
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <div className="md:w-1/2 bg-gradient-to-b from-amber-800/50 to-amber-900/50 rounded-lg p-4 h-96 flex items-center justify-center">
+                        <VirtualFittingRoom 
+                          outfits={[
+                            {
+                              id: 1,
+                              name: "قميص كاجوال",
+                              image: "https://api.dicebear.com/7.x/identicon/svg?seed=shirt1",
+                              description: "قطن 100%، مناسب لجميع المناسبات",
+                              price: 299
+                            },
+                            {
+                              id: 2,
+                              name: "حذاء رياضي",
+                              image: "https://api.dicebear.com/7.x/identicon/svg?seed=shoes1",
+                              description: "مريح للرياضة والمشي",
+                              price: 599
+                            },
+                            {
+                              id: 3,
+                              name: "بنطلون جينز",
+                              image: "https://api.dicebear.com/7.x/identicon/svg?seed=jeans1",
+                              description: "تصميم عصري مع خامة ممتازة",
+                              price: 450
+                            }
+                          ]}
+                        />
+                      </div>
+                      
+                      <div className="md:w-1/2 bg-gradient-to-b from-amber-800/50 to-amber-900/50 rounded-lg p-4">
+                        <h4 className="text-lg font-bold mb-3 text-amber-300">جرب بالكاميرا</h4>
+                        <p className="text-amber-200 mb-4">يمكنك الآن تجربة الملابس افتراضياً باستخدام الكاميرا</p>
+                        
+                        <div className="flex flex-col gap-4">
+                          <div className="bg-white/10 p-3 rounded-lg backdrop-blur-sm">
+                            <div className="font-bold mb-1">كيف يعمل؟</div>
+                            <ul className="list-disc mr-5 text-sm space-y-1 text-amber-200">
+                              <li>التقط صورة لنفسك باستخدام الكاميرا</li>
+                              <li>اختر الملابس التي تريد تجربتها</li>
+                              <li>شاهد كيف تبدو الملابس عليك</li>
+                              <li>شارك النتيجة مع أصدقائك</li>
+                            </ul>
+                          </div>
+                          
+                          <Button 
+                            className="bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold"
+                            onClick={() => setShowCamera(true)}
+                          >
+                            <i className="fas fa-camera mr-2"></i>
+                            ابدأ التجربة الآن
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* تصنيفات الملابس */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <h3 className="text-xl font-bold mb-4 text-amber-300 flex items-center">
+                      <i className="fas fa-list mr-2"></i>
+                      تصنيفات الملابس
+                    </h3>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      {['رجالي', 'نسائي', 'أطفال', 'أحذية', 'اكسسوارات', 'رياضة'].map((category, index) => (
+                        <div key={index} className="bg-amber-800/50 hover:bg-amber-700/70 rounded-lg p-3 cursor-pointer transition">
+                          <div className="font-bold">{category}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* العروض الخاصة */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <h3 className="text-xl font-bold mb-4 text-amber-300 flex items-center">
+                      <i className="fas fa-tag mr-2"></i>
+                      العروض الخاصة
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      <div className="bg-gradient-to-r from-amber-600 to-amber-700 p-3 rounded-lg">
+                        <div className="font-bold">خصم 30%</div>
+                        <div className="text-sm text-amber-200">على جميع الملابس الصيفية</div>
+                      </div>
+                      <div className="bg-gradient-to-r from-amber-600 to-amber-700 p-3 rounded-lg">
+                        <div className="font-bold">1 + 1 مجاناً</div>
+                        <div className="text-sm text-amber-200">على التيشيرتات</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+          
+          {/* متجر الإلكترونيات والتقنية */}
+          <StoreInteraction
+            storePosition={{ x: 25, y: 0, z: 15 }}
+            storeName="متجر الإلكترونيات والتقنية"
+            triggerDistance={10}
+            storeColor="#10b981"
+            storeIcon="laptop"
+            interiorComponent={
+              <div className="p-6 bg-gradient-to-b from-emerald-900 to-emerald-700 text-white h-full overflow-auto">
+                <h2 className="text-3xl font-bold mb-2">متجر الإلكترونيات والتقنية</h2>
+                <p className="mb-6 text-emerald-200">أحدث المنتجات التقنية والأجهزة الذكية</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* عرض المنتج ثلاثي الأبعاد */}
+                  <div className="md:col-span-2 bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <h3 className="text-xl font-bold mb-4 text-emerald-300 flex items-center">
+                      <i className="fas fa-cube mr-2"></i>
+                      عرض المنتج ثلاثي الأبعاد
+                    </h3>
+                    
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <div className="md:w-1/2 bg-gradient-to-b from-emerald-800/50 to-emerald-900/50 rounded-lg p-4 h-80 flex items-center justify-center">
+                        <ThreeProductView 
+                          color="#10b981"
+                          rotationSpeed={0.01}
+                          showControls={true}
+                        />
+                      </div>
+                      
+                      <div className="md:w-1/2 bg-gradient-to-b from-emerald-800/50 to-emerald-900/50 rounded-lg p-4">
+                        <h4 className="text-lg font-bold mb-3 text-emerald-300">هاتف أمريكي الذكي</h4>
+                        <p className="text-emerald-200 mb-4">أحدث هاتف ذكي من أمريكي بمواصفات عالية وتصميم مميز</p>
+                        
+                        <div className="space-y-3">
+                          <div className="bg-white/10 p-3 rounded-lg">
+                            <div className="font-bold mb-1">المواصفات</div>
+                            <ul className="list-disc mr-5 text-sm space-y-1 text-emerald-200">
+                              <li>شاشة OLED مقاس 6.5 بوصة</li>
+                              <li>معالج ثماني النواة</li>
+                              <li>كاميرا خلفية بدقة 50 ميجابكسل</li>
+                              <li>بطارية 5000 مللي أمبير</li>
+                              <li>دعم الشحن السريع</li>
+                            </ul>
+                          </div>
+                          
+                          <div className="flex justify-between items-center">
+                            <div className="text-xl font-bold text-emerald-300">3,999 جنيه</div>
+                            <Button className="bg-emerald-500 hover:bg-emerald-600 text-emerald-950 font-bold">
+                              <i className="fas fa-shopping-cart mr-2"></i>
+                              إضافة للسلة
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* الأقسام */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <h3 className="text-xl font-bold mb-4 text-emerald-300 flex items-center">
+                      <i className="fas fa-list mr-2"></i>
+                      الأقسام
+                    </h3>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      {['هواتف ذكية', 'لابتوب', 'إلكترونيات', 'سماعات', 'أجهزة منزلية', 'ألعاب'].map((category, index) => (
+                        <div key={index} className="bg-emerald-800/50 hover:bg-emerald-700/70 rounded-lg p-3 cursor-pointer transition">
+                          <div className="font-bold">{category}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* العلامات التجارية */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <h3 className="text-xl font-bold mb-4 text-emerald-300 flex items-center">
+                      <i className="fas fa-award mr-2"></i>
+                      العلامات التجارية
+                    </h3>
+                    
+                    <div className="grid grid-cols-3 gap-2">
+                      {['سامسونج', 'أبل', 'هواوي', 'شاومي', 'سوني', 'ديل', 'إتش بي', 'لينوفو', 'إل جي'].map((brand, index) => (
+                        <div key={index} className="bg-white/5 hover:bg-white/10 p-2 rounded-lg flex items-center justify-center">
+                          <div className="text-sm font-medium">{brand}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             }
           />
@@ -518,6 +769,82 @@ export default function VRAmrikyyTownPage() {
             </div>
           </motion.div>
         </motion.div>
+      )}
+      
+      {/* Camera overlay for virtual fitting room */}
+      {showCamera && (
+        <div className="fixed inset-0 z-50">
+          <CameraIntegration
+            onCapture={(imageSrc) => {
+              setCapturedImage(imageSrc);
+              setShowCamera(false);
+              toast({
+                title: "تم التقاط الصورة بنجاح",
+                description: "يمكنك الآن استخدام الصورة في تجربة الملابس",
+              });
+            }}
+            onClose={() => setShowCamera(false)}
+            mode="product-try-on"
+            productImageUrl="https://api.dicebear.com/7.x/identicon/svg?seed=shirt1"
+            enableFilters={true}
+            enableAREffects={true}
+          />
+        </div>
+      )}
+
+      {/* Captured image overlay */}
+      {capturedImage && !showCamera && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
+          <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl max-w-2xl w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-white">تجربة الملابس الافتراضية</h2>
+              <Button variant="ghost" size="icon" onClick={() => setCapturedImage(null)}>
+                <i className="fas fa-times text-white"></i>
+              </Button>
+            </div>
+            
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="md:w-2/3 bg-black/30 rounded-lg overflow-hidden">
+                <img 
+                  src={capturedImage} 
+                  alt="صورتك مع الملابس" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              
+              <div className="md:w-1/3 space-y-4">
+                <div className="bg-white/10 p-3 rounded-lg">
+                  <h3 className="text-lg font-bold mb-2 text-amber-300">اختر ملابس أخرى</h3>
+                  <div className="space-y-2">
+                    {["قميص كاجوال", "بنطلون جينز", "حذاء رياضي", "جاكيت"].map((item, index) => (
+                      <div 
+                        key={index} 
+                        className="bg-amber-600/20 p-2 rounded cursor-pointer hover:bg-amber-600/30"
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Button className="w-full bg-amber-500 hover:bg-amber-600 text-amber-950">
+                    <i className="fas fa-camera mr-2"></i>
+                    التقاط صورة جديدة
+                  </Button>
+                  <Button className="w-full bg-white/10 hover:bg-white/20 text-white">
+                    <i className="fas fa-share-alt mr-2"></i>
+                    مشاركة الصورة
+                  </Button>
+                  <Button className="w-full bg-green-500 hover:bg-green-600 text-white">
+                    <i className="fas fa-shopping-cart mr-2"></i>
+                    إضافة الملابس للسلة
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       
       {/* Landing page content (when not in fullscreen) */}
