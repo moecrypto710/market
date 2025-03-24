@@ -352,7 +352,12 @@ export class MemStorage implements IStorage {
         brandId: 5,
         featured: true,
         threeDModelUrl: "/models/samsung-phone.glb",
-        viewCount: 603
+        viewCount: 603,
+        culturalHeritageTitle: "تطور الاتصالات في الثقافة العربية",
+        culturalHeritageStory: "تمتاز الثقافة العربية بتقاليد عريقة في التواصل والاتصال، بدءًا من الرسائل المكتوبة التي كانت تنقل عبر الصحراء بواسطة القوافل، إلى نظام البريد المتطور في العصر العباسي المعروف باسم 'البريد'. تطورت وسائل الاتصال في العالم العربي مع الزمن، لكنها دائمًا حافظت على أهمية التواصل الشخصي والمباشر. الهواتف الذكية الحديثة مثل هذا الجهاز تمثل امتدادًا لهذا التاريخ العريق، مع تمكين المستخدمين من التواصل عبر وسائط متعددة تحترم التقاليد العربية في التواصل الغني بالتعبير وتبادل الثقافة والمعرفة.",
+        culturalHeritageImageUrl: "/images/heritage/arabic-communication.jpg",
+        culturalHeritageRegion: "العالم العربي",
+        culturalHeritagePeriod: "من العصر الجاهلي إلى العصر الحديث"
       },
       {
         name: "ساعة أبل ووتش سيريس 8",
