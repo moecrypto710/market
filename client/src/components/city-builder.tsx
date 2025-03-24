@@ -56,7 +56,7 @@ export default function CityBuilder() {
   const buildings: Building[] = [
     {
       id: 'travelAgency',
-      name: 'وكالة السفر طيران الإمارات', // Travel Agency Emirates Airlines
+      name: 'وكالة السفر العربي', // Arab Travel Agency
       type: 'travel',
       position: { x: 0, y: 0, z: 0 }, // matches Vector3(0, 0, 0) in Unity
       rotation: 0,
@@ -195,10 +195,80 @@ export default function CityBuilder() {
         return <AirplaneBuildingInterior />;
       case 'clothing':
         return (
-          <div className="flex flex-col items-center justify-center h-full bg-amber-50 text-black p-4">
-            <h2 className="text-2xl font-bold mb-4">متجر الملابس</h2>
-            <p className="text-center mb-6">مرحبًا بك في متجر الملابس. استكشف أحدث الأزياء والموديلات.</p>
-            <Button>تصفح المنتجات</Button>
+          <div className="flex flex-col h-full bg-amber-50 text-black p-4">
+            <div className="text-center mb-5">
+              <h2 className="text-2xl font-bold">متجر الملابس</h2>
+              <p className="text-sm text-gray-600 mb-4">استكشف أحدث الأزياء والموديلات</p>
+              <div className="h-1 w-32 bg-amber-400 mx-auto"></div>
+            </div>
+            
+            <div className="flex-1 flex flex-col md:flex-row gap-4">
+              {/* Left side - virtual fitting room */}
+              <div className="flex-1 h-full">
+                <div className="bg-white rounded-lg shadow-md p-3 h-full flex flex-col">
+                  <h3 className="text-lg font-semibold mb-3 text-amber-700">غرفة تجربة الملابس الافتراضية</h3>
+                  
+                  <div className="flex-1 bg-amber-50 rounded-md flex flex-col items-center justify-center">
+                    <VirtualFittingRoom 
+                      outfits={[
+                        {
+                          id: 1,
+                          name: "قميص كاجوال",
+                          image: "/images/product-templates/adidas-tshirt.svg",
+                          price: 299
+                        },
+                        {
+                          id: 2,
+                          name: "حذاء رياضي",
+                          image: "/images/product-templates/nike-shoes.svg",
+                          price: 799
+                        },
+                        {
+                          id: 3,
+                          name: "بنطلون جينز",
+                          image: "/images/product-templates/levis-jeans.svg",
+                          price: 450
+                        }
+                      ]}
+                      showControls={true}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right side - dynamic promotions and store info */}
+              <div className="w-full md:w-64">
+                <div className="bg-white rounded-lg shadow-md p-3 mb-4">
+                  <h3 className="text-lg font-semibold mb-2 text-amber-700">عروض اليوم</h3>
+                  <DynamicPromotions 
+                    variant="highlight"
+                    animated={true}
+                  />
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-md p-3">
+                  <h3 className="text-lg font-semibold mb-2 text-amber-700">معلومات المتجر</h3>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-center">
+                      <span className="ml-2">⏰</span>
+                      <span>ساعات العمل: 9ص - 10م</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="ml-2">📱</span>
+                      <span>الهاتف: 1234-567-8910+</span>
+                    </li>
+                    <li className="flex items-center">
+                      <span className="ml-2">🏬</span>
+                      <span>الطابق الثاني، المدخل الرئيسي</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <Button className="bg-amber-500 hover:bg-amber-600 text-white">تصفح المنتجات</Button>
+            </div>
           </div>
         );
       case 'electronics':
@@ -288,7 +358,7 @@ export default function CityBuilder() {
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ repeat: Infinity, duration: 2 }}
               >
-                طيران الإمارات
+                السفر العربي
               </motion.div>
             </div>
           )}

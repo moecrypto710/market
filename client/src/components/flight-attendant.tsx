@@ -15,6 +15,7 @@ interface FlightAttendantProps {
   avatarUrl?: string;
   onDialogueComplete?: () => void;
   customDialogues?: string[];
+  onTryClothes?: () => void; // Callback for trying clothes in virtual fitting room
 }
 
 export default function FlightAttendant({
@@ -23,6 +24,7 @@ export default function FlightAttendant({
   avatarUrl,
   onDialogueComplete,
   customDialogues,
+  onTryClothes,
 }: FlightAttendantProps) {
   const { toast } = useToast();
   
@@ -117,7 +119,7 @@ export default function FlightAttendant({
           />
         ) : (
           <div className="w-16 h-24 flex items-center justify-center relative overflow-hidden">
-            {/* Emirates Flight Attendant Representation */}
+            {/* Flight Attendant Representation */}
             <div className="absolute inset-0 bg-gradient-to-b from-blue-900 to-blue-800"></div>
             
             {/* Head and face */}
@@ -129,13 +131,13 @@ export default function FlightAttendant({
               <div className="w-2 h-1 bg-red-500 absolute top-6 rounded-full"></div>
             </div>
             
-            {/* Emirates uniform - white scarf and red hat */}
+            {/* Uniform - white scarf and blue hat */}
             <div className="w-12 h-3 bg-white absolute top-9 rounded-full transform -rotate-6"></div>
-            <div className="w-6 h-2 bg-red-600 absolute top-0 left-2 rounded-t-md"></div>
+            <div className="w-6 h-2 bg-blue-600 absolute top-0 left-2 rounded-t-md"></div>
             
-            {/* Body - Emirates uniform */}
+            {/* Body - airline uniform */}
             <div className="w-14 h-12 bg-blue-800 absolute bottom-0 rounded-b-md">
-              <div className="w-full h-4 bg-red-600 absolute top-0"></div>
+              <div className="w-full h-4 bg-blue-600 absolute top-0"></div>
               <div className="w-8 h-1 bg-yellow-400 absolute top-5 left-3"></div>
               <div className="w-8 h-1 bg-yellow-400 absolute top-7 left-3"></div>
             </div>
@@ -219,10 +221,14 @@ export default function FlightAttendant({
                 variant="outline"
                 className="text-xs border-yellow-400 text-yellow-400 hover:bg-blue-800"
                 onClick={() => {
-                  toast({
-                    title: "قريباً",
-                    description: "سيتم إضافة غرفة تبديل الملابس الافتراضية قريباً!",
-                  });
+                  if (onTryClothes) {
+                    onTryClothes();
+                  } else {
+                    toast({
+                      title: "تجربة الملابس",
+                      description: "سيتم فتح غرفة تبديل الملابس الافتراضية!",
+                    });
+                  }
                 }}
               >
                 تجربة الملابس

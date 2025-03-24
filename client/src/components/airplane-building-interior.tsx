@@ -19,7 +19,35 @@ export default function AirplaneBuildingInterior() {
     imageUrl?: string;
     price?: string;
   } | null>(null);
+  
+  // State to control visibility of the virtual fitting room
+  const [showFittingRoom, setShowFittingRoom] = useState(false);
 
+  // Sample outfits for the virtual fitting room based on Unity's VirtualFittingRoom.cs
+  const travelOutfits = [
+    {
+      id: 1,
+      name: "قميص سفر أنيق",
+      image: "/images/product-templates/adidas-tshirt.svg",
+      description: "قميص مريح ومناسب للسفر الطويل",
+      price: 450
+    },
+    {
+      id: 2,
+      name: "حذاء رياضي للسفر",
+      image: "/images/product-templates/nike-shoes.svg",
+      description: "حذاء مريح للتنقل في المطارات",
+      price: 800
+    },
+    {
+      id: 3,
+      name: "بنطلون سفر كلاسيكي",
+      image: "/images/product-templates/levis-jeans.svg",
+      description: "بنطلون مريح وعملي للسفر طويل المدى",
+      price: 650
+    }
+  ];
+  
   // Available destinations for the travel agency
   const destinations = [
     { 
@@ -65,7 +93,7 @@ export default function AirplaneBuildingInterior() {
   return (
     <div className="flex flex-col h-full bg-gradient-to-b from-blue-900 to-blue-950 text-white p-6 rounded-lg">
       <div className="text-center mb-8">
-        <div className="text-3xl font-bold mb-2 text-yellow-400">طيران الإمارات</div>
+        <div className="text-3xl font-bold mb-2 text-yellow-400">السفر العربي</div>
         <div className="text-lg text-blue-200">وكالة السفر الرسمية</div>
         <div className="h-1 w-32 bg-yellow-400 mx-auto my-4"></div>
       </div>
@@ -166,9 +194,9 @@ export default function AirplaneBuildingInterior() {
           position={{ x: 20, y: 10 }}
           scale={1.2}
           customDialogues={[
-            "مرحبًا بكم في طيران الإمارات!",
+            "مرحبًا بكم في السفر العربي!",
             "هل تحتاج إلى مساعدة في اختيار وجهتك؟",
-            "يمكنك الاستمتاع بخدماتنا المميزة على متن الطائرة."
+            "يمكنك تجربة ملابس السفر الخاصة بنا قبل رحلتك!"
           ]}
           onDialogueComplete={() => {
             toast({
@@ -176,12 +204,47 @@ export default function AirplaneBuildingInterior() {
               description: "يمكنك التواصل معها في أي وقت للمساعدة."
             });
           }}
+          onTryClothes={() => setShowFittingRoom(true)}
         />
       </div>
+      
+      {/* Virtual Fitting Room based on Unity's VirtualFittingRoom.cs */}
+      {showFittingRoom && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="w-full max-w-4xl h-[80vh] overflow-hidden rounded-lg shadow-xl relative">
+            <VirtualFittingRoom 
+              outfits={travelOutfits}
+              onOutfitSelected={(outfit) => {
+                toast({
+                  title: `تم اختيار ${outfit.name}`,
+                  description: "يمكنك شراء هذا المنتج قبل رحلتك!"
+                });
+              }}
+            />
+            
+            <button 
+              className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center"
+              onClick={() => setShowFittingRoom(false)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-6 flex justify-between items-center text-sm text-blue-300">
         <div>رقم الهاتف: 1234-567-8910+</div>
         <div>ساعات العمل: 9 صباحًا - 9 مساءً</div>
+        
+        {/* Button to open virtual fitting room */}
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="border-yellow-400 text-yellow-400 hover:bg-blue-900/50"
+          onClick={() => setShowFittingRoom(true)}
+        >
+          تجربة ملابس السفر
+        </Button>
       </div>
     </div>
   );
