@@ -923,19 +923,19 @@ export default function VRTown({
     }
   }, [avatarPosition, selectedAvatar, vrEnabled, currentSection]);
   
-  // Helper to get area name in Arabic
+  // Helper to get area name in global format
   function getAreaName(sectionId: string) {
     switch (sectionId) {
-      case 'entrance': return 'المدخل الرئيسي 🚪';
-      case 'electronics': return 'الإلكترونيات 💻';
-      case 'clothing': return 'الأزياء 👗';
-      case 'food': return 'المطاعم 🍔';
-      case 'plaza': return 'الساحة المركزية ✨';
-      case 'luxury': return 'المنتجات الفاخرة 💎';
-      case 'sports': return 'الرياضة 🏅';
-      case 'eco': return 'المنتجات الصديقة للبيئة 🌱';
-      case 'entertainment': return 'الترفيه 🎮';
-      default: return 'البلدة 🏙️';
+      case 'entrance': return 'Main Entrance 🚪';
+      case 'electronics': return 'Electronics District 💻';
+      case 'clothing': return 'Fashion Avenue 👗';
+      case 'food': return 'Food Court 🍔';
+      case 'plaza': return 'Central Plaza ✨';
+      case 'luxury': return 'Luxury Boutiques 💎';
+      case 'sports': return 'Sports Arena 🏅';
+      case 'eco': return 'Eco-Friendly Zone 🌱';
+      case 'entertainment': return 'Entertainment Hub 🎮';
+      default: return 'Amrikyy Town 🏙️';
     }
   }
   
@@ -1223,12 +1223,17 @@ export default function VRTown({
           {/* Digital circuit background pattern */}
           <div className="absolute inset-0 circuit-overlay opacity-30"></div>
           
-          {/* Enhanced arabesque pattern with cultural fusion */}
-          <div className="absolute inset-0 arabesque-pattern mix-blend-overlay opacity-30"></div>
+          {/* Futuristic global city pattern */}
+          <div className="absolute inset-0 mix-blend-overlay opacity-30"
+               style={{
+                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                 backgroundSize: '80px 80px'
+               }}
+          ></div>
           
-          {/* Advanced 3D grid with depth effect */}
+          {/* Advanced 3D grid with depth effect - more futuristic */}
           <div className="absolute inset-0 perspective-3d" style={{ 
-            backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(217, 70, 239, 0.1) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(217, 70, 239, 0.1) 100%)',
+            backgroundImage: 'linear-gradient(transparent 0%, transparent calc(100% - 1px), rgba(59, 130, 246, 0.2) 100%), linear-gradient(to right, transparent 0%, transparent calc(100% - 1px), rgba(59, 130, 246, 0.2) 100%)',
             backgroundSize: '60px 60px',
             transform: 'perspective(800px) rotateX(60deg)',
             transformOrigin: 'center bottom',
@@ -1430,20 +1435,20 @@ export default function VRTown({
               ))}
             </div>
             
-            {/* Second Floor Stores with Arabic Design */}
+            {/* Second Floor Stores with Modern International Design */}
             <div className="absolute top-0 left-[20%] transform -translate-x-1/2">
-              <div className="islamic-arch"></div>
-              <div className="store-brand-logo nike-style">ﻧﺎﻳﻜﻲ</div>
+              <div className="modern-storefront"></div>
+              <div className="store-brand-logo nike-style">NIKE</div>
             </div>
             
             <div className="absolute top-0 left-[50%] transform -translate-x-1/2">
-              <div className="islamic-arch"></div>
-              <div className="store-brand-logo apple-style">آبل</div>
+              <div className="tech-storefront"></div>
+              <div className="store-brand-logo apple-style">APPLE</div>
             </div>
             
             <div className="absolute top-0 right-[20%] transform translate-x-1/2">
-              <div className="islamic-arch"></div>
-              <div className="store-brand-logo adidas-style">أديداس</div>
+              <div className="sports-storefront"></div>
+              <div className="store-brand-logo adidas-style">ADIDAS</div>
             </div>
             
             {/* Central Dome */}
@@ -1459,30 +1464,30 @@ export default function VRTown({
           <div className="absolute bottom-30 left-[60%] mall-person mall-person-walking" style={{ animationDelay: '-4s' }}></div>
           <div className="absolute bottom-50 left-[10%] mall-person mall-person-walking" style={{ animationDelay: '-6s' }}></div>
           
-          {/* Central Plaza with Fountain and Arabic Elements */}
+          {/* Futuristic Central Plaza with Digital Fountain */}
           <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
-            <div className="mall-fountain"></div>
-            <div className="islamic-pattern absolute inset-0 opacity-10"></div>
-            <div className="text-xs text-center mt-2 text-white/70 font-arabic">نافورة الساحة المركزية</div>
+            <div className="digital-fountain"></div>
+            <div className="digital-grid absolute inset-0 opacity-20"></div>
+            <div className="text-xs text-center mt-2 text-white/70 font-futuristic">CENTRAL PLAZA</div>
           </div>
           
-          {/* Mall Directory Sign - Holographic with Arabic Design */}
+          {/* Mall Directory Sign - Holographic with Modern Design */}
           <div className="absolute top-10 left-1/2 transform -translate-x-1/2 z-20">
-            <div className="holographic-container p-4 rounded-lg shadow-glow-sm arabesque-border">
-              <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2 font-arabic">
-                بلدة أمريكي التجارية
+            <div className="holographic-container p-4 rounded-lg shadow-glow-sm futuristic-border">
+              <h3 className="text-center text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-blue-300 mb-2">
+                AMRIKYY TOWN
               </h3>
-              <div className="text-xs text-center text-white/70 mb-1">اضغط على أي قسم لزيارته</div>
-              <div className="h-px w-full bg-gradient-to-r from-transparent via-fuchsia-500/50 to-transparent my-1"></div>
-              <div className="text-center text-sm text-fuchsia-300 mt-1">
-                {`أنت الآن في: ${getAreaName(currentSection)}`}
+              <div className="text-xs text-center text-white/70 mb-1">Tap any section to visit</div>
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-500/50 to-transparent my-1"></div>
+              <div className="text-center text-sm text-blue-300 mt-1">
+                {`You are in: ${getAreaName(currentSection)}`}
               </div>
               
-              {/* Arabic ornamental decoration */}
+              {/* Futuristic geometric decoration */}
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-10 h-5 opacity-30">
                 <svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0,50 Q50,0 100,50" stroke="#d946ef" fill="none" strokeWidth="2" />
-                  <path d="M20,50 Q50,20 80,50" stroke="#d946ef" fill="none" strokeWidth="2" />
+                  <path d="M0,50 L50,10 L100,50" stroke="#3b82f6" fill="none" strokeWidth="2" />
+                  <path d="M25,50 L50,25 L75,50" stroke="#3b82f6" fill="none" strokeWidth="2" />
                 </svg>
               </div>
             </div>
