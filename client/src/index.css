@@ -1023,6 +1023,177 @@
   background: rgba(59, 130, 246, 0.3);
 }
 
+/* Airplane building style */
+.airplane-building {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.airplane-body {
+  position: absolute;
+  width: 160px;
+  height: 40px;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.5));
+  border-radius: 50px 50px 0 0;
+  left: 20px;
+  top: 40px;
+  transform: rotateX(60deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.airplane-body::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  background-image: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.2) 25%, 
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 75%, 
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shine-effect 3s infinite linear;
+}
+
+@keyframes shine-effect {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.airplane-wing-left {
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  background: rgba(59, 130, 246, 0.6);
+  left: -30px;
+  top: 45px;
+  transform: rotateX(60deg) rotateZ(20deg);
+  border-radius: 30px 10px 10px 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.airplane-wing-right {
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  background: rgba(59, 130, 246, 0.6);
+  right: -30px;
+  top: 45px;
+  transform: rotateX(60deg) rotateZ(-20deg);
+  border-radius: 10px 30px 10px 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.airplane-tail {
+  position: absolute;
+  width: 30px;
+  height: 40px;
+  background: rgba(59, 130, 246, 0.7);
+  left: 65px;
+  top: 10px;
+  transform: rotateX(60deg);
+  border-radius: 10px 10px 0 0;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.airplane-window {
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  background: rgba(230, 255, 255, 0.8);
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.airplane-entrance {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(20, 20, 35, 0.9);
+  border-radius: 50%;
+  left: 75px;
+  top: 50px;
+  transform: rotateX(60deg);
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+.airplane-entrance::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+}
+
+.airplane-runway {
+  position: absolute;
+  width: 300px;
+  height: 60px;
+  background: rgba(30, 30, 40, 0.7);
+  left: -50px;
+  top: 70px;
+  transform: rotateX(60deg);
+  z-index: -1;
+  border-radius: 5px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.airplane-runway::before {
+  content: '';
+  position: absolute;
+  width: 80%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  left: 10%;
+  top: calc(50% - 2px);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.airplane-runway::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 20px,
+      rgba(255, 255, 255, 0.5) 20px,
+      rgba(255, 255, 255, 0.5) 40px
+    );
+  opacity: 0.1;
+}
+
+.airplane-lights {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  bottom: 5px;
+}
+
+.airplane-light {
+  width: 4px;
+  height: 4px;
+  background: rgb(255, 247, 150);
+  border-radius: 50%;
+  animation: blink 2s infinite alternate;
+}
+
+@keyframes blink {
+  0%, 80% { opacity: 1; }
+  100% { opacity: 0.3; }
+}
+
 .font-futuristic {
   font-family: 'Orbitron', 'Rajdhani', sans-serif;
   letter-spacing: 1px;
