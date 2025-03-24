@@ -1440,18 +1440,20 @@ export default function VRTown({
               <div className="text-xs text-center mt-1 text-white/70">Fashion</div>
             </div>
             
-            <div className="absolute top-0 left-[50%] transform -translate-x-1/2">
+            <div className="absolute top-0 left-[50%] transform -translate-x-1/2 z-20">
               <div className="tech-storefront"></div>
               <div className="store-brand-logo apple-style">APPLE</div>
+              <div className="text-xs text-center mt-1 text-white/70">Electronics</div>
             </div>
             
-            <div className="absolute top-0 right-[20%] transform translate-x-1/2">
+            <div className="absolute top-0 right-[20%] transform translate-x-1/2 z-20">
               <div className="sports-storefront"></div>
               <div className="store-brand-logo adidas-style">ADIDAS</div>
+              <div className="text-xs text-center mt-1 text-white/70">Sports</div>
             </div>
             
             {/* Travel District - Enhanced 3D Airplane Building (Emirates Airlines) */}
-            <div className="absolute top-[-30px] right-[-10%] transform translate-x-1/2 scale-75">
+            <div className="absolute top-[-30px] right-[-10%] transform translate-x-1/2 scale-75 z-30">
               <div className="advanced-airplane-building">
                 {/* Modern 3D Airplane Building */}
                 <div className="airplane-3d-container">
@@ -1543,7 +1545,7 @@ export default function VRTown({
             </div>
             
             {/* Travel District - Enhanced 3D Airplane Building (Turkish Airlines) */}
-            <div className="absolute top-[-20px] left-[-10%] transform -translate-x-1/2 scale-75 rotate-[15deg]">
+            <div className="absolute top-[-20px] left-[-10%] transform -translate-x-1/2 scale-75 rotate-[15deg] z-30">
               <div className="advanced-airplane-building turkish">
                 {/* Modern 3D Airplane Building with Turkish Airlines colors */}
                 <div className="airplane-3d-container">
