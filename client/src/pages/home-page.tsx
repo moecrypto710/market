@@ -4,11 +4,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
+import TouchControls from "@/components/touch-controls";
 import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useMovement } from "@/hooks/use-movement";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -19,7 +21,22 @@ export default function HomePage() {
   const [transitionStyle, setTransitionStyle] = useState<'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque'>('arabesque');
   const [, setLocation] = useLocation();
   const heroRef = useRef<HTMLDivElement>(null);
-  const [showTouchControls, setShowTouchControls] = useState(false);
+  const [showTouchControls, setShowTouchControls] = useState(isMobile);
+  const [immersiveMode, setImmersiveMode] = useState(false);
+  
+  // Initialize movement with useMovement hook
+  const {
+    position,
+    rotation,
+    isMoving,
+    moveForward,
+    moveBackward,
+    moveLeft,
+    moveRight,
+    rotate,
+    resetPosition,
+    setSpeed
+  } = useMovement();
   
   // Get products
   const { data: products } = useQuery<Product[]>({
@@ -61,18 +78,47 @@ export default function HomePage() {
 
   // Handle movement direction for touch controls
   const handleMove = (direction: 'forward' | 'backward' | 'left' | 'right') => {
-    // Implement movement logic here
-    console.log(`Moving ${direction}`);
+    switch (direction) {
+      case 'forward':
+        moveForward();
+        break;
+      case 'backward':
+        moveBackward();
+        break;
+      case 'left':
+        moveLeft();
+        break;
+      case 'right':
+        moveRight();
+        break;
+    }
   };
 
   // Handle stop movement
   const handleStopMove = () => {
-    console.log('Stopped moving');
+    // Movement will stop automatically when touch ends
+    // This is just for additional cleanup if needed
   };
 
   // Handle camera rotation
   const handleLook = (deltaX: number, deltaY: number) => {
-    console.log(`Looking: deltaX=${deltaX}, deltaY=${deltaY}`);
+    rotate(deltaX, deltaY);
+  };
+  
+  // Function to toggle immersive mode (replaces VR mode)
+  const toggleImmersiveMode = () => {
+    setImmersiveMode(prev => !prev);
+    setShowTouchControls(isMobile || !showTouchControls);
+    setAiInitialQuestion(immersiveMode ? undefined : "كيف أستخدم تجربة التفاعلية؟");
+    triggerCelebration();
+    
+    // Reset position when entering immersive mode
+    if (!immersiveMode) {
+      resetPosition();
+    }
+    
+    // Scroll to top when toggling mode
+    setTimeout(() => window.scrollTo(0, 0), 100);
   };
 
   // Animation variants
@@ -141,11 +187,11 @@ export default function HomePage() {
                   <p className="text-white/70 text-sm">{user?.email || 'user@example.com'}</p>
                 </div>
                 
-                {/* VR Button */}
+                {/* Immersive Mode Button */}
                 <div className="ml-auto">
                   <Button 
-                    onClick={toggleVR}
-                    aria-label="دخول بلدة الأمريكي الافتراضية"
+                    onClick={toggleImmersiveMode}
+                    aria-label="دخول بلدة الأمريكي التفاعلية"
                     className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-5 py-2 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -153,7 +199,7 @@ export default function HomePage() {
                     <span className="absolute -bottom-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
                     
                     <span className="relative z-10 flex items-center justify-center gap-2">
-                      <i className="fas fa-vr-cardboard text-lg"></i>
+                      <i className="fas fa-cube text-lg"></i>
                       <span className="font-bold">دخول بلدة الأمريكي</span>
                     </span>
                   </Button>
@@ -218,19 +264,14 @@ export default function HomePage() {
                   تجربة بلدة الأمريكي الافتراضية الذكية الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة ثلاثية الأبعاد تفاعلية
                 </p>
                 
-                {/* Single prominent VR button */}
+                {/* Single prominent immersive button */}
                 <motion.div
                   variants={fadeInUp}
                   className="flex justify-center"
                 >
                   <Button 
-                    onClick={() => {
-                      triggerCelebration();
-                      toggleVR();
-                      setAiInitialQuestion("كيف أستخدم تجربة الواقع الافتراضي؟");
-                      setTimeout(() => window.scrollTo(0, 0), 100);
-                    }}
-                    aria-label="دخول البلدة الافتراضية الذكية"
+                    onClick={toggleImmersiveMode}
+                    aria-label="دخول البلدة التفاعلية الذكية"
                     className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-10 py-8 h-auto text-xl md:text-2xl w-full sm:w-auto rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden group border border-white/20"
                   >
                     {/* Interior glow effects */}
@@ -249,9 +290,9 @@ export default function HomePage() {
                     {/* 3D Text and Icon */}
                     <div className="relative z-10 flex items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-105">
                       <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
-                        <i className="fas fa-vr-cardboard text-3xl drop-shadow-lg"></i>
+                        <i className="fas fa-cube text-3xl drop-shadow-lg"></i>
                       </div>
-                      <span className="drop-shadow-md text-shadow-lg">دخول البلدة الافتراضية الذكية</span>
+                      <span className="drop-shadow-md text-shadow-lg">دخول البلدة التفاعلية الذكية</span>
                     </div>
                     
                     {/* Pulsing accent indicator */}
