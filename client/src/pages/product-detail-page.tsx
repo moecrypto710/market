@@ -10,6 +10,7 @@ import ProductCard from '@/components/product-card';
 import PersonalizedRecommendations from '@/components/personalized-recommendations';
 import AugmentedReality from '@/components/augmented-reality';
 import CommunityQRCode from '@/components/community-qrcode';
+import CulturalHeritageStory from '@/components/cultural-heritage-story';
 import { useToast } from '@/hooks/use-toast';
 import SocialShare from '@/components/social-share';
 import { Product } from '@shared/schema';
@@ -467,6 +468,13 @@ export default function ProductDetailPage() {
               }}
             ></div>
             <p className="text-white/70">{validProduct.description}</p>
+            
+            {/* Cultural Heritage Story */}
+            {validProduct.culturalHeritageTitle && validProduct.culturalHeritageStory && (
+              <div className="mt-4">
+                <CulturalHeritageStory product={validProduct} />
+              </div>
+            )}
           </div>
           
           {/* Product Ratings & Reviews */}
