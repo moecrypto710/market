@@ -164,16 +164,38 @@ export default function AuthPage() {
     <div className="flex flex-col md:flex-row min-h-screen py-10">
       <div className="w-full md:w-1/2 px-4 md:px-10 flex items-center justify-center">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-3">
-              مول أمريكي
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">VR</span>
+          <div className="text-center mb-8 relative">
+            {/* Decorative elements */}
+            <div className="absolute -top-32 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-gradient-to-r from-purple-600/20 to-fuchsia-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+            
+            <h1 className="text-4xl font-bold mb-3 relative">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-purple-200">بلدة الأمريكي</span>
+              <span className="inline-block mx-2 px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-md text-white">VR</span>
             </h1>
-            <p className="text-white/70 text-lg">تجربة تسوق افتراضية في عالم العرب</p>
-            <div className="flex justify-center mt-4 mb-2">
+            
+            <p className="text-white/70 text-lg mb-3">مدينة الأعمال الافتراضية المتكاملة</p>
+            
+            <div className="flex justify-center mt-4 mb-2 flex-wrap gap-2">
               <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-sm">
                 <i className="fas fa-vr-cardboard mr-2 text-purple-400"></i>
                 <span className="text-white/90">تسوق بتقنية الواقع الافتراضي</span>
+              </div>
+              
+              <div className="inline-block px-3 py-1 rounded-full bg-gradient-to-r from-amber-600/20 to-orange-600/20 border border-amber-500/30 text-sm">
+                <i className="fas fa-medal mr-2 text-amber-400"></i>
+                <span className="text-white/90">برنامج الولاء التفاعلي</span>
+              </div>
+            </div>
+            
+            {/* AR badge animation */}
+            <div className="relative mt-5 mb-3 flex justify-center">
+              <div className="relative inline-block">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-fuchsia-500/30 rounded-full filter blur-xl animate-pulse-slow"></div>
+                <div className="relative inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-indigo-900/80 to-purple-900/80 backdrop-blur-sm border border-white/10 rounded-full shadow-xl">
+                  <i className="fas fa-cube text-amber-400"></i>
+                  <span className="text-white font-medium">احصل على مكافآت AR حصرية</span>
+                  <div className="absolute -inset-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 animate-shimmer" style={{backgroundSize: '200% 100%'}}></div>
+                </div>
               </div>
             </div>
           </div>

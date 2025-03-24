@@ -249,6 +249,20 @@ export default function HomePage() {
                   </Button>
                   
                   <Button 
+                    onClick={() => triggerTransition('arabesque', '/rewards')}
+                    className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold px-8 py-4 h-auto text-lg w-full sm:w-auto rounded-full shadow-lg shadow-amber-900/30 transform transition-transform hover:scale-105 relative overflow-hidden group"
+                  >
+                    <div className="flex items-center justify-center gap-3 relative z-10">
+                      <div className="relative">
+                        <i className="fas fa-medal text-2xl"></i>
+                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-ping"></div>
+                      </div>
+                      <span>برنامج الولاء التفاعلي</span>
+                    </div>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform duration-1000"></div>
+                  </Button>
+                  
+                  <Button 
                     variant="outline"
                     className="border-2 border-purple-500/40 hover:bg-purple-500/20 px-8 py-4 h-auto w-full sm:w-auto text-lg rounded-full transform transition-transform hover:scale-105"
                     onClick={() => window.location.href = '/auth'}
