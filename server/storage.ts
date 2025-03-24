@@ -592,7 +592,8 @@ export class PgStorage implements IStorage {
     this.sessionStore = new PgStore({
       conObject: {
         connectionString: process.env.DATABASE_URL,
-        ssl: true,
+        // No SSL needed for Replit internal PostgreSQL
+        ssl: false, 
       },
       tableName: 'session',
       createTableIfMissing: true,
