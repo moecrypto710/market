@@ -803,6 +803,16 @@ export default function VRTown({
   const [gazeProgress, setGazeProgress] = useState<number>(0);
   const [gazeTarget, setGazeTarget] = useState<string | null>(null);
   
+  // VR Navigation locations (inspired by VRNavigation Unity script)
+  const [currentLocationIndex, setCurrentLocationIndex] = useState<number>(0);
+  const navigationLocations = [
+    { id: 'main-entrance', position: { x: 0, y: 0, z: 0 }, name: 'المدخل الرئيسي' },
+    { id: 'electronics-section', position: { x: 50, y: 0, z: 30 }, name: 'قسم الإلكترونيات' },
+    { id: 'clothing-section', position: { x: -40, y: 0, z: 60 }, name: 'قسم الملابس' },
+    { id: 'travel-section', position: { x: 0, y: 0, z: 100 }, name: 'قسم السفر' },
+    { id: 'cafe-area', position: { x: 80, y: 0, z: -20 }, name: 'منطقة المقهى' }
+  ];
+  
   // Enhanced VR features
   const [rotationAngle, setRotationAngle] = useState(0);
   const [viewMode, setViewMode] = useState<'2d' | '3d' | '360' | 'ar'>('3d');
@@ -865,7 +875,7 @@ export default function VRTown({
     
     toast({
       title: `مرحبًا ${avatar.name}!`,
-      description: "ابدأ تجربة التسوق الافتراضية باستخدام أسهم لوحة المفاتيح للتنقل"
+      description: "استخدم أسهم لوحة المفاتيح للتنقل بحرية، واضغط على زر Tab للانتقال بين المواقع المحددة مسبقًا"
     });
   }
   
@@ -878,6 +888,44 @@ export default function VRTown({
   function exitVR() {
     toggleVR();
     setSelectedAvatar(null);
+  }
+  
+  // Navigate to the next location (similar to Unity VRNavigation)
+  function navigateToNextLocation() {
+    const nextIndex = (currentLocationIndex + 1) % navigationLocations.length;
+    const nextLocation = navigationLocations[nextIndex];
+    
+    // Show transition effect
+    setTransitionStyle('cultural');
+    setShowTransition(true);
+    
+    // Update avatar position
+    setAvatarPosition(nextLocation.position);
+    setCurrentLocationIndex(nextIndex);
+    
+    // Update current section
+    let newSection = currentSection;
+    if (nextLocation.id.includes('electronics')) {
+      newSection = 'electronics';
+      setAmbientColor('#5e35b1');
+    } else if (nextLocation.id.includes('clothing')) {
+      newSection = 'clothing';
+      setAmbientColor('#e91e63');
+    } else if (nextLocation.id.includes('travel')) {
+      newSection = 'travel';
+      setAmbientColor('#2196f3');
+    } else if (nextLocation.id === 'main-entrance') {
+      newSection = 'entrance';
+      setAmbientColor('#9c27b0');
+    }
+    
+    if (newSection !== currentSection) {
+      setCurrentSection(newSection);
+      toast({
+        title: `أهلاً بك في ${nextLocation.name}`,
+        description: `انتقلت إلى موقع جديد: ${nextLocation.name}`
+      });
+    }
   }
   
   // Handle gaze navigation to new point
@@ -1098,6 +1146,10 @@ export default function VRTown({
           break;
         case "l":
           setShowNavigationLabels(prev => !prev);
+          break;
+        case "Tab": // Similar to Unity's "Fire1" button for navigation
+          e.preventDefault(); // Prevent default tab behavior
+          navigateToNextLocation();
           break;
       }
     };
