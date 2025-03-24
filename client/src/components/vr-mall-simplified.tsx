@@ -27,6 +27,8 @@ interface AvatarProps {
 
 interface VRMallProps {
   products: Product[];
+  initialView?: 'map' | 'firstPerson' | 'aerial';
+  highlightBusinessType?: 'electronics' | 'travel' | 'clothing' | null;
 }
 
 // Avatar Selection Component
