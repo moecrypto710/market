@@ -332,7 +332,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 
-                <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto mb-6 leading-relaxed font-light">
+                <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-6 leading-relaxed font-normal bg-gradient-to-r from-black/40 to-black/40 backdrop-blur-sm p-4 rounded-lg">
                   اكتشف بلدة الأمريكي، المدينة الافتراضية المتكاملة للأعمال حيث تجتمع متاجر الهواتف والأجهزة الإلكترونية، وكالات السفر والطيران، الفنادق، متاجر الملابس والإكسسوارات في عالم افتراضي ثلاثي الأبعاد بتصميم عربي أصيل
                 </p>
                 
@@ -543,32 +543,39 @@ export default function HomePage() {
             </Carousel>
           </motion.div>
           
-          {/* Featured Products with Enhanced UI */}
+          {/* Note about VR-only products */}
           <motion.div 
             className="mb-12"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.6 }}
           >
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-8 bg-gradient-to-b from-fuchsia-500 to-purple-700 rounded-full"></div>
-                <h2 className="text-2xl font-bold text-white">منتجات مميزة</h2>
+            <div className="bg-gradient-to-r from-fuchsia-900/60 to-purple-900/60 backdrop-blur-md rounded-2xl p-6 border border-fuchsia-500/20 text-center">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6 p-4">
+                <div className="text-4xl text-white">
+                  <i className="fas fa-vr-cardboard"></i>
+                </div>
+                <div className="text-center md:text-right">
+                  <h3 className="text-xl font-bold text-white mb-2">المنتجات متوفرة فقط داخل بلدة الأمريكي</h3>
+                  <p className="text-white/80">لتصفح المنتجات والخدمات، يرجى الانتقال إلى تجربة الواقع الافتراضي</p>
+                </div>
+                <div>
+                  <Button 
+                    onClick={() => {
+                      triggerCelebration();
+                      toggleVR();
+                      setAiInitialQuestion("كيف أستخدم تجربة الواقع الافتراضي؟");
+                      setTimeout(() => window.scrollTo(0, 0), 100);
+                    }}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold px-6 py-3 h-auto rounded-full shadow-lg shadow-purple-900/30"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <i className="fas fa-vr-cardboard"></i>
+                      <span>الدخول الآن</span>
+                    </div>
+                  </Button>
+                </div>
               </div>
-              <Button variant="ghost" className="text-fuchsia-300 hover:text-fuchsia-200 hover:bg-fuchsia-900/20">
-                عرض الكل <i className="fas fa-arrow-left mr-2"></i>
-              </Button>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products?.slice(0, 8).map((product) => (
-                <motion.div
-                  key={product.id}
-                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                >
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
             </div>
           </motion.div>
           
