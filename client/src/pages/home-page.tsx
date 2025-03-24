@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
 import TouchControls from "@/components/touch-controls";
+import StoreInteraction from "@/components/store-interaction";
 import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
