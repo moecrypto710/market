@@ -54,7 +54,13 @@ function Router() {
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
       <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
-      <ProtectedRoute path="/virtual-city" component={VRAmrikyyTownPage} />
+      <Route path="/virtual-city">
+        {() => {
+          // إعادة توجيه المسار القديم إلى المسار الجديد
+          window.location.href = "/vr-amrikyy-town";
+          return null;
+        }}
+      </Route>
       <ProtectedRoute path="/vr-amrikyy-town" component={VRAmrikyyTownPage} />
       <Route component={NotFound} />
     </Switch>
