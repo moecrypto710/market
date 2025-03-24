@@ -508,9 +508,9 @@ export default function HomePage() {
                   </div>
                 </div>
                 
-                {/* Simplified description with better styling */}
+                {/* Realistic description with better styling */}
                 <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-10 leading-relaxed font-normal bg-black/20 backdrop-blur-sm p-5 rounded-xl border border-white/10">
-                  اكتشف بلدة الأمريكي، المدينة الافتراضية الذكية المتكاملة للأعمال حيث تجتمع متاجر الإلكترونيات، وكالات السفر والطيران، متاجر الملابس والإكسسوارات في عالم افتراضي ثلاثي الأبعاد
+                  تجربة بلدة الأمريكي الافتراضية الذكية الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة ثلاثية الأبعاد تفاعلية
                 </p>
                 
                 {/* Single prominent VR button */}
@@ -535,23 +535,23 @@ export default function HomePage() {
                   </Button>
                 </motion.div>
                 
-                {/* Compact stats showcase */}
+                {/* Compact realistic stats showcase */}
                 <div className="flex justify-center mt-10">
                   <motion.div 
                     className="flex flex-wrap justify-center gap-4 max-w-3xl"
                     variants={fadeInUp}
                   >
                     <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                      <div className="text-xl font-bold text-blue-300">+500</div>
-                      <div className="text-white/70 text-sm">منتج عالمي</div>
+                      <div className="text-xl font-bold text-blue-300">+30</div>
+                      <div className="text-white/70 text-sm">منتج متنوع</div>
                     </div>
                     <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                      <div className="text-xl font-bold text-purple-300">+50</div>
-                      <div className="text-white/70 text-sm">ماركة عالمية</div>
+                      <div className="text-xl font-bold text-purple-300">3</div>
+                      <div className="text-white/70 text-sm">أقسام رئيسية</div>
                     </div>
                     <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                      <div className="text-xl font-bold text-pink-300">+60</div>
-                      <div className="text-white/70 text-sm">متجر افتراضي</div>
+                      <div className="text-xl font-bold text-pink-300">+10</div>
+                      <div className="text-white/70 text-sm">مبنى تفاعلي</div>
                     </div>
                   </motion.div>
                 </div>
