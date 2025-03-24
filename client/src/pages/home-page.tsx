@@ -457,7 +457,7 @@ export default function HomePage() {
               </div>
             </motion.div>
           )}
-          {/* Hero Section with Arabesque Pattern Background */}
+          {/* Smart Hero Section */}
           <motion.div 
             ref={heroRef}
             className="relative mb-12 overflow-hidden rounded-2xl"
@@ -465,69 +465,58 @@ export default function HomePage() {
             animate="visible"
             variants={staggerChildren}
           >
-            {/* Enhanced futuristic background with arabesque patterns */}
-            <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-900/90 via-purple-900/90 to-indigo-900/90 overflow-hidden">
-              {/* Arabesque pattern overlay */}
-              <div className="absolute inset-0 opacity-15" 
-                   style={{ 
-                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-                     backgroundSize: '30px 30px'
-                   }}
-              ></div>
-              
+            {/* Enhanced futuristic background with digital patterns */}
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-fuchsia-900/90 overflow-hidden">
               {/* Digital circuit pattern */}
-              <div className="absolute inset-0 opacity-5"
+              <div className="absolute inset-0 opacity-10"
                    style={{
                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                      backgroundSize: '80px 80px'
                    }}
               ></div>
 
-              {/* Advanced glowing orbs with gradients */}
-              <div className="absolute top-20 left-20 w-80 h-80 rounded-full bg-gradient-to-br from-purple-500/20 to-fuchsia-500/10 filter blur-3xl animate-pulse-slow"></div>
-              <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-gradient-to-tr from-fuchsia-500/20 to-indigo-500/10 filter blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+              {/* Futuristic glow effects */}
+              <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/10 filter blur-3xl animate-pulse-slow"></div>
+              <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-gradient-to-tr from-purple-500/20 to-pink-500/10 filter blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
               
-              {/* Futuristic scanning line */}
+              {/* Scanning line effect */}
               <div 
-                className="absolute inset-0 opacity-10"
+                className="absolute inset-0 opacity-20"
                 style={{
-                  background: 'linear-gradient(to bottom, transparent, transparent 50%, rgba(170, 0, 255, 0.2) 50%, transparent 50.5%)',
+                  background: 'linear-gradient(to bottom, transparent, transparent 50%, rgba(170, 0, 255, 0.3) 50%, transparent 50.5%)',
                   backgroundSize: '100% 120px',
                   animation: 'scanline 6s linear infinite'
                 }}
               ></div>
-              
-              {/* Holographic dots */}
-              <div className="absolute top-1/4 left-1/4 w-1 h-1 bg-blue-400 rounded-full animate-float1 z-20"></div>
-              <div className="absolute top-3/4 left-1/3 w-1 h-1 bg-pink-400 rounded-full animate-float2 z-20"></div>
-              <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-purple-400 rounded-full animate-float3 z-20"></div>
-              <div className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-cyan-400 rounded-full animate-float1 z-20"></div>
             </div>
             
-            <div className="relative py-16 px-6 md:px-12 z-10">
+            {/* Content with proper spacing and hierarchy */}
+            <div className="relative py-20 px-6 md:px-12 z-10">
               <motion.div 
-                className="text-center mb-8 hero-element"
+                className="text-center mb-10 hero-element"
                 variants={fadeInUp}
               >
-                <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-fuchsia-200">
+                {/* Main Title with Modern Styling */}
+                <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300">
                   بلدة الأمريكي
-                  <span className="inline-block mx-2 px-2 py-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-md text-white">VR</span>
+                  <span className="inline-block mx-2 px-3 py-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-md text-white">VR</span>
                 </h1>
                 
-                <div className="flex justify-center mb-4">
-                  <div className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium">
-                    أول مدينة أعمال افتراضية متكاملة في العالم العربي
+                <div className="flex justify-center mb-6">
+                  <div className="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm font-medium">
+                    أول مدينة أعمال افتراضية ذكية متكاملة في العالم العربي
                   </div>
                 </div>
                 
-                <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-6 leading-relaxed font-normal bg-gradient-to-r from-black/40 to-black/40 backdrop-blur-sm p-4 rounded-lg">
-                  اكتشف بلدة الأمريكي، المدينة الافتراضية المتكاملة للأعمال حيث تجتمع متاجر الهواتف والأجهزة الإلكترونية، وكالات السفر والطيران، الفنادق، متاجر الملابس والإكسسوارات في عالم افتراضي ثلاثي الأبعاد
+                {/* Simplified description with better styling */}
+                <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-10 leading-relaxed font-normal bg-black/20 backdrop-blur-sm p-5 rounded-xl border border-white/10">
+                  اكتشف بلدة الأمريكي، المدينة الافتراضية الذكية المتكاملة للأعمال حيث تجتمع متاجر الإلكترونيات، وكالات السفر والطيران، متاجر الملابس والإكسسوارات في عالم افتراضي ثلاثي الأبعاد
                 </p>
                 
-                {/* Hero buttons */}
+                {/* Single prominent VR button */}
                 <motion.div
-                  className="flex flex-col sm:flex-row items-center justify-center gap-5 mt-8 hero-element"
                   variants={fadeInUp}
+                  className="flex justify-center"
                 >
                   <Button 
                     onClick={() => {
@@ -536,62 +525,36 @@ export default function HomePage() {
                       setAiInitialQuestion("كيف أستخدم تجربة الواقع الافتراضي؟");
                       setTimeout(() => window.scrollTo(0, 0), 100);
                     }}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold px-8 py-4 h-auto text-lg w-full sm:w-auto rounded-full shadow-lg shadow-purple-900/30 transform transition-transform hover:scale-105"
+                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-10 py-6 h-auto text-xl md:text-2xl w-full sm:w-auto rounded-2xl shadow-xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 relative overflow-hidden group"
                   >
-                    <div className="flex items-center justify-center gap-3">
-                      <i className="fas fa-vr-cardboard text-2xl"></i>
-                      <span>ابدأ تجربة الواقع الافتراضي</span>
+                    <div className="flex items-center justify-center gap-4">
+                      <i className="fas fa-vr-cardboard text-3xl"></i>
+                      <span>دخول البلدة الافتراضية الذكية</span>
                     </div>
-                  </Button>
-                  
-                  <Button 
-                    onClick={() => triggerTransition('arabesque', '/rewards')}
-                    className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold px-8 py-4 h-auto text-lg w-full sm:w-auto rounded-full shadow-lg shadow-amber-900/30 transform transition-transform hover:scale-105 relative overflow-hidden group"
-                  >
-                    <div className="flex items-center justify-center gap-3 relative z-10">
-                      <div className="relative">
-                        <i className="fas fa-medal text-2xl"></i>
-                        <div className="absolute -top-1 -right-1 w-2 h-2 bg-white rounded-full animate-ping"></div>
-                      </div>
-                      <span>برنامج الولاء التفاعلي</span>
-                    </div>
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform duration-1000"></div>
-                  </Button>
-                  
-                  <Button 
-                    variant="outline"
-                    className="border-2 border-purple-500/40 hover:bg-purple-500/20 px-8 py-4 h-auto w-full sm:w-auto text-lg rounded-full transform transition-transform hover:scale-105"
-                    onClick={() => window.location.href = '/auth'}
-                  >
-                    <div className="flex items-center justify-center gap-3">
-                      <i className="fas fa-user text-xl"></i>
-                      <span>تسجيل الدخول</span>
-                    </div>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform"></div>
                   </Button>
                 </motion.div>
                 
-                {/* Stats counter */}
-                <motion.div 
-                  className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 text-center hero-element"
-                  variants={fadeInUp}
-                >
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-fuchsia-300 mb-1">+500</div>
-                    <div className="text-white/70 text-sm">منتج عالمي</div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-fuchsia-300 mb-1">+50</div>
-                    <div className="text-white/70 text-sm">ماركة عالمية</div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-fuchsia-300 mb-1">+60</div>
-                    <div className="text-white/70 text-sm">متجر افتراضي</div>
-                  </div>
-                  <div className="hidden md:block bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/10">
-                    <div className="text-3xl font-bold text-fuchsia-300 mb-1">+10K</div>
-                    <div className="text-white/70 text-sm">مستخدم نشط</div>
-                  </div>
-                </motion.div>
+                {/* Compact stats showcase */}
+                <div className="flex justify-center mt-10">
+                  <motion.div 
+                    className="flex flex-wrap justify-center gap-4 max-w-3xl"
+                    variants={fadeInUp}
+                  >
+                    <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                      <div className="text-xl font-bold text-blue-300">+500</div>
+                      <div className="text-white/70 text-sm">منتج عالمي</div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                      <div className="text-xl font-bold text-purple-300">+50</div>
+                      <div className="text-white/70 text-sm">ماركة عالمية</div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                      <div className="text-xl font-bold text-pink-300">+60</div>
+                      <div className="text-white/70 text-sm">متجر افتراضي</div>
+                    </div>
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
