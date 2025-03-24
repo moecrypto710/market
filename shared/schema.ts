@@ -34,8 +34,8 @@ export const paymentMethodEnum = pgEnum("payment_method", [
 export const categoryEnum = pgEnum("category", [
   "electronics", 
   "clothing", 
-  "home", 
-  "sports"
+  "travel", 
+  "accessories"
 ]);
 
 export const eventTypeEnum = pgEnum("event_type", [
