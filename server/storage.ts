@@ -262,8 +262,9 @@ export class MemStorage implements IStorage {
       this.users.set(user.id, user);
     });
     
-    // Sample brand products for Amrikyy Mall
+    // Sample brand products for بلدة الأمريكي Town
     const productData: Omit<Product, "id">[] = [
+      // CLOTHING PRODUCTS
       {
         name: "حذاء نايكي اير جوردان ريترو",
         description: "حذاء رياضي أصلي من نايكي، مستوحى من تصميم مايكل جوردان الكلاسيكي مع تقنية الهواء المضغوط للراحة المثالية",
@@ -321,6 +322,8 @@ export class MemStorage implements IStorage {
         culturalHeritageRegion: "شمال أفريقيا والشرق الأوسط",
         culturalHeritagePeriod: "القرون 17-20"
       },
+      
+      // ELECTRONICS PRODUCTS
       {
         name: "سماعات آبل إيربودز برو",
         description: "سماعات آبل إيربودز برو الأصلية مع خاصية إلغاء الضوضاء النشطة وجودة صوت استثنائية ومقاومة للماء والعرق",
@@ -377,6 +380,65 @@ export class MemStorage implements IStorage {
         culturalHeritageImageUrl: "/images/heritage/islamic-timekeeping.jpg",
         culturalHeritageRegion: "بلاد الشام وبغداد",
         culturalHeritagePeriod: "العصر الذهبي الإسلامي (750-1258)"
+      },
+      
+      // TRAVEL SERVICES
+      {
+        name: "تذكرة طيران - الخطوط السعودية",
+        description: "تذكرة طيران ذهاب وعودة على درجة الضيافة مع وزن أمتعة إضافي وخدمة وجبات فاخرة",
+        price: 3800,
+        imageUrl: "/images/product-templates/flight-ticket.svg",
+        category: "travel",
+        inStock: true,
+        commissionRate: 20,
+        vrEnabled: true,
+        brandId: 7,
+        featured: true,
+        threeDModelUrl: "/models/airplane-ticket.glb",
+        viewCount: 980,
+        culturalHeritageTitle: "تقاليد السفر عبر الصحراء",
+        culturalHeritageStory: "السفر له مكانة خاصة في الثقافة العربية، حيث كانت القوافل تعبر الصحراء للتجارة والحج منذ آلاف السنين. طورت المجتمعات البدوية معرفة دقيقة بالنجوم للملاحة عبر الصحراء، وابتكرت طرقاً للبقاء على قيد الحياة في البيئات القاسية. كانت رحلات القوافل تستغرق أشهراً، مقارنة بالطيران الحديث الذي يختصر المسافات لساعات قليلة. ومع ذلك، لا تزال قيم الضيافة والترحيب بالمسافرين تشكل عنصراً أساسياً في خدمات السفر العربية الحديثة، استمراراً لتقاليد إكرام الضيف المتأصلة في الثقافة.",
+        culturalHeritageImageUrl: "/images/heritage/caravan-travel.jpg",
+        culturalHeritageRegion: "شبه الجزيرة العربية",
+        culturalHeritagePeriod: "العصور القديمة حتى الحديثة"
+      },
+      {
+        name: "باقة سياحية - الأهرامات وأبو الهول",
+        description: "رحلة سياحية لمدة 5 أيام تشمل زيارة الأهرامات وأبو الهول مع مرشد سياحي خاص وإقامة فندقية فاخرة",
+        price: 9500,
+        imageUrl: "/images/product-templates/egypt-tour.svg",
+        category: "travel",
+        inStock: true,
+        commissionRate: 22,
+        vrEnabled: true,
+        brandId: 8,
+        featured: true,
+        threeDModelUrl: "/models/pyramids-tour.glb",
+        viewCount: 1240,
+        culturalHeritageTitle: "اكتشاف الآثار المصرية",
+        culturalHeritageStory: "مصر القديمة كانت مهد واحدة من أعظم الحضارات في التاريخ، حيث تركت إرثاً هائلاً من الآثار والمعالم التي لا تزال تذهل العالم حتى اليوم. الأهرامات، التي بنيت كمقابر للفراعنة، تمثل إنجازاً هندسياً مذهلاً وشهادة على براعة المصريين القدماء. كان العلماء العرب في العصور الوسطى من أوائل من درسوا الآثار المصرية بشكل منهجي، مسجلين ملاحظات دقيقة عن الأهرامات والمعابد. اليوم، تمزج السياحة الثقافية بين التعرف على هذا التراث الغني واستخدام التقنيات الحديثة لتقديم تجربة غامرة تربط الزائر بالماضي العريق.",
+        culturalHeritageImageUrl: "/images/heritage/egyptian-pyramids.jpg",
+        culturalHeritageRegion: "مصر",
+        culturalHeritagePeriod: "2600 ق.م - الحاضر"
+      },
+      {
+        name: "حجز فندق - برج العرب دبي",
+        description: "إقامة فاخرة لمدة 3 ليالي في فندق برج العرب السبع نجوم مع إطلالة على البحر وخدمات حصرية",
+        price: 25000,
+        imageUrl: "/images/product-templates/burj-al-arab.svg",
+        category: "travel",
+        inStock: true,
+        commissionRate: 25,
+        vrEnabled: true,
+        brandId: 9,
+        featured: true,
+        threeDModelUrl: "/models/burj-al-arab.glb",
+        viewCount: 1580,
+        culturalHeritageTitle: "فن الضيافة العربية",
+        culturalHeritageStory: "الضيافة في الثقافة العربية ليست مجرد خدمة، بل هي تقليد راسخ يعكس قيماً أساسية في المجتمع. في التاريخ العربي، كان استقبال الضيوف وإكرامهم يعتبر واجباً اجتماعياً ودينياً، ويمتد لثلاثة أيام على الأقل. كانت الخيام البدوية تفتح أبوابها للمسافرين في الصحراء، وكان تقديم القهوة العربية والتمر طقساً أساسياً في الترحيب. اليوم، تجسد الفنادق الفاخرة مثل برج العرب هذا التراث مع إضافة عناصر من الرفاهية المعاصرة، حيث تمزج بين الديكورات المستوحاة من التراث والتصميمات الحديثة لخلق تجربة ضيافة فريدة تعكس الهوية الثقافية العربية في سياق عالمي.",
+        culturalHeritageImageUrl: "/images/heritage/arabic-hospitality.jpg",
+        culturalHeritageRegion: "الخليج العربي",
+        culturalHeritagePeriod: "تقليدي إلى معاصر"
       }
     ];
 
@@ -389,30 +451,63 @@ export class MemStorage implements IStorage {
     const rewardData: Omit<Reward, "id">[] = [
       {
         name: "خصم 500 جنيه على منتجات نايكي",
-        description: "استمتع بخصم على طلبك التالي من منتجات نايكي الأصلية في مول أمريكي. صالح على جميع منتجات نايكي بما فيها الإصدارات الجديدة والحصرية",
+        description: "استمتع بخصم على طلبك التالي من منتجات نايكي الأصلية في بلدة الأمريكي. صالح على جميع منتجات نايكي بما فيها الإصدارات الجديدة والحصرية",
         pointsRequired: 1000,
         isActive: true,
         tier: "basic",
         imageUrl: "/images/product-templates/nike-shoes.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       },
       {
         name: "شحن مجاني لمدة 3 أشهر",
-        description: "توصيل مجاني لجميع مشترياتك من أي ماركة في مول أمريكي لجميع أنحاء مصر، والخدمة صالحة لمدة 3 أشهر كاملة من تاريخ التفعيل",
+        description: "توصيل مجاني لجميع مشترياتك من أي ماركة في بلدة الأمريكي لجميع أنحاء مصر، والخدمة صالحة لمدة 3 أشهر كاملة من تاريخ التفعيل",
         pointsRequired: 750,
         isActive: true,
         tier: "basic",
         imageUrl: "/images/product-templates/samsung-galaxy.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       },
       {
         name: "قسيمة هدية بقيمة 1000 جنيه",
-        description: "احصل على قسيمة هدية بقيمة 1000 جنيه لاستخدامها على أي منتجات في مول أمريكي. القسيمة قابلة للتحويل ويمكن استخدامها على أقساط",
+        description: "احصل على قسيمة هدية بقيمة 1000 جنيه لاستخدامها على أي منتجات في بلدة الأمريكي. القسيمة قابلة للتحويل ويمكن استخدامها على أقساط",
         pointsRequired: 2000,
         isActive: true,
         tier: "premium",
         imageUrl: "/images/product-templates/adidas-tshirt.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       },
       {
         name: "عضوية VIP لمدة شهر",
@@ -421,25 +516,58 @@ export class MemStorage implements IStorage {
         isActive: true,
         tier: "premium",
         imageUrl: "/images/product-templates/apple-airpods.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       },
       {
         name: "متجر افتراضي مجاني لمدة شهر",
-        description: "احصل على متجر افتراضي مجاني في مول أمريكي لمدة شهر كامل لعرض منتجاتك الخاصة أو منتجات شركائك مع دعم فني كامل",
+        description: "احصل على متجر افتراضي مجاني في بلدة الأمريكي لمدة شهر كامل لعرض منتجاتك الخاصة أو منتجات شركائك مع دعم فني كامل",
         pointsRequired: 5000,
         isActive: true,
         tier: "vip",
         imageUrl: "/images/product-templates/levis-jeans.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       },
       {
         name: "وصول حصري لمجموعات محدودة",
-        description: "الوصول الحصري للمنتجات المحدودة والإصدارات الخاصة من كبرى الماركات العالمية قبل نفاذها من السوق",
+        description: "الوصول الحصري للمنتجات المحدودة والإصدارات الخاصة من كبرى الماركات العالمية في بلدة الأمريكي قبل نفاذها من السوق",
         pointsRequired: 7500,
         isActive: true,
         tier: "vip",
         imageUrl: "/images/product-templates/nike-shoes.svg",
-        expiryDate: new Date("2025-12-31")
+        expiryDate: new Date("2025-12-31"),
+        arEnabled: false,
+        arDescription: "",
+        arThumbnailUrl: "",
+        arModelUrl: "",
+        badgeId: "",
+        badgeIcon: "",
+        badgeTitle: "",
+        achievementType: "",
+        rarity: "",
+        unlockCriteria: "",
+        streakRequired: 0
       }
     ];
 
