@@ -163,6 +163,159 @@ export default function CameraIntegration({
       }
     };
   }, [cameraFacing]);
+  
+  // Handle product position adjustment for virtual try-on
+  useEffect(() => {
+    if (!isARActive || selectedEffect !== 'virtual-try' || !productImageUrl) {
+      return;
+    }
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Adjust position with arrow keys
+      switch (e.key) {
+        case 'ArrowUp':
+          setVirtualPosition(prev => ({ ...prev, y: prev.y - 10 }));
+          break;
+        case 'ArrowDown':
+          setVirtualPosition(prev => ({ ...prev, y: prev.y + 10 }));
+          break;
+        case 'ArrowLeft':
+          setVirtualPosition(prev => ({ ...prev, x: prev.x - 10 }));
+          break;
+        case 'ArrowRight':
+          setVirtualPosition(prev => ({ ...prev, x: prev.x + 10 }));
+          break;
+        // Adjust size with + and -
+        case '+':
+        case '=':
+          setVirtualPosition(prev => ({ ...prev, scale: prev.scale + 0.1 }));
+          break;
+        case '-':
+        case '_':
+          setVirtualPosition(prev => ({ ...prev, scale: Math.max(0.1, prev.scale - 0.1) }));
+          break;
+        // Adjust rotation with [ and ]
+        case '[':
+        case '{':
+          setVirtualPosition(prev => ({ ...prev, rotation: prev.rotation - 5 }));
+          break;
+        case ']':
+        case '}':
+          setVirtualPosition(prev => ({ ...prev, rotation: prev.rotation + 5 }));
+          break;
+        // Reset position with R
+        case 'r':
+        case 'R':
+          setVirtualPosition({ x: 0, y: 0, scale: 1, rotation: 0 });
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // AR product adjustment instructions notification
+    toast({
+      title: "تعديل وضع المنتج",
+      description: "استخدم مفاتيح الأسهم لتحريك المنتج، + و - لتغيير الحجم، [ و ] للتدوير، R لإعادة الضبط",
+      duration: 5000,
+    });
+    
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isARActive, selectedEffect, productImageUrl]);
+  
+  // Handle touch gestures for product position adjustment
+  useEffect(() => {
+    if (!isARActive || selectedEffect !== 'virtual-try' || !productImageUrl) {
+      return;
+    }
+    
+    let startX = 0;
+    let startY = 0;
+    let startDistance = 0;
+    let startRotation = 0;
+    let isMoving = false;
+    let isScaling = false;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        // Single touch for moving
+        isMoving = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      } else if (e.touches.length === 2) {
+        // Two touches for scaling/rotating
+        isMoving = false;
+        isScaling = true;
+        
+        // Calculate initial distance between two fingers for scaling
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        startDistance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Calculate initial angle for rotation
+        startRotation = Math.atan2(dy, dx) * (180 / Math.PI);
+      }
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isMoving && e.touches.length === 1) {
+        // Move the product
+        const deltaX = e.touches[0].clientX - startX;
+        const deltaY = e.touches[0].clientY - startY;
+        
+        setVirtualPosition(prev => ({
+          ...prev,
+          x: prev.x + deltaX,
+          y: prev.y + deltaY
+        }));
+        
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      } else if (isScaling && e.touches.length === 2) {
+        // Calculate current distance for scaling
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Calculate scale ratio
+        const scale = distance / startDistance;
+        
+        // Calculate current angle for rotation
+        const rotation = Math.atan2(dy, dx) * (180 / Math.PI);
+        const deltaRotation = rotation - startRotation;
+        
+        setVirtualPosition(prev => ({
+          ...prev,
+          scale: prev.scale * scale,
+          rotation: prev.rotation + deltaRotation
+        }));
+        
+        startDistance = distance;
+        startRotation = rotation;
+      }
+    };
+    
+    const handleTouchEnd = () => {
+      isMoving = false;
+      isScaling = false;
+    };
+    
+    if (videoRef.current) {
+      videoRef.current.addEventListener('touchstart', handleTouchStart);
+      videoRef.current.addEventListener('touchmove', handleTouchMove);
+      videoRef.current.addEventListener('touchend', handleTouchEnd);
+    }
+    
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('touchstart', handleTouchStart);
+        videoRef.current.removeEventListener('touchmove', handleTouchMove);
+        videoRef.current.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [isARActive, selectedEffect, productImageUrl]);
 
   // Capture image from video stream
   const captureImage = () => {
@@ -375,18 +528,121 @@ export default function CameraIntegration({
                 
                 {selectedEffect === 'measure' && (
                   <div className="absolute inset-0">
+                    {/* Measurement Grid */}
                     <div className="absolute left-1/3 top-1/3 w-1/3 h-1/3 border-2 border-yellow-500 border-dashed"></div>
                     <div className="absolute left-1/3 top-1/3 w-[2px] h-1/3 bg-yellow-500"></div>
                     <div className="absolute left-1/3 top-1/3 w-1/3 h-[2px] bg-yellow-500"></div>
-                    <div className="absolute right-1/3 bottom-1/3 text-xs text-yellow-500 font-mono">MEASURING...</div>
+                    
+                    {/* Measurement Data */}
+                    <div className="absolute right-4 top-1/3 bg-black/50 backdrop-blur-sm p-2 rounded-lg border border-yellow-500/30">
+                      <div className="text-xs text-yellow-500 font-mono mb-1">MEASURING...</div>
+                      <div className="flex items-center text-[10px] text-white/80 mb-1">
+                        <span className="w-3 h-3 bg-yellow-500/20 border border-yellow-500 mr-1"></span>
+                        <span>Width: <span className="text-yellow-500">~48 cm</span></span>
+                      </div>
+                      <div className="flex items-center text-[10px] text-white/80 mb-1">
+                        <span className="w-3 h-3 bg-yellow-500/20 border border-yellow-500 mr-1"></span>
+                        <span>Height: <span className="text-yellow-500">~72 cm</span></span>
+                      </div>
+                      <div className="flex items-center text-[10px] text-white/80">
+                        <span className="w-3 h-3 bg-yellow-500/20 border border-yellow-500 mr-1"></span>
+                        <span>Distance: <span className="text-yellow-500">~1.2 m</span></span>
+                      </div>
+                    </div>
+                    
+                    {/* Target points with pulsing effect */}
+                    <div className="absolute left-1/3 top-1/3 w-3 h-3 border-2 border-yellow-500 rounded-full flex items-center justify-center">
+                      <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    </div>
+                    <div className="absolute right-1/3 top-1/3 w-3 h-3 border-2 border-yellow-500 rounded-full flex items-center justify-center">
+                      <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    </div>
+                    <div className="absolute left-1/3 bottom-1/3 w-3 h-3 border-2 border-yellow-500 rounded-full flex items-center justify-center">
+                      <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    </div>
+                    <div className="absolute right-1/3 bottom-1/3 w-3 h-3 border-2 border-yellow-500 rounded-full flex items-center justify-center">
+                      <div className="w-1 h-1 bg-yellow-500 rounded-full"></div>
+                    </div>
+                    
+                    {/* Active scanning effect */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      <div className="h-[2px] w-full bg-yellow-500/50 animate-scan" style={{ animationDuration: '4s' }}></div>
+                    </div>
                   </div>
                 )}
                 
                 {selectedEffect === 'scan' && (
                   <div className="absolute inset-0">
+                    {/* Main scanning beam effect */}
                     <div className="h-[2px] w-full bg-fuchsia-500/80 animate-scan"></div>
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm text-fuchsia-500 font-mono">
-                      SCANNING PRODUCT
+                    
+                    {/* Product detection frame */}
+                    <div className="absolute left-1/4 right-1/4 top-1/4 bottom-1/4 border-2 border-fuchsia-500/50 border-dashed rounded-md overflow-hidden">
+                      {/* Cross target */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-[1px] h-full bg-fuchsia-500/30"></div>
+                        <div className="h-[1px] w-full bg-fuchsia-500/30"></div>
+                      </div>
+                      
+                      {/* Corner brackets */}
+                      <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-fuchsia-500"></div>
+                      <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-fuchsia-500"></div>
+                      <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-fuchsia-500"></div>
+                      <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-fuchsia-500"></div>
+                    </div>
+                    
+                    {/* Info Panel */}
+                    <div className="absolute right-4 top-1/4 bg-black/60 backdrop-blur-sm p-2 rounded-lg border border-fuchsia-500/30 w-48">
+                      <div className="text-xs text-fuchsia-500 font-mono font-bold mb-2 flex items-center">
+                        <div className="w-2 h-2 bg-fuchsia-500 rounded-full animate-pulse-slow mr-2"></div>
+                        SCANNING PRODUCT
+                      </div>
+                      
+                      <div className="text-[10px] text-white/70 mb-2">
+                        <div className="mb-1 flex justify-between">
+                          <span>Detection:</span>
+                          <span className="text-fuchsia-500">ACTIVE</span>
+                        </div>
+                        <div className="w-full h-1 bg-black/50 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-fuchsia-500/50 to-fuchsia-500 w-[65%]"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-[10px] text-white/70 mb-2">
+                        <div className="mb-1 flex justify-between">
+                          <span>Recognition:</span>
+                          <span className="text-fuchsia-500">IN PROGRESS</span>
+                        </div>
+                        <div className="w-full h-1 bg-black/50 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-fuchsia-500/50 to-fuchsia-500 w-[25%] animate-pulse-slow"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-[10px] text-white/70">
+                        <div className="mb-1 flex justify-between">
+                          <span>Data Analysis:</span>
+                          <span className="text-fuchsia-500">WAITING</span>
+                        </div>
+                        <div className="w-full h-1 bg-black/50 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-fuchsia-500/50 to-fuchsia-500 w-[5%]"></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Data Points Animation */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {Array.from({ length: 10 }).map((_, i) => (
+                        <div 
+                          key={i} 
+                          className="absolute w-1 h-1 bg-fuchsia-500 rounded-full animate-float1"
+                          style={{
+                            top: `${30 + Math.random() * 40}%`,
+                            left: `${30 + Math.random() * 40}%`,
+                            animationDelay: `${i * 0.2}s`,
+                            animationDuration: `${3 + Math.random() * 2}s`
+                          }}
+                        ></div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -469,6 +725,121 @@ export default function CameraIntegration({
               )}
             </div>
           )}
+        </div>
+      )}
+      
+      {/* Virtual try-on position controls */}
+      {isARActive && selectedEffect === 'virtual-try' && productImageUrl && !capturedImage && (
+        <div className="w-full max-w-3xl mt-2">
+          <div className="bg-black/60 backdrop-blur-sm rounded-xl p-3 border border-fuchsia-500/30">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-xs font-medium text-white/90">ضبط موضع المنتج</h3>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                className="h-7 text-xs"
+                onClick={() => setVirtualPosition({ x: 0, y: 0, scale: 1, rotation: 0 })}
+              >
+                <i className="fas fa-undo-alt mr-1"></i>
+                إعادة ضبط
+              </Button>
+            </div>
+            
+            {/* On-screen controls for touch devices */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-2">
+                <div className="flex flex-col gap-2">
+                  {/* Position controls */}
+                  <div className="flex justify-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                      onClick={() => setVirtualPosition(prev => ({ ...prev, y: prev.y - 10 }))}
+                    >
+                      <i className="fas fa-arrow-up"></i>
+                    </Button>
+                  </div>
+                  <div className="flex justify-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                      onClick={() => setVirtualPosition(prev => ({ ...prev, x: prev.x - 10 }))}
+                    >
+                      <i className="fas fa-arrow-left"></i>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                      onClick={() => setVirtualPosition(prev => ({ ...prev, y: prev.y + 10 }))}
+                    >
+                      <i className="fas fa-arrow-down"></i>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                      onClick={() => setVirtualPosition(prev => ({ ...prev, x: prev.x + 10 }))}
+                    >
+                      <i className="fas fa-arrow-right"></i>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                {/* Size controls */}
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                    onClick={() => setVirtualPosition(prev => ({ ...prev, scale: prev.scale + 0.1 }))}
+                  >
+                    <i className="fas fa-plus"></i>
+                  </Button>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-9 w-9 bg-black/30 hover:bg-black/50"
+                    onClick={() => setVirtualPosition(prev => ({ ...prev, scale: Math.max(0.1, prev.scale - 0.1) }))}
+                  >
+                    <i className="fas fa-minus"></i>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Rotation controls */}
+            <div className="mt-2 flex justify-between">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-8 bg-black/30 hover:bg-black/50"
+                onClick={() => setVirtualPosition(prev => ({ ...prev, rotation: prev.rotation - 15 }))}
+              >
+                <i className="fas fa-undo mr-1"></i>
+                تدوير
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-xs h-8 bg-black/30 hover:bg-black/50"
+                onClick={() => setVirtualPosition(prev => ({ ...prev, rotation: prev.rotation + 15 }))}
+              >
+                <i className="fas fa-redo mr-1"></i>
+                تدوير
+              </Button>
+            </div>
+            
+            <div className="text-xs text-white/60 mt-2 text-center">
+              يمكنك أيضًا استخدام لوحة المفاتيح: مفاتيح الأسهم للتحريك، + و - للتكبير والتصغير، [ و ] للتدوير
+            </div>
+          </div>
         </div>
       )}
       
