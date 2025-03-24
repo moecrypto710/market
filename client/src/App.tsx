@@ -46,7 +46,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/" component={HomePage} />
+      <ProtectedRoute path="/" component={VRAmrikyyTownPage} />
       <ProtectedRoute path="/product/:productId" component={ProductDetailPage} />
       <ProtectedRoute path="/rewards" component={RewardsAffiliatePage} />
       <ProtectedRoute path="/affiliate" component={RewardsAffiliatePage} />
@@ -57,11 +57,17 @@ function Router() {
       <Route path="/virtual-city">
         {() => {
           // إعادة توجيه المسار القديم إلى المسار الجديد
-          window.location.href = "/vr-amrikyy-town";
+          window.location.href = "/";
           return null;
         }}
       </Route>
-      <ProtectedRoute path="/vr-amrikyy-town" component={VRAmrikyyTownPage} />
+      <Route path="/vr-amrikyy-town">
+        {() => {
+          // إعادة توجيه المسار القديم إلى المسار الجديد
+          window.location.href = "/";
+          return null;
+        }}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

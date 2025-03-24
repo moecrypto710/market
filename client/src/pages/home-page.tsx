@@ -1,45 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
-import { Product } from "@shared/schema";
-import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
-import AIAssistant from "@/components/ai-assistant";
-import CulturalTransition from "@/components/cultural-transition";
-import TouchControls from "@/components/touch-controls";
-import StoreInteraction from "@/components/store-interaction";
-import Product360View from "@/components/product-360-view";
-import CityBuilder from "@/components/city-builder";
-import confetti from 'canvas-confetti';
-import { useState, useEffect, useRef } from "react";
-import { useLocation, Link } from "wouter";
-import { motion } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useMovement } from "@/hooks/use-movement";
+import { useEffect } from "react";
+import { useLocation } from "wouter";
 
 export default function HomePage() {
-  const { user, logoutMutation } = useAuth();
-  const isMobile = useIsMobile();
-  const [viewedProducts, setViewedProducts] = useState<Product[]>([]);
-  const [aiInitialQuestion, setAiInitialQuestion] = useState<string | undefined>();
-  const [showTransition, setShowTransition] = useState(false);
-  const [transitionStyle, setTransitionStyle] = useState<'modern' | 'futuristic' | 'cultural' | 'geometric' | 'calligraphy' | 'arabesque'>('arabesque');
   const [, setLocation] = useLocation();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [showTouchControls, setShowTouchControls] = useState(isMobile);
-  const [immersiveMode, setImmersiveMode] = useState(false);
   
-  // Initialize movement with useMovement hook
-  const {
-    position,
-    rotation,
-    isMoving,
-    moveForward,
-    moveBackward,
-    moveLeft,
-    moveRight,
-    rotate,
-    resetPosition,
-    setSpeed
-  } = useMovement();
+  useEffect(() => {
+    // Redirect to main page 
+    setLocation('/');
+    return () => {};
+  }, [setLocation]);
+  
+  return null;
+}
   
   // Get products
   const { data: products } = useQuery<Product[]>({

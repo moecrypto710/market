@@ -219,13 +219,60 @@ export default function VRAmrikyyTownPage() {
   };
   
   return (
-    <div className={`relative ${fullscreenMode ? 'h-screen w-screen overflow-hidden fixed inset-0 z-50 bg-slate-900' : ''}`}>
-      {/* VR Environment - shown only in fullscreen mode */}
-      {fullscreenMode && (
+    <div className="relative">
+      {!fullscreenMode ? (
+        <div className="container mx-auto py-8 px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 mb-4">
+              مدينة أمريكي
+            </h1>
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8">
+              تجربة تسوق تفاعلية في مدينة أمريكي الافتراضية
+            </p>
+            <Button
+              onClick={() => setFullscreenMode(true)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-xl rounded-xl"
+            >
+              <i className="fas fa-play-circle mr-2"></i>
+              ابدأ التجربة
+            </Button>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700">
+                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                  <i className="fas fa-building text-blue-400 text-xl"></i>
+                </div>
+                <h3 className="text-xl font-bold mb-2">استكشف المباني</h3>
+                <p className="text-gray-400">تجول في متاجر الملابس والإلكترونيات ووكالات السفر</p>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700">
+                <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-4">
+                  <i className="fas fa-tshirt text-purple-400 text-xl"></i>
+                </div>
+                <h3 className="text-xl font-bold mb-2">تجربة افتراضية للملابس</h3>
+                <p className="text-gray-400">استخدم الكاميرا لتجربة الملابس افتراضياً قبل الشراء</p>
+              </div>
+              
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700">
+                <div className="w-12 h-12 rounded-full bg-indigo-500/20 flex items-center justify-center mb-4">
+                  <i className="fas fa-sun text-indigo-400 text-xl"></i>
+                </div>
+                <h3 className="text-xl font-bold mb-2">تغيير الأجواء</h3>
+                <p className="text-gray-400">غير بين أوقات النهار المختلفة وحالات الطقس المتنوعة</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div 
-          className="absolute inset-0 overflow-hidden" 
+          className="h-screen w-screen overflow-hidden fixed inset-0 z-50 bg-slate-900" 
           style={getEnvironmentStyles()}
         >
+          <div 
+            className="absolute inset-0 overflow-hidden" 
+            style={getEnvironmentStyles()}
+          >
           {/* Sky and environment */}
           <div className="absolute inset-0 z-0"></div>
           
