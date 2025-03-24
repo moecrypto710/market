@@ -1538,6 +1538,7 @@ export default function EnhancedCityBuilder() {
             {/* 3D buildings */}
             <div className="absolute inset-0">
               {renderBuildings()}
+              {renderCharacters()}
             </div>
           </>
         )}
