@@ -63,27 +63,27 @@ export default function CityBuilder() {
       type: 'travel',
       position: { x: 0, y: 0, z: 0 }, // matches Vector3(0, 0, 0) in Unity
       rotation: 0,
-      scale: 1.5, // Increased size to make it more prominent
+      scale: 1.8, // Increased size to make it more prominent
       color: '#2563eb', // blue-600
       icon: 'fa-plane'
     },
     {
       id: 'clothingStore',
-      name: 'متجر الملابس', // متجر الملابس
+      name: 'متجر الملابس الفاخرة', // Luxury Clothing Store
       type: 'clothing',
-      position: { x: 10, y: 0, z: 0 }, // matches Vector3(10, 0, 0) in Unity
-      rotation: 0,
-      scale: 1,
+      position: { x: 12, y: 0, z: 2 }, // moved further right and slightly forward
+      rotation: 15, // rotated slightly
+      scale: 1.2,
       color: '#f59e0b', // amber-500
       icon: 'fa-tshirt'
     },
     {
       id: 'electronicsStore',
-      name: 'متجر الإلكترونيات', // متجر الإلكترونيات
+      name: 'متجر الإلكترونيات والتقنية', // Electronics & Tech Store
       type: 'electronics',
-      position: { x: -10, y: 0, z: 0 }, // matches Vector3(-10, 0, 0) in Unity
-      rotation: 0,
-      scale: 1,
+      position: { x: -12, y: 0, z: 2 }, // moved further left and slightly forward
+      rotation: -15, // rotated slightly in opposite direction
+      scale: 1.2,
       color: '#10b981', // emerald-500
       icon: 'fa-laptop'
     }
@@ -343,8 +343,17 @@ export default function CityBuilder() {
       // Check if building should be rendered (in front of camera)
       if (style.opacity <= 0.1) return null;
       
-      // Special styling for travel agency
+      // Special styling for different building types
       const isTravelAgency = building.id === 'travelAgency';
+      const isClothingStore = building.id === 'clothingStore';
+      const isElectronicsStore = building.id === 'electronicsStore';
+      
+      // 3D building style with rotation
+      const buildingRotation = building.rotation || 0;
+      
+      // Effect color based on building type
+      const glowColor = building.color;
+      const shadowColor = `${glowColor}80`; // semi-transparent glow
       
       return (
         <motion.div
@@ -353,63 +362,131 @@ export default function CityBuilder() {
           style={{
             ...style,
             perspective: '1000px',
+            transform: `rotateY(${buildingRotation}deg)`,
           }}
-          initial={{ scale: 0 }}
+          initial={{ scale: 0, opacity: 0 }}
           animate={{ 
             scale: building.scale || 1,
-            y: isTravelAgency ? [0, -5, 0] : 0 
+            opacity: style.opacity,
+            y: isTravelAgency ? [0, -5, 0] : 0,
           }}
           transition={
             isTravelAgency 
-              ? { y: { repeat: Infinity, duration: 3, ease: "easeInOut" } }
-              : {}
+              ? { 
+                  y: { repeat: Infinity, duration: 3, ease: "easeInOut" },
+                  scale: { duration: 0.7, ease: "easeOut" },
+                  opacity: { duration: 0.5 }
+                }
+              : {
+                  scale: { duration: 0.7, ease: "easeOut" },
+                  opacity: { duration: 0.5 }
+                }
           }
-          whileHover={{ scale: (building.scale || 1) * 1.05 }}
+          whileHover={{ 
+            scale: (building.scale || 1) * 1.05,
+            boxShadow: `0 0 15px ${shadowColor}`,
+          }}
           whileTap={{ scale: (building.scale || 1) * 0.95 }}
         >
-          {/* Add airplane animation for travel agency */}
-          {isTravelAgency && (
+          {/* Building wrapper with 3D effect */}
+          <div className="relative group">
+            {/* 3D building body */}
+            <div 
+              className="relative rounded-lg overflow-hidden transition-all duration-300"
+              style={{
+                width: '100%',
+                height: '100%',
+                background: `linear-gradient(135deg, ${building.color}, ${building.color}99)`,
+                boxShadow: `0 5px 15px rgba(0,0,0,0.3), 0 0 8px ${shadowColor}`,
+                border: `2px solid ${building.color}33`,
+                transform: `perspective(500px) rotateX(10deg)`,
+              }}
+            >
+              {/* Building facade with windows */}
+              <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-1 p-1 opacity-60">
+                {[...Array(9)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="bg-white/20 rounded-sm"
+                    style={{
+                      animationDelay: `${i * 0.1}s`,
+                      animation: i % 3 === 1 ? 'pulse 4s infinite' : 'none'
+                    }}
+                  />
+                ))}
+              </div>
+              
+              {/* Building nameplate */}
+              <div 
+                className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center text-xs p-1 backdrop-blur-sm"
+                style={{ direction: 'rtl' }}
+              >
+                {building.name}
+              </div>
+              
+              {/* Store logo/icon */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <i 
+                  className={`fas ${building.icon} text-white/80 text-4xl`}
+                  style={{
+                    filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.5))',
+                    animation: 'pulse 3s infinite'
+                  }}
+                ></i>
+              </div>
+            </div>
+            
+            {/* Floating indicator/effects */}
             <motion.div 
-              className="absolute -top-10 -right-10 text-yellow-400 text-2xl transform rotate-45"
+              className={`absolute -top-4 -right-4 text-xl z-10 ${isElectronicsStore ? 'text-emerald-400' : isClothingStore ? 'text-amber-400' : 'text-blue-400'}`}
               animate={{ 
-                x: [-20, 20, -20], 
-                y: [-10, 10, -10],
-                rotate: [30, 35, 30]
+                y: [-3, 3, -3],
+                rotate: isElectronicsStore ? [0, 15, 0, -15, 0] : isClothingStore ? [0, -10, 0] : [0, 10, 0]
               }}
               transition={{ 
                 repeat: Infinity, 
-                duration: 10,
-                ease: "linear" 
+                duration: isElectronicsStore ? 5 : 3,
+                ease: "easeInOut" 
               }}
-              style={{ zIndex: 100 }}
             >
-              ✈️
+              {isElectronicsStore ? '🖥️' : isClothingStore ? '👕' : '✈️'}
             </motion.div>
-          )}
+          </div>
           
+          {/* Store interaction component */}
           <StoreInteraction
             storePosition={building.position}
             storeName={building.name}
             interiorComponent={getStoreInterior(building.type)}
-            triggerDistance={2.5}
+            triggerDistance={3.5} // Increased trigger distance
             onEnter={() => setActiveBuilding(building.id)}
             onExit={() => setActiveBuilding(null)}
             storeColor={building.color}
             storeIcon={building.icon}
           />
           
-          {/* Special indicator for travel agency */}
-          {isTravelAgency && (
-            <div className="absolute -bottom-8 left-0 right-0 text-center">
-              <motion.div 
-                className="inline-block bg-yellow-400 text-blue-900 px-2 py-1 rounded-full text-xs font-bold"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ repeat: Infinity, duration: 2 }}
-              >
-                السفر العربي
-              </motion.div>
-            </div>
-          )}
+          {/* Special indicator for different store types */}
+          <div className="absolute -bottom-8 left-0 right-0 text-center">
+            <motion.div 
+              className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                isTravelAgency ? 'bg-yellow-400 text-blue-900' : 
+                isClothingStore ? 'bg-amber-400 text-amber-900' :
+                'bg-emerald-400 text-emerald-900'
+              }`}
+              animate={{ 
+                scale: [1, 1.1, 1],
+                y: isTravelAgency ? [0, -3, 0] : isClothingStore ? [0, -2, 0] : [0, -1, 0]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: isTravelAgency ? 2 : isClothingStore ? 3 : 4
+              }}
+            >
+              {isTravelAgency ? 'السفر العربي' : 
+               isClothingStore ? 'أزياء فاخرة' : 
+               'إلكترونيات متطورة'}
+            </motion.div>
+          </div>
         </motion.div>
       );
     });
