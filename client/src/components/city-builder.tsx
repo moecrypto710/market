@@ -84,10 +84,25 @@ export default function CityBuilder() {
     }
   ];
   
-  // State to track active building
+  // State to track active building and gate
   const [activeBuilding, setActiveBuilding] = useState<string | null>(null);
+  const [gateOpen, setGateOpen] = useState<boolean>(false);
   
-  // Register buildings as collision objects
+  // Define gate positions based on Unity GateControl concept
+  const gates = [
+    {
+      id: 'mainGate',
+      position: { x: 0, y: 0, z: 5 },
+      name: 'البوابة الرئيسية',
+    },
+    {
+      id: 'mallGate',
+      position: { x: 5, y: 0, z: 5 },
+      name: 'بوابة المجمع التجاري',
+    }
+  ];
+
+  // Register buildings and gates as collision objects
   useEffect(() => {
     // We need to create a stable reference to the buildings functions
     const addBuildingCollisions = () => {
@@ -98,6 +113,17 @@ export default function CityBuilder() {
           position: building.position,
           size: { width: 5, height: 5, depth: 5 },
           type: 'object',
+        });
+      });
+      
+      // Add gates as trigger zones (not solid objects)
+      gates.forEach(gate => {
+        movement.addCollisionObject({
+          id: gate.id,
+          position: gate.position,
+          size: { width: 3, height: 5, depth: 3 },
+          type: 'trigger',
+          onCollision: () => setGateOpen(true),
         });
       });
       
@@ -118,6 +144,9 @@ export default function CityBuilder() {
     return () => {
       buildings.forEach(building => {
         movement.removeCollisionObject(building.id);
+      });
+      gates.forEach(gate => {
+        movement.removeCollisionObject(gate.id);
       });
       movement.removeCollisionObject('road');
     };
