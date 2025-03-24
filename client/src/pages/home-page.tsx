@@ -253,9 +253,9 @@ export default function HomePage() {
                     </span>
                   </Button>
                   
-                  <Link href="/virtual-city">
+                  <Link href="/vr-amrikyy-town">
                     <Button 
-                      aria-label="استكشاف المدينة الافتراضية"
+                      aria-label="استكشاف بلدة أمريكي الافتراضية"
                       className="relative bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 text-white px-4 py-2 h-auto shadow-lg shadow-blue-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                     >
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -264,7 +264,7 @@ export default function HomePage() {
                       
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <i className="fas fa-city text-lg"></i>
-                        <span className="font-bold">المدينة الافتراضية</span>
+                        <span className="font-bold">بلدة أمريكي</span>
                       </span>
                     </Button>
                   </Link>
@@ -366,9 +366,9 @@ export default function HomePage() {
                     </div>
                   </Button>
                   
-                  <Link href="/virtual-city">
+                  <Link href="/vr-amrikyy-town">
                     <Button 
-                      aria-label="استكشاف المدينة الافتراضية"
+                      aria-label="استكشاف بلدة أمريكي المتكاملة"
                       className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-6 h-auto text-xl md:text-2xl rounded-2xl shadow-2xl shadow-blue-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-blue-600/50 relative overflow-hidden group border border-white/20"
                     >
                       {/* Interior glow effects */}
@@ -387,9 +387,9 @@ export default function HomePage() {
                       {/* City Text and Icon */}
                       <div className="relative z-10 flex items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-105">
                         <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
-                          <i className="fas fa-city text-2xl drop-shadow-lg"></i>
+                          <i className="fas fa-building text-2xl drop-shadow-lg"></i>
                         </div>
-                        <span className="drop-shadow-md text-shadow-lg">المدينة الافتراضية</span>
+                        <span className="drop-shadow-md text-shadow-lg">البلدة المتكاملة</span>
                       </div>
                       
                       {/* Pulsing accent indicator */}
