@@ -149,74 +149,417 @@ export default function ThreeBuildingModel({
         break;
     }
     
-    // Create building
+    // Create enhanced building with more architectural details and stylistic elements
     const createBuilding = () => {
       const buildingGroup = new THREE.Group();
-    
-      // Main building structure
-      const buildingGeometry = new THREE.BoxGeometry(width, height, depth);
-      const buildingMesh = new THREE.Mesh(
-        buildingGeometry,
-        new THREE.MeshPhongMaterial({ color: new THREE.Color(mainColor) })
-      );
-      buildingMesh.position.y = height / 2;
+      
+      // Create building style elements based on type
+      const buildingStyle = type === 'travel' ? 'modern' : 
+                            type === 'clothing' ? 'boutique' : 
+                            type === 'electronics' ? 'tech' : 'standard';
+      
+      // Main building structure with facade variation by type
+      let buildingGeometry;
+      
+      // Apply different geometry based on building type
+      if (buildingStyle === 'modern') {
+        // Sleek, slightly tapered modern skyscraper for travel agency
+        // Create a more complex shape for the modern building
+        const points = [];
+        const widthFactor = width * 0.5;
+        
+        // Create a slightly tapered shape - wider at bottom, narrower at top
+        points.push(new THREE.Vector2(-widthFactor - 0.2, 0));
+        points.push(new THREE.Vector2(-widthFactor, 0));
+        points.push(new THREE.Vector2(-widthFactor * 0.95, height * 0.3));
+        points.push(new THREE.Vector2(-widthFactor * 0.9, height * 0.7));
+        points.push(new THREE.Vector2(-widthFactor * 0.85, height));
+        points.push(new THREE.Vector2(widthFactor * 0.85, height));
+        points.push(new THREE.Vector2(widthFactor * 0.9, height * 0.7));
+        points.push(new THREE.Vector2(widthFactor * 0.95, height * 0.3));
+        points.push(new THREE.Vector2(widthFactor, 0));
+        points.push(new THREE.Vector2(widthFactor + 0.2, 0));
+        
+        // Create a shape from the points
+        const shape = new THREE.Shape(points);
+        
+        // Extrude the shape to create a 3D building
+        buildingGeometry = new THREE.ExtrudeGeometry(shape, {
+          steps: 2,
+          depth: depth,
+          bevelEnabled: true,
+          bevelThickness: 0.2,
+          bevelSize: 0.1,
+          bevelOffset: 0,
+          bevelSegments: 3
+        });
+        
+        // Rotate to correct orientation
+        buildingGeometry.rotateX(Math.PI / 2);
+      } else if (buildingStyle === 'boutique') {
+        // Elegant boutique building with decorative elements
+        buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+      } else if (buildingStyle === 'tech') {
+        // High-tech geometric building for electronics
+        // Create a more complex shape for tech buildings
+        buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+      } else {
+        // Standard building
+        buildingGeometry = new THREE.BoxGeometry(width, height, depth);
+      }
+      
+      // Create materials with better shading and texture effects
+      const buildingMaterial = new THREE.MeshPhongMaterial({ 
+        color: new THREE.Color(mainColor),
+        specular: 0x333333,
+        shininess: 30,
+      });
+      
+      const buildingMesh = new THREE.Mesh(buildingGeometry, buildingMaterial);
+      
+      // Position the building correctly based on its geometry
+      if (buildingStyle === 'modern') {
+        buildingMesh.position.y = height / 2;
+        buildingMesh.position.z = -depth / 2;
+      } else {
+        buildingMesh.position.y = height / 2;
+      }
+      
       buildingMesh.castShadow = true;
       buildingMesh.receiveShadow = true;
       buildingGroup.add(buildingMesh);
       
-      // Roof
-      const roofGeometry = new THREE.BoxGeometry(width + 0.5, 1, depth + 0.5);
-      const roofMesh = new THREE.Mesh(
-        roofGeometry,
-        new THREE.MeshPhongMaterial({ color: new THREE.Color(roofColor) })
-      );
-      roofMesh.position.y = height + 0.5;
+      // Add building type-specific details and architectural elements
+      if (buildingStyle === 'modern') {
+        // Modern skyscraper with glass facade and spire
+        
+        // Glass panels overlay
+        const glassPanelsGeometry = new THREE.BoxGeometry(width * 0.95, height * 0.9, depth * 0.95);
+        const glassPanelsMaterial = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.2),
+          transparent: true,
+          opacity: 0.3,
+          specular: 0xffffff,
+          shininess: 100,
+          envMap: null, // Would add environment map for reflections in a full implementation
+        });
+        
+        const glassPanelsMesh = new THREE.Mesh(glassPanelsGeometry, glassPanelsMaterial);
+        glassPanelsMesh.position.y = height / 2 + 0.1;
+        buildingGroup.add(glassPanelsMesh);
+        
+        // Add spire/antenna at the top
+        const spireGeometry = new THREE.CylinderGeometry(0.1, 0.3, height * 0.2, 8);
+        const spireMaterial = new THREE.MeshPhongMaterial({
+          color: 0x888888,
+          specular: 0xffffff,
+        });
+        
+        const spireMesh = new THREE.Mesh(spireGeometry, spireMaterial);
+        spireMesh.position.y = height + height * 0.1;
+        spireMesh.castShadow = true;
+        buildingGroup.add(spireMesh);
+        
+        // Add communication dish
+        const dishGeometry = new THREE.SphereGeometry(0.5, 16, 8, 0, Math.PI);
+        const dishMaterial = new THREE.MeshPhongMaterial({
+          color: 0xdddddd,
+          side: THREE.DoubleSide,
+        });
+        
+        const dishMesh = new THREE.Mesh(dishGeometry, dishMaterial);
+        dishMesh.rotation.x = Math.PI / 2;
+        dishMesh.position.set(width * 0.3, height + 0.5, 0);
+        buildingGroup.add(dishMesh);
+        
+        // Add helipad on roof
+        const helipadGeometry = new THREE.CylinderGeometry(1.5, 1.5, 0.1, 16);
+        const helipadMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
+        
+        const helipadMesh = new THREE.Mesh(helipadGeometry, helipadMaterial);
+        helipadMesh.position.y = height + 0.05;
+        helipadMesh.position.x = -width * 0.2;
+        buildingGroup.add(helipadMesh);
+        
+        // Add H marking
+        const hMarkingGeometry = new THREE.PlaneGeometry(1, 1);
+        const hMarkingMaterial = new THREE.MeshBasicMaterial({ 
+          color: 0xffffff,
+          side: THREE.DoubleSide,
+        });
+        
+        const hMarkingMesh = new THREE.Mesh(hMarkingGeometry, hMarkingMaterial);
+        hMarkingMesh.rotation.x = -Math.PI / 2;
+        hMarkingMesh.position.y = height + 0.11;
+        hMarkingMesh.position.x = -width * 0.2;
+        buildingGroup.add(hMarkingMesh);
+        
+      } else if (buildingStyle === 'boutique') {
+        // Boutique building with decorative elements
+        
+        // Decorative awning
+        const awningGeometry = new THREE.BoxGeometry(width + 1, 0.2, depth / 2 + 0.5);
+        const awningMaterial = new THREE.MeshPhongMaterial({ 
+          color: new THREE.Color(mainColor).lerp(new THREE.Color('#000000'), 0.3),
+        });
+        
+        const awningMesh = new THREE.Mesh(awningGeometry, awningMaterial);
+        awningMesh.position.y = height / 3;
+        awningMesh.position.z = depth / 4 + 0.25;
+        awningMesh.castShadow = true;
+        buildingGroup.add(awningMesh);
+        
+        // Decorative pillars at entrance
+        for (let side = -1; side <= 1; side += 2) {
+          const pillarGeometry = new THREE.CylinderGeometry(0.2, 0.2, height / 2, 8);
+          const pillarMaterial = new THREE.MeshPhongMaterial({ 
+            color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.2),
+          });
+          
+          const pillarMesh = new THREE.Mesh(pillarGeometry, pillarMaterial);
+          pillarMesh.position.set(side * (width / 3), height / 4, depth / 2 + 0.2);
+          pillarMesh.castShadow = true;
+          buildingGroup.add(pillarMesh);
+        }
+        
+        // Decorative roof elements
+        const decorativeRoofGeometry = new THREE.SphereGeometry(width / 4, 16, 8, 0, Math.PI);
+        const decorativeRoofMaterial = new THREE.MeshPhongMaterial({ 
+          color: new THREE.Color(roofColor),
+          side: THREE.DoubleSide,
+        });
+        
+        const decorativeRoofMesh = new THREE.Mesh(decorativeRoofGeometry, decorativeRoofMaterial);
+        decorativeRoofMesh.rotation.x = Math.PI;
+        decorativeRoofMesh.position.y = height + width / 4;
+        decorativeRoofMesh.castShadow = true;
+        buildingGroup.add(decorativeRoofMesh);
+        
+      } else if (buildingStyle === 'tech') {
+        // High-tech building with geometric patterns and LED-like details
+        
+        // Solar panels on roof
+        const solarPanelsGeometry = new THREE.BoxGeometry(width * 0.8, 0.1, depth * 0.8);
+        const solarPanelsMaterial = new THREE.MeshPhongMaterial({ 
+          color: 0x111111,
+          specular: 0x333333,
+        });
+        
+        const solarPanelsMesh = new THREE.Mesh(solarPanelsGeometry, solarPanelsMaterial);
+        solarPanelsMesh.position.y = height + 0.05;
+        buildingGroup.add(solarPanelsMesh);
+        
+        // Grid pattern for solar panels
+        const gridSize = 6;
+        const panelSize = {
+          width: (width * 0.8) / gridSize,
+          depth: (depth * 0.8) / gridSize,
+        };
+        
+        for (let x = 0; x < gridSize; x++) {
+          for (let z = 0; z < gridSize; z++) {
+            const panelGeometry = new THREE.PlaneGeometry(panelSize.width * 0.9, panelSize.depth * 0.9);
+            const panelMaterial = new THREE.MeshPhongMaterial({ 
+              color: 0x1a4c7c,
+              specular: 0x333333,
+              shininess: 30,
+            });
+            
+            const panelMesh = new THREE.Mesh(panelGeometry, panelMaterial);
+            
+            // Position within the grid
+            const xPos = (x * panelSize.width) - (width * 0.8 / 2) + (panelSize.width / 2);
+            const zPos = (z * panelSize.depth) - (depth * 0.8 / 2) + (panelSize.depth / 2);
+            
+            panelMesh.rotation.x = -Math.PI / 2; // Make it face up
+            panelMesh.position.set(xPos, height + 0.11, zPos);
+            buildingGroup.add(panelMesh);
+          }
+        }
+        
+        // Add satellite dish
+        const dishGeometry = new THREE.SphereGeometry(0.6, 16, 8, 0, Math.PI);
+        const dishMaterial = new THREE.MeshPhongMaterial({
+          color: 0xdddddd,
+          side: THREE.DoubleSide,
+        });
+        
+        const dishMesh = new THREE.Mesh(dishGeometry, dishMaterial);
+        dishMesh.rotation.x = Math.PI / 2;
+        dishMesh.rotation.z = Math.PI / 4;
+        dishMesh.position.set(width * 0.3, height + 0.5, depth * 0.3);
+        buildingGroup.add(dishMesh);
+        
+        // Add glowing elements (LED-like strips)
+        const stripGeometry = new THREE.BoxGeometry(width * 0.9, 0.1, 0.1);
+        const stripMaterial = new THREE.MeshBasicMaterial({ 
+          color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.5),
+          transparent: true,
+          opacity: 0.7,
+        });
+        
+        // Add multiple strips at different heights
+        for (let h = 1; h < 5; h++) {
+          const stripMesh = new THREE.Mesh(stripGeometry, stripMaterial);
+          stripMesh.position.set(0, height * (h / 5), depth / 2 + 0.06);
+          buildingGroup.add(stripMesh);
+        }
+      }
+      
+      // Enhanced Roof with more detail
+      let roofGeometry;
+      
+      if (buildingStyle === 'modern') {
+        // Modern building gets a flat roof with details
+        roofGeometry = new THREE.BoxGeometry(width, 0.5, depth);
+      } else if (buildingStyle === 'boutique') {
+        // Boutique gets a slightly sloped roof
+        const roofShape = new THREE.Shape();
+        roofShape.moveTo(-width / 2 - 0.5, -depth / 2 - 0.5);
+        roofShape.lineTo(width / 2 + 0.5, -depth / 2 - 0.5);
+        roofShape.lineTo(width / 2 + 0.5, depth / 2 + 0.5);
+        roofShape.lineTo(-width / 2 - 0.5, depth / 2 + 0.5);
+        roofShape.lineTo(-width / 2 - 0.5, -depth / 2 - 0.5);
+        
+        roofGeometry = new THREE.ExtrudeGeometry(roofShape, {
+          steps: 1,
+          depth: 1.5,
+          bevelEnabled: true,
+          bevelThickness: 0.2,
+          bevelSize: 0.2,
+          bevelOffset: 0,
+          bevelSegments: 3
+        });
+      } else {
+        // Standard flat roof
+        roofGeometry = new THREE.BoxGeometry(width + 0.5, 1, depth + 0.5);
+      }
+      
+      const roofMaterial = new THREE.MeshPhongMaterial({ 
+        color: new THREE.Color(roofColor)
+      });
+      
+      const roofMesh = new THREE.Mesh(roofGeometry, roofMaterial);
+      
+      if (buildingStyle === 'boutique') {
+        roofMesh.position.y = height;
+        roofMesh.rotation.x = Math.PI / 2;
+      } else {
+        roofMesh.position.y = height + 0.5;
+      }
+      
       roofMesh.castShadow = true;
       buildingGroup.add(roofMesh);
       
-      // Windows
+      // Enhanced Windows with better materials and more variation
       const createWindows = () => {
         const floors = buildingData.features.floors;
         const windowsPerFloor = buildingData.features.windowsPerFloor;
         const windowWidth = buildingData.features.windowWidth;
         const windowHeight = buildingData.features.windowHeight;
         
-        const windowGeometry = new THREE.PlaneGeometry(windowWidth, windowHeight);
+        // More realistic window material with reflections
         const windowMaterial = new THREE.MeshPhongMaterial({ 
           color: new THREE.Color(windowColor),
           transparent: true,
           opacity: 0.7,
-          shininess: 100
+          specular: 0xffffff,
+          shininess: 100,
         });
         
-        // Front windows
+        // Material for window frames
+        const frameMaterial = new THREE.MeshPhongMaterial({
+          color: 0x444444,
+        });
+        
+        // Front windows - create frames and glass
         for (let floor = 0; floor < floors; floor++) {
           for (let w = 0; w < windowsPerFloor; w++) {
-            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+            // Create window group including frame and glass
+            const windowGroup = new THREE.Group();
             
-            // Position windows evenly across the facade
+            // Create window frame
+            const frameGeometry = new THREE.BoxGeometry(windowWidth + 0.1, windowHeight + 0.1, 0.05);
+            const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+            windowGroup.add(frameMesh);
+            
+            // Create window glass
+            const windowGeometry = new THREE.PlaneGeometry(windowWidth, windowHeight);
+            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+            windowMesh.position.z = 0.03; // Slightly in front of the frame
+            windowGroup.add(windowMesh);
+            
+            // Position the window group
             const xPos = (w - (windowsPerFloor - 1) / 2) * (width / windowsPerFloor);
             const yPos = 1 + floor * (height / floors);
-            const zPos = depth / 2 + 0.05; // Slightly in front of the facade
+            const zPos = depth / 2 + 0.05;
             
-            windowMesh.position.set(xPos, yPos, zPos);
-            buildingGroup.add(windowMesh);
+            windowGroup.position.set(xPos, yPos, zPos);
+            
+            // Add some random variation to make it more realistic
+            if (Math.random() > 0.8) {
+              // Some windows are open
+              windowMesh.rotation.y = Math.random() * 0.2;
+              windowMesh.position.x += 0.1;
+            }
+            
+            // Add light glow for some random windows (at night)
+            if (Math.random() > 0.6) {
+              const glowGeometry = new THREE.PlaneGeometry(windowWidth * 0.9, windowHeight * 0.9);
+              const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffffaa,
+                transparent: true,
+                opacity: 0.3 + Math.random() * 0.3,
+              });
+              
+              const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+              glowMesh.position.z = 0.02;
+              windowGroup.add(glowMesh);
+            }
+            
+            buildingGroup.add(windowGroup);
           }
         }
         
         // Side windows
         for (let floor = 0; floor < floors; floor++) {
           for (let w = 0; w < windowsPerFloor - 1; w++) {
+            const windowGroup = new THREE.Group();
+            
+            // Frame
+            const frameGeometry = new THREE.BoxGeometry(windowWidth + 0.1, windowHeight + 0.1, 0.05);
+            const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+            windowGroup.add(frameMesh);
+            
+            // Glass
+            const windowGeometry = new THREE.PlaneGeometry(windowWidth, windowHeight);
             const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+            windowMesh.position.z = 0.03;
+            windowGroup.add(windowMesh);
             
             // Position windows evenly across the side facade
             const zPos = (w - (windowsPerFloor - 2) / 2) * (depth / (windowsPerFloor - 1));
             const yPos = 1 + floor * (height / floors);
-            const xPos = width / 2 + 0.05; // Slightly to the side of the facade
+            const xPos = width / 2 + 0.05;
             
-            windowMesh.position.set(xPos, yPos, zPos);
-            windowMesh.rotation.y = Math.PI / 2; // Rotate to face outward
-            buildingGroup.add(windowMesh);
+            windowGroup.position.set(xPos, yPos, zPos);
+            windowGroup.rotation.y = Math.PI / 2; // Rotate to face outward
+            
+            // Add random glow for some windows
+            if (Math.random() > 0.7) {
+              const glowGeometry = new THREE.PlaneGeometry(windowWidth * 0.9, windowHeight * 0.9);
+              const glowMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffffaa,
+                transparent: true,
+                opacity: 0.3 + Math.random() * 0.3,
+              });
+              
+              const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial);
+              glowMesh.position.z = 0.02;
+              windowGroup.add(glowMesh);
+            }
+            
+            buildingGroup.add(windowGroup);
           }
         }
       };
@@ -224,24 +567,164 @@ export default function ThreeBuildingModel({
       // Add windows
       createWindows();
       
-      // Door
-      const doorGeometry = new THREE.PlaneGeometry(2, 3);
-      const doorMaterial = new THREE.MeshPhongMaterial({ 
-        color: new THREE.Color(buildingData.facades.door)
+      // Enhanced door with better geometry and materials
+      const doorWidth = 2;
+      const doorHeight = 3;
+      
+      // Door frame
+      const doorFrameGeometry = new THREE.BoxGeometry(doorWidth + 0.3, doorHeight + 0.3, 0.2);
+      const doorFrameMaterial = new THREE.MeshPhongMaterial({ 
+        color: 0x333333
       });
+      
+      const doorFrameMesh = new THREE.Mesh(doorFrameGeometry, doorFrameMaterial);
+      doorFrameMesh.position.set(0, 1.5, depth / 2 + 0.1);
+      buildingGroup.add(doorFrameMesh);
+      
+      // Door with material based on building type
+      const doorGeometry = new THREE.PlaneGeometry(doorWidth, doorHeight);
+      let doorMaterial;
+      
+      if (buildingStyle === 'modern') {
+        // Glass door for modern building
+        doorMaterial = new THREE.MeshPhongMaterial({ 
+          color: 0x88ccff,
+          transparent: true,
+          opacity: 0.7,
+          specular: 0xffffff,
+          shininess: 100
+        });
+      } else if (buildingStyle === 'boutique') {
+        // Fancy wood door for boutique
+        doorMaterial = new THREE.MeshPhongMaterial({ 
+          color: 0x8B4513, // Saddle brown
+          specular: 0x333333,
+          shininess: 30
+        });
+      } else {
+        // Standard door
+        doorMaterial = new THREE.MeshPhongMaterial({ 
+          color: new THREE.Color(buildingData.facades.door)
+        });
+      }
+      
       const doorMesh = new THREE.Mesh(doorGeometry, doorMaterial);
-      doorMesh.position.set(0, 1.5, depth / 2 + 0.05);
+      doorMesh.position.set(0, 1.5, depth / 2 + 0.15);
       buildingGroup.add(doorMesh);
       
-      // Ground/base
+      // Add door handle
+      const handleGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+      const handleMaterial = new THREE.MeshPhongMaterial({ color: 0xAAAAAA });
+      
+      const handleMesh = new THREE.Mesh(handleGeometry, handleMaterial);
+      handleMesh.position.set(doorWidth/3, 1.5, depth / 2 + 0.2);
+      buildingGroup.add(handleMesh);
+      
+      // Enhanced Ground/base with texture and details
       const baseGeometry = new THREE.BoxGeometry(width + 2, 0.5, depth + 2);
       const baseMaterial = new THREE.MeshPhongMaterial({ 
-        color: new THREE.Color(buildingData.facades.ground) 
+        color: new THREE.Color(buildingData.facades.ground), 
+        specular: 0x111111,
+        shininess: 10
       });
+      
       const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
       baseMesh.position.y = -0.25;
       baseMesh.receiveShadow = true;
       buildingGroup.add(baseMesh);
+      
+      // Add some environment details around the building
+      
+      // Add small decorative elements based on building type
+      if (buildingStyle === 'modern') {
+        // Modern building gets planters
+        for (let side = -1; side <= 1; side += 2) {
+          const planterGeometry = new THREE.BoxGeometry(1, 0.5, 1);
+          const planterMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
+          
+          const planterMesh = new THREE.Mesh(planterGeometry, planterMaterial);
+          planterMesh.position.set(side * (width / 2 + 1), 0.25, depth / 2 + 1);
+          planterMesh.castShadow = true;
+          planterMesh.receiveShadow = true;
+          buildingGroup.add(planterMesh);
+          
+          // Add plant
+          const plantGeometry = new THREE.SphereGeometry(0.4, 8, 8);
+          const plantMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 }); // Forest green
+          
+          const plantMesh = new THREE.Mesh(plantGeometry, plantMaterial);
+          plantMesh.position.set(side * (width / 2 + 1), 0.7, depth / 2 + 1);
+          plantMesh.castShadow = true;
+          buildingGroup.add(plantMesh);
+        }
+      } else if (buildingStyle === 'boutique') {
+        // Boutique gets decorative lamps
+        for (let side = -1; side <= 1; side += 2) {
+          // Lamp post
+          const postGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 8);
+          const postMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
+          
+          const postMesh = new THREE.Mesh(postGeometry, postMaterial);
+          postMesh.position.set(side * (width / 2 + 0.5), 1, depth / 2 + 0.5);
+          postMesh.castShadow = true;
+          buildingGroup.add(postMesh);
+          
+          // Lamp shade
+          const shadeGeometry = new THREE.SphereGeometry(0.2, 8, 8, 0, Math.PI * 2, 0, Math.PI / 2);
+          const shadeMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0xFFD700, 
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 0.8
+          });
+          
+          const shadeMesh = new THREE.Mesh(shadeGeometry, shadeMaterial);
+          shadeMesh.position.set(side * (width / 2 + 0.5), 2, depth / 2 + 0.5);
+          shadeMesh.castShadow = true;
+          buildingGroup.add(shadeMesh);
+          
+          // Light source inside lamp
+          const lightGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+          const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFCC });
+          
+          const lightMesh = new THREE.Mesh(lightGeometry, lightMaterial);
+          lightMesh.position.set(side * (width / 2 + 0.5), 2, depth / 2 + 0.5);
+          buildingGroup.add(lightMesh);
+        }
+      } else if (buildingStyle === 'tech') {
+        // Tech building gets security cameras
+        for (let side = -1; side <= 1; side += 2) {
+          // Camera mount
+          const mountGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.5);
+          const mountMaterial = new THREE.MeshPhongMaterial({ color: 0x333333 });
+          
+          const mountMesh = new THREE.Mesh(mountGeometry, mountMaterial);
+          mountMesh.position.set(side * (width / 2 - 0.3), height - 2, depth / 2 + 0.3);
+          buildingGroup.add(mountMesh);
+          
+          // Camera body
+          const cameraGeometry = new THREE.CylinderGeometry(0.1, 0.15, 0.3, 8);
+          const cameraMaterial = new THREE.MeshPhongMaterial({ color: 0x111111 });
+          
+          const cameraMesh = new THREE.Mesh(cameraGeometry, cameraMaterial);
+          cameraMesh.rotation.x = Math.PI / 2;
+          cameraMesh.position.set(side * (width / 2 - 0.3), height - 2, depth / 2 + 0.5);
+          buildingGroup.add(cameraMesh);
+          
+          // Camera lens
+          const lensGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.1, 8);
+          const lensMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x000000,
+            specular: 0xFFFFFF,
+            shininess: 100
+          });
+          
+          const lensMesh = new THREE.Mesh(lensGeometry, lensMaterial);
+          lensMesh.rotation.x = Math.PI / 2;
+          lensMesh.position.set(side * (width / 2 - 0.3), height - 2, depth / 2 + 0.65);
+          buildingGroup.add(lensMesh);
+        }
+      }
       
       // Add the building to the scene
       buildingGroup.scale.set(scale, scale, scale);
