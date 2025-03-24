@@ -11,6 +11,7 @@ import TrafficLight from './traffic-light';
 import TouchControls from './touch-controls';
 import VirtualFittingRoom from './virtual-fitting-room';
 import DynamicPromotions from './dynamic-promotions';
+import ThreeProductView from './three-product-view';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from './ui/button';
 
@@ -275,10 +276,56 @@ export default function CityBuilder() {
         );
       case 'electronics':
         return (
-          <div className="flex flex-col items-center justify-center h-full bg-emerald-50 text-black p-4">
-            <h2 className="text-2xl font-bold mb-4">متجر الإلكترونيات</h2>
-            <p className="text-center mb-6">مرحبًا بك في متجر الإلكترونيات. استكشف أحدث المنتجات التقنية.</p>
-            <Button>تصفح المنتجات</Button>
+          <div className="flex flex-col h-full bg-emerald-50 text-black p-4">
+            <div className="text-center mb-5">
+              <h2 className="text-2xl font-bold">متجر الإلكترونيات</h2>
+              <p className="text-sm text-gray-600 mb-4">استكشف أحدث المنتجات التقنية والأجهزة الذكية</p>
+              <div className="h-1 w-32 bg-emerald-400 mx-auto"></div>
+            </div>
+            
+            <div className="flex-1 flex flex-col md:flex-row gap-4">
+              {/* Left side - 3D product view */}
+              <div className="flex-1 h-full">
+                <div className="bg-white rounded-lg shadow-md p-3 h-full flex flex-col">
+                  <h3 className="text-lg font-semibold mb-3 text-emerald-700">عرض ثلاثي الأبعاد للمنتج</h3>
+                  
+                  <div className="flex-1 bg-[#1a1a2e] rounded-md flex flex-col items-center justify-center">
+                    <ThreeProductView 
+                      color="#10b981"
+                      rotationSpeed={0.01}
+                      height="100%"
+                      showControls={true}
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Right side - product info and daily promotions */}
+              <div className="w-full md:w-64">
+                <div className="bg-white rounded-lg shadow-md p-3 mb-4">
+                  <h3 className="text-lg font-semibold mb-2 text-emerald-700">عروض اليوم</h3>
+                  <DynamicPromotions 
+                    variant="default"
+                    animated={true}
+                  />
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-md p-3">
+                  <h3 className="text-lg font-semibold mb-2 text-emerald-700">مواصفات المنتج</h3>
+                  <ul className="text-sm text-gray-600 space-y-2 mr-4 list-disc" style={{ direction: 'rtl' }}>
+                    <li>معالج متطور</li>
+                    <li>ذاكرة 16 جيجابايت</li>
+                    <li>شاشة عالية الوضوح</li>
+                    <li>بطارية طويلة العمر</li>
+                    <li>ضمان لمدة عامين</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">إضافة إلى السلة</Button>
+            </div>
           </div>
         );
       default:
