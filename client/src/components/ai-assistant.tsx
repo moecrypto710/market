@@ -288,7 +288,7 @@ export default function AIAssistant({
     // Minimized state - just show the chat button
     return (
       <Button
-        className="fixed bottom-4 right-4 rounded-full w-14 h-14 p-0 bg-[#00ffcd] hover:bg-[#00d6ae] shadow-lg z-40"
+        className="fixed bottom-6 right-6 rounded-full w-14 h-14 p-0 bg-gradient-to-r from-[#00ffcd] to-[#ff00aa] hover:from-[#00d6ae] hover:to-[#d600aa] shadow-lg z-40 border-2 border-white/30"
         onClick={() => setIsOpen(true)}
       >
         <i className="fas fa-robot text-2xl text-black"></i>
