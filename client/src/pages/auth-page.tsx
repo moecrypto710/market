@@ -50,6 +50,7 @@ export default function AuthPage() {
   const [aiAssistantMinimized, setAiAssistantMinimized] = useState(false);
   const [aiAssistantQuestion, setAiAssistantQuestion] = useState<string | undefined>();
   const aiHelpButtonRef = useRef<HTMLButtonElement>(null);
+  const [activeTab, setActiveTab] = useState<string>("customer");
 
   const registerForm = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -85,6 +86,26 @@ export default function AuthPage() {
       console.error('Failed to load stored credentials', error);
     }
   }, [loginForm]);
+  
+  // Show AI assistant tooltip after a delay
+  useEffect(() => {
+    // Show AI helper tooltip after 5 seconds
+    const showAssistantTimer = setTimeout(() => {
+      if (!showAiAssistant) {
+        // Flash the AI button to draw attention
+        if (aiHelpButtonRef.current) {
+          aiHelpButtonRef.current.classList.add('animate-bounce');
+          setTimeout(() => {
+            if (aiHelpButtonRef.current) {
+              aiHelpButtonRef.current.classList.remove('animate-bounce');
+            }
+          }, 2000);
+        }
+      }
+    }, 5000);
+    
+    return () => clearTimeout(showAssistantTimer);
+  }, [showAiAssistant]);
 
   const onLoginSubmit = (data: LoginFormValues) => {
     const { rememberMe, ...credentials } = data;
@@ -277,7 +298,10 @@ export default function AuthPage() {
             </div>
           </div>
 
-          <Tabs defaultValue="customer" className="w-full">
+          <Tabs 
+            value={activeTab} 
+            onValueChange={setActiveTab}
+            className="w-full">
             <TabsList className="grid grid-cols-3 mb-6">
               <TabsTrigger value="customer" className="flex items-center gap-1.5">
                 <i className="fas fa-user text-xs"></i>
@@ -446,6 +470,13 @@ export default function AuthPage() {
                         </div>
                       )}
                     </Button>
+                    
+                    <div className="text-center text-sm text-white/50 mt-4">
+                      ليس لديك حساب؟{" "}
+                      <a href="#" onClick={() => setActiveTab("register")} className="text-purple-400 hover:text-purple-300">
+                        إنشاء حساب جديد
+                      </a>
+                    </div>
                   </form>
                 </Form>
               </div>
@@ -605,6 +636,13 @@ export default function AuthPage() {
                     <div className="text-center mt-4">
                       <a href="#" className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors">
                         طلب شراكة جديدة في بلدة الأمريكي
+                      </a>
+                    </div>
+                    
+                    <div className="text-center text-sm text-white/50 mt-4">
+                      ليس لديك حساب؟{" "}
+                      <a href="#" onClick={() => setActiveTab("register")} className="text-emerald-400 hover:text-emerald-300">
+                        إنشاء حساب جديد
                       </a>
                     </div>
                   </form>
@@ -853,7 +891,7 @@ export default function AuthPage() {
                     
                     <div className="text-center text-sm text-white/50 mt-4">
                       لديك حساب بالفعل؟{" "}
-                      <a href="#" onClick={() => document.querySelector('[value="customer"]')?.click()} className="text-indigo-400 hover:text-indigo-300">
+                      <a href="#" onClick={() => setActiveTab("customer")} className="text-indigo-400 hover:text-indigo-300">
                         تسجيل الدخول
                       </a>
                     </div>
