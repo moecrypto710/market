@@ -15,6 +15,7 @@ import ServicesPage from "@/pages/services-page";
 import BusinessWorldPage from "@/pages/business-world-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
+import { VRProvider } from "./hooks/use-vr";
 import BottomNav from "./components/layout/bottom-nav";
 import Header from "./components/layout/header";
 
@@ -79,17 +80,19 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="min-h-screen font-[Tajawal] bg-black text-white">
-          <Header />
-          <main className="pb-20">
-            <Router />
-          </main>
-          <BottomNav />
-          <Toaster />
-          
-          {/* Arabic cultural welcome screen */}
-          {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
-        </div>
+        <VRProvider>
+          <div className="min-h-screen font-[Tajawal] bg-black text-white">
+            <Header />
+            <main className="pb-20">
+              <Router />
+            </main>
+            <BottomNav />
+            <Toaster />
+            
+            {/* Arabic cultural welcome screen */}
+            {showWelcome && <WelcomeScreen onComplete={handleWelcomeComplete} />}
+          </div>
+        </VRProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

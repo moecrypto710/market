@@ -141,8 +141,32 @@ export default function Product360View({
     setCurrentQuality(quality);
   };
   
-  // Get product model or fallback to product image
-  const productSrc = product.imageUrl || "https://via.placeholder.com/500";
+  // Get product model or fallback to product image - use a temporary reference image based on category
+  const getProductImage = () => {
+    if (product.imageUrl) return product.imageUrl;
+    
+    // Use category-based template images from public folder if available
+    if (product.category) {
+      switch(product.category) {
+        case 'clothing':
+          return '/images/product-templates/levis-jeans.svg';
+        case 'shoes':
+          return '/images/product-templates/nike-shoes.svg';
+        case 'electronics':
+          return '/images/product-templates/samsung-galaxy.svg';
+        case 'accessories':
+          return '/images/product-templates/apple-airpods.svg';
+        case 'sportswear':
+          return '/images/product-templates/adidas-tshirt.svg';
+        default:
+          return product.imageUrl || '/images/product-templates/nike-shoes.svg';
+      }
+    }
+    
+    return product.imageUrl || '/images/product-templates/nike-shoes.svg';
+  };
+  
+  const productSrc = getProductImage();
   
   return (
     <div 
