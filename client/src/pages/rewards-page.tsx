@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Reward } from "@shared/schema";
 import { Progress } from "@/components/ui/progress";
 import { RewardCard } from "@/components/reward-card";
@@ -6,10 +6,16 @@ import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import confetti from 'canvas-confetti';
-import { BrainCircuitIcon, RocketIcon, SparklesIcon, Zap, Trophy, Gift, ShoppingCart, UserPlus, Star, Award, TrendingUp, BadgeCheck } from "lucide-react";
+import { 
+  BrainCircuitIcon, RocketIcon, SparklesIcon, Zap, Trophy, Gift, ShoppingCart, 
+  UserPlus, Star, Award, TrendingUp, BadgeCheck, Crown, Medal, Sparkles, 
+  Coins, Gem, ChevronsUp, HelpCircle, ArrowUpRight, Bell, Clock, RotateCw 
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 export default function RewardsPage() {
   const { user } = useAuth();
@@ -250,6 +256,66 @@ export default function RewardsPage() {
                   <RewardCard reward={reward} userPoints={currentPoints} />
                 </div>
               ))}
+            </div>
+          </div>
+          
+          {/* AI Recommendations Section */}
+          <div className="mb-10 relative">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-white flex items-center">
+                <Sparkles className="mr-2 h-5 w-5 text-purple-400" />
+                <span className="border-b-2 border-purple-500 pb-1">توصيات ذكية مخصصة لك</span>
+              </h3>
+              <div className="px-3 py-1 text-xs border border-white/10 rounded-full bg-gradient-to-r from-blue-600/10 to-purple-600/10">
+                <span className="text-white/70 flex items-center">
+                  <BrainCircuitIcon className="h-3 w-3 mr-1" /> 
+                  توصيات الذكاء الاصطناعي
+                </span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <AnimatePresence>
+                {aiRecommendations.map((rec, index) => (
+                  <motion.div
+                    key={rec.title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="bg-gradient-to-br from-black to-purple-900/30 backdrop-blur-sm border border-white/10 text-white overflow-hidden relative group hover:border-purple-500/30 transition-all duration-300">
+                      {/* Decorative elements */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-800/5 to-blue-800/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div className="absolute -top-12 -right-12 w-24 h-24 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      
+                      <CardContent className="pt-6 pb-6 relative z-10">
+                        <div className="flex items-start mb-4">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 flex items-center justify-center mr-4 border border-white/10 group-hover:border-purple-500/30 transition-all duration-300">
+                            <rec.icon className="h-5 w-5 text-blue-400" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-white to-white/90 group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">{rec.title}</h4>
+                            <p className="text-xs text-white/60 mt-1">{rec.description}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-300">+{rec.points} نقطة</span>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="text-white/70 hover:text-white hover:bg-white/10 group-hover:border-purple-500/20"
+                          >
+                            <span>{rec.actionText}</span>
+                            <ArrowUpRight className="h-3 w-3 ml-1" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </div>
           
