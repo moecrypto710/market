@@ -13,6 +13,7 @@ import AuthPage from "@/pages/auth-page";
 import ProductDetailPage from "@/pages/product-detail-page";
 import StoreRentalPage from "@/pages/store-rental-page";
 import ServicesPage from "@/pages/services-page";
+import BusinessWorldPage from "@/pages/business-world-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import BottomNav from "./components/layout/bottom-nav";
@@ -52,6 +53,7 @@ function Router() {
       <ProtectedRoute path="/account" component={AccountPage} />
       <ProtectedRoute path="/store-rental" component={StoreRentalPage} />
       <ProtectedRoute path="/services" component={ServicesPage} />
+      <ProtectedRoute path="/business-world" component={BusinessWorldPage} />
       <Route component={NotFound} />
     </Switch>
   );
