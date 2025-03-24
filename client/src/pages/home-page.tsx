@@ -10,7 +10,7 @@ import Product360View from "@/components/product-360-view";
 import CityBuilder from "@/components/city-builder";
 import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useMovement } from "@/hooks/use-movement";
@@ -237,11 +237,11 @@ export default function HomePage() {
                 </div>
                 
                 {/* Immersive Mode Button */}
-                <div className="ml-auto">
+                <div className="ml-auto flex gap-2">
                   <Button 
                     onClick={toggleImmersiveMode}
                     aria-label="دخول بلدة الأمريكي التفاعلية"
-                    className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-5 py-2 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
+                    className="relative bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white px-4 py-2 h-auto shadow-lg shadow-purple-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
                   >
                     <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
                     <span className="absolute -top-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
@@ -249,9 +249,25 @@ export default function HomePage() {
                     
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       <i className="fas fa-cube text-lg"></i>
-                      <span className="font-bold">دخول بلدة الأمريكي</span>
+                      <span className="font-bold">وضع ثلاثي الأبعاد</span>
                     </span>
                   </Button>
+                  
+                  <Link href="/virtual-city">
+                    <Button 
+                      aria-label="استكشاف المدينة الافتراضية"
+                      className="relative bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 text-white px-4 py-2 h-auto shadow-lg shadow-blue-600/30 transform transition-all duration-300 hover:scale-105 overflow-hidden group"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
+                      <span className="absolute -top-10 -left-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+                      <span className="absolute -bottom-10 -right-10 w-24 h-24 bg-white/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></span>
+                      
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        <i className="fas fa-city text-lg"></i>
+                        <span className="font-bold">المدينة الافتراضية</span>
+                      </span>
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </motion.div>
@@ -313,15 +329,15 @@ export default function HomePage() {
                   تجربة بلدة الأمريكي التفاعلية ثلاثية الأبعاد الأولى من نوعها، حيث يمكنك استكشاف المباني المختلفة لمتاجر الإلكترونيات وشركات السفر ومحلات الملابس في بيئة غامرة
                 </p>
                 
-                {/* Single prominent immersive button */}
+                {/* Prominent buttons for both VR modes */}
                 <motion.div
                   variants={fadeInUp}
-                  className="flex justify-center"
+                  className="flex flex-col sm:flex-row justify-center gap-4"
                 >
                   <Button 
                     onClick={toggleImmersiveMode}
                     aria-label="دخول البلدة التفاعلية الذكية"
-                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-10 py-8 h-auto text-xl md:text-2xl w-full sm:w-auto rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden group border border-white/20"
+                    className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold px-8 py-6 h-auto text-xl md:text-2xl rounded-2xl shadow-2xl shadow-purple-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-600/50 relative overflow-hidden group border border-white/20"
                   >
                     {/* Interior glow effects */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform"></div>
@@ -338,10 +354,10 @@ export default function HomePage() {
                     
                     {/* 3D Text and Icon */}
                     <div className="relative z-10 flex items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-105">
-                      <div className="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
-                        <i className="fas fa-cube text-3xl drop-shadow-lg"></i>
+                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
+                        <i className="fas fa-cube text-2xl drop-shadow-lg"></i>
                       </div>
-                      <span className="drop-shadow-md text-shadow-lg">دخول البلدة التفاعلية الذكية</span>
+                      <span className="drop-shadow-md text-shadow-lg">وضع ثلاثي الأبعاد</span>
                     </div>
                     
                     {/* Pulsing accent indicator */}
@@ -349,6 +365,39 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-white animate-pulse-fast"></div>
                     </div>
                   </Button>
+                  
+                  <Link href="/virtual-city">
+                    <Button 
+                      aria-label="استكشاف المدينة الافتراضية"
+                      className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-700 hover:via-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-6 h-auto text-xl md:text-2xl rounded-2xl shadow-2xl shadow-blue-900/40 transform transition-all duration-300 hover:scale-105 hover:shadow-blue-600/50 relative overflow-hidden group border border-white/20"
+                    >
+                      {/* Interior glow effects */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transform transition-transform"></div>
+                      <div className="absolute -top-20 -left-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      
+                      {/* Animated border */}
+                      <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                        <div className="absolute top-0 left-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-tl"></div>
+                        <div className="absolute top-0 right-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-tr"></div>
+                        <div className="absolute bottom-0 left-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-bl"></div>
+                        <div className="absolute bottom-0 right-0 w-2 h-2 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-border-br"></div>
+                      </div>
+                      
+                      {/* City Text and Icon */}
+                      <div className="relative z-10 flex items-center justify-center gap-4 transition-transform duration-300 group-hover:scale-105">
+                        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20 shadow-inner backdrop-blur-sm">
+                          <i className="fas fa-city text-2xl drop-shadow-lg"></i>
+                        </div>
+                        <span className="drop-shadow-md text-shadow-lg">المدينة الافتراضية</span>
+                      </div>
+                      
+                      {/* Pulsing accent indicator */}
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-white/40 rounded-full overflow-hidden">
+                        <div className="absolute inset-0 bg-white animate-pulse-fast"></div>
+                      </div>
+                    </Button>
+                  </Link>
                 </motion.div>
                 
                 {/* Compact realistic stats showcase */}
