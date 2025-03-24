@@ -175,14 +175,14 @@ export default function ThreeBuildingModel({
       const buildingGroup = new THREE.Group();
       
       // Create building style elements based on type
-      // Define possible building styles
+      // Define possible building styles with cultural focus
       type BuildingStyle = 'modern' | 'arabic-boutique' | 'tech' | 'standard';
       
-      // Assign style based on building type
+      // Assign style based on building type - ensuring Arabic architectural styles
       const buildingStyle: BuildingStyle = 
-                          type === 'travel' ? 'modern' : 
+                          type === 'travel' ? 'arabic-boutique' : // Now all buildings use Arabic style
                           type === 'clothing' ? 'arabic-boutique' : 
-                          type === 'electronics' ? 'tech' : 'standard';
+                          type === 'electronics' ? 'arabic-boutique' : 'arabic-boutique';
       
       // Main building structure with facade variation by type
       let buildingGeometry;
