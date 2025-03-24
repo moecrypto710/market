@@ -317,135 +317,39 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
   const [selectionStarted, setSelectionStarted] = useState(false);
   const [selectedPreview, setSelectedPreview] = useState<AvatarProps | null>(null);
   
-  // Enhanced avatar options with futuristic styles and more variety
+  // Smart-looking avatars with only male and female options
   const avatars = [
     { 
       id: 1, 
       name: "أحمد",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Ahmed&backgroundColor=b6e3f4",
-      personality: "مهتم بالتكنولوجيا والإلكترونيات المتطورة",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=AhmedSmart&backgroundColor=000000&scale=110&clothes=blazer&clothesColor=0a0a0a",
+      personality: "خبير التكنولوجيا والذكاء الاصطناعي",
       favoriteCategory: "electronics",
-      personalStyle: "عصري تقني",
+      personalStyle: "عصري ذكي",
       benefits: [
-        "تخفيضات إضافية 15% على الإلكترونيات",
-        "وصول حصري لآخر التقنيات",
-        "تحليلات متقدمة للمنتجات"
+        "تحليل ذكي ومتقدم للمنتجات التقنية",
+        "وصول حصري لأحدث التقنيات",
+        "خدمة مستشار تكنولوجي شخصي"
       ],
-      color: "#5e35b1",
-      specialFeature: "محلل المواصفات التقنية",
-      specialFeatureDescription: "قدرة خاصة على تحليل مواصفات المنتجات التقنية ومقارنتها بسرعة"
+      color: "#3b82f6",
+      specialFeature: "مستشار التكنولوجيا الذكية",
+      specialFeatureDescription: "يستخدم الذكاء الاصطناعي المتقدم لتحليل المنتجات التقنية وتقديم التوصيات الذكية"
     },
     { 
       id: 2, 
       name: "سارة",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Sara&backgroundColor=ffdfbf",
-      personality: "مهتمة بالموضة والأزياء العصرية",
-      favoriteCategory: "clothing",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=SaraSmart&backgroundColor=000000&scale=110&clothes=blazerAndShirt&clothesColor=1a1a1a",
+      personality: "خبيرة التسوق الذكي والأزياء العصرية",
+      favoriteCategory: "all",
       personalStyle: "أنيق عصري",
       benefits: [
-        "نصائح أزياء شخصية مخصصة",
-        "تجربة افتراضية متطورة للملابس",
-        "إخطارات حصرية للتخفيضات"
+        "تحليل متقدم للاتجاهات والمنتجات",
+        "نظام توصيات مخصص بالذكاء الاصطناعي",
+        "خدمة مساعد تسوق افتراضي شخصي"
       ],
       color: "#d946ef",
-      specialFeature: "مستشارة الأناقة الرقمية",
-      specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية عبر تقنية الذكاء الاصطناعي"
-    },
-    { 
-      id: 3, 
-      name: "فهد",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Fahad&backgroundColor=c8f7dc",
-      personality: "عاشق للرياضة والنشاط البدني",
-      favoriteCategory: "sports",
-      personalStyle: "رياضي حيوي",
-      benefits: [
-        "توصيات مخصصة للمنتجات الرياضية",
-        "تحليل رقمي للأداء الرياضي",
-        "دعوات حصرية لفعاليات رياضية"
-      ],
-      color: "#0ea5e9",
-      specialFeature: "مدرب اللياقة الافتراضي",
-      specialFeatureDescription: "يقدم نصائح متخصصة لاختيار المعدات الرياضية المناسبة لأهدافك"
-    },
-    { 
-      id: 4, 
-      name: "نورا",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Noura&backgroundColor=ffd5dc",
-      personality: "مبدعة في تصميم وديكور المنازل",
-      favoriteCategory: "home",
-      personalStyle: "عصري أنيق",
-      benefits: [
-        "رؤية ثلاثية الأبعاد للديكورات المنزلية",
-        "تنسيقات مخصصة للمساحات",
-        "اكتشاف القطع النادرة والمميزة"
-      ],
-      color: "#f97316",
-      specialFeature: "محاكي الديكور الذكي",
-      specialFeatureDescription: "يمكنها إنشاء تصور ثلاثي الأبعاد للمنتجات في منزلك باستخدام الواقع المعزز"
-    },
-    { 
-      id: 5, 
-      name: "عمر",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Omar&backgroundColor=e0f2fe",
-      personality: "محب للتكنولوجيا والواقع الافتراضي",
-      favoriteCategory: "electronics",
-      personalStyle: "مستقبلي",
-      benefits: [
-        "تجارب واقع افتراضي حصرية",
-        "تحليلات متقدمة للمنتجات التقنية",
-        "ميزات تجريبية للتكنولوجيا الحديثة"
-      ],
-      color: "#3b82f6",
-      specialFeature: "استكشاف الواقع الافتراضي",
-      specialFeatureDescription: "يتيح لك استكشاف مناطق خاصة في البلدة باستخدام تقنيات الواقع الافتراضي المتقدمة"
-    },
-    { 
-      id: 6, 
-      name: "ليلى",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Layla&backgroundColor=feedcb",
-      personality: "خبيرة في المجوهرات والإكسسوارات الفاخرة",
-      favoriteCategory: "luxury",
-      personalStyle: "راقي فاخر",
-      benefits: [
-        "عروض خاصة على المنتجات الفاخرة",
-        "دعوات لفعاليات حصرية",
-        "خدمة استشارية شخصية للهدايا الفاخرة"
-      ],
-      color: "#eab308",
-      specialFeature: "استشاري الهدايا الفاخرة",
-      specialFeatureDescription: "يقدم توصيات مخصصة للهدايا والمنتجات الفاخرة بناءً على مناسبتك وميزانيتك"
-    },
-    { 
-      id: 7, 
-      name: "زياد",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Ziad&backgroundColor=d1fae5",
-      personality: "مهتم بالمنتجات المستدامة والصديقة للبيئة",
-      favoriteCategory: "eco",
-      personalStyle: "مستدام طبيعي",
-      benefits: [
-        "اكتشاف المنتجات الصديقة للبيئة",
-        "تقارير عن الاستدامة للمنتجات",
-        "مكافآت للاختيارات المستدامة"
-      ],
-      color: "#10b981",
-      specialFeature: "مرشد الاستدامة",
-      specialFeatureDescription: "يساعدك على تحديد المنتجات الصديقة للبيئة والمستدامة في جميع أقسام البلدة"
-    },
-    { 
-      id: 8, 
-      name: "ياسمين",
-      image: "https://api.dicebear.com/7.x/personas/svg?seed=Yasmin&backgroundColor=ffe4e6",
-      personality: "شغوفة بالموسيقى والترفيه",
-      favoriteCategory: "entertainment",
-      personalStyle: "عصري فني",
-      benefits: [
-        "اكتشاف الإصدارات الحصرية",
-        "تخفيضات على منتجات الترفيه",
-        "وصول مبكر للفعاليات الموسيقية"
-      ],
-      color: "#ec4899",
-      specialFeature: "مستشار الترفيه",
-      specialFeatureDescription: "يقدم توصيات مخصصة للمنتجات الترفيهية والموسيقية المناسبة لذوقك"
+      specialFeature: "مستشارة التسوق الذكي",
+      specialFeatureDescription: "تستخدم الذكاء الاصطناعي المتقدم لتقديم تجربة تسوق مخصصة وذكية ومجموعة توصيات فريدة"
     }
   ];
 
