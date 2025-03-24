@@ -13,6 +13,7 @@ import CommunityQRCode from '@/components/community-qrcode';
 import CulturalHeritageStory from '@/components/cultural-heritage-story';
 import { useToast } from '@/hooks/use-toast';
 import SocialShare from '@/components/social-share';
+import Product360View from '@/components/product-360-view';
 import { Product } from '@shared/schema';
 import { getProduct } from '@/lib/api';
 
