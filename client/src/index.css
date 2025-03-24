@@ -1213,10 +1213,12 @@
 }
 
 .airplane-light {
+  position: absolute;
   width: 4px;
   height: 4px;
   background: rgb(255, 247, 150);
   border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   animation: blink 2s infinite alternate;
 }
 
@@ -1259,7 +1261,9 @@
   50% { transform: translateX(200px) translateY(0); }
   75% { transform: translateX(100px) translateY(20px); }
   100% { transform: translateX(0) translateY(0); }
-}fore {
+}
+
+.mall-escalator::before {
   content: '';
   position: absolute;
   inset: 0;

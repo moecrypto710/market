@@ -1541,6 +1541,78 @@ export default function VRTown({
               <div className="store-brand-logo adidas-style">ADIDAS</div>
             </div>
             
+            {/* Travel District - Airplane Building (Emirates Airlines) */}
+            <div className="absolute top-[-30px] right-[-10%] transform translate-x-1/2 scale-75">
+              <div className="airplane-building">
+                <div className="airplane-body"></div>
+                <div className="airplane-wing-left"></div>
+                <div className="airplane-wing-right"></div>
+                <div className="airplane-tail"></div>
+                <div className="airplane-entrance"></div>
+                <div className="airplane-runway"></div>
+                
+                {/* Airplane Windows */}
+                {[...Array(8)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="airplane-window" 
+                    style={{ 
+                      left: `${40 + i * 15}px`, 
+                      top: '45px',
+                      transform: 'rotateX(60deg)'
+                    }}
+                  ></div>
+                ))}
+                
+                {/* Airplane Lights */}
+                <div className="airplane-lights">
+                  <div className="airplane-light" style={{ left: '10px', bottom: '5px' }}></div>
+                  <div className="airplane-light" style={{ right: '10px', bottom: '5px' }}></div>
+                </div>
+                
+                {/* Emirates Logo */}
+                <div className="absolute top-[-10px] left-[50%] transform -translate-x-1/2 text-white text-xs font-bold" style={{ textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>
+                  EMIRATES
+                </div>
+              </div>
+            </div>
+            
+            {/* Travel District - Airplane Building (Turkish Airlines) */}
+            <div className="absolute top-[-20px] left-[-10%] transform -translate-x-1/2 scale-75 rotate-[15deg]">
+              <div className="airplane-building">
+                <div className="airplane-body" style={{ background: 'linear-gradient(to right, rgba(227, 28, 33, 0.8), rgba(227, 28, 33, 0.5))' }}></div>
+                <div className="airplane-wing-left" style={{ background: 'rgba(227, 28, 33, 0.6)' }}></div>
+                <div className="airplane-wing-right" style={{ background: 'rgba(227, 28, 33, 0.6)' }}></div>
+                <div className="airplane-tail" style={{ background: 'rgba(227, 28, 33, 0.7)' }}></div>
+                <div className="airplane-entrance"></div>
+                <div className="airplane-runway"></div>
+                
+                {/* Airplane Windows */}
+                {[...Array(8)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="airplane-window" 
+                    style={{ 
+                      left: `${40 + i * 15}px`, 
+                      top: '45px',
+                      transform: 'rotateX(60deg)'
+                    }}
+                  ></div>
+                ))}
+                
+                {/* Airplane Lights */}
+                <div className="airplane-lights">
+                  <div className="airplane-light" style={{ left: '10px', bottom: '5px' }}></div>
+                  <div className="airplane-light" style={{ right: '10px', bottom: '5px' }}></div>
+                </div>
+                
+                {/* Turkish Airlines Logo */}
+                <div className="absolute top-[-10px] left-[50%] transform -translate-x-1/2 text-white text-xs font-bold" style={{ textShadow: '0 0 5px rgba(0,0,0,0.5)' }}>
+                  TURKISH
+                </div>
+              </div>
+            </div>
+            
             {/* Central Dome */}
             <div className="absolute top-[-20px] left-1/2 transform -translate-x-1/2">
               <div className="mall-dome"></div>
