@@ -29,6 +29,8 @@ const buildingData = {
     pattern: '#e2c275',
     // Arabic style mosaic color
     mosaic: '#40a9ff',
+    // Accent color for architectural details
+    accent: '#f5b942',
   },
   
   // Building features
@@ -173,9 +175,14 @@ export default function ThreeBuildingModel({
       const buildingGroup = new THREE.Group();
       
       // Create building style elements based on type
-      const buildingStyle = type === 'travel' ? 'modern' : 
-                            type === 'clothing' ? 'arabic-boutique' : 
-                            type === 'electronics' ? 'tech' : 'standard';
+      // Define possible building styles
+      type BuildingStyle = 'modern' | 'arabic-boutique' | 'boutique' | 'tech' | 'standard';
+      
+      // Assign style based on building type
+      const buildingStyle: BuildingStyle = 
+                          type === 'travel' ? 'modern' : 
+                          type === 'clothing' ? 'arabic-boutique' : 
+                          type === 'electronics' ? 'tech' : 'standard';
       
       // Main building structure with facade variation by type
       let buildingGeometry;
@@ -315,6 +322,305 @@ export default function ThreeBuildingModel({
         hMarkingMesh.position.y = height + 0.11;
         hMarkingMesh.position.x = -width * 0.2;
         buildingGroup.add(hMarkingMesh);
+        
+      } else if (buildingStyle === 'arabic-boutique') {
+        // Arabic style boutique building with decorative elements
+        
+        // Add decorative arch at entrance
+        const createArchedEntrance = () => {
+          // Base for the arch
+          const baseWidth = width / 2;
+          const baseHeight = height / 3;
+          const baseDepth = 0.5;
+          
+          const baseGeometry = new THREE.BoxGeometry(baseWidth, baseHeight, baseDepth);
+          const baseMaterial = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.1),
+            shininess: 20
+          });
+          
+          const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+          baseMesh.position.set(0, baseHeight / 2, depth / 2 + baseDepth / 2);
+          buildingGroup.add(baseMesh);
+          
+          // Arabic pointed arch (horseshoe shape)
+          const archRadius = baseWidth / 2.5;
+          const archSegments = 16;
+          const archHeight = baseHeight * 0.7;
+          
+          // Create custom shape for the arch
+          const archShape = new THREE.Shape();
+          archShape.moveTo(-baseWidth / 2, 0);
+          
+          // Left side of arch
+          archShape.lineTo(-baseWidth / 2, baseHeight - archHeight);
+          
+          // Draw the arch curve
+          for (let i = 0; i <= archSegments; i++) {
+            const angle = Math.PI - (i / archSegments) * Math.PI;
+            const x = -archRadius * Math.cos(angle);
+            const y = baseHeight - archHeight + archRadius * Math.sin(angle);
+            archShape.lineTo(x, y);
+          }
+          
+          // Right side of arch
+          archShape.lineTo(baseWidth / 2, baseHeight - archHeight);
+          archShape.lineTo(baseWidth / 2, 0);
+          archShape.lineTo(-baseWidth / 2, 0);
+          
+          // Extrude the shape
+          const archGeometry = new THREE.ExtrudeGeometry(archShape, {
+            steps: 1,
+            depth: baseDepth,
+            bevelEnabled: false
+          });
+          
+          const archMaterial = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.15),
+            shininess: 30
+          });
+          
+          const archMesh = new THREE.Mesh(archGeometry, archMaterial);
+          archMesh.rotation.x = Math.PI / 2;
+          archMesh.position.set(0, 0, depth / 2 + baseDepth);
+          buildingGroup.add(archMesh);
+          
+          // Decorative patterns inside the arch
+          const patternGeometry = new THREE.PlaneGeometry(baseWidth * 0.9, baseHeight * 0.8);
+          const patternMaterial = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(buildingData.facades.mosaic),
+            shininess: 50,
+            side: THREE.DoubleSide
+          });
+          
+          const patternMesh = new THREE.Mesh(patternGeometry, patternMaterial);
+          patternMesh.position.set(0, baseHeight / 2, depth / 2 + baseDepth + 0.02);
+          buildingGroup.add(patternMesh);
+        };
+        
+        // Add central dome - key feature of Arabic architecture
+        const createDome = () => {
+          const domeRadius = width / 2.5;
+          const domeSegments = 32;
+          
+          // Create dome geometry
+          const domeGeometry = new THREE.SphereGeometry(
+            domeRadius, domeSegments, domeSegments, 
+            0, Math.PI * 2, 0, Math.PI / 2
+          );
+          
+          // Dome material with slight lustre to simulate tiled surface
+          const domeMaterial = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(buildingData.facades.dome),
+            shininess: 50,
+            specular: 0x333333
+          });
+          
+          const dome = new THREE.Mesh(domeGeometry, domeMaterial);
+          dome.position.set(0, height + 0.1, 0); // Position on top of building
+          dome.castShadow = true;
+          buildingGroup.add(dome);
+          
+          // Add dome base (drum)
+          const drumHeight = domeRadius * 0.3;
+          const drumGeometry = new THREE.CylinderGeometry(
+            domeRadius * 1.05, domeRadius * 1.05, drumHeight, domeSegments
+          );
+          
+          const drumMaterial = new THREE.MeshPhongMaterial({
+            color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.2),
+            shininess: 30
+          });
+          
+          const drum = new THREE.Mesh(drumGeometry, drumMaterial);
+          drum.position.set(0, height - drumHeight/2, 0);
+          drum.castShadow = true;
+          buildingGroup.add(drum);
+          
+          // Add decorative finial at the top of dome
+          const finialGeometry = new THREE.ConeGeometry(domeRadius * 0.1, domeRadius * 0.3, 16);
+          const finialMaterial = new THREE.MeshPhongMaterial({
+            color: 0xd4af37, // Gold color
+            shininess: 100,
+            specular: 0x555555
+          });
+          
+          const finial = new THREE.Mesh(finialGeometry, finialMaterial);
+          finial.position.set(0, height + domeRadius + 0.1, 0);
+          finial.castShadow = true;
+          buildingGroup.add(finial);
+          
+          // Add decorative arched windows around the drum
+          const windowCount = 8;
+          const windowWidth = domeRadius * 0.4;
+          const windowHeight = drumHeight * 0.7;
+          
+          for (let i = 0; i < windowCount; i++) {
+            const angle = (i / windowCount) * Math.PI * 2;
+            const x = Math.sin(angle) * domeRadius;
+            const z = Math.cos(angle) * domeRadius;
+            
+            // Create arched window
+            const windowGeometry = new THREE.PlaneGeometry(windowWidth, windowHeight);
+            const windowMaterial = new THREE.MeshPhongMaterial({
+              color: 0x3366ff, // Blue tinted glass
+              transparent: true,
+              opacity: 0.7,
+              shininess: 100,
+              side: THREE.DoubleSide
+            });
+            
+            const windowMesh = new THREE.Mesh(windowGeometry, windowMaterial);
+            windowMesh.position.set(x, height - drumHeight/2, z);
+            windowMesh.lookAt(0, height - drumHeight/2, 0); // Make it face center
+            windowMesh.rotation.y += Math.PI; // Flip to face outward
+            buildingGroup.add(windowMesh);
+            
+            // Add decorated arch frame
+            const frameGeometry = new THREE.TorusGeometry(
+              windowWidth * 0.35, windowWidth * 0.05, 8, 12, Math.PI
+            );
+            const frameMaterial = new THREE.MeshPhongMaterial({
+              color: new THREE.Color(buildingData.facades.pattern),
+              shininess: 30
+            });
+            
+            const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+            frameMesh.position.set(x, height - drumHeight/2 + windowHeight * 0.35, z);
+            frameMesh.lookAt(0, height - drumHeight/2, 0);
+            frameMesh.rotation.y += Math.PI;
+            frameMesh.rotation.x += Math.PI / 2;
+            buildingGroup.add(frameMesh);
+          }
+        };
+        
+        // Create mashrabiya (wooden lattice screens) for windows
+        const createMashrabiya = () => {
+          const windowWidth = 1.2;
+          const windowHeight = 2;
+          const floors = 3;
+          const windowsPerWall = 3;
+          
+          // Create only on front and sides
+          for (let side = -1; side <= 1; side += 2) {
+            for (let floor = 0; floor < floors; floor++) {
+              for (let w = 0; w < windowsPerWall; w++) {
+                const mashrabiyaGroup = new THREE.Group();
+                
+                // Window base frame
+                const frameGeometry = new THREE.BoxGeometry(windowWidth + 0.2, windowHeight + 0.2, 0.1);
+                const frameMaterial = new THREE.MeshPhongMaterial({
+                  color: 0x5c4033, // Brown wooden color
+                  shininess: 10
+                });
+                
+                const frameMesh = new THREE.Mesh(frameGeometry, frameMaterial);
+                mashrabiyaGroup.add(frameMesh);
+                
+                // Create wooden lattice pattern (simplified)
+                const latticeSize = 0.1;
+                const latticeSpacing = 0.2;
+                const horizontalCount = Math.floor(windowWidth / latticeSpacing);
+                const verticalCount = Math.floor(windowHeight / latticeSpacing);
+                
+                // Vertical lattice pieces
+                for (let v = 0; v < horizontalCount; v++) {
+                  const latticeGeometry = new THREE.BoxGeometry(latticeSize, windowHeight * 0.9, latticeSize);
+                  const latticeMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x8b4513, // Darker wood for lattice
+                    shininess: 5
+                  });
+                  
+                  const latticeMesh = new THREE.Mesh(latticeGeometry, latticeMaterial);
+                  const xPos = -windowWidth/2 + v * latticeSpacing + latticeSize;
+                  latticeMesh.position.set(xPos, 0, 0.05);
+                  mashrabiyaGroup.add(latticeMesh);
+                }
+                
+                // Horizontal lattice pieces
+                for (let h = 0; h < verticalCount; h++) {
+                  const latticeGeometry = new THREE.BoxGeometry(windowWidth * 0.9, latticeSize, latticeSize);
+                  const latticeMaterial = new THREE.MeshPhongMaterial({
+                    color: 0x8b4513,
+                    shininess: 5
+                  });
+                  
+                  const latticeMesh = new THREE.Mesh(latticeGeometry, latticeMaterial);
+                  const yPos = -windowHeight/2 + h * latticeSpacing + latticeSize;
+                  latticeMesh.position.set(0, yPos, 0.05);
+                  mashrabiyaGroup.add(latticeMesh);
+                }
+                
+                // Position the window on the building
+                const xPos = (w - 1) * windowWidth * 1.2;
+                const yPos = 1.5 + floor * 3;
+                let zPos = depth / 2 + 0.05;
+                let rotation = 0;
+                
+                if (side === -1) {
+                  // Side windows
+                  zPos = (w - 1) * windowWidth * 1.2;
+                  rotation = Math.PI / 2;
+                  mashrabiyaGroup.position.set(-width/2 - 0.05, yPos, zPos);
+                } else {
+                  // Front windows
+                  mashrabiyaGroup.position.set(xPos, yPos, zPos);
+                }
+                
+                mashrabiyaGroup.rotation.y = rotation;
+                buildingGroup.add(mashrabiyaGroup);
+              }
+            }
+          }
+        };
+        
+        // Add decorative columns with ornate capitals
+        const createDecorativeColumns = () => {
+          // Create columns at the entrance
+          for (let side = -1; side <= 1; side += 2) {
+            // Skip center position
+            if (side === 0) continue;
+            
+            // Column base
+            const baseGeometry = new THREE.CylinderGeometry(0.3, 0.35, 0.4, 8);
+            const baseMaterial = new THREE.MeshPhongMaterial({
+              color: new THREE.Color(mainColor).lerp(new THREE.Color('#ffffff'), 0.3),
+              shininess: 30
+            });
+            
+            const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+            baseMesh.position.set(side * (width / 4), 0.2, depth / 2 + 0.2);
+            buildingGroup.add(baseMesh);
+            
+            // Column shaft
+            const shaftGeometry = new THREE.CylinderGeometry(0.25, 0.3, height / 2, 16);
+            const shaftMaterial = new THREE.MeshPhongMaterial({
+              color: 0xf5f5dc, // Beige marble-like color
+              shininess: 50
+            });
+            
+            const shaftMesh = new THREE.Mesh(shaftGeometry, shaftMaterial);
+            shaftMesh.position.set(side * (width / 4), height / 4, depth / 2 + 0.2);
+            buildingGroup.add(shaftMesh);
+            
+            // Ornate capital
+            const capitalGeometry = new THREE.CylinderGeometry(0.4, 0.25, 0.5, 16);
+            const capitalMaterial = new THREE.MeshPhongMaterial({
+              color: 0xdeb887, // Burlywood color for decorative capital
+              shininess: 30
+            });
+            
+            const capitalMesh = new THREE.Mesh(capitalGeometry, capitalMaterial);
+            capitalMesh.position.set(side * (width / 4), height / 2 + 0.25, depth / 2 + 0.2);
+            buildingGroup.add(capitalMesh);
+          }
+        };
+        
+        // Execute all the creation functions to build the Arabic structure
+        createArchedEntrance();
+        createDome();
+        createMashrabiya();
+        createDecorativeColumns();
         
       } else if (buildingStyle === 'boutique') {
         // Boutique building with decorative elements
