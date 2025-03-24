@@ -299,8 +299,31 @@ export default function CameraIntegration({
               autoPlay
               playsInline
               muted
+              style={selectedFilter ? filters.find(f => f.id === selectedFilter)?.style : undefined}
               className={`w-full h-full object-cover ${cameraFacing === 'user' ? 'scale-x-[-1]' : ''}`}
             />
+            
+            {/* Futuristic AR interface overlay */}
+            <div className="absolute inset-0 pointer-events-none">
+              {/* Holographic scanline effect */}
+              <div className="absolute inset-0 bg-scan-lines opacity-10"></div>
+              
+              {/* Futuristic HUD elements */}
+              <div className="absolute top-4 left-4 border border-fuchsia-500/40 px-3 py-1 rounded-lg text-xs bg-black/30 backdrop-blur-sm text-fuchsia-500 font-mono">
+                AR MODE: {isARActive ? 'ACTIVE' : 'STANDBY'}
+              </div>
+              
+              <div className="absolute top-4 right-4 border border-fuchsia-500/40 px-3 py-1 rounded-lg text-xs bg-black/30 backdrop-blur-sm text-fuchsia-500 font-mono flex items-center">
+                <span className="h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                CAMERA: {cameraFacing === 'user' ? 'FRONT' : 'REAR'}
+              </div>
+              
+              {/* Corner brackets for futuristic interface */}
+              <div className="absolute top-2 left-2 border-t-2 border-l-2 border-fuchsia-500/50 w-12 h-12"></div>
+              <div className="absolute top-2 right-2 border-t-2 border-r-2 border-fuchsia-500/50 w-12 h-12"></div>
+              <div className="absolute bottom-2 left-2 border-b-2 border-l-2 border-fuchsia-500/50 w-12 h-12"></div>
+              <div className="absolute bottom-2 right-2 border-b-2 border-r-2 border-fuchsia-500/50 w-12 h-12"></div>
+            </div>
             
             {/* Countdown overlay */}
             {isCapturing && (
@@ -310,11 +333,63 @@ export default function CameraIntegration({
             )}
             
             {/* AR guide overlay based on mode */}
-            {mode === 'product-try-on' && (
+            {mode === 'product-try-on' && !isARActive && (
               <div className="absolute inset-0 flex items-end justify-center pb-20 opacity-50">
-                <div className="border-2 border-dashed border-white rounded-full w-32 h-32">
+                <div className="border-2 border-dashed border-fuchsia-500 rounded-full w-32 h-32 relative">
                   <div className="text-center text-xs mt-12 text-white">ضع وجهك هنا</div>
+                  
+                  {/* Animated guide markers */}
+                  <div className="absolute -top-1 -left-1 w-3 h-3 border-2 border-fuchsia-500 rounded-full animate-ping"></div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 border-2 border-fuchsia-500 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+                  <div className="absolute -bottom-1 -left-1 w-3 h-3 border-2 border-fuchsia-500 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 border-2 border-fuchsia-500 rounded-full animate-ping" style={{ animationDelay: '1.5s' }}></div>
                 </div>
+              </div>
+            )}
+            
+            {/* AR effect overlay */}
+            {isARActive && selectedEffect && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {selectedEffect === 'hologram' && (
+                  <div className="relative">
+                    <div className="absolute -inset-8 rounded-full bg-blue-500/20 animate-pulse"></div>
+                    <div className="text-blue-500 text-lg font-mono">HOLOGRAM PROCESSING</div>
+                    <div className="mt-2 h-1 bg-blue-500/30 rounded-full overflow-hidden">
+                      <div className="h-full w-1/2 bg-blue-500 animate-[scan_2s_ease-in-out_infinite]"></div>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedEffect === 'virtual-try' && productImageUrl && (
+                  <img 
+                    src={productImageUrl} 
+                    alt="Virtual Try-on" 
+                    className="max-w-[80%] max-h-[80%] object-contain opacity-90"
+                    style={{
+                      transform: `translate(${virtualPosition.x}px, ${virtualPosition.y}px) 
+                                 scale(${virtualPosition.scale}) 
+                                 rotate(${virtualPosition.rotation}deg)`,
+                    }}
+                  />
+                )}
+                
+                {selectedEffect === 'measure' && (
+                  <div className="absolute inset-0">
+                    <div className="absolute left-1/3 top-1/3 w-1/3 h-1/3 border-2 border-yellow-500 border-dashed"></div>
+                    <div className="absolute left-1/3 top-1/3 w-[2px] h-1/3 bg-yellow-500"></div>
+                    <div className="absolute left-1/3 top-1/3 w-1/3 h-[2px] bg-yellow-500"></div>
+                    <div className="absolute right-1/3 bottom-1/3 text-xs text-yellow-500 font-mono">MEASURING...</div>
+                  </div>
+                )}
+                
+                {selectedEffect === 'scan' && (
+                  <div className="absolute inset-0">
+                    <div className="h-[2px] w-full bg-fuchsia-500/80 animate-scan"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm text-fuchsia-500 font-mono">
+                      SCANNING PRODUCT
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </>
@@ -326,7 +401,78 @@ export default function CameraIntegration({
         <canvas ref={canvasRef} className="hidden" />
       </div>
       
-      {/* Controls */}
+      {/* Filter and effect controls */}
+      {!capturedImage && (
+        <div className="w-full max-w-3xl flex flex-wrap justify-center items-center gap-2 mt-4">
+          {/* Filter selection */}
+          {enableFilters && (
+            <div className="flex items-center">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowFilters(!showFilters)}
+                className="mr-2 text-xs">
+                <i className="fas fa-magic mr-1"></i>
+                فلاتر
+              </Button>
+              
+              {showFilters && (
+                <div className="flex gap-2 items-center bg-black/60 rounded-full px-3 py-1 backdrop-blur-sm border border-fuchsia-500/30">
+                  {filters.map(filter => (
+                    <div 
+                      key={filter.id}
+                      className={`w-8 h-8 rounded-full cursor-pointer overflow-hidden border-2 transition-all
+                                ${selectedFilter === filter.id ? 'border-fuchsia-500 scale-110' : 'border-white/20'}`}
+                      onClick={() => setSelectedFilter(filter.id)}
+                      title={filter.name}
+                    >
+                      <div 
+                        className="w-full h-full bg-gradient-to-br from-purple-500 to-fuchsia-500"
+                        style={filter.style}
+                      ></div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* AR effects selection */}
+          {enableAREffects && (
+            <div className="flex items-center">
+              <Button 
+                variant={isARActive ? "default" : "ghost"}
+                size="sm" 
+                onClick={() => setShowEffects(!showEffects)}
+                className="mr-2 text-xs">
+                <i className="fas fa-vr-cardboard mr-1"></i>
+                تأثيرات
+              </Button>
+              
+              {showEffects && (
+                <div className="flex gap-2 items-center bg-black/60 rounded-full px-3 py-1 backdrop-blur-sm border border-fuchsia-500/30">
+                  {arEffects.map(effect => (
+                    <div 
+                      key={effect.id}
+                      className={`w-8 h-8 rounded-full cursor-pointer flex items-center justify-center transition-all
+                              ${selectedEffect === effect.id ? 'bg-fuchsia-500 text-white' : 'bg-black/50 text-white/70 hover:text-white/90'}`}
+                      onClick={() => {
+                        setSelectedEffect(effect.id);
+                        setIsARActive(effect.id !== 'none');
+                      }}
+                      title={effect.name}
+                    >
+                      <i className={`fas fa-${effect.icon} text-sm`}></i>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Main controls */}
       <div className="w-full max-w-3xl mt-4 flex justify-center gap-4">
         {!capturedImage ? (
           <>
