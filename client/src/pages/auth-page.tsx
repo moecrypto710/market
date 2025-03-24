@@ -580,133 +580,251 @@ export default function AuthPage() {
               </div>
             </TabsContent>
 
+            {/* REGISTER TAB */}
             <TabsContent value="register">
-              <div className="bg-black border border-white/30 rounded-lg p-6">
+              <div className="bg-gradient-to-br from-black/95 via-black/90 to-indigo-950/20 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-xl">
+                <div className="mb-6">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-bold text-white mb-1">انضم إلى بلدة الأمريكي</h3>
+                    <p className="text-white/60 text-sm">سجل حساباً جديداً واستمتع بتجربة تسوق فريدة</p>
+                  </div>
+                  
+                  {/* Account Type Selection */}
+                  <div className="bg-black/40 backdrop-blur-sm p-4 rounded-lg mb-6 border border-white/10">
+                    <h4 className="text-white/80 text-center mb-3 text-sm font-medium">اختر نوع الحساب</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="relative">
+                        <input type="radio" id="customer-account" name="account-type" className="peer sr-only" defaultChecked />
+                        <label htmlFor="customer-account" className="flex items-center justify-center gap-2 p-3 bg-purple-900/30 border border-purple-500/20 rounded-lg peer-checked:bg-purple-700/40 peer-checked:border-purple-500/50 cursor-pointer transition-all duration-200">
+                          <i className="fas fa-user text-purple-400"></i>
+                          <span className="text-white">حساب عميل</span>
+                          <div className="absolute top-2 right-2 w-2 h-2 bg-purple-500 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                        </label>
+                      </div>
+                      <div className="relative">
+                        <input type="radio" id="business-account" name="account-type" className="peer sr-only" />
+                        <label htmlFor="business-account" className="flex items-center justify-center gap-2 p-3 bg-emerald-900/30 border border-emerald-500/20 rounded-lg peer-checked:bg-emerald-700/40 peer-checked:border-emerald-500/50 cursor-pointer transition-all duration-200">
+                          <i className="fas fa-store text-emerald-400"></i>
+                          <span className="text-white">حساب أعمال</span>
+                          <div className="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Social Registration */}
+                  <div className="grid grid-cols-2 gap-3 mb-5">
+                    <Button 
+                      variant="outline" 
+                      className="border-white/10 bg-gradient-to-r from-blue-900/30 to-blue-800/10 hover:from-white hover:to-white hover:text-black relative overflow-hidden group h-12"
+                      onClick={() => handleLoginWithSocial('facebook')}
+                      type="button"
+                      disabled={registerMutation.isPending}
+                    >
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                      <div className="relative flex items-center justify-center gap-2">
+                        <i className="fab fa-facebook text-blue-400 group-hover:text-blue-600"></i>
+                        <span>تسجيل عبر فيسبوك</span>
+                      </div>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="border-white/10 bg-gradient-to-r from-red-900/30 to-red-800/10 hover:from-white hover:to-white hover:text-black relative overflow-hidden group h-12"
+                      onClick={() => handleLoginWithSocial('google')}
+                      type="button"
+                      disabled={registerMutation.isPending}
+                    >
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000"></div>
+                      <div className="relative flex items-center justify-center gap-2">
+                        <i className="fab fa-google text-red-400 group-hover:text-red-600"></i>
+                        <span>تسجيل عبر جوجل</span>
+                      </div>
+                    </Button>
+                  </div>
+
+                  <div className="relative flex items-center gap-4 py-5">
+                    <div className="border-t border-white/10 flex-grow"></div>
+                    <div className="text-white/50 text-sm">أو</div>
+                    <div className="border-t border-white/10 flex-grow"></div>
+                  </div>
+                </div>
+
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                    <FormField
-                      control={registerForm.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>اسم المستخدم</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="اختر اسم مستخدم" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={registerForm.control}
+                        name="username"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/80">اسم المستخدم</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                  <i className="fas fa-user text-sm"></i>
+                                </div>
+                                <Input 
+                                  placeholder="اختر اسم مستخدم" 
+                                  className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-indigo-400/50" 
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>الاسم الكامل</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="ادخل اسمك الكامل" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={registerForm.control}
+                        name="fullName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/80">الاسم الكامل</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                  <i className="fas fa-id-card text-sm"></i>
+                                </div>
+                                <Input 
+                                  placeholder="ادخل اسمك الكامل" 
+                                  className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-indigo-400/50" 
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
                     <FormField
                       control={registerForm.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>البريد الإلكتروني</FormLabel>
+                          <FormLabel className="text-white/80">البريد الإلكتروني</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="email"
-                              placeholder="ادخل بريدك الإلكتروني" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
+                            <div className="relative">
+                              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                <i className="fas fa-envelope text-sm"></i>
+                              </div>
+                              <Input 
+                                type="email"
+                                placeholder="ادخل بريدك الإلكتروني" 
+                                className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-indigo-400/50" 
+                                {...field} 
+                              />
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>كلمة المرور</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="password" 
-                              placeholder="اختر كلمة مرور قوية" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={registerForm.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/80">كلمة المرور</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                  <i className="fas fa-lock text-sm"></i>
+                                </div>
+                                <Input 
+                                  type="password" 
+                                  placeholder="اختر كلمة مرور قوية" 
+                                  className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-indigo-400/50" 
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={registerForm.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>تأكيد كلمة المرور</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="password" 
-                              placeholder="أعد كتابة كلمة المرور" 
-                              className="bg-white/20 border-none text-white placeholder:text-white/50" 
-                              {...field} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={registerForm.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-white/80">تأكيد كلمة المرور</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/40">
+                                  <i className="fas fa-shield-alt text-sm"></i>
+                                </div>
+                                <Input 
+                                  type="password" 
+                                  placeholder="أعد كتابة كلمة المرور" 
+                                  className="bg-white/10 border-none text-white placeholder:text-white/30 pr-10 rounded-lg focus:ring-1 focus:ring-indigo-400/50" 
+                                  {...field} 
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <Button 
-                        variant="outline" 
-                        className="border-white/20 hover:bg-white hover:text-black"
-                        onClick={() => handleLoginWithSocial('facebook')}
-                        type="button"
-                        disabled={registerMutation.isPending}
-                      >
-                        <i className="fab fa-facebook mr-2"></i>
-                        فيسبوك
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="border-white/20 hover:bg-white hover:text-black"
-                        onClick={() => handleLoginWithSocial('google')}
-                        type="button"
-                        disabled={registerMutation.isPending}
-                      >
-                        <i className="fab fa-google mr-2"></i>
-                        جوجل
-                      </Button>
+                    {/* Terms and Conditions Checkbox */}
+                    <div className="bg-indigo-900/20 border border-indigo-500/30 rounded-lg p-3">
+                      <div className="flex items-start gap-2">
+                        <Checkbox id="terms" className="data-[state=checked]:bg-indigo-500 data-[state=checked]:border-indigo-500 mt-1" />
+                        <div>
+                          <label htmlFor="terms" className="text-white/90 text-sm">
+                            أوافق على <a href="#" className="text-indigo-400 hover:text-indigo-300 underline">شروط الاستخدام</a> و <a href="#" className="text-indigo-400 hover:text-indigo-300 underline">سياسة الخصوصية</a> الخاصة ببلدة الأمريكي
+                          </label>
+                          <p className="text-white/50 text-xs mt-1">سيتم إرسال إشعارات مهمة إلى بريدك الإلكتروني. يمكنك تعديل إعدادات الإشعارات لاحقاً</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* VR Badge Animation */}
+                    <div className="bg-indigo-900/10 border border-indigo-500/20 rounded-lg p-3">
+                      <div className="flex items-center justify-center gap-3">
+                        <div className="relative w-10 h-10 flex-shrink-0">
+                          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/50 to-purple-600/50 blur-sm rounded-full animate-pulse-slow"></div>
+                          <div className="relative w-full h-full bg-gradient-to-r from-indigo-900 to-purple-900 rounded-full flex items-center justify-center">
+                            <i className="fas fa-vr-cardboard text-white"></i>
+                          </div>
+                        </div>
+                        <div className="text-sm text-white/80">
+                          سجل الآن واحصل على تجربة واقع افتراضي كاملة ومكافآت حصرية في بلدة الأمريكي
+                        </div>
+                      </div>
                     </div>
 
                     <Button 
                       type="submit" 
-                      className="w-full bg-white text-black hover:bg-white/80"
+                      className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold rounded-lg h-12 mt-2"
                       disabled={registerMutation.isPending}
                     >
-                      {registerMutation.isPending ? 'جاري إنشاء الحساب...' : 'إنشاء حساب'}
+                      {registerMutation.isPending ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+                          <span>جاري إنشاء الحساب...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2">
+                          <i className="fas fa-user-plus"></i>
+                          <span>إنشاء حساب</span>
+                        </div>
+                      )}
                     </Button>
+                    
+                    <div className="text-center text-sm text-white/50 mt-4">
+                      لديك حساب بالفعل؟{" "}
+                      <a href="#" onClick={() => document.querySelector('[value="customer"]')?.click()} className="text-indigo-400 hover:text-indigo-300">
+                        تسجيل الدخول
+                      </a>
+                    </div>
                   </form>
                 </Form>
               </div>
