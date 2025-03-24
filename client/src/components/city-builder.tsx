@@ -530,22 +530,148 @@ export default function CityBuilder() {
   };
   
   // Simplified sky
-  const renderSky = () => (
-    <div 
-      className="absolute inset-0 z-0" 
-      style={{
-        background: 'linear-gradient(to bottom, #1e40af 0%, #3b82f6 60%, #93c5fd 100%)',
-      }}
-    >
-      {/* Simple clouds */}
-      <div className="absolute w-20 h-10 bg-white rounded-full blur-sm opacity-70" style={{ left: '10%', top: '15%' }}></div>
-      <div className="absolute w-32 h-16 bg-white rounded-full blur-sm opacity-70" style={{ left: '30%', top: '10%' }}></div>
-      <div className="absolute w-24 h-12 bg-white rounded-full blur-sm opacity-70" style={{ right: '20%', top: '20%' }}></div>
-      
-      {/* Sun */}
-      <div className="absolute w-16 h-16 rounded-full bg-yellow-300 opacity-90" style={{ right: '15%', top: '5%', boxShadow: '0 0 30px rgba(253, 224, 71, 0.8)' }}></div>
-    </div>
-  );
+  // Enhanced sky with day/night cycle inspired by Unity's DayNightCycle script
+  const renderSky = () => {
+    // Get time of day (could be dynamic in a more complex implementation)
+    const timeOfDay = 'day'; // Can be 'dawn', 'day', 'dusk', 'night'
+    
+    // Sky gradients for different times of day - similar to setting Skybox materials in Unity
+    const skyGradients = {
+      dawn: 'linear-gradient(to bottom, #0c0a3e 0%, #6b2d5c 20%, #f7b733 60%, #f2f2f2 100%)',
+      day: 'linear-gradient(to bottom, #0078ff 0%, #3b82f6 40%, #93c5fd 100%)',
+      dusk: 'linear-gradient(to bottom, #2c3e50 0%, #fd746c 60%, #ff9068 100%)',
+      night: 'linear-gradient(to bottom, #0f0c29 0%, #302b63 50%, #24243e 100%)'
+    };
+    
+    // Stars only visible at night
+    const showStars = timeOfDay === 'night';
+    
+    return (
+      <div 
+        className="absolute inset-0 z-0 overflow-hidden" 
+        style={{
+          background: skyGradients[timeOfDay],
+          transition: 'background 2s ease-in-out',
+        }}
+      >
+        {/* Animated stars */}
+        {showStars && (
+          <div className="absolute inset-0">
+            {Array.from({ length: 100 }).map((_, i) => (
+              <div 
+                key={i}
+                className="absolute bg-white rounded-full"
+                style={{
+                  width: `${Math.random() * 2 + 1}px`,
+                  height: `${Math.random() * 2 + 1}px`,
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 60}%`,
+                  opacity: Math.random() * 0.7 + 0.3,
+                  animation: `twinkle ${Math.random() * 5 + 3}s infinite alternate`,
+                  animationDelay: `${Math.random() * 5}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
+        
+        {/* Enhanced clouds with animation */}
+        <div className="absolute top-0 left-0 right-0 h-60 overflow-hidden">
+          {/* First cloud layer - closer, faster */}
+          <div className="absolute left-0 right-0 top-10">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div 
+                key={`cloud1-${i}`}
+                className="absolute"
+                style={{
+                  left: `${(i * 20 + Math.random() * 10)}%`,
+                  top: `${Math.random() * 20}%`,
+                  opacity: 0.7,
+                  animation: 'driftRight 30s linear infinite',
+                  animationDelay: `${i * -6}s`,
+                }}
+              >
+                <div className="cloud flex">
+                  <div className="w-16 h-16 bg-white rounded-full"></div>
+                  <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
+                  <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Second cloud layer - further, slower */}
+          <div className="absolute left-0 right-0 top-0">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div 
+                key={`cloud2-${i}`}
+                className="absolute"
+                style={{
+                  left: `${(i * 25 + Math.random() * 15)}%`,
+                  top: `${Math.random() * 10}%`,
+                  opacity: 0.5,
+                  transform: 'scale(1.5)',
+                  animation: 'driftRight 45s linear infinite',
+                  animationDelay: `${i * -11}s`,
+                }}
+              >
+                <div className="cloud flex">
+                  <div className="w-16 h-16 bg-white rounded-full"></div>
+                  <div className="w-20 h-20 bg-white rounded-full -mr-6"></div>
+                  <div className="w-16 h-16 bg-white rounded-full -mr-6"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Dynamic sun/moon based on time of day */}
+        {timeOfDay === 'day' && (
+          <div 
+            className="absolute w-20 h-20 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-200"
+            style={{ 
+              right: '15%', 
+              top: '5%', 
+              boxShadow: '0 0 40px rgba(253, 224, 71, 0.9)',
+              animation: 'pulseSun 8s ease-in-out infinite alternate'
+            }}
+          >
+            {/* Sun rays */}
+            <div className="absolute inset-0 sun-rays"></div>
+          </div>
+        )}
+        
+        {timeOfDay === 'night' && (
+          <div 
+            className="absolute w-16 h-16 rounded-full bg-gradient-to-b from-slate-100 to-slate-300"
+            style={{ 
+              right: '25%', 
+              top: '15%', 
+              boxShadow: '0 0 20px rgba(255, 255, 255, 0.5)',
+            }}
+          >
+            {/* Moon craters */}
+            <div className="absolute w-3 h-3 rounded-full bg-slate-300 top-3 left-5 opacity-80"></div>
+            <div className="absolute w-2 h-2 rounded-full bg-slate-300 top-6 left-10 opacity-80"></div>
+            <div className="absolute w-4 h-4 rounded-full bg-slate-300 top-9 left-3 opacity-80"></div>
+          </div>
+        )}
+        
+        {/* Dynamic horizon glow (dawn/dusk only) */}
+        {(timeOfDay === 'dawn' || timeOfDay === 'dusk') && (
+          <div 
+            className="absolute bottom-0 left-0 right-0 h-1/3"
+            style={{
+              background: timeOfDay === 'dawn' 
+                ? 'linear-gradient(to top, rgba(255, 140, 50, 0.5) 0%, transparent 100%)'
+                : 'linear-gradient(to top, rgba(255, 80, 80, 0.5) 0%, transparent 100%)',
+              opacity: 0.7,
+            }}
+          />
+        )}
+      </div>
+    );
+  };
   
   // Screen message state (based on ScreenInteraction.cs)
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
