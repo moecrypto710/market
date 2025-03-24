@@ -37,21 +37,22 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
   const [selectionStarted, setSelectionStarted] = useState(false);
   const [selectedPreview, setSelectedPreview] = useState<AvatarProps | null>(null);
   
-  // Enhanced avatar options with futuristic styles
+  // Enhanced avatar options with futuristic styles and more variety
   const avatars = [
     { 
       id: 1, 
       name: "أحمد",
       image: "https://api.dicebear.com/7.x/personas/svg?seed=Ahmed&backgroundColor=b6e3f4",
-      personality: "مهتم بالتكنولوجيا والإلكترونيات الحديثة",
+      personality: "مهتم بالتكنولوجيا والإلكترونيات المتطورة",
       favoriteCategory: "electronics",
       personalStyle: "عصري تقني",
       benefits: [
-        "تخفيضات إضافية 10% على الإلكترونيات",
-        "وصول حصري لآخر التقنيات"
+        "تخفيضات إضافية 15% على الإلكترونيات",
+        "وصول حصري لآخر التقنيات",
+        "تحليلات متقدمة للمنتجات"
       ],
       color: "#5e35b1",
-      specialFeature: "محلل المواصفات",
+      specialFeature: "محلل المواصفات التقنية",
       specialFeatureDescription: "قدرة خاصة على تحليل مواصفات المنتجات التقنية ومقارنتها بسرعة"
     },
     { 
@@ -62,12 +63,45 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
       favoriteCategory: "clothing",
       personalStyle: "أنيق عصري",
       benefits: [
-        "نصائح أزياء شخصية",
-        "تجربة افتراضية للملابس"
+        "نصائح أزياء شخصية مخصصة",
+        "تجربة افتراضية متطورة للملابس",
+        "إخطارات حصرية للتخفيضات"
       ],
-      color: "#e91e63",
-      specialFeature: "مستشارة الأناقة",
-      specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية"
+      color: "#d946ef",
+      specialFeature: "مستشارة الأناقة الرقمية",
+      specialFeatureDescription: "قدرة خاصة على تنسيق الإطلالات المثالية عبر تقنية الذكاء الاصطناعي"
+    },
+    { 
+      id: 3, 
+      name: "فهد",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Fahad&backgroundColor=c8f7dc",
+      personality: "عاشق للرياضة والنشاط البدني",
+      favoriteCategory: "sports",
+      personalStyle: "رياضي حيوي",
+      benefits: [
+        "توصيات مخصصة للمنتجات الرياضية",
+        "تحليل رقمي للأداء الرياضي",
+        "دعوات حصرية لفعاليات رياضية"
+      ],
+      color: "#0ea5e9",
+      specialFeature: "مدرب اللياقة الافتراضي",
+      specialFeatureDescription: "يقدم نصائح متخصصة لاختيار المعدات الرياضية المناسبة لأهدافك"
+    },
+    { 
+      id: 4, 
+      name: "نورا",
+      image: "https://api.dicebear.com/7.x/personas/svg?seed=Noura&backgroundColor=ffd5dc",
+      personality: "مبدعة في تصميم وديكور المنازل",
+      favoriteCategory: "home",
+      personalStyle: "عصري أنيق",
+      benefits: [
+        "رؤية ثلاثية الأبعاد للديكورات المنزلية",
+        "تنسيقات مخصصة للمساحات",
+        "اكتشاف القطع النادرة والمميزة"
+      ],
+      color: "#f97316",
+      specialFeature: "محاكي الديكور الذكي",
+      specialFeatureDescription: "يمكنها إنشاء تصور ثلاثي الأبعاد للمنتجات في منزلك باستخدام الواقع المعزز"
     }
   ];
 
@@ -134,18 +168,58 @@ function AvatarSelectionScreen({ onSelect }: { onSelect: (avatar: AvatarProps) =
       )}
       
       <div className="relative z-10 w-full max-w-5xl flex flex-col items-center">
-        {/* Header with futuristic design */}
-        <div className="relative mb-8 text-center">
-          <h2 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
-            اختر الشخصية الافتراضية
-          </h2>
-          <p className="text-white/70 text-lg">
-            اختر شخصية للتسوق في مول أمريكي الافتراضي
-          </p>
+        {/* Enhanced header with advanced futuristic design */}
+        <div className="relative mb-10 text-center">
+          {/* Background decorative elements */}
+          <div className="absolute -inset-10 -z-10">
+            <div className="absolute inset-0 opacity-10 circuit-overlay"></div>
+            <div className="absolute inset-x-0 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/70 to-transparent"></div>
+            <div className="absolute left-1/4 right-1/4 top-[52%] h-[1px] bg-gradient-to-r from-transparent via-fuchsia-500/40 to-transparent"></div>
+          </div>
           
-          {/* Decorative elements */}
-          <div className="absolute -left-4 top-1/2 h-0.5 w-12 bg-gradient-to-r from-transparent to-pink-500/80"></div>
-          <div className="absolute -right-4 top-1/2 h-0.5 w-12 bg-gradient-to-l from-transparent to-purple-500/80"></div>
+          {/* Header text with enhanced gradient and animation */}
+          <div className="relative">
+            {/* Floating particles around header */}
+            <div className="absolute -top-4 left-1/4 w-1 h-1 bg-fuchsia-300 rounded-full animate-float1 opacity-70"></div>
+            <div className="absolute -bottom-2 right-1/3 w-1 h-1 bg-blue-300 rounded-full animate-float2 opacity-70"></div>
+            
+            {/* Main title with animated gradient */}
+            <h2 className="text-5xl font-bold mb-3 text-transparent bg-clip-text holographic-bg text-glow"
+                style={{
+                  backgroundImage: 'linear-gradient(to right, #d946ef, #ffffff, #d946ef)',
+                  backgroundSize: '200% auto',
+                  animation: 'holographic-move 6s linear infinite'
+                }}>
+              اختر الشخصية الافتراضية
+            </h2>
+            
+            {/* Ornamental divider */}
+            <div className="w-24 h-1 mx-auto mb-3 rounded-full bg-gradient-to-r from-transparent via-fuchsia-500 to-transparent"></div>
+            
+            {/* Subtitle with shimmer effect */}
+            <p className="text-white/80 text-lg relative inline-block">
+              اختر شخصية للتسوق في مول أمريكي الافتراضي
+              
+              {/* Shine animation */}
+              <span className="absolute inset-0 w-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 animate-scan"
+                    style={{
+                      animationDuration: '3s',
+                      animationIterationCount: 'infinite'
+                    }}>
+              </span>
+            </p>
+          </div>
+          
+          {/* Advanced decorative elements */}
+          <div className="absolute -left-16 top-1/2 flex items-center">
+            <div className="w-3 h-3 rounded-full bg-fuchsia-500/70 animate-pulse-slow"></div>
+            <div className="h-[1px] w-12 bg-gradient-to-r from-fuchsia-500/80 to-transparent"></div>
+          </div>
+          
+          <div className="absolute -right-16 top-1/2 flex items-center">
+            <div className="h-[1px] w-12 bg-gradient-to-l from-fuchsia-500/80 to-transparent"></div>
+            <div className="w-3 h-3 rounded-full bg-fuchsia-500/70 animate-pulse-slow"></div>
+          </div>
         </div>
         
         <div className="flex gap-12 w-full justify-center">

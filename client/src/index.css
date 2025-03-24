@@ -180,6 +180,52 @@
   }
 }
 
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes zoom-in {
+  0% {
+    transform: scale(0.6) translateY(40px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes beam-effect {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-20px) scaleY(2);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-40px) scaleY(1);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-60px);
+    opacity: 0;
+  }
+}
+
 @keyframes float {
   0%, 100% {
     transform: translateY(0);
@@ -364,6 +410,24 @@
   animation: scanline 6s linear infinite;
 }
 
+.animate-fade-in {
+  animation: fade-in 0.8s forwards;
+}
+
+.animate-zoom-in {
+  animation: zoom-in 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-beam {
+  animation: beam-effect 2s ease-out infinite;
+  animation-delay: calc(var(--delay, 0) * 0.1s);
+}
+
+.animate-particle-rise {
+  animation: particle-rise 1.5s ease-out forwards;
+  animation-delay: calc(var(--delay, 0) * 0.1s);
+}
+
 .holographic-bg {
   background: linear-gradient(to right, 
     rgba(0,0,0,0.7) 0%,
@@ -401,6 +465,97 @@
 
 .border-3 {
   border-width: 3px;
+}
+
+/* Futuristic layout components */
+.holographic-container {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.holographic-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid transparent;
+  border-radius: 1rem;
+  background: linear-gradient(45deg, #d946ef10, #ffffff30, #d946ef10) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-flow 4s linear infinite;
+}
+
+.futuristic-panel {
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.8), rgba(30, 20, 40, 0.8));
+  border-radius: 1rem;
+  border: 1px solid rgba(217, 70, 239, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  position: relative;
+}
+
+.futuristic-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(217, 70, 239, 0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(217, 70, 239, 0.15), transparent 40%);
+  pointer-events: none;
+}
+
+.diagonal-split {
+  position: relative;
+  overflow: hidden;
+}
+
+.diagonal-split::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 49.9%, rgba(217, 70, 239, 0.1) 50%, transparent 51%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Arabesque elements for cultural fusion */
+.arabesque-border {
+  position: relative;
+  border: 1px solid rgba(217, 70, 239, 0.2);
+}
+
+.arabesque-border::before,
+.arabesque-border::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0c11.046 0 20 8.954 20 20s-8.954 20-20 20S0 31.046 0 20 8.954 0 20 0zm0 5C11.729 5 5 11.729 5 20s6.729 15 15 15 15-6.729 15-15S28.271 5 20 5zm0 5c-5.523 0-10 4.477-10 10s4.477 10 10 10 10-4.477 10-10-4.477-10-10-10zm0 5a5 5 0 0 0-5 5 5 5 0 0 0 5 5 5 5 0 0 0 5-5 5 5 0 0 0-5-5z' fill='%23d946ef' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.arabesque-border::before {
+  top: -10px;
+  left: -10px;
+  transform: rotate(0deg);
+}
+
+.arabesque-border::after {
+  bottom: -10px;
+  right: -10px;
+  transform: rotate(180deg);
 }
 
 @layer base {
