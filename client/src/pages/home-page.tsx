@@ -1,15 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
-import { useVR } from "@/hooks/use-vr";
 import { Button } from "@/components/ui/button";
-import VRTown from "@/components/vr-town";
 import AIAssistant from "@/components/ai-assistant";
 import CulturalTransition from "@/components/cultural-transition";
 import confetti from 'canvas-confetti';
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();

@@ -1,8 +1,7 @@
-import { useVR } from "@/hooks/use-vr";
-import VROverlay from "../vr-overlay";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Header() {
-  const { vrEnabled, toggleVR } = useVR();
+  const isMobile = useIsMobile();
   
   return (
     <header className="bg-black text-white text-center py-4 px-2 sticky top-0 z-50 border-b border-gray-700/20 shadow-md shadow-purple-900/10 relative overflow-hidden">
@@ -17,21 +16,18 @@ export default function Header() {
       <div className="relative z-10">
         <h1 className="text-2xl font-bold">
           بلدة الأمريكي
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">VR</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mx-1">مول</span>
         </h1>
-        <p className="text-sm text-white/70">مدينة الأعمال الافتراضية المتكاملة</p>
+        <p className="text-sm text-white/70">مدينة الأعمال والتسوق المتكاملة</p>
       </div>
       
       <div 
         className="absolute left-4 top-1/2 -translate-y-1/2 cursor-pointer transform transition-transform hover:scale-105"
-        onClick={toggleVR}
       >
-        <span className={`${vrEnabled ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' : 'bg-white text-black'} px-3 py-1 rounded-full text-xs font-bold flex items-center shadow-lg`}>
-          <i className={`fas fa-vr-cardboard ml-1 ${vrEnabled ? 'animate-pulse' : ''}`}></i> VR
+        <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center shadow-lg">
+          <i className="fas fa-shopping-cart ml-1"></i> {isMobile ? "تسوق" : "تسوق الآن"}
         </span>
       </div>
-      
-      {vrEnabled && <VROverlay />}
     </header>
   );
 }
