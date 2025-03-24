@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CityMapProps {
   playerPosition?: { x: number; y: number; z: number };
@@ -37,342 +37,290 @@ export default function CityMap({
   onLocationSelect,
   isExpanded = false,
   onToggleExpand,
-  showLabels = true
+  showLabels = false
 }: CityMapProps) {
-  const [mapCenter, setMapCenter] = useState<{ x: number; z: number }>({ x: 0, z: 0 });
-  const [mapZoom, setMapZoom] = useState<number>(1);
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
-  const [showLegend, setShowLegend] = useState<boolean>(false);
-
-  // Map dimensions and scaling
-  const mapWidth = isExpanded ? 300 : 180;
-  const mapHeight = isExpanded ? 300 : 180;
-  const mapScale = 10; // Scale factor to convert game coordinates to pixels
-
-  // Calculate boundaries for the map
+  const [selected, setSelected] = useState<string | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [mapSize, setMapSize] = useState({ width: 300, height: 300 });
+  
+  // Map parameters for scaling and positioning
+  const mapScale = 5; // Scale factor for converting 3D coordinates to 2D map
+  const mapPadding = isExpanded ? 40 : 20; // Padding around the map
+  
+  // Set map size based on container and expanded state
   useEffect(() => {
-    if (buildings.length === 0) return;
-    
-    // Find the center of all the buildings
-    const allPositions = [...buildings.map(b => b.position), ...pointsOfInterest.map(p => p.position)];
-    
-    const sumX = allPositions.reduce((sum, pos) => sum + pos.x, 0);
-    const sumZ = allPositions.reduce((sum, pos) => sum + pos.z, 0);
-    
-    const avgX = sumX / allPositions.length;
-    const avgZ = sumZ / allPositions.length;
-    
-    setMapCenter({ x: avgX, z: avgZ });
-  }, [buildings, pointsOfInterest]);
-
-  // Convert world position to map position
-  const worldToMapPosition = (worldPos: { x: number; z: number }) => {
-    const scaledX = (worldPos.x - mapCenter.x) * mapScale * mapZoom;
-    const scaledZ = (worldPos.z - mapCenter.z) * mapScale * mapZoom;
+    if (mapRef.current) {
+      const size = isExpanded ? 400 : 200;
+      setMapSize({ width: size, height: size });
+    }
+  }, [isExpanded, mapRef]);
+  
+  // Convert 3D coordinates to 2D map coordinates
+  const toMapCoords = (pos: { x: number; y: number; z: number }) => {
+    const centerX = mapSize.width / 2;
+    const centerZ = mapSize.height / 2;
     
     return {
-      x: mapWidth / 2 + scaledX,
-      y: mapHeight / 2 - scaledZ, // Invert Z axis to match top-down view
+      x: centerX + pos.x / mapScale,
+      y: centerZ + pos.z / mapScale  // Note: z-axis in 3D becomes y-axis in 2D map
     };
   };
-
-  // Handle clicking on a map location
-  const handleLocationClick = (id: string, position: { x: number; y: number; z: number }) => {
-    setSelectedLocation(id);
+  
+  // Handle click on map item
+  const handleItemClick = (id: string, position: { x: number; y: number; z: number }) => {
+    setSelected(id);
     if (onLocationSelect) {
       onLocationSelect(id, position);
     }
   };
-
+  
+  // Calculate size of map elements based on expanded state
+  const getItemSize = (type: 'building' | 'poi' | 'player') => {
+    switch(type) {
+      case 'building':
+        return isExpanded ? 20 : 12;
+      case 'poi':
+        return isExpanded ? 16 : 10;
+      case 'player':
+        return isExpanded ? 14 : 8;
+      default:
+        return isExpanded ? 16 : 10;
+    }
+  };
+  
   return (
-    <div className="relative">
-      <Card className={`
-        transition-all duration-300 p-0 overflow-hidden
-        ${isExpanded ? 'absolute bottom-0 right-0 shadow-2xl z-50' : 'shadow-md'}
-      `}>
-        <CardContent className="p-0">
-          <div 
-            className={`
-              relative bg-slate-800 border border-slate-700 rounded-lg overflow-hidden
-              ${isExpanded ? 'w-[300px] h-[300px]' : 'w-[180px] h-[180px]'}
-            `}
-          >
-            {/* Map grid background */}
-            <div className="absolute inset-0 grid"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-                  `,
-                  backgroundSize: `${10 * mapZoom}px ${10 * mapZoom}px`,
-                  backgroundPosition: `${mapWidth/2}px ${mapHeight/2}px`
-                }}
-            />
-            
-            {/* Decorative compass rose */}
-            <div className="absolute top-2 left-2 opacity-40 pointer-events-none">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L14 14H10L12 2Z" fill="rgba(255,255,255,0.8)" />
-                <path d="M12 22L10 10H14L12 22Z" fill="rgba(255,255,255,0.5)" />
-                <path d="M2 12L14 10V14L2 12Z" fill="rgba(255,255,255,0.5)" />
-                <path d="M22 12L10 14V10L22 12Z" fill="rgba(255,255,255,0.5)" />
-                <circle cx="12" cy="12" r="2" fill="rgba(255,255,255,0.8)" />
-              </svg>
-            </div>
-            
-            {/* Buildings on map */}
-            {buildings.map((building) => {
-              const mapPos = worldToMapPosition({ x: building.position.x, z: building.position.z });
-              
-              // Building size based on type
-              const buildingSize = building.type === 'travel' ? 14 : 12;
-              
-              return (
-                <div
-                  key={building.id}
-                  className={`
-                    absolute rounded-sm transform -translate-x-1/2 -translate-y-1/2 cursor-pointer
-                    transition-all duration-200 hover:brightness-125 hover:shadow-glow
-                    ${selectedLocation === building.id ? 'ring-2 ring-white ring-opacity-70' : ''}
-                  `}
-                  style={{
-                    left: `${mapPos.x}px`,
-                    top: `${mapPos.y}px`,
-                    width: `${buildingSize}px`,
-                    height: `${buildingSize}px`,
-                    backgroundColor: building.color,
-                    boxShadow: `0 0 5px ${building.color}80`,
-                  }}
-                  onClick={() => handleLocationClick(building.id, building.position)}
-                >
-                  {/* Building icon */}
-                  {building.type === 'travel' && (
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-[6px]">
-                      <i className="fas fa-plane"></i>
-                    </div>
-                  )}
-                  {building.type === 'clothing' && (
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-[6px]">
-                      <i className="fas fa-tshirt"></i>
-                    </div>
-                  )}
-                  {building.type === 'electronics' && (
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-[6px]">
-                      <i className="fas fa-mobile-alt"></i>
-                    </div>
-                  )}
-                  
-                  {/* Building label, visible when expanded or selected */}
-                  {(showLabels || selectedLocation === building.id) && (
-                    <div 
-                      className={`
-                        absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap
-                        bg-slate-900/80 text-white px-1 py-0.5 rounded text-[8px] pointer-events-none
-                        transition-opacity duration-200
-                        ${isExpanded || selectedLocation === building.id ? 'opacity-100' : 'opacity-0'}
-                      `}
-                      style={{ direction: 'rtl' }}
-                    >
-                      {building.name}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            
-            {/* Points of interest */}
-            {pointsOfInterest.map((poi) => {
-              const mapPos = worldToMapPosition({ x: poi.position.x, z: poi.position.z });
-              
-              return (
-                <div
-                  key={poi.id}
-                  className="absolute w-3 h-3 rounded-full bg-yellow-400/70 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-                  style={{
-                    left: `${mapPos.x}px`,
-                    top: `${mapPos.y}px`,
-                    boxShadow: '0 0 4px rgba(250, 204, 21, 0.5)',
-                  }}
-                  onClick={() => handleLocationClick(poi.id, poi.position)}
-                >
-                  {/* POI icon */}
-                  <div className="absolute inset-0 flex items-center justify-center text-slate-900 text-[6px]">
-                    <i className={`fas ${poi.icon || 'fa-star'}`}></i>
-                  </div>
-                  
-                  {/* POI label */}
-                  {(showLabels || selectedLocation === poi.id) && (
-                    <div 
-                      className={`
-                        absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap
-                        bg-slate-900/80 text-white px-1 py-0.5 rounded text-[8px] pointer-events-none
-                        transition-opacity duration-200
-                        ${isExpanded || selectedLocation === poi.id ? 'opacity-100' : 'opacity-0'}
-                      `}
-                      style={{ direction: 'rtl' }}
-                    >
-                      {poi.name}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-            
-            {/* Player position marker */}
-            <div
-              className="absolute w-4 h-4 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-              style={{
-                left: `${worldToMapPosition({ x: playerPosition.x, z: playerPosition.z }).x}px`,
-                top: `${worldToMapPosition({ x: playerPosition.x, z: playerPosition.z }).y}px`,
-              }}
-            >
-              {/* Direction indicator triangle */}
-              <svg width="16" height="16" viewBox="0 0 16 16" className="fill-white drop-shadow-glow">
-                <polygon points="8,0 16,16 8,12 0,16" />
-              </svg>
-            </div>
-            
-            {/* Map controls */}
-            <div className="absolute bottom-2 right-2 flex flex-col gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-6 h-6 bg-slate-900/60 hover:bg-slate-900/80 text-[10px] text-white rounded-sm"
-                onClick={() => setMapZoom(Math.min(mapZoom + 0.2, 2))}
-              >
-                <i className="fas fa-plus"></i>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-6 h-6 bg-slate-900/60 hover:bg-slate-900/80 text-[10px] text-white rounded-sm"
-                onClick={() => setMapZoom(Math.max(mapZoom - 0.2, 0.5))}
-              >
-                <i className="fas fa-minus"></i>
-              </Button>
-              {isExpanded && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-6 h-6 bg-slate-900/60 hover:bg-slate-900/80 text-[10px] text-white rounded-sm"
-                  onClick={() => setShowLegend(!showLegend)}
-                >
-                  <i className="fas fa-info"></i>
-                </Button>
-              )}
-            </div>
-            
-            {/* Map title bar */}
-            <div className="absolute top-0 left-0 right-0 bg-slate-900/80 py-1 px-2 flex justify-between items-center">
-              <div className="text-white text-xs font-medium" style={{ direction: 'rtl' }}>
-                خريطة المدينة
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 text-white hover:bg-slate-700/50 p-0"
-                onClick={onToggleExpand}
-              >
-                <i className={`fas fa-${isExpanded ? 'compress-alt' : 'expand-alt'} text-[10px]`}></i>
-              </Button>
-            </div>
-            
-            {/* Map legend (only visible when expanded and legend is shown) */}
-            {isExpanded && showLegend && (
-              <div className="absolute left-2 bottom-2 bg-slate-900/80 p-2 rounded text-xs max-w-[120px]">
-                <div className="mb-2 font-medium text-white">المفاتيح:</div>
-                <div className="space-y-1.5">
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-blue-600 rounded-sm mr-1.5"></div>
-                    <span className="text-[9px] text-white" style={{ direction: 'rtl' }}>وكالة سفر</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-amber-500 rounded-sm mr-1.5"></div>
-                    <span className="text-[9px] text-white" style={{ direction: 'rtl' }}>متجر ملابس</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-emerald-500 rounded-sm mr-1.5"></div>
-                    <span className="text-[9px] text-white" style={{ direction: 'rtl' }}>إلكترونيات</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-3 h-3 bg-yellow-400 rounded-full mr-1.5"></div>
-                    <span className="text-[9px] text-white" style={{ direction: 'rtl' }}>نقطة اهتمام</span>
-                  </div>
-                  <div className="flex items-center">
-                    <svg width="12" height="12" viewBox="0 0 16 16" className="fill-white mr-1.5">
-                      <polygon points="8,0 16,16 8,12 0,16" />
-                    </svg>
-                    <span className="text-[9px] text-white" style={{ direction: 'rtl' }}>موقعك الحالي</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+    <div 
+      className={`relative bg-slate-800 rounded-lg shadow-xl border border-blue-500/30 overflow-hidden transition-all duration-300 ${
+        isExpanded ? 'w-[420px] h-[420px]' : 'w-[220px] h-[220px]'
+      }`}
+      ref={mapRef}
+    >
+      {/* Map toggle button */}
+      <Button
+        size="sm"
+        variant="outline"
+        className="absolute top-2 right-2 z-10 bg-slate-800/80 border-blue-400/30 hover:bg-slate-700/80 text-blue-400"
+        onClick={onToggleExpand}
+      >
+        <i className={`fas fa-${isExpanded ? 'compress-alt' : 'expand-alt'} text-xs`}></i>
+      </Button>
       
-      {/* Selected location info card, only shown when a location is selected */}
-      {selectedLocation && isExpanded && (
+      {/* Map title */}
+      <div className="absolute top-2 left-2 z-10 text-white text-sm font-bold flex items-center">
+        <i className="fas fa-map-marked text-blue-400 mr-2"></i>
+        <span className={`${isExpanded ? 'block' : 'hidden'}`}>خريطة المدينة</span>
+      </div>
+      
+      {/* Main map area */}
+      <div 
+        className="relative w-full h-full p-4"
+        style={{
+          background: `radial-gradient(circle, rgba(23,37,84,0.7) 0%, rgba(15,23,42,0.9) 100%)`,
+          backgroundSize: '100% 100%',
+        }}
+      >
+        {/* Grid lines */}
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div 
+            className="w-full h-full" 
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #4f46e5 1px, transparent 1px),
+                linear-gradient(to bottom, #4f46e5 1px, transparent 1px)
+              `,
+              backgroundSize: `${mapSize.width / 10}px ${mapSize.height / 10}px`
+            }}
+          />
+        </div>
+        
+        {/* Compass rose */}
+        <div className="absolute bottom-4 left-4 text-white/70 text-xs flex flex-col items-center">
+          <div className="w-8 h-8 relative">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 transform font-bold text-blue-400">N</div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 transform font-bold text-blue-400/70">S</div>
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 transform font-bold text-blue-400/70">W</div>
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 transform font-bold text-blue-400/70">E</div>
+            <div className="w-6 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 border-blue-400/40 rounded-full"></div>
+            <div className="w-0.5 h-6 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-400/40"></div>
+            <div className="w-6 h-0.5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-400/40"></div>
+          </div>
+        </div>
+        
+        {/* Buildings on the map */}
+        {buildings.map((building) => {
+          const mapPos = toMapCoords(building.position);
+          const size = getItemSize('building');
+          const isActive = selected === building.id;
+          const isHovered = hoveredItem === building.id;
+          
+          return (
+            <TooltipProvider key={building.id}>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    className={`absolute cursor-pointer ${isActive ? 'z-30' : 'z-10'}`}
+                    style={{
+                      left: mapPos.x - size/2,
+                      top: mapPos.y - size/2,
+                      width: size,
+                      height: size,
+                      backgroundColor: building.color,
+                      borderRadius: '3px',
+                      boxShadow: isActive || isHovered 
+                        ? `0 0 10px 2px ${building.color}` 
+                        : 'none'
+                    }}
+                    onClick={() => handleItemClick(building.id, building.position)}
+                    onMouseEnter={() => setHoveredItem(building.id)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    whileHover={{ scale: 1.2 }}
+                    animate={{
+                      scale: isActive ? 1.2 : 1,
+                      opacity: isHovered || isActive ? 1 : 0.8
+                    }}
+                  >
+                    {(showLabels || isHovered || isActive) && (
+                      <div 
+                        className={`absolute whitespace-nowrap bg-slate-900/80 text-white px-2 py-0.5 rounded text-xs -translate-y-full -translate-x-1/4 transform -top-1 right-1/2 border-l-2 border-r-2`}
+                        style={{ borderColor: building.color }}
+                      >
+                        {building.name}
+                      </div>
+                    )}
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <div className="text-xs">
+                    <div className="font-bold mb-1">{building.name}</div>
+                    <div className="text-slate-400">
+                      نوع: {building.type === 'travel' ? 'سفر وسياحة' : 
+                             building.type === 'clothing' ? 'ملابس وأزياء' : 
+                             building.type === 'electronics' ? 'إلكترونيات' : 'آخر'}
+                    </div>
+                    <div className="text-slate-400 mt-1">انقر للانتقال</div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
+
+        {/* Points of interest */}
+        {pointsOfInterest.map((poi) => {
+          const mapPos = toMapCoords(poi.position);
+          const size = getItemSize('poi');
+          const isActive = selected === poi.id;
+          const isHovered = hoveredItem === poi.id;
+          const icon = poi.icon || 'map-marker';
+          
+          return (
+            <TooltipProvider key={poi.id}>
+              <Tooltip delayDuration={300}>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    className={`absolute cursor-pointer rounded-full bg-yellow-500/20 flex items-center justify-center ${isActive ? 'z-30' : 'z-20'}`}
+                    style={{
+                      left: mapPos.x - size/2,
+                      top: mapPos.y - size/2,
+                      width: size,
+                      height: size
+                    }}
+                    onClick={() => handleItemClick(poi.id, poi.position)}
+                    onMouseEnter={() => setHoveredItem(poi.id)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    whileHover={{ scale: 1.2 }}
+                    animate={{
+                      scale: isActive ? 1.2 : 1,
+                      opacity: isHovered || isActive ? 1 : 0.8,
+                      boxShadow: isActive || isHovered 
+                        ? '0 0 8px 2px rgba(245, 158, 11, 0.5)' 
+                        : '0 0 0px 0px rgba(245, 158, 11, 0)'
+                    }}
+                  >
+                    <i className={`fas fa-${icon} text-amber-400 text-xs`}></i>
+                    {(showLabels || isHovered || isActive) && (
+                      <div 
+                        className="absolute whitespace-nowrap bg-slate-900/80 text-amber-300 px-2 py-0.5 rounded text-xs -translate-y-full transform -top-1 right-0 border-l border-r border-amber-500/50"
+                      >
+                        {poi.name}
+                      </div>
+                    )}
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <div className="text-xs">
+                    <div className="font-bold mb-1 text-amber-400">{poi.name}</div>
+                    <div className="text-slate-400">
+                      نوع: {poi.type === 'entrance' ? 'مدخل' : 
+                             poi.type === 'shopping' ? 'تسوق' : 
+                             poi.type === 'landmark' ? 'معلم سياحي' : 'نقطة اهتمام'}
+                    </div>
+                    <div className="text-slate-400 mt-1">انقر للانتقال</div>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
+        
+        {/* Player position marker */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="absolute left-2 top-12 bg-slate-800/90 backdrop-blur-sm p-3 rounded-lg border border-slate-700 shadow-xl max-w-[200px] z-10"
+          className="absolute z-50 flex items-center justify-center"
+          style={{
+            left: toMapCoords(playerPosition).x - getItemSize('player')/2,
+            top: toMapCoords(playerPosition).y - getItemSize('player')/2,
+            width: getItemSize('player'),
+            height: getItemSize('player')
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.7, 1, 0.7]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "loop"
+          }}
         >
-          {(() => {
-            // Find selected building or POI
-            const selected = 
-              [...buildings, ...pointsOfInterest].find(item => item.id === selectedLocation);
-            
-            if (!selected) return null;
-            
-            const isBuilding = 'type' in selected && ['travel', 'clothing', 'electronics'].includes(selected.type);
-            
-            return (
-              <>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <Badge 
-                    className="text-[9px] py-0 px-1.5"
-                    style={{ backgroundColor: isBuilding ? (selected as any).color : '#ca8a04' }}
-                  >
-                    {isBuilding 
-                      ? selected.type === 'travel' 
-                        ? 'سفر' 
-                        : selected.type === 'clothing' 
-                          ? 'ملابس' 
-                          : 'إلكترونيات'
-                      : 'نقطة اهتمام'
-                    }
-                  </Badge>
-                  <h4 className="text-xs font-medium text-white" style={{ direction: 'rtl' }}>
-                    {selected.name}
-                  </h4>
-                </div>
-                
-                <div className="flex justify-between mt-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="h-7 text-[10px] border-slate-700 bg-slate-700/50 hover:bg-slate-700 text-white"
-                    onClick={() => handleLocationClick(selected.id, selected.position)}
-                  >
-                    <i className="fas fa-location-arrow ml-1 text-[8px]"></i>
-                    انتقال
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="h-7 text-[10px] hover:bg-slate-700/50 text-slate-400"
-                    onClick={() => setSelectedLocation(null)}
-                  >
-                    إغلاق
-                  </Button>
-                </div>
-              </>
-            );
-          })()}
+          <div className="absolute w-full h-full rounded-full bg-blue-600/40 animate-ping"></div>
+          <div className="absolute w-3/4 h-3/4 rounded-full bg-blue-500/60"></div>
+          <div className="absolute w-1/2 h-1/2 rounded-full bg-blue-400"></div>
+          {isExpanded && (
+            <div className="absolute -top-7 whitespace-nowrap bg-slate-900/80 text-blue-300 px-2 py-0.5 rounded text-xs">
+              موقعك الحالي
+            </div>
+          )}
         </motion.div>
-      )}
+        
+        {/* Map legend */}
+        {isExpanded && (
+          <div className="absolute bottom-4 right-4 bg-slate-900/70 backdrop-blur-sm p-2 rounded border border-blue-500/20 text-xs text-white">
+            <div className="flex items-center mb-1">
+              <div className="w-3 h-3 bg-blue-500 mr-2 rounded-full"></div>
+              <span>موقعك الحالي</span>
+            </div>
+            <div className="flex items-center mb-1">
+              <div className="w-3 h-3 bg-amber-500/50 mr-2 rounded-full flex items-center justify-center">
+                <i className="fas fa-star text-[6px] text-amber-300"></i>
+              </div>
+              <span>نقاط اهتمام</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-indigo-600 mr-2 rounded-sm"></div>
+              <span>مباني</span>
+            </div>
+          </div>
+        )}
+        
+        {/* Minimap feature - distance scale */}
+        {isExpanded && (
+          <div className="absolute bottom-4 left-14 flex items-center">
+            <div className="h-0.5 w-10 bg-white/50"></div>
+            <div className="text-white/50 text-[8px] ml-1">10م</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

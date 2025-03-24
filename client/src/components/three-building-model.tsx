@@ -23,6 +23,12 @@ const buildingData = {
     door: '#4a6da7',
     // Ground floor color
     ground: '#3b5998',
+    // Arabic style dome color
+    dome: '#d4af37',
+    // Arabic style pattern color
+    pattern: '#e2c275',
+    // Arabic style mosaic color
+    mosaic: '#40a9ff',
   },
   
   // Building features
