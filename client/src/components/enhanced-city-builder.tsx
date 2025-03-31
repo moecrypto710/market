@@ -3,8 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMovement } from '@/hooks/use-movement';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/use-auth';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Card } from '@/components/ui/card';
+import { useQuery } from '@tanstack/react-query';
 import AirplaneBuildingInterior from './airplane-building-interior';
 import EnterBuilding from './enter-building';
 import StoreInteraction from './store-interaction';
@@ -74,6 +79,8 @@ interface EnvironmentSettings {
 export default function EnhancedCityBuilder() {
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const [, navigate] = useLocation();
+  const { user } = useAuth();
   
   // City layout and state
   const [buildings, setBuildings] = useState<Building[]>([]);
@@ -82,7 +89,13 @@ export default function EnhancedCityBuilder() {
   const [isInteriorView, setIsInteriorView] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [activeDialog, setActiveDialog] = useState<{ npcId: string, messages: string[], index: number } | null>(null);
+  
+  // العناصر المفتوحة للزائر والمستخدم المسجل
+  const [unlockedFeatures, setUnlockedFeatures] = useState<string[]>([
+    'mosque', 'coffee_shop', 'book_store'
+  ]);
   
   // Environment settings
   const [settings, setSettings] = useState<EnvironmentSettings>({
@@ -454,17 +467,35 @@ export default function EnhancedCityBuilder() {
       
       // Handle NPC interaction
       const handleNPCClick = () => {
+        // تخصيص الحوار حسب حالة تسجيل الدخول
+        let customizedDialog = [...npc.dialog];
+        
+        // إذا كان المستخدم مسجل الدخول، إضافة رسائل ترحيبية خاصة
+        if (user) {
+          if (npc.type === 'civilian') {
+            customizedDialog.push(`أهلا ${user.username}! مرحباً بك في مدينتنا.`);
+            customizedDialog.push(`لديك ${user.points || 0} نقطة. استمتع بالتسوق!`);
+          } else if (npc.type === 'shopkeeper') {
+            customizedDialog.push(`${user.username}! لدينا عروض خاصة للأعضاء المسجلين.`);
+          } else if (npc.type === 'airline_staff') {
+            customizedDialog.push(`مرحباً ${user.username}! يمكنك حجز رحلة وكسب نقاط إضافية.`);
+          }
+        } else {
+          // إذا كان زائر، إضافة دعوة للتسجيل
+          customizedDialog.push("سجل الدخول للاستفادة من تجربة أفضل ومميزات إضافية!");
+        }
+        
         // Show dialog when NPC is clicked
         setActiveDialog({
           npcId: npc.id,
-          messages: npc.dialog,
+          messages: customizedDialog,
           index: 0
         });
         
         // Display toast notification
         toast({
           title: `${npc.name} يتحدث`,
-          description: npc.dialog[0],
+          description: customizedDialog[0],
           duration: 3000,
         });
       };
@@ -631,6 +662,34 @@ export default function EnhancedCityBuilder() {
   const renderHUD = () => {
     return (
       <div className="absolute inset-0 pointer-events-none">
+        {/* User info card (top left) */}
+        <div className="absolute top-4 left-4 bg-black bg-opacity-50 text-white px-4 py-3 rounded-lg pointer-events-auto">
+          <div className="flex items-center">
+            <Avatar className="h-10 w-10 mr-2">
+              <AvatarImage src={user?.avatarUrl || "https://api.dicebear.com/7.x/identicon/svg?seed=user"} alt="User" />
+              <AvatarFallback>{user?.username ? user.username.charAt(0) : '?'}</AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="font-bold">
+                {user ? user.username : 'زائر'}
+              </div>
+              {user && (
+                <div className="text-xs opacity-75">نقاط: {user.points || 0}</div>
+              )}
+            </div>
+          </div>
+          {!user && (
+            <Button 
+              variant="link" 
+              size="sm" 
+              className="text-blue-300 p-0 h-auto mt-1"
+              onClick={() => navigate('/auth')}
+            >
+              تسجيل الدخول لتفعيل المزيد من الميزات
+            </Button>
+          )}
+        </div>
+        
         {/* Compass */}
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-30 text-white px-4 py-2 rounded-full">
           <div className="flex items-center justify-center">
